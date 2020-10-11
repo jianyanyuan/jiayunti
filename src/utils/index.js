@@ -115,3 +115,35 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+/**
+* options [{key,val}]
+* 返回val 或 ''
+* @param {*} key
+* @param {*} options
+*/
+export function keyToVal(key, options) {
+  if (typeof (key) === 'undefined' || key === null || !Array.isArray(options)) {
+    return ''
+  }
+  for (const i of options) {
+    if (i.key === key) return i.val
+  }
+  return ''
+}
+
+/**
+* 数值格式化
+* 将数字转为EN-US，千分制分隔
+* 失败返回 ''
+* @param {*} value
+*/
+export function numberFormat(value) {
+  const number = +value
+  if (isNaN(number)) {
+    return ''
+  } else {
+    const reg = /(?=(\B\d{3})+$)/g
+    return number.toString().replace(reg, ',')
+  }
+}

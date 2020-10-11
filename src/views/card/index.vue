@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-10-11 20:47:16
+ * @LastEditTime: 2020-10-11 20:55:15
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -20,7 +20,7 @@
           <el-input v-model="item.name" />
         </el-form-item>
         <el-form-item label="时间" prop="time">
-          <el-date-picker v-model="item.time" type="datetime" placeholder="Pick a date" />
+          <el-date-picker v-model="item.time" type="datetime" placeholder="选择日期" />
         </el-form-item>
         <el-form-item label="联系方式" prop="phone">
           <el-input v-model="item.phone" />
