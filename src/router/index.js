@@ -159,6 +159,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/card',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Card',
+        component: () => import('@/views/card/index'),
+        meta: { title: 'Card', icon: 'form' }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
