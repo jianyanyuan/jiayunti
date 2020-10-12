@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-10-12 13:39:40
+ * @LastEditTime: 2020-10-12 13:50:11
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -45,38 +45,8 @@
         </div>
       </el-collapse-item>
     </el-collapse>
-    <el-button type="primary" size="medium" style="margin-top:30px" @click="model.visible = true">新增异议</el-button>
+    <el-button type="primary" size="medium" style="margin-top:30px" @click="submitFeedback">提交</el-button>
 
-    <el-dialog :title="model.title" :visible.sync="model.visible" :close-on-click-modal="false" center>
-      <el-card v-for="(item, index) in model.dissents" :key="index + 100" class="box-card">
-        <div slot="header" class="clearfix">
-          <span>{{ "异议" + (index + 1) }}</span>
-          <el-button v-if="index != 0" style="float: right; padding: 3px 0" type="text" @click="removeDissent(index)">删除</el-button>
-        </div>
-        <el-form :ref="model.ruleForm + index" :model="item" :rules="model.rules" label-width="100px">
-          <el-form-item label="建议人" prop="name">
-            <el-input v-model="item.name" />
-          </el-form-item>
-          <el-form-item label="时间" prop="time">
-            <el-date-picker v-model="item.time" type="datetime" placeholder="选择日期" />
-          </el-form-item>
-          <el-form-item label="联系方式" prop="phone">
-            <el-input v-model="item.phone" />
-          </el-form-item>
-          <el-form-item label="详细地址" prop="address">
-            <el-input v-model="item.address" />
-          </el-form-item>
-          <el-form-item label="异议详情" prop="detail">
-            <el-input v-model="item.detail" type="textarea" />
-          </el-form-item>
-        </el-form>
-      </el-card>
-      <span slot="footer">
-        <el-button type="primary" @click="addDissent">新增</el-button>
-        <el-button type="primary" @click="addDissent">提 交</el-button>
-      </span>
-
-    </el-dialog>
   </div>
 </template>
 
@@ -115,40 +85,14 @@ export default {
           feedback: '你的需求已知晓，将之后联系',
           status: 1
         }
-      ],
-      model: {
-        visible: false,
-        title: '新增异议',
-        ruleForm: {
-          name: '',
-          time: '',
-          phone: '',
-          address: '',
-          detail: ''
-        },
-        rules: {
-          name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-          time: [{ required: true, message: '请选择时间', trigger: 'blur' }],
-          phone: [{ required: true, message: '请输入联系方式', trigger: 'blur' }],
-          address: [{ required: true, message: '请输入详细地址', trigger: 'blur' }],
-          detail: [{ required: true, message: '请输入异议详情', trigger: 'blur' }]
-        },
-        dissents: [
-          {
-            name: '',
-            time: '',
-            phone: '',
-            address: '',
-            detail: ''
-          }
-        ]
-      }
+      ]
     }
   },
   computed: {
     ...mapState('common', ['handleStatus', 'handleTag'])
   },
   methods: {
+    submitFeedback() {},
     removeDissent(index) {
       if (index > 0) {
         this.model.dissents.splice(index, 1)

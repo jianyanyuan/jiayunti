@@ -183,6 +183,66 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/apply',
+    component: Layout,
+    redirect: '/apply/post',
+    name: 'Apply',
+    meta: {
+      title: 'Apply',
+      icon: 'apply'
+    },
+    children: [
+      {
+        path: 'post',
+        component: () => import('@/views/apply/post/index'), // Parent router-view
+        name: 'Post',
+        meta: {
+          title: 'Post',
+          icon: 'post'
+        }
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/apply/list/index'),
+        name: 'List',
+        meta: {
+          title: 'List',
+          icon: 'list'
+        }
+      }
+    ]
+  },
+  {
+    path: '/community',
+    component: Layout,
+    redirect: '/community/list',
+    name: 'Community',
+    meta: {
+      title: 'Community',
+      icon: 'community'
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/community/list/index'),
+        name: 'communityList',
+        meta: {
+          title: 'List',
+          icon: 'list'
+        }
+      },
+      {
+        path: 'collapse',
+        component: () => import('@/views/community/collapse/index'),
+        name: 'communityCollapse',
+        meta: {
+          title: 'Collapse',
+          icon: 'collapse'
+        }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

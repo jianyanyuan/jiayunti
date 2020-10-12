@@ -1,15 +1,28 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-10-11 20:55:15
+ * @LastEditTime: 2020-10-12 13:39:21
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
 <template>
   <div class="app-container">
-    <div class="clearfix" style="height:50px">
-      <el-button style="float: right;" type="primary" size="medium" @click="addDissent">新增</el-button>
+    <div class="basic-container">
+      <el-card style="margin-bottom:30px">
+        <div slot="header">
+          <span>基本信息</span>
+        </div>
+        <div>
+          <p>姓名：{{ basic.name }}</p>
+          <p>详细地址：{{ basic.address }}</p>
+          <p>电话：{{ basic.phone }}</p>
+          <p>加装电梯地址：{{ basic.liftAddress }}</p>
+          <p>设计单位：{{ basic.company }}</p>
+          <p>设备规格：{{ basic.spec }}</p>
+        </div>
+      </el-card>
     </div>
+
     <el-card v-for="(item, index) in dissents" :key="index" class="box-card">
       <div slot="header" class="clearfix">
         <span>{{ "异议" + (index + 1) }}</span>
@@ -33,8 +46,9 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <div style="height:50px">
-      <el-button type="primary" size="medium" @click="addDissent">提交</el-button>
+    <div style="height:50px;text-align:center">
+      <el-button type="primary" size="medium" @click="addDissent">新 增</el-button>
+      <el-button type="primary" size="medium" @click="addDissent">提 交</el-button>
     </div>
   </div>
 </template>
@@ -43,6 +57,14 @@
 export default {
   data() {
     return {
+      basic: {
+        name: '李先生',
+        address: '苏州高新区',
+        phone: '15988800323',
+        liftAddress: '小区1楼',
+        company: '苏州建研院',
+        spec: '高端电梯'
+      },
       ruleForm: {
         name: '',
         time: '',
@@ -71,7 +93,7 @@ export default {
   methods: {
     removeDissent(index) {
       if (index > 0) {
-        this.dissents = this.dissents.splice(index, 1)
+        this.dissents.splice(index, 1)
       }
     },
     addDissent() {
@@ -98,7 +120,11 @@ export default {
 </script>
 
 <style scoped>
-.head{
+.basic-container /deep/ .el-card__header:nth-child(1) {
+  background: #409eff;
+  color: #fff;
+}
+.head {
   height: 30px;
 }
 .text {
