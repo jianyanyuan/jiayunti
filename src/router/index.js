@@ -226,7 +226,7 @@ export const constantRoutes = [
       {
         path: 'list',
         component: () => import('@/views/community/list/index'),
-        name: 'communityList',
+        name: 'CommunityList',
         meta: {
           title: 'List',
           icon: 'list'
@@ -235,11 +235,17 @@ export const constantRoutes = [
       {
         path: 'collapse',
         component: () => import('@/views/community/collapse/index'),
-        name: 'communityCollapse',
+        name: 'CommunityCollapse',
         meta: {
           title: 'Collapse',
           icon: 'collapse'
         }
+      },
+      {
+        path: 'card',
+        name: 'CommunityCard',
+        component: () => import('@/views/community/card/index'),
+        meta: { title: 'Card', icon: 'card' }
       }
     ]
   },

@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-10-12 13:39:40
+ * @LastEditTime: 2020-10-12 15:13:16
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -26,7 +26,7 @@
       <el-collapse-item v-for="(item, index) in dissents" :key="index">
         <template slot="title">
           建议人：{{ item.name }}
-          <el-tag :type="item.status | keyToVal(handleTag)">{{ item.status | keyToVal(handleStatus) }}</el-tag>
+          <el-tag :type="item.status | keyToVal(handleTag)" style="margin-left:10px">{{ item.status | keyToVal(handleStatus) }}</el-tag>
         </template>
         <!-- <div>
           建议人：{{ item.name }}
@@ -45,7 +45,6 @@
         </div>
       </el-collapse-item>
     </el-collapse>
-    <el-button type="primary" size="medium" style="margin-top:30px" @click="model.visible = true">新增异议</el-button>
 
     <el-dialog :title="model.title" :visible.sync="model.visible" :close-on-click-modal="false" center>
       <el-card v-for="(item, index) in model.dissents" :key="index + 100" class="box-card">

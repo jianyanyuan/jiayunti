@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-10-12 13:44:57
+ * @LastEditTime: 2020-10-12 15:37:47
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -48,23 +48,25 @@ const state = {
     { key: 3, val: '球队' }
   ],
   handleStatus: [
-    { key: 0, val: '暂未处理' },
-    { key: 1, val: '已处理' }
+    { key: 0, val: '未通过' },
+    { key: 1, val: '已解决' }
   ],
   handleTag: [
-    { key: 0, val: 'warning' },
+    { key: 0, val: 'danger' },
     { key: 1, val: 'success' }
   ],
   applyStatus: [
     { key: 0, val: '正在审核中' },
     { key: 1, val: '公示阶段' },
     { key: 2, val: '审核通过' },
+    { key: 3, val: '管道踏勘' },
     { key: -1, val: '驳回' }
   ],
   applyTag: [
     { key: 0, val: '' },
     { key: 1, val: 'warning' },
     { key: 2, val: 'success' },
+    { key: 3, val: 'warning' },
     { key: -1, val: 'info' }
   ]
 }

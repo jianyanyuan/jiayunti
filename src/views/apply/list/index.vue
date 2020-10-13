@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: 张飞达
- * @LastEditTime: 2020-10-12 11:29:42
+ * @LastEditTime: 2020-10-12 15:11:30
  * @Description:申请列表
 -->
 
@@ -40,9 +40,6 @@
             </el-popconfirm>
             <el-button v-if="scope.row.status === 1 && scope.row.dissent" size="mini" type="success" @click="dissentResult(scope.row)">
               <router-link :to="{path:'/collapse/index',query:{applyId:scope.row.Id}}">查看反馈</router-link>
-            </el-button>
-            <el-button v-if="scope.row.status === 1 && !scope.row.dissent" size="mini" type="warning" @click="raiseDissent(scope.row)">
-              <router-link :to="{path:'/card/index',query:{applyId:scope.row.Id}}" class="link">提出异议</router-link>
             </el-button>
             <el-button v-if="scope.row.status === -1" size="mini" type="danger" @click="viewAudit(scope.row)">审核意见</el-button>
             <el-tag v-if="scope.row.status === 2" size="medium" type="success">申请已通过</el-tag>
