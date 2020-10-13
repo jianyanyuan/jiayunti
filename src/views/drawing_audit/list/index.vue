@@ -2,8 +2,8 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-10-13 16:30:15
- * @Description:设计列表
+ * @LastEditTime: 2020-10-13 16:30:49
+ * @Description:图审列表
 -->
 
 <template>
@@ -16,26 +16,47 @@
       </el-table-column>
       <el-table-column type="expand">
         <template slot-scope="{ row }">
-          <el-form label-position="left" inline class="demo-table-expand">
-            <el-form-item label="申请人">
-              <span>{{ row.apply.name }}</span>
-            </el-form-item>
-            <el-form-item label="申请时间">
-              <span>{{ row.apply.time }}</span>
-            </el-form-item>
-            <el-form-item label="详细地址">
-              <span>{{ row.apply.address }}</span>
-            </el-form-item>
-            <el-form-item label="电话">
-              <span>{{ row.apply.phone }}</span>
-            </el-form-item>
-            <el-form-item label="加装电梯地址">
-              <span>{{ row.apply.liftAddress }}</span>
-            </el-form-item>
-            <el-form-item label="设备规格">
-              <span>{{ row.apply.spec }}</span>
-            </el-form-item>
-          </el-form>
+          <el-card style="margin-bottom:30px" class="expand-info">
+            <div slot="header">
+              <span>设计信息</span>
+            </div>
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="设计单位">
+                <span>{{ row.design.org }}</span>
+              </el-form-item>
+              <el-form-item label="时间">
+                <span>{{ row.design.time }}</span>
+              </el-form-item>
+              <el-form-item label="详细地址">
+                <span>{{ row.design.address }}</span>
+              </el-form-item>
+              <el-form-item label="电话">
+                <span>{{ row.design.phone }}</span>
+              </el-form-item>
+            </el-form>
+          </el-card>
+          <el-card style="margin-bottom:30px" class="expand-info">
+            <div slot="header">
+              <span>申请信息</span>
+            </div>
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="申请人">
+                <span>{{ row.apply.name }}</span>
+              </el-form-item>
+              <el-form-item label="详细地址">
+                <span>{{ row.apply.address }}</span>
+              </el-form-item>
+              <el-form-item label="电话">
+                <span>{{ row.apply.phone }}</span>
+              </el-form-item>
+              <el-form-item label="加装电梯地址">
+                <span>{{ row.apply.liftAddress }}</span>
+              </el-form-item>
+              <el-form-item label="设备规格">
+                <span>{{ row.apply.spec }}</span>
+              </el-form-item>
+            </el-form>
+          </el-card>
         </template>
       </el-table-column>
       <el-table-column label="编号" prop="code" min-width="200" align="center" />
@@ -44,16 +65,21 @@
           {{ row.apply.name }}
         </template>
       </el-table-column>
-      <el-table-column label="申请时间" min-width="200" sortable align="center">
+      <el-table-column label="申请时间" min-width="200" prop="apply.time" sortable align="center">
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.apply.time }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="设计时间" min-width="200" prop="designTime" sortable align="center">
-        <template v-if="scope.row.designTime" slot-scope="scope">
+      <el-table-column label="设计单位" min-width="200" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.design.org }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="设计时间" min-width="200" prop="design.time" sortable align="center">
+        <template slot-scope="scope">
           <i class="el-icon-time" />
-          <span>{{ scope.row.designTime }}</span>
+          <span>{{ scope.row.design.time }}</span>
         </template>
       </el-table-column>
       <el-table-column label="审核时间" min-width="200" prop="auditTime" sortable align="center">
@@ -70,13 +96,11 @@
       <el-table-column align="center" label="操作" min-width="200">
         <template slot-scope="scope">
           <el-row type="flex" justify="space-around">
-
-            <el-button v-if="scope.row.status === 0" size="mini" :type="scope.row.status | keyToVal(designTag)" @click="uploadModal.visible = true">上传设计图</el-button>
-            <el-button v-if="scope.row.status === 2" size="mini" :type="scope.row.status | keyToVal(designTag)" @click="editModal.visible = true">
-              <router-link :to="{path:'/design/edit',query:{applyId:scope.row.Id}}">修改设计图</router-link>
+            <el-button v-if="scope.row.status === 0" size="mini" :type="scope.row.status | keyToVal(designTag)">
+              <router-link :to="{path:'/drawing_audit/audit',query:{applyId:scope.row.Id}}">审 核</router-link>
             </el-button>
 
-            <el-button v-if="scope.row.status === 3 || scope.row.status === 1" size="mini" type="success">
+            <el-button v-if="scope.row.status !== 0 || scope.row.status === 1" size="mini" type="success">
               <router-link :to="{path:'/design/view',query:{applyId:scope.row.Id}}">查看设计图</router-link>
             </el-button>
             <el-button size="mini" type="primary" @click="viewProcess(scope.row)">查看流程</el-button>
@@ -114,7 +138,6 @@ export default {
       list: [
         {
           code: 'apply10121056',
-          designTime: '',
           auditTime: '',
           apply: {
             name: '李先生',
@@ -124,12 +147,18 @@ export default {
             spec: '高端电梯',
             time: '2020-10-12 10:56'
           },
-          status: 0 // 未设计
+          design: {
+            org: '建研院',
+            time: '2020-10-12 10:56',
+            address: '苏州高新区',
+            phone: '15988800323'
+          },
+          status: 0 // 未审核
         },
         {
           code: 'apply10131146',
           designTime: '2020-10-14 10:56',
-          auditTime: '',
+          auditTime: '2020-10-14 10:56',
           apply: {
             name: '李先生',
             address: '苏州高新区',
@@ -137,9 +166,14 @@ export default {
             liftAddress: '小区1楼',
             spec: '高端电梯',
             time: '2020-10-13 11:46'
-
           },
-          status: 1 // 审核中
+          design: {
+            org: '建研院',
+            time: '2020-10-12 10:56',
+            address: '苏州高新区',
+            phone: '15988800323'
+          },
+          status: 1 // 审核未通过
         },
         {
           code: 'apply10140800',
@@ -152,37 +186,46 @@ export default {
             liftAddress: '小区1楼',
             spec: '高端电梯',
             time: '2020-10-14 08:00'
-
           },
-          status: 2 // 审核未通过
-        },
-        {
-          code: 'apply10140900',
-          designTime: '2020-10-14 10:56',
-          auditTime: '2020-10-14 10:56',
-          apply: {
-            name: '李先生',
+          design: {
+            org: '建研院',
+            time: '2020-10-12 10:56',
             address: '苏州高新区',
-            phone: '15988800323',
-            liftAddress: '小区1楼',
-            spec: '高端电梯',
-            time: '2020-10-14 09:00'
-
+            phone: '15988800323'
           },
-          status: 3 // 审核通过
+          status: 2 // 审核通过
         }
+        // {
+        //   code: 'apply10140900',
+        //   designTime: '2020-10-14 10:56',
+        //   auditTime: '2020-10-14 10:56',
+        //   apply: {
+        //     name: '李先生',
+        //     address: '苏州高新区',
+        //     phone: '15988800323',
+        //     liftAddress: '小区1楼',
+        //     spec: '高端电梯',
+        //     time: '2020-10-14 09:00'
+        //   },
+        //   design: {
+        //     org: '建研院',
+        //     time: '2020-10-12 10:56',
+        //     address: '苏州高新区',
+        //     phone: '15988800323'
+        //   },
+        //   status: 3 // 审核通过
+        // }
       ],
       listLoading: false,
       designStatus: [
-        { key: 0, val: '未设计' },
-        { key: 1, val: '审核中' },
-        { key: 2, val: '审核未通过' },
-        { key: 3, val: '审核通过' }
+        { key: 0, val: '未审核' },
+        { key: 1, val: '审核未通过' },
+        { key: 2, val: '审核通过' }
       ],
       designTag: [
         { key: 0, val: 'info' },
-        { key: 1, val: 'warning' },
-        { key: 2, val: 'danger' }
+        { key: 1, val: 'danger' },
+        { key: 2, val: 'success' }
       ],
       pagination: {
         total: 20,
@@ -242,7 +285,11 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
+.expand-info ::v-deep .el-card__header {
+  background: #409eff;
+  color: #fff;
+}
 .demo-table-expand {
   font-size: 0;
 }
@@ -250,7 +297,7 @@ export default {
   width: 100%;
   margin-bottom: 30px;
 }
-.design-table .demo-table-expand /deep/ label {
+.design-table .demo-table-expand ::v-deep label {
   width: 100px;
   color: #99a9bf;
 }
@@ -259,17 +306,17 @@ export default {
   margin-bottom: 0;
   width: 100%;
 }
-.uploadModal /deep/ .el-upload-dragger {
+.uploadModal ::v-deep .el-upload-dragger {
   padding: 40px 5px;
   border: 2px solid #e5e5e5;
   color: #777;
   -webkit-transition: background-color 0.2s linear;
   transition: background-color 0.2s linear;
 }
-.uploadModal /deep/ .el-upload-dragger:hover {
+.uploadModal ::v-deep .el-upload-dragger:hover {
   background: #f6f6f6;
 }
-.uploadModal /deep/ .el-dialog__body {
+.uploadModal ::v-deep .el-dialog__body {
   text-align: center;
 }
 </style>

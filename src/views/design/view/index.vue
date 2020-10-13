@@ -1,12 +1,13 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-10-13 15:45:48
+ * @LastEditTime: 2020-10-13 16:41:30
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
 <template>
   <div class="app-container">
+    <el-page-header style="margin-bottom:20px" content="审核详情" @back="$router.go(-1)" />
     <div class="basic-container">
       <el-card style="margin-bottom:30px">
         <div slot="header">
@@ -47,6 +48,28 @@
           <p>设备规格：{{ basic.spec }}</p>
         </div> -->
       </el-card>
+      <el-card style="margin-bottom:30px">
+        <div slot="header">
+          <span>申请信息</span>
+        </div>
+        <el-form label-position="left" inline class="demo-table-expand">
+          <el-form-item label="申请人">
+            <span>{{ apply.name }}</span>
+          </el-form-item>
+          <el-form-item label="详细地址">
+            <span>{{ apply.address }}</span>
+          </el-form-item>
+          <el-form-item label="电话">
+            <span>{{ apply.phone }}</span>
+          </el-form-item>
+          <el-form-item label="加装电梯地址">
+            <span>{{ apply.liftAddress }}</span>
+          </el-form-item>
+          <el-form-item label="设备规格">
+            <span>{{ apply.spec }}</span>
+          </el-form-item>
+        </el-form>
+      </el-card>
     </div>
 
     <ul>
@@ -55,9 +78,9 @@
       </li>
     </ul>
 
-    <div style="height:50px;text-align:center">
-      <el-button type="primary" size="medium" @click="$router.go(-1)">返 回</el-button>
-    </div>
+    <!-- <div style="height:50px;text-align:center">
+      <el-button type="primary" size="medium" @click="">返 回</el-button>
+    </div> -->
   </div>
 </template>
 
@@ -78,6 +101,14 @@ export default {
         name: '李先生',
         time: '2020-10-13 08:00',
         comments: '审核通过'
+      },
+      apply: {
+        name: '李先生',
+        address: '苏州高新区',
+        phone: '15988800323',
+        liftAddress: '小区1楼',
+        spec: '高端电梯',
+        time: '2020-10-14 08:00'
       },
       auditStatus: [
         { key: 0, val: '审核中' },

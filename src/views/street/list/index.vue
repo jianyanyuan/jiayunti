@@ -1,4 +1,12 @@
 <!--
+ * @Author: your name
+ * @Date: 2020-10-13 16:22:03
+ * @LastEditTime: 2020-10-13 16:26:04
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \jiayunti\src\views\street\list\index.vue
+-->
+<!--
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: Please set LastEditors
@@ -14,51 +22,6 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column type="expand">
-        <template slot-scope="{ row }">
-          <el-card style="margin-bottom:30px" class="expand-info">
-            <div slot="header">
-              <span>设计信息</span>
-            </div>
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="设计单位">
-                <span>{{ row.design.org }}</span>
-              </el-form-item>
-              <el-form-item label="时间">
-                <span>{{ row.design.time }}</span>
-              </el-form-item>
-              <el-form-item label="详细地址">
-                <span>{{ row.design.address }}</span>
-              </el-form-item>
-              <el-form-item label="电话">
-                <span>{{ row.design.phone }}</span>
-              </el-form-item>
-            </el-form>
-          </el-card>
-          <el-card style="margin-bottom:30px" class="expand-info">
-            <div slot="header">
-              <span>申请信息</span>
-            </div>
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="申请人">
-                <span>{{ row.apply.name }}</span>
-              </el-form-item>
-              <el-form-item label="详细地址">
-                <span>{{ row.apply.address }}</span>
-              </el-form-item>
-              <el-form-item label="电话">
-                <span>{{ row.apply.phone }}</span>
-              </el-form-item>
-              <el-form-item label="加装电梯地址">
-                <span>{{ row.apply.liftAddress }}</span>
-              </el-form-item>
-              <el-form-item label="设备规格">
-                <span>{{ row.apply.spec }}</span>
-              </el-form-item>
-            </el-form>
-          </el-card>
-        </template>
-      </el-table-column>
       <el-table-column label="编号" prop="code" min-width="200" align="center" />
       <el-table-column label="申请人" min-width="200" align="center">
         <template slot-scope="{row}">
@@ -69,17 +32,6 @@
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.apply.time }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="设计单位" min-width="200" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.design.org }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="设计时间" min-width="200" prop="design.time" sortable align="center">
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.design.time }}</span>
         </template>
       </el-table-column>
       <el-table-column label="审核时间" min-width="200" prop="auditTime" sortable align="center">
@@ -97,11 +49,7 @@
         <template slot-scope="scope">
           <el-row type="flex" justify="space-around">
             <el-button v-if="scope.row.status === 0" size="mini" :type="scope.row.status | keyToVal(designTag)">
-              <router-link :to="{path:'/drawing_check/audit',query:{applyId:scope.row.Id}}">审 核</router-link>
-            </el-button>
-
-            <el-button v-if="scope.row.status !== 0 || scope.row.status === 1" size="mini" type="success">
-              <router-link :to="{path:'/design/view',query:{applyId:scope.row.Id}}">查看设计图</router-link>
+              <router-link :to="{path:'/street/audit',query:{applyId:scope.row.Id}}">审 核</router-link>
             </el-button>
             <el-button size="mini" type="primary" @click="viewProcess(scope.row)">查看流程</el-button>
           </el-row>
@@ -109,17 +57,6 @@
       </el-table-column>
     </el-table>
     <el-pagination background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
-    <el-dialog center title="上传" :visible.sync="uploadModal.visible" :close-on-click-modal="false" class="uploadModal">
-      <el-upload ref="upload" action="/api/co/Attachment/UploadAttachment" :before-upload="uploadBefore" :on-success="uploadSuccess" :on-remove="uploadRemove" :on-error="uploadError" list-type="picture" drag multiple :auto-upload="false">
-        <!-- <i class="el-icon-upload" /> -->
-        <div>将文件拖到此处，或点击添加</div>
-        <p>单个文件大小不超过20MB，可上传图片或PDF</p>
-      </el-upload>
-      <span slot="footer">
-        <el-button size="small" type="primary" @click="submitUpload">上传设计图</el-button>
-      </span>
-
-    </el-dialog>
     <!-- <div>
       <p>联系方式</p>
       <p>审核单位：XXX图审机构 审核人员：XXX 联系电话：0512XXXX 工作时间：周一至周五 9:00-11:00 14:00-17:00</p>
@@ -158,7 +95,7 @@ export default {
         {
           code: 'apply10131146',
           designTime: '2020-10-14 10:56',
-          auditTime: '',
+          auditTime: '2020-10-14 10:56',
           apply: {
             name: '李先生',
             address: '苏州高新区',

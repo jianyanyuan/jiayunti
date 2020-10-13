@@ -289,15 +289,15 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/drawing_check',
+    path: '/drawing_audit',
     component: Layout,
-    redirect: '/drawing_check/list',
+    redirect: '/drawing_audit/list',
     name: 'DrawingCheck',
     meta: { title: 'DrawingCheck', icon: 'check' },
     children: [
       {
         path: 'list',
-        component: () => import('@/views/drawing_check/list/index'), // Parent router-view
+        component: () => import('@/views/drawing_audit/list/index'), // Parent router-view
         name: 'DrawingCheckList',
         meta: {
           title: 'List',
@@ -306,9 +306,37 @@ export const constantRoutes = [
       },
       {
         path: 'audit',
-        component: () => import('@/views/drawing_check/audit/index'), // Parent router-view
+        component: () => import('@/views/drawing_audit/audit/index'), // Parent router-view
         hidden: true,
         name: 'DrawingCheckAudit',
+        meta: {
+          title: 'Audit',
+          icon: 'list'
+        }
+      }
+    ]
+  },
+  {
+    path: '/street',
+    component: Layout,
+    redirect: '/street/list',
+    name: 'Street',
+    meta: { title: 'Street', icon: 'street' },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/street/list/index'), // Parent router-view
+        name: 'StreetList',
+        meta: {
+          title: 'List',
+          icon: 'list'
+        }
+      },
+      {
+        path: 'audit',
+        component: () => import('@/views/street/audit/index'), // Parent router-view
+        hidden: true,
+        name: 'StreetAudit',
         meta: {
           title: 'Audit',
           icon: 'list'
