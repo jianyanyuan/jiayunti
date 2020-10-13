@@ -1,8 +1,8 @@
 <!--
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
- * @LastEditors: 张飞达
- * @LastEditTime: 2020-10-12 15:11:30
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-10-13 09:34:44
  * @Description:申请列表
 -->
 
@@ -15,13 +15,13 @@
         </template>
       </el-table-column>
       <el-table-column label="编号" prop="code" min-width="200" align="center" />
-      <el-table-column label="提交日期" min-width="200" align="center">
+      <el-table-column label="提交时间" min-width="200" align="center">
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.applyTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="审核日期" min-width="200" align="center">
+      <el-table-column label="审核时间" min-width="200" align="center">
         <template v-if="scope.row.auditTime" slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.auditTime }}</span>

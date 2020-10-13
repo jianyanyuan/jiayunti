@@ -15,13 +15,13 @@
         </template>
       </el-table-column>
       <el-table-column label="编号" prop="code" min-width="200" align="center" />
-      <el-table-column label="提交日期" min-width="200" align="center">
+      <el-table-column label="提交时间" min-width="200" align="center">
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.applyTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="审核日期" min-width="200" align="center">
+      <el-table-column label="审核时间" min-width="200" align="center">
         <template v-if="scope.row.auditTime" slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.auditTime }}</span>

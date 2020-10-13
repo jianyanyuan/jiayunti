@@ -249,6 +249,73 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/design',
+    component: Layout,
+    redirect: '/design/list',
+    name: 'Design',
+    meta: { title: 'Design', icon: 'design' },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/design/list/index'), // Parent router-view
+        name: 'DesignList',
+        meta: {
+          title: 'List',
+          icon: 'list'
+        }
+      },
+      {
+        path: 'view',
+        component: () => import('@/views/design/view/index'), // Parent router-view
+        name: 'DesignView',
+        hidden: true,
+        meta: {
+          title: 'View',
+          icon: 'eye'
+        }
+      },
+      {
+        path: 'edit',
+        component: () => import('@/views/design/edit/index'), // Parent router-view
+        hidden: true,
+        name: 'DesignEdit',
+        meta: {
+          title: 'Edit',
+          icon: 'edit'
+        }
+      }
+
+    ]
+  },
+  {
+    path: '/drawing_check',
+    component: Layout,
+    redirect: '/drawing_check/list',
+    name: 'DrawingCheck',
+    meta: { title: 'DrawingCheck', icon: 'check' },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/drawing_check/list/index'), // Parent router-view
+        name: 'DrawingCheckList',
+        meta: {
+          title: 'List',
+          icon: 'list'
+        }
+      },
+      {
+        path: 'audit',
+        component: () => import('@/views/drawing_check/audit/index'), // Parent router-view
+        hidden: true,
+        name: 'DrawingCheckAudit',
+        meta: {
+          title: 'Audit',
+          icon: 'list'
+        }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
