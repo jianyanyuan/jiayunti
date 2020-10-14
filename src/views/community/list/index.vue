@@ -1,4 +1,12 @@
 <!--
+ * @Author: your name
+ * @Date: 2020-10-13 09:15:58
+ * @LastEditTime: 2020-10-14 10:01:51
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \jiayunti\src\views\community\list\index.vue
+-->
+<!--
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: 张飞达
