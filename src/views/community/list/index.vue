@@ -1,16 +1,8 @@
 <!--
- * @Author: your name
- * @Date: 2020-10-13 09:15:58
- * @LastEditTime: 2020-10-14 10:01:51
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \jiayunti\src\views\community\list\index.vue
--->
-<!--
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
- * @LastEditors: 张飞达
- * @LastEditTime: 2020-10-12 16:26:45
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-10-14 13:08:31
  * @Description:申请列表
 -->
 
@@ -75,6 +67,11 @@
         <el-table-column label="是否完成" min-width="180" align="center">
           <template slot-scope="{row}">
             <el-checkbox v-model="row.isComplete">是</el-checkbox>
+          </template>
+        </el-table-column>
+        <el-table-column label="时间" min-width="250" align="center">
+          <template slot-scope="{row}">
+            <el-date-picker v-model="row.time" type="datetime" size="small" :disabled="!row.isComplete" />
           </template>
         </el-table-column>
         <el-table-column label="结果" min-width="240" align="center">
@@ -151,18 +148,21 @@ export default {
             project: '线路',
             company: '',
             isComplete: false,
+            time: '',
             result: ''
           },
           {
             project: '建筑',
             company: '',
             isComplete: false,
+            time: '',
             result: ''
           },
           {
             project: '水管',
             company: '',
             isComplete: false,
+            time: '',
             result: ''
           }
         ]
