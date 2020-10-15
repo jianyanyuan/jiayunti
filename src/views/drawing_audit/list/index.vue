@@ -2,12 +2,36 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-10-14 08:23:18
+ * @LastEditTime: 2020-10-15 08:56:53
  * @Description:图审列表
 -->
 
 <template>
   <div class="app-container">
+    <div class="manage-query">
+      <el-form ref="queryForm" :inline="true" :model="query" size="small">
+        <el-form-item label="编号" prop="Name " style="margin-right: 30px">
+          <el-input v-model="query.code" />
+        </el-form-item>
+        <el-form-item label="申请人" prop="applyName " style="margin-right: 30px">
+          <el-input v-model="query.applyName" />
+        </el-form-item>
+        <el-form-item label="设计单位" prop="designName " style="margin-right: 30px">
+          <el-input v-model="query.designName" />
+        </el-form-item>
+        <el-form-item label="状态" prop="status " style="margin-right: 30px">
+          <el-select v-model="query.status">
+            <el-option v-for="item in designStatus" :key="item.val" :label="item.val" :value="item.key" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" @click="goSearch">搜索</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="info" icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
     <el-table v-loading="listLoading" class="design-table" :data="list" element-loading-text="Loading" border fit highlight-current-row :default-sort="{prop: 'status', order: 'ascending'}">
       <el-table-column align="center" label="序号" min-width="95">
         <template slot-scope="scope">
@@ -135,6 +159,12 @@ export default {
   },
   data() {
     return {
+      query: {
+        code: '',
+        applyName: '',
+        designName: '',
+        status: ''
+      },
       list: [
         {
           code: 'apply10121056',
@@ -286,6 +316,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+ .manage-query {
+  height: 45px;
+  padding: 5px 20px;
+  background: #efefef;
+  border-bottom: 1px solid #ddd;
+}
 .expand-info ::v-deep .el-card__header {
   background: #409eff;
   color: #fff;

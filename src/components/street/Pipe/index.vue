@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-10-14 10:12:06
+ * @LastEditTime: 2020-10-15 09:06:01
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
+-->
 <template>
   <div>
     <el-tabs tab-position="left">

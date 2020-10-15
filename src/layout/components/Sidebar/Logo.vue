@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-10-13 09:15:58
+ * @LastEditTime: 2020-10-15 16:11:52
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \jiayunti\src\layout\components\Sidebar\Logo.vue
+-->
 <template>
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
@@ -24,7 +32,7 @@ export default {
   },
   data() {
     return {
-      title: 'Vue Admin Template',
+      title: '加梯云平台',
       logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
     }
   }
