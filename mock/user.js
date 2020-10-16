@@ -1,3 +1,10 @@
+/*
+ * @Author: zfd
+ * @Date: 2020-10-13 09:15:58
+ * @LastEditors: zfd
+ * @LastEditTime: 2020-10-16 11:21:47
+ * @Description:
+ */
 
 const tokens = {
   admin: {
@@ -15,11 +22,35 @@ const users = {
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Super Admin'
   },
-  'editor-token': {
-    roles: ['editor'],
-    introduction: 'I am an editor',
+  'resident-token': {
+    roles: ['resident'],
+    introduction: 'I am an resident',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    name: 'Normal Editor'
+    name: 'Normal resident'
+  },
+  'community-token': {
+    roles: ['community'],
+    introduction: 'I am an community',
+    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    name: 'Normal community'
+  },
+  'designer-token': {
+    roles: ['designer'],
+    introduction: 'I am an designer',
+    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    name: 'Normal designer'
+  },
+  'street-token': {
+    roles: ['street'],
+    introduction: 'I am an street',
+    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    name: 'Normal street'
+  },
+  'drawing-audit-token': {
+    roles: ['drawingAudit'],
+    introduction: 'I am an drawingAudit',
+    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    name: 'Normal drawingAudit'
   }
 }
 
@@ -29,8 +60,8 @@ module.exports = [
     url: '/vue-admin-template/user/login',
     type: 'post',
     response: config => {
-      const { username } = config.body
-      const token = tokens[username]
+      // const { username } = config.body
+      const token = 'Bearer eylMbctittit1.y tlr.bfrzrialtjoarjlyibo101511lAkilf2010NA12.61Ft-lulrj[10otNicir1s1aA1Vb&oNk2451lxkthor2hmbiE:1aNldanr2tb opeclcxcto'
 
       // mock error
       if (!token) {

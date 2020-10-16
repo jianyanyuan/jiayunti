@@ -121,7 +121,7 @@
         <template slot-scope="scope">
           <el-row type="flex" justify="space-around">
             <el-button v-if="scope.row.status === 0" size="mini" :type="scope.row.status | keyToVal(designTag)">
-              <router-link :to="{path:'/drawing_audit/audit',query:{applyId:scope.row.Id}}">审 核</router-link>
+              <router-link :to="{path:'/drawing-audit/audit',query:{applyId:scope.row.Id}}">审 核</router-link>
             </el-button>
 
             <el-button v-if="scope.row.status !== 0 || scope.row.status === 1" size="mini" type="success">

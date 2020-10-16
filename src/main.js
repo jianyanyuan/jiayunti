@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-09 19:47:59
- * @LastEditTime: 2020-10-11 21:27:20
+ * @LastEditTime: 2020-10-16 10:42:31
  * @Description: main.js
  * @FilePath: \vue-admin-template\src\main.js
  */
@@ -21,6 +21,7 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import * as filters from '@/filters' // global filters
 
 /**
  * If you don't want to use mock-server
@@ -39,6 +40,11 @@ if (process.env.NODE_ENV === 'production') {
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 Vue.use(ElementUI)
+
+// register global utility filters
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 
 Vue.config.productionTip = false
 

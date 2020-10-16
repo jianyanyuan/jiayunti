@@ -1,3 +1,10 @@
+/*
+ * @Author: zfd
+ * @Date: 2020-10-13 09:15:58
+ * @LastEditors: zfd
+ * @LastEditTime: 2020-10-16 10:53:51
+ * @Description:
+ */
 import Vue from 'vue'
 import Router from 'vue-router'
 
@@ -11,6 +18,7 @@ import residentRouter from './modules/audit/resident.js'
 import communityRouter from './modules/audit/community.js'
 import designerRouter from './modules/audit/designer.js'
 import streetRouter from './modules/audit/street.js'
+import drawingAuditRouter from './modules/audit/drawing-audit.js'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -38,13 +46,34 @@ import streetRouter from './modules/audit/street.js'
  */
 export const constantRoutes = [
   {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path(.*)',
+        component: () => import('@/views/redirect/index')
+      }
+    ]
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
   {
+    path: '/auth-redirect',
+    component: () => import('@/views/login/auth-redirect'),
+    hidden: true
+  },
+  {
     path: '/404',
-    component: () => import('@/views/404'),
+    component: () => import('@/views/error-page/404'),
+    hidden: true
+  },
+  {
+    path: '/401',
+    component: () => import('@/views/error-page/401'),
     hidden: true
   },
   {
@@ -52,195 +81,21 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/apply/list'
   },
-  {
-    path: '/card',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Card',
-        component: () => import('@/views/card/index'),
-        meta: { title: 'Card', icon: 'card' }
-      }
-    ]
-  },
-  {
-    path: '/collapse',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Collapse',
-        component: () => import('@/views/collapse/index'),
-        meta: { title: 'Collapse', icon: 'collapse' }
-      }
-    ]
-  },
-  {
-    path: '/apply',
-    component: Layout,
-    redirect: '/apply/post',
-    name: 'Apply',
-    meta: {
-      title: 'Apply',
-      icon: 'apply'
-    },
-    children: [
-      {
-        path: 'post',
-        component: () => import('@/views/apply/post/index'), // Parent router-view
-        name: 'Post',
-        meta: {
-          title: 'Post',
-          icon: 'post'
-        }
-      },
-      {
-        path: 'list',
-        component: () => import('@/views/apply/list/index'),
-        name: 'List',
-        meta: {
-          title: 'List',
-          icon: 'list'
-        }
-      }
-    ]
-  },
-  {
-    path: '/community',
-    component: Layout,
-    redirect: '/community/list',
-    name: 'Community',
-    meta: {
-      title: 'Community',
-      icon: 'community'
-    },
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/views/community/list/index'),
-        name: 'CommunityList',
-        meta: {
-          title: 'List',
-          icon: 'list'
-        }
-      },
-      {
-        path: 'collapse',
-        component: () => import('@/views/community/collapse/index'),
-        name: 'CommunityCollapse',
-        meta: {
-          title: 'Collapse',
-          icon: 'collapse'
-        }
-      },
-      {
-        path: 'card',
-        name: 'CommunityCard',
-        component: () => import('@/views/community/card/index'),
-        meta: { title: 'Card', icon: 'card' }
-      }
-    ]
-  },
-  {
-    path: '/design',
-    component: Layout,
-    redirect: '/design/list',
-    name: 'Design',
-    meta: { title: 'Design', icon: 'design' },
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/views/design/list/index'), // Parent router-view
-        name: 'DesignList',
-        meta: {
-          title: 'List',
-          icon: 'list'
-        }
-      },
-      {
-        path: 'view',
-        component: () => import('@/views/design/view/index'), // Parent router-view
-        name: 'DesignView',
-        hidden: true,
-        meta: {
-          title: 'View',
-          icon: 'eye'
-        }
-      },
-      {
-        path: 'edit',
-        component: () => import('@/views/design/edit/index'), // Parent router-view
-        hidden: true,
-        name: 'DesignEdit',
-        meta: {
-          title: 'Edit',
-          icon: 'edit'
-        }
-      }
-
-    ]
-  },
-  {
-    path: '/drawing_audit',
-    component: Layout,
-    redirect: '/drawing_audit/list',
-    name: 'DrawingCheck',
-    meta: { title: 'DrawingCheck', icon: 'check' },
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/views/drawing_audit/list/index'), // Parent router-view
-        name: 'DrawingCheckList',
-        meta: {
-          title: 'List',
-          icon: 'list'
-        }
-      },
-      {
-        path: 'audit',
-        component: () => import('@/views/drawing_audit/audit/index'), // Parent router-view
-        hidden: true,
-        name: 'DrawingCheckAudit',
-        meta: {
-          title: 'Audit',
-          icon: 'list'
-        }
-      }
-    ]
-  },
-  {
-    path: '/street',
-    component: Layout,
-    redirect: '/street/list',
-    name: 'Street',
-    meta: { title: 'Street', icon: 'street' },
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/views/street/list/index'), // Parent router-view
-        name: 'StreetList',
-        meta: {
-          title: 'List',
-          icon: 'list'
-        }
-      },
-      {
-        path: 'audit',
-        component: () => import('@/views/street/audit/index'), // Parent router-view
-        hidden: true,
-        name: 'StreetAudit',
-        meta: {
-          title: 'Audit',
-          icon: 'list'
-        }
-      }
-    ]
-  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
 
+/**
+ * asyncRoutes
+ * the routes that need to be dynamically loaded based on user roles
+ */
+export const asyncRoutes = [
+  residentRouter,
+  communityRouter,
+  designerRouter,
+  streetRouter,
+  drawingAuditRouter
+]
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
