@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-10-16 10:08:04
+ * @LastEditTime: 2020-10-16 15:07:21
  * @LastEditors: zfd
  * @Description: 审批端居民路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -11,13 +11,13 @@
 import Layout from '@/layout'
 
 const residentRouter = {
-  path: '/audit/resident',
+  path: '/resident',
   component: Layout,
-  redirect: '/audit/resident/apply',
+  redirect: '/apply',
   name: 'Resident',
   meta: {
     title: '居民',
-    icon: 'resident',
+    icon: 'people',
     roles: ['admin', 'resident']
   },
   children: [

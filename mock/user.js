@@ -2,16 +2,29 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-16 11:21:47
- * @Description:
+ * @LastEditTime: 2020-10-16 15:51:52
+ * @Description: user mock
  */
+const api_prefix_dev = '/api/user/'
 
 const tokens = {
   admin: {
     token: 'admin-token'
   },
-  editor: {
-    token: 'editor-token'
+  resident: {
+    token: 'resident-token'
+  },
+  community: {
+    token: 'community-token'
+  },
+  designer: {
+    token: 'designer-token'
+  },
+  street: {
+    token: 'street-token'
+  },
+  drawing_audit: {
+    token: 'drawing-audit-token'
   }
 }
 
@@ -57,57 +70,60 @@ const users = {
 module.exports = [
   // user login
   {
-    url: '/vue-admin-template/user/login',
+    url: api_prefix_dev + 'login',
     type: 'post',
     response: config => {
       // const { username } = config.body
-      const token = 'Bearer eylMbctittit1.y tlr.bfrzrialtjoarjlyibo101511lAkilf2010NA12.61Ft-lulrj[10otNicir1s1aA1Vb&oNk2451lxkthor2hmbiE:1aNldanr2tb opeclcxcto'
+      const data = {
+        token: 'Bearer eylMbctittit1.y tlr.bfrzrialtjoarjlyibo101511lAkilf2010NA12.61Ft-lulrj[10otNicir1s1aA1Vb&oNk2451lxkthor2hmbiE:1aNldanr2tb opeclcxcto',
+        roleToken: tokens.admin.token
+      }
 
       // mock error
-      if (!token) {
+      if (!data.token) {
         return {
-          code: 60204,
+          status: 401,
           message: 'Account and password are incorrect.'
         }
       }
 
       return {
-        code: 20000,
-        data: token
+        status: 200,
+        data
       }
     }
   },
 
   // get user info
   {
-    url: '/vue-admin-template/user/info\.*',
+    url: api_prefix_dev + 'info\.*',
     type: 'get',
     response: config => {
       const { token } = config.query
-      const info = users[token]
+      const data = users[token]
 
       // mock error
-      if (!info) {
+      if (!data) {
         return {
-          code: 50008,
+          status: 500,
           message: 'Login failed, unable to get user details.'
         }
       }
 
       return {
-        code: 20000,
-        data: info
+        status: 200,
+        data
       }
     }
   },
 
   // user logout
   {
-    url: '/vue-admin-template/user/logout',
+    url: api_prefix_dev + 'logout',
     type: 'post',
     response: _ => {
       return {
-        code: 20000,
+        status: 200,
         data: 'success'
       }
     }

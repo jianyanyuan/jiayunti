@@ -11,9 +11,9 @@
 import Layout from '@/layout'
 
 const streetRouter = {
-  path: '/audit/street',
+  path: '/street',
   component: Layout,
-  redirect: '/audit/street/list',
+  redirect: '/list',
   name: 'Street',
   meta: {
     title: '街道',

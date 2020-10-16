@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-16 10:27:47
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-16 10:29:27
+ * @LastEditTime: 2020-10-16 14:05:25
  * @Description:
 -->
 <template>
@@ -56,7 +56,7 @@ export default {
   methods: {
     back() {
       if (this.$route.query.noGoBack) {
-        this.$router.push({ path: '/dashboard' })
+        this.$router.push({ path: '/' })
       } else {
         this.$router.go(-1)
       }

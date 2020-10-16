@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-10-16 10:34:00
+ * @LastEditTime: 2020-10-16 14:36:39
  * @LastEditors: zfd
  * @Description: 审批端图审路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -11,9 +11,9 @@
 import Layout from '@/layout'
 
 const drawingAuditRouter = {
-  path: '/audit/drawing-audit',
+  path: '/drawingAudit',
   component: Layout,
-  redirect: '/audit/drawing-audit/list',
+  redirect: '/list',
   name: 'DrawingAudit',
   meta: {
     title: '图审',

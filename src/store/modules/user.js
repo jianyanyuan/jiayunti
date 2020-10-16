@@ -2,16 +2,15 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-16 11:03:07
+ * @LastEditTime: 2020-10-16 16:19:47
  * @Description:
  */
 import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, getRoleToken, setRoleToken, removeRoleToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
-
 const getDefaultState = () => {
   return {
-    token: getToken(),
+    token: '',
     name: '',
     avatar: '',
     introduction: '',
@@ -19,7 +18,13 @@ const getDefaultState = () => {
   }
 }
 
-const state = getDefaultState()
+const state = {
+  token: getToken(),
+  name: '',
+  avatar: '',
+  introduction: '',
+  roles: []
+}
 
 const mutations = {
   RESET_STATE: (state) => {
@@ -49,8 +54,9 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
-        commit('SET_TOKEN', data.token)
+        commit('SET_TOKEN', data)
         setToken(data.token)
+        setRoleToken(data.roleToken)
         resolve()
       }).catch(error => {
         reject(error)
@@ -61,13 +67,11 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getInfo(getRoleToken()).then(response => {
         const { data } = response
-
         if (!data) {
           return reject('Verification failed, please Login again.')
         }
-
         const { roles, name, avatar, introduction } = data
 
         // roles must be a non-empty array
@@ -90,6 +94,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         removeToken() // must remove  token  first
+        removeRoleToken()
         resetRouter()
         commit('RESET_STATE')
         resolve()

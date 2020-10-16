@@ -1,10 +1,9 @@
 <!--
- * @Author: your name
- * @Date: 2020-10-13 09:15:58
- * @LastEditTime: 2020-10-15 16:11:52
- * @LastEditors: your name
- * @Description: In User Settings Edit
- * @FilePath: \jiayunti\src\layout\components\Sidebar\Logo.vue
+ * @Author: zfd
+ * @Date: 2020-10-16 14:47:20
+ * @LastEditors: zfd
+ * @LastEditTime: 2020-10-16 15:55:24
+ * @Description:
 -->
 <template>
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
@@ -14,7 +13,7 @@
         <h1 v-else class="sidebar-title">{{ title }} </h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
+        <img v-if="logo" src="@/assets/logo.png" class="sidebar-logo">
         <h1 class="sidebar-title">{{ title }} </h1>
       </router-link>
     </transition>
@@ -22,6 +21,8 @@
 </template>
 
 <script>
+import path from 'path'
+
 export default {
   name: 'SidebarLogo',
   props: {
@@ -33,8 +34,10 @@ export default {
   data() {
     return {
       title: '加梯云平台',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+      logo: true
     }
+  },
+  created() {
   }
 }
 </script>

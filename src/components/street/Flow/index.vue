@@ -47,7 +47,6 @@ export default {
               fontSize: 15,
               show: true,
               formatter: (params) => {
-                console.log(params.data)
                 return params.data.detail || ''
               }
             },

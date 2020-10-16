@@ -1,3 +1,10 @@
+/*
+ * @Author: zfd
+ * @Date: 2020-10-13 09:15:58
+ * @LastEditors: zfd
+ * @LastEditTime: 2020-10-16 15:47:09
+ * @Description:
+ */
 import Cookies from 'js-cookie'
 
 const state = {

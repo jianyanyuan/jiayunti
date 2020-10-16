@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:14
- * @LastEditTime: 2020-10-16 10:07:31
+ * @LastEditTime: 2020-10-16 14:56:11
  * @LastEditors: zfd
  * @Description: 审批端社区路由表
  * @FilePath: \jiayunti\src\router\modules\audit\community.js
@@ -9,9 +9,9 @@
 import Layout from '@/layout'
 
 const communityRouter = {
-  path: '/audit/community',
+  path: '/community',
   component: Layout,
-  redirect: '/audit/community/list',
+  redirect: '/community/list',
   name: 'Community',
   meta: {
     title: '社区',

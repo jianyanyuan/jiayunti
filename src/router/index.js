@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-16 10:53:51
+ * @LastEditTime: 2020-10-16 16:32:14
  * @Description:
  */
 import Vue from 'vue'
@@ -75,14 +75,9 @@ export const constantRoutes = [
     path: '/401',
     component: () => import('@/views/error-page/401'),
     hidden: true
-  },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/apply/list'
-  },
+  }
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 /**
@@ -90,6 +85,11 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  {
+    path: '/admin',
+    component: Layout,
+    redirect: '/resident/apply'
+  },
   residentRouter,
   communityRouter,
   designerRouter,
