@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-16 15:51:52
+ * @LastEditTime: 2020-10-19 10:11:23
  * @Description: user mock
  */
 const api_prefix_dev = '/api/user/'
@@ -23,7 +23,7 @@ const tokens = {
   street: {
     token: 'street-token'
   },
-  drawing_audit: {
+  'drawing-audit': {
     token: 'drawing-audit-token'
   }
 }
@@ -60,7 +60,7 @@ const users = {
     name: 'Normal street'
   },
   'drawing-audit-token': {
-    roles: ['drawingAudit'],
+    roles: ['drawing-audit'],
     introduction: 'I am an drawingAudit',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Normal drawingAudit'

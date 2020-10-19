@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-16 16:32:14
+ * @LastEditTime: 2020-10-19 09:16:41
  * @Description:
  */
 import Vue from 'vue'
@@ -56,6 +56,11 @@ export const constantRoutes = [
       }
     ]
   },
+  // {
+  //   path: '/',
+  //   redirect: '/resident/apply',
+  //   hidden: true
+  // },
   {
     path: '/login',
     component: () => import('@/views/login/index'),
@@ -76,8 +81,6 @@ export const constantRoutes = [
     component: () => import('@/views/error-page/401'),
     hidden: true
   }
-  // 404 page must be placed at the end !!!
-  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 /**
@@ -94,7 +97,9 @@ export const asyncRoutes = [
   communityRouter,
   designerRouter,
   streetRouter,
-  drawingAuditRouter
+  drawingAuditRouter,
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
 ]
 const createRouter = () => new Router({
   // mode: 'history', // require service support

@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-10-16 10:09:14
+ * @LastEditTime: 2020-10-19 10:02:35
  * @LastEditors: zfd
  * @Description: 审批端街道路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -13,7 +13,7 @@ import Layout from '@/layout'
 const streetRouter = {
   path: '/street',
   component: Layout,
-  redirect: '/list',
+  redirect: '/street/list',
   name: 'Street',
   meta: {
     title: '街道',

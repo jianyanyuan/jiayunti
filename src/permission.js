@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-16 16:33:39
+ * @LastEditTime: 2020-10-19 09:29:42
  * @Description:
  */
 import router from './router'
@@ -44,8 +44,12 @@ router.beforeEach(async(to, from, next) => {
           const { roles } = await store.dispatch('user/getInfo')
           // generate accessible routes map based on roles
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+          if (Array.isArray(roles) && roles.length > 0) {
+            accessRoutes.push({ path: '/', redirect: '/' + roles[0], hidden: true })
+          }
           // dynamically add accessible routes
           router.addRoutes(accessRoutes)
+
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true })
@@ -60,7 +64,6 @@ router.beforeEach(async(to, from, next) => {
     }
   } else {
     /* has no token*/
-
     if (whiteList.indexOf(to.path) !== -1) {
       // in the free login whitelist, go directly
       next()

@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-10-16 14:56:52
+ * @LastEditTime: 2020-10-19 10:01:55
  * @LastEditors: zfd
  * @Description: 审批端设计路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -13,7 +13,7 @@ import Layout from '@/layout'
 const designerRouter = {
   path: '/designer',
   component: Layout,
-  redirect: '/list',
+  redirect: '/designer/list',
   name: 'Designer',
   meta: {
     title: '设计',

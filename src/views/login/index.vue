@@ -95,9 +95,12 @@ export default {
             const { roles } = await this.$store.dispatch('user/getInfo')
             const accessRoutes = await this.$store.dispatch('permission/generateRoutes', roles)
             // dynamically add accessible routes
+            // repair the problem of '/' not found, must place 404 at the end
+            if (Array.isArray(roles) && roles.length > 0) {
+              accessRoutes.splice(accessRoutes.length - 1, 0, { path: '/', redirect: '/' + roles[0], hidden: true })
+            }
             this.$router.addRoutes(accessRoutes)
-
-            this.$router.push({ path: this.redirect || '/' + roles })
+            this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {
             this.loading = false
