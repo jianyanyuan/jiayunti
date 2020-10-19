@@ -2,14 +2,14 @@
  * @Author: zfd
  * @Date: 2020-10-16 14:47:20
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-16 15:55:24
+ * @LastEditTime: 2020-10-19 10:19:16
  * @Description:
 -->
 <template>
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
+        <img v-if="logo" src="@/assets/logo.png" class="sidebar-logo">
         <h1 v-else class="sidebar-title">{{ title }} </h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import path from 'path'
+// import path from 'path'
 
 export default {
   name: 'SidebarLogo',
