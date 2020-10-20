@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-20 15:40:34
+ * @LastEditTime: 2020-10-20 16:41:16
  * @Description:申请列表
 -->
 
@@ -10,26 +10,26 @@
   <div class="app-container">
     <el-button type="primary" size="medium" style="margin-bottom:20px" @click="addApply">新增申请</el-button>
 
-    <el-table v-loading="listLoading" style="width:100%" :data="list" element-loading-text="Loading" border fit highlight-current-row>
+    <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'applyTime', order: 'descending'}" border fit highlight-current-row>
       <el-table-column align="center" label="序号" min-width="50">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
       <el-table-column label="编号" prop="code" min-width="200" align="center" />
-      <el-table-column label="提交时间" min-width="200" align="center">
+      <el-table-column label="提交时间" min-width="200" align="center" prop="applyTime" sortable>
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.applyTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="审核时间" min-width="200" align="center">
+      <el-table-column label="审核时间" min-width="200" align="center" prop="auditTime" sortable>
         <template v-if="scope.row.auditTime" slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.auditTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="状态" min-width="110" align="center">
+      <el-table-column class-name="status-col" label="状态" min-width="110" align="center" prop="status" sortable>
         <template slot-scope="scope">
           <el-tag :type="scope.row.status | keyToVal(applyTag)">{{ scope.row.status | keyToVal(applyStatus) }}</el-tag>
         </template>
@@ -37,15 +37,19 @@
       <el-table-column align="center" label="操作" min-width="200">
         <template slot-scope="scope">
           <el-row type="flex" justify="space-around">
-            <el-popconfirm v-if="scope.row.status !== -1 && scope.row.status !== 2" title="确认撤销申请吗？" @onConfirm="cancelApply(scope.row)">
+            <el-button v-if="scope.row.status === 0" size="mini" type="primary">
+              <router-link :to="{path:'/resident/apply',query:{applyId:scope.row.Id}}">提交材料</router-link>
+            </el-button>
+
+            <el-popconfirm v-if="scope.row.status !== 10 && scope.row.status !== 2" title="确认撤销申请吗？" @onConfirm="cancelApply(scope.row)">
               <el-button slot="reference" size="mini" type="info">撤销申请</el-button>
             </el-popconfirm>
             <el-button v-if="scope.row.status === 1 && scope.row.dissent" size="mini" type="success" @click="dissentResult(scope.row)">
               <router-link :to="{path:'/collapse/index',query:{applyId:scope.row.Id}}">查看反馈</router-link>
             </el-button>
-            <el-button v-if="scope.row.status === -1" size="mini" type="danger" @click="viewAudit(scope.row)">审核意见</el-button>
+            <el-button v-if="scope.row.status === 10" size="mini" type="danger" @click="viewAudit(scope.row)">审核意见</el-button>
             <el-tag v-if="scope.row.status === 2" size="medium" type="success">申请已通过</el-tag>
-            <el-button size="mini" type="primary" @click="viewProcess(scope.row)">查看流程</el-button>
+            <el-button v-if="scope.row.status !== 0" size="mini" type="primary" @click="viewProcess(scope.row)">查看流程</el-button>
           </el-row>
         </template>
       </el-table-column>
@@ -55,7 +59,7 @@
       <p>审核单位：XXX街道办 审核人员：XXX 联系电话：0512XXXX 工作时间：周一至周五 9:00-11:00 14:00-17:00</p>
     </div>
     <!-- 新增申请 -->
-    <el-dialog title="新增申请" center="" :visible.sync="model.visible" :close-on-click-modal="false" width="600px" @closed="resetForm">
+    <el-dialog title="新增申请" center :visible.sync="model.visible" :close-on-click-modal="false" width="600px" @closed="resetForm">
       <el-form ref="form" v-loading="formLoading" :model="model.form" :rules="model.rules" label-width="120px">
         <el-form-item label="申请人" prop="name">
           <el-input v-model="model.form.name" />
@@ -191,7 +195,7 @@ export default {
       ],
       list: [
         {
-          code: '小区--222幢--几',
+          code: 'xxx小区xxxx幢xxx单元',
           applyTime: '2020-10-12 10:56',
           auditTime: '2020-10-14 10:56',
           status: 1, // 公示阶段
@@ -208,7 +212,7 @@ export default {
           code: 'apply10140800',
           applyTime: '2020-10-14 08:00',
           auditTime: '2020-10-14 10:56',
-          status: -1 // 已驳回
+          status: 10 // 已驳回
         },
         {
           code: 'apply10140900',
@@ -260,8 +264,15 @@ export default {
           this.model.form.address = this.model.form.address.concat(this.plot)
           this.model.form.rooms = this.dynamicRooms.map(v => v.val)
           this.formLoading = false
-          console.log(this.model.form)
+          this.listLoading = true
+          this.list.push({
+            code: 'xxx小区' + Date.now,
+            applyTime: new Date(),
+            auditTime: '',
+            status: 0
+          })
           this.model.visible = false
+          this.listLoading = false
         } else {
           this.$message.error('请补全信息')
         }
