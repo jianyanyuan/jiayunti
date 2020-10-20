@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 09:15:58
- * @LastEditTime: 2020-10-13 16:06:53
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-10-19 14:20:50
+ * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\App.vue
 -->
@@ -18,6 +18,16 @@ export default {
 }
 </script>
 <style lang="scss">
+.el-upload-dragger {
+  padding: 40px 5px;
+  border: 2px solid #e5e5e5;
+  color: #777;
+  -webkit-transition: background-color 0.2s linear;
+  transition: background-color 0.2s linear;
+}
+.el-upload-dragger:hover {
+  background: #f6f6f6;
+}
 li{
   list-style: none;
 }

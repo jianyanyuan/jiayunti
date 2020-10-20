@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-19 09:29:42
+ * @LastEditTime: 2020-10-19 13:40:21
  * @Description:
  */
 import router from './router'
@@ -15,7 +15,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
+const whiteList = ['/login', '/auth-redirect', '/regist'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-10-16 14:30:38
+ * @LastEditTime: 2020-10-19 14:49:04
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -9,17 +9,26 @@
 <template>
   <div class="app-container">
     <div class="line-divider" />
-    <div class="step-btn-group" @click="change($event)">
-      <el-button v-show="curStep > 0" type="primary" icon="el-icon-arrow-left" @click="curStep--" />
+    <!-- @click="change($event)" -->
+    <div class="step-btn-group">
       <div v-for="(item,index) in stepBtnGroup" :key="item" class="stepBtn" :step-index="index" :class="{'step-actived': curStep === index}">
         {{ item }}
       </div>
-      <el-button v-show="curStep < stepBtnGroup.length - 1" type="primary" icon="el-icon-right" @click="curStep++" />
     </div>
     <div class="line-divider" />
 
     <div class="dynamic-component-container">
-      <component :is="curComponent" />
+      <keep-alive>
+        <component :is="curComponent" />
+      </keep-alive>
+    </div>
+    <div class="step-container">
+      <el-button-group>
+        <el-button v-show="curStep > 0" type="primary" icon="el-icon-arrow-left" @click="curStep--">上一步</el-button>
+        <el-button v-show="curStep < stepBtnGroup.length - 1" type="primary" icon="el-icon-arrow-right" @click="curStep++">下一步</el-button>
+        <el-button v-show="curStep === stepBtnGroup.length - 1" type="primary" icon="el-icon-upload2" @click="submitApplay">提交申请</el-button>
+
+      </el-button-group>
     </div>
 
   </div>
@@ -42,12 +51,9 @@ export default {
   },
   data() {
     return {
-      stepBtnGroup: ['申请流程图', '居民申请材料', '设计院设计', '管道踏勘记录', '审核'],
+      stepBtnGroup: ['基本资料', '意见征询表', '意见征询汇总表', '委托授权书', '项目协议书'],
       componentGroup: ['Flow', 'Resident', 'Design', 'Pipe', 'Audit'],
-      curStep: {
-        step: 0,
-        component: 'Flow'
-      }
+      curStep: 0
     }
   },
   computed: {
@@ -56,12 +62,16 @@ export default {
     }
   },
   methods: {
-    change(event) {
-      if (event.target.className === 'stepBtn') {
-        this.curStep = +event.target.attributes['step-index'].value
-      }
+    // change(event) {
+    //   if (event.target.className === 'stepBtn') {
+    //     this.curStep = +event.target.attributes['step-index'].value
+    //   }
+    // },
+    submitApplay() {
+
     }
   }
+
 }
 </script>
 
@@ -84,12 +94,16 @@ export default {
   color: #fff;
   text-align: center;
   line-height: 40px;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 .step-btn-group .step-actived {
   background: #82a7cb;
 }
 .dynamic-component-container{
   margin-top: 30px;
+}
+.step-container{
+  margin-top: 30px;
+  text-align: center;
 }
 </style>

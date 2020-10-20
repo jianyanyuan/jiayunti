@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-10-19 10:02:35
+ * @LastEditTime: 2020-10-19 15:05:57
  * @LastEditors: zfd
  * @Description: 审批端街道路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -27,7 +27,7 @@ const streetRouter = {
       name: 'StreetList',
       meta: {
         title: '申请列表',
-        icon: 'list',
+        icon: 'street',
         roles: ['admin', 'street']
       }
     },
@@ -35,10 +35,10 @@ const streetRouter = {
       path: 'check',
       component: () => import('@/views/audit/street/check/index'),
       name: 'StreetCheck',
+      // hidden: true,
       meta: {
         title: '审核',
         icon: 'check',
-        hidden: true,
         roles: ['admin', 'street']
       }
     }

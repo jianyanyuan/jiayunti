@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-10-19 10:10:02
+ * @LastEditTime: 2020-10-19 15:05:48
  * @LastEditors: zfd
  * @Description: 审批端图审路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -27,7 +27,7 @@ const drawingAuditRouter = {
       name: 'DrawingAuditList',
       meta: {
         title: '申请列表',
-        icon: 'list',
+        icon: 'institution',
         roles: ['admin', 'drawing-audit']
       }
     },
@@ -35,10 +35,10 @@ const drawingAuditRouter = {
       path: 'check',
       component: () => import('@/views/audit/drawing-audit/check/index'),
       name: 'DrawingAuditCheck',
+      // hidden: true,
       meta: {
         title: '审核',
         icon: 'check',
-        hidden: true,
         roles: ['admin', 'drawing-audit']
       }
     }

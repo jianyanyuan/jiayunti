@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-19 09:16:41
+ * @LastEditTime: 2020-10-19 13:35:42
  * @Description:
  */
 import Vue from 'vue'
@@ -64,6 +64,11 @@ export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
+    hidden: true
+  },
+  {
+    path: '/regist',
+    component: () => import('@/views/regist/index'),
     hidden: true
   },
   {

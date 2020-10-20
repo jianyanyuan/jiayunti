@@ -2,19 +2,26 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-16 15:54:36
+ * @LastEditTime: 2020-10-20 09:25:03
  * @Description:
  */
 import Cookies from 'js-cookie'
+import { Base64 } from 'js-base64'
 
 const TokenKey = 'Authorization'
 const RoleKey = 'AuthorizationRole'
 
 export function getToken() {
-  return Cookies.get(TokenKey)
+  // 取出解密
+  const token = Cookies.get(TokenKey)
+  if (token) {
+    return Base64.decode(token)
+  }
+  return token
 }
 export function setToken(token) {
-  return Cookies.set(TokenKey, token)
+  // 加密存储
+  return Cookies.set(TokenKey, Base64.encode(token))
 }
 
 export function removeToken() {

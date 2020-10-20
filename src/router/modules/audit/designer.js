@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-10-19 10:01:55
+ * @LastEditTime: 2020-10-19 15:05:41
  * @LastEditors: zfd
  * @Description: 审批端设计路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -27,7 +27,7 @@ const designerRouter = {
       name: 'DesignerList',
       meta: {
         title: '申请列表',
-        icon: 'list',
+        icon: 'design',
         roles: ['admin', 'designer']
       }
     },
@@ -35,10 +35,10 @@ const designerRouter = {
       path: 'edit',
       component: () => import('@/views/audit/designer/edit/index'),
       name: 'DesignerEdit',
+      // hidden: true,
       meta: {
         title: '编辑',
         icon: 'edit',
-        hidden: true,
         roles: ['admin', 'designer']
       }
     },
@@ -46,11 +46,10 @@ const designerRouter = {
       path: 'view',
       component: () => import('@/views/audit/designer/view/index'), // Parent router-view
       name: 'DesignerView',
-      hidden: true,
+      // hidden: true,
       meta: {
         title: '查看',
         icon: 'eye',
-        hidden: true,
         roles: ['admin', 'designer']
       }
     }

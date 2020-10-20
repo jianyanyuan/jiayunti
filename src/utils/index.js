@@ -147,3 +147,19 @@ export function numberFormat(value) {
     return number.toString().replace(reg, ',')
   }
 }
+
+export function deepClone(obj) {
+  if (obj === null) return null
+  if (obj instanceof Function) return new Function(obj)
+  if (obj instanceof Date) return new Date(obj)
+  if (obj instanceof RegExp) return new RegExp(obj)
+  if (typeof obj !== 'object') return obj
+  const result = new obj.constructor()
+  const keys = Object.keys(obj)
+  for (const k in obj) {
+    if (keys.includes(k)) {
+      result[k] = deepClone(obj[k])
+    }
+  }
+  return result
+}
