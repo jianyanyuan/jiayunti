@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-20 16:41:16
+ * @LastEditTime: 2020-10-21 10:02:52
  * @Description:申请列表
 -->
 
@@ -75,19 +75,10 @@
         <el-form-item label="加装电梯地址" prop="elevatorAddress">
           <el-input v-model="model.form.elevatorAddress" placeholder="xxx小区xx幢xxx单元" />
         </el-form-item>
-        <el-form-item
-          v-for="(room, index) in dynamicRooms"
-          :key="room.key"
-          :label="'房间编号' + (index+1)"
-          :prop="room.val"
-          :rules="{required: true, message: '房间编号不能为空', trigger: 'blur'}"
-        >
+        <el-form-item v-for="(room, index) in model.form.rooms" :key="room.key" :label="'房间编号' + (index+1)" :prop="'rooms.' + index + '.val'" :rules="{required: true, message: '房间编号不能为空', trigger: 'blur'}">
           <el-input v-model="room.val" placeholder="400">
             <template slot="append">
-              <el-button
-                :icon="index == 0 ? 'el-icon-plus' : 'el-icon-minus'"
-                @click="handleRoom(index)"
-              />
+              <el-button :icon="index == 0 ? 'el-icon-plus' : 'el-icon-minus'" @click="handleRoom(index)" />
             </template>
           </el-input>
         </el-form-item>
@@ -102,7 +93,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { keyToVal, deepClone } from '@/utils'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
 
@@ -111,7 +102,7 @@ const defaultForm = {
   address: [],
   phone: '',
   elevatorAddress: '',
-  rooms: []
+  rooms: [{ key: 'defaultRoom', val: '' }]
 }
 export default {
   filters: {
@@ -131,68 +122,7 @@ export default {
           elevatorAddress: [{ required: true, message: '电梯地址不为空', trigger: 'blur' }]
         }
       },
-      dynamicRooms: [{ key: Date.now(), val: '' }],
       plot: [],
-      addressOptions: [{
-        value: 'jiangsu',
-        label: '江苏',
-        children: [
-          {
-            value: 'suzhou',
-            label: '苏州',
-            children: [
-              {
-                value: 'gusu',
-                label: '姑苏区',
-                children: null
-              },
-              {
-                value: 'gyyq',
-                label: '工业园区'
-              }
-            ]
-          },
-          {
-            value: 'wuxi',
-            label: '无锡'
-          }
-        ]
-      }, {
-        value: 'zhejiang',
-        label: '浙江',
-        children: [
-          {
-            value: 'hangzhou',
-            label: '杭州'
-          },
-          {
-            value: 'ningbo',
-            label: '宁波'
-          }
-        ]
-      }
-      ],
-      plotOptions: [{
-        value: 'canglang',
-        label: '沧浪街道',
-        children: [
-          {
-            value: 'shequ',
-            label: '社区',
-            children: [
-              {
-                value: 'xiaoqu',
-                label: '小区'
-              }
-            ]
-          },
-          {
-            value: 'shequ1',
-            label: '社区1'
-          }
-        ]
-      }
-      ],
       list: [
         {
           code: 'xxx小区xxxx幢xxx单元',
@@ -230,7 +160,9 @@ export default {
     }
   },
   computed: {
-    ...mapState('common', ['applyStatus', 'applyTag'])
+    ...mapState('common', ['applyStatus', 'applyTag']),
+    ...mapGetters('common', ['addressOptions', 'plotOptions'])
+
   },
   created() {
   },
@@ -244,14 +176,13 @@ export default {
     },
     handleRoom(index) {
       if (index === 0) {
-        this.dynamicRooms.push({ key: Date.now(), val: '' })
+        this.model.form.rooms.push({ key: Date.now(), val: '' })
       } else {
-        this.dynamicRooms.splice(index, 1)
+        this.model.form.rooms.splice(index, 1)
       }
     },
     resetForm() {
       this.model.form = deepClone(defaultForm)
-      this.dynamicRooms = [{ key: Date.now(), val: '' }]
     },
     postApply() {
       this.$refs.form.validate(valid => {
@@ -262,7 +193,8 @@ export default {
           }
           this.formLoading = true
           this.model.form.address = this.model.form.address.concat(this.plot)
-          this.model.form.rooms = this.dynamicRooms.map(v => v.val)
+          this.model.form.rooms = this.model.form.rooms.map(v => v.val)
+          console.log(this.model.form)
           this.formLoading = false
           this.listLoading = true
           this.list.push({
@@ -282,5 +214,4 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-
 </style>

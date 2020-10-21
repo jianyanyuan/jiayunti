@@ -2,64 +2,167 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-19 15:04:56
+ * @LastEditTime: 2020-10-21 10:37:03
  * @Description:
 -->
 <template>
   <div>
-    <el-form :model="form" :rules="rule" label-width="120px">
-      <el-form-item label="楼梯名称" prop="stairway">
-        <el-input v-model="form.stairway" />
-      </el-form-item>
-      <el-form-item label="申请人姓名" prop="name">
-        <el-input v-model="form.name" />
-      </el-form-item>
-      <el-form-item label="申请人地址" prop="applyAddress">
-        <el-input v-model="form.applyAddress" />
-      </el-form-item>
-      <el-form-item label="联系电话" prop="phone">
-        <el-input v-model="form.phone" />
-      </el-form-item>
-      <el-form-item label="加装电梯地址" prop="liftAddress">
-        <el-input v-model="form.liftAddress" />
-      </el-form-item>
-      <el-form-item label="详细地址" prop="detailAddress">
-        <el-input v-model="form.detailAddress" />
-      </el-form-item>
-    </el-form>
+    <el-card style="margin-bottom:30px">
+      <div slot="header">
+        <el-row type="flex" justify="space-between" align="middle">
+          <span>基本资料</span>
+          <el-button v-if="!hasChanged" type="primary" style="float:right" @click="hasChanged = true">修改</el-button>
+          <el-button v-else type="primary" style="float:right" @click="hasChanged = false">保存</el-button>
+        </el-row>
+      </div>
+      <!-- 展示 -->
+      <el-form v-if="!hasChanged" ref="form" v-loading="formLoading" :model="form" :rules="rules" label-width="120px" class="show-form">
+        <el-form-item label="申请人">
+          {{ form.name }}
+        </el-form-item>
+        <el-form-item label="地址">
+          <el-cascader v-model="form.address" :options="addressOptions" />
+          <label for="address-detail" class="label-detail"> — </label>
+          <el-cascader v-model="plot" :options="plotOptions" />
+        </el-form-item>
+        <el-form-item label="电话">
+          {{ form.phone }}
+        </el-form-item>
+        <el-form-item label="加装电梯地址">
+          {{ form.elevatorAddress }}
+        </el-form-item>
+        <el-form-item v-for="(room, index) in form.rooms" :key="room.key" :label="'房间编号' + (index+1)">
+          {{ room.val }}
+        </el-form-item>
+        <div style="text-align:center">
+          <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess">下一步</el-button>
+        </div>
+      </el-form>
+      <!-- 修改保存 -->
+      <el-form v-else ref="form" v-loading="formLoading" :model="form" :rules="rules" label-width="120px">
+        <el-form-item label="申请人" prop="name">
+          <el-input v-model="form.name" />
+        </el-form-item>
+        <el-form-item label="地址" prop="address">
+          <el-cascader v-model="form.address" :options="addressOptions" />
+          <label for="address-detail" class="label-detail"> — </label>
+          <el-cascader v-model="plot" :options="plotOptions" />
+        </el-form-item>
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="form.phone" />
+        </el-form-item>
+        <el-form-item label="加装电梯地址" prop="elevatorAddress">
+          <el-input v-model="form.elevatorAddress" placeholder="xxx小区xx幢xxx单元" />
+        </el-form-item>
+        <el-form-item v-for="(room, index) in form.rooms" :key="room.key" :label="'房间编号' + (index+1)" :prop="'rooms.' + index + '.val'" :rules="{required: true, message: '房间编号不能为空', trigger: 'blur'}">
+          <el-input v-model="room.val" placeholder="400">
+            <template slot="append">
+              <el-button :icon="index == 0 ? 'el-icon-plus' : 'el-icon-minus'" @click="handleRoom(index)" />
+            </template>
+          </el-input>
+        </el-form-item>
+      </el-form>
+
+    </el-card>
+
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { deepClone } from '@/utils'
+import { validatePhone, validateTrueName } from '@/utils/element-validator'
+const defaultForm = {
+  name: '张飞达',
+  address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ', 'xiaoqu'],
+  phone: '15988800323',
+  elevatorAddress: 'xxx小区xxx幢xxx单元',
+  rooms: ['401', '402', '403']
+}
 export default {
   name: 'Resident',
   data() {
     return {
-      form: {
-        stairway: '',
-        name: '',
-        applyAddress: '',
-        phone: '',
-        liftAddress: '',
-        detailAddress: ''
+      // 修改后重新保存
+      hasChanged: false,
+      formLoading: false,
+      form: deepClone(defaultForm),
+      rules: {
+        name: [{ required: true, validator: validateTrueName, trigger: 'blur' }],
+        address: [{ required: true, message: '地址不为空', trigger: 'blur' }],
+        phone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
+        elevatorAddress: [{ required: true, message: '电梯地址不为空', trigger: 'blur' }]
       },
-      rule: {
+      plot: []
+    }
+  },
+
+  computed: {
+    ...mapGetters('common', ['addressOptions', 'plotOptions'])
+  },
+  watch: {
+
+  },
+  created() {
+    this.plot = this.form.address.slice(3)
+
+    this.form.address = this.form.address.slice(0, 3)
+    this.form.rooms = this.form.rooms.map(v => {
+      return {
+
+        key: v + '1',
+        val: v
 
       }
     }
+    )
   },
   methods: {
-
+    handleRoom(index) {
+      if (index === 0) {
+        this.form.rooms.push({ key: Date.now(), val: '' })
+      } else {
+        this.form.rooms.splice(index, 1)
+      }
+    },
+    nextProcess() {
+      this.$emit('nextProcess')
+    },
+    postApply() {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          if (this.plot.length === 0) {
+            this.$message.error('请选择地址')
+            return false
+          }
+          this.formLoading = true
+          this.form.address = this.form.address.concat(this.plot)
+          this.form.rooms = this.form.rooms.map(v => v.val)
+          this.formLoading = false
+          console.log(this.form)
+        } else {
+          this.$message.error('请补全信息')
+        }
+      })
+    }
   }
 }
 </script>
 
-<style scoped>
-.audit-operation {
-  width: 200px;
-  margin: 0 auto;
-  margin-top: 30px;
-  display: flex;
-  justify-content: space-between;
+<style scoped lang="scss">
+// el-input__icon el-icon-arrow-down
+// .show-form ::v-deep .el-cascader,
+// .show-form ::v-deep .el-input__suffix-inner{
+//      pointer-events: none;
+//     cursor: default;
+//     opacity: 0.8;
+// }
+.show-form ::v-deep {
+  .el-cascader,
+  .el-input__suffix-inner {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.8;
+  }
 }
 </style>

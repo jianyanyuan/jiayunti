@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-10-19 14:49:04
+ * @LastEditTime: 2020-10-21 10:33:42
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -19,13 +19,13 @@
 
     <div class="dynamic-component-container">
       <keep-alive>
-        <component :is="curComponent" />
+        <component :is="curComponent" @nextProcess="curStep++" />
       </keep-alive>
     </div>
     <div class="step-container">
       <el-button-group>
         <el-button v-show="curStep > 0" type="primary" icon="el-icon-arrow-left" @click="curStep--">上一步</el-button>
-        <el-button v-show="curStep < stepBtnGroup.length - 1" type="primary" icon="el-icon-arrow-right" @click="curStep++">下一步</el-button>
+        <!-- <el-button v-show="curStep < stepBtnGroup.length - 1" type="primary" icon="el-icon-arrow-right" @click="curStep++">下一步</el-button> -->
         <el-button v-show="curStep === stepBtnGroup.length - 1" type="primary" icon="el-icon-upload2" @click="submitApplay">提交申请</el-button>
 
       </el-button-group>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import Flow from '@/components/street/Flow'
+import Basic from '@/components/resident/basic'
 import Resident from '@/components/street/Resident'
 import Design from '@/components/street/Design'
 import Pipe from '@/components/street/Pipe'
@@ -46,13 +46,13 @@ export default {
     Audit,
     Design,
     Resident,
-    Flow,
+    Basic,
     Pipe
   },
   data() {
     return {
       stepBtnGroup: ['基本资料', '意见征询表', '意见征询汇总表', '委托授权书', '项目协议书'],
-      componentGroup: ['Flow', 'Resident', 'Design', 'Pipe', 'Audit'],
+      componentGroup: ['Basic', 'Resident', 'Design', 'Pipe', 'Audit'],
       curStep: 0
     }
   },

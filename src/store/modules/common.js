@@ -1,7 +1,8 @@
+
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-10-20 16:31:22
+ * @LastEditTime: 2020-10-21 08:37:07
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -29,23 +30,6 @@ const state = {
     { key: 1, val: 'warning' },
     { key: -1, val: 'danger' },
     { key: 3, val: 'info' }
-  ],
-  menu: [
-    { key: 0, val: '根节点', disabled: true },
-    { key: 1, val: '菜单' },
-    { key: 2, val: '页面' },
-    { key: 3, val: '按钮' }
-  ],
-  menuType: [
-    { key: 0, val: 'danger' },
-    { key: 1, val: 'warning' },
-    { key: 2, val: 'success' },
-    { key: 3, val: 'info' }
-  ],
-  teamFlag: [
-    { key: 1, val: '国家' },
-    { key: 2, val: '联赛' },
-    { key: 3, val: '球队' }
   ],
   handleStatus: [
     { key: 0, val: '未通过' },
@@ -82,23 +66,94 @@ const state = {
     { key: 9, val: 'success' },
     { key: 10, val: 'info' },
     { key: 11, val: 'info' }
-  ]
+  ],
+  // 省份--城市--区县
+  addressOptions: [],
+  // 街道--社区--小区
+  plotOptions: []
 }
 const getters = {
-
+  addressOptions: state => state.addressOptions,
+  plotOptions: state => state.plotOptions
 }
 const mutations = {
-
+  SET_ADDRESS: (state, address) => {
+    state.addressOptions = address
+  },
+  SET_PLOT: (state, plot) => {
+    state.plotOptions = plot
+  }
 }
 const actions = {
-  // login({ commit }, param) {
-  //     USER.login(param).then(res => {
-  //         commit("SET_USERNAME",res.name);
-  //         console.log(res);
-  //     }).catch(err => {
-  //         console.log(err);
-  //     });
-  // }
+  // app.vue 获取
+  getAddress({ commit }) {
+    return new Promise((resolve, reject) => {
+      const addressOptions = [{
+        value: 'jiangsu',
+        label: '江苏',
+        children: [
+          {
+            value: 'suzhou',
+            label: '苏州',
+            children: [
+              {
+                value: 'gusu',
+                label: '姑苏区',
+                children: null
+              },
+              {
+                value: 'gyyq',
+                label: '工业园区'
+              }
+            ]
+          },
+          {
+            value: 'wuxi',
+            label: '无锡'
+          }
+        ]
+      }, {
+        value: 'zhejiang',
+        label: '浙江',
+        children: [
+          {
+            value: 'hangzhou',
+            label: '杭州'
+          },
+          {
+            value: 'ningbo',
+            label: '宁波'
+          }
+        ]
+      }
+      ]
+      commit('SET_ADDRESS', addressOptions)
+
+      const plotOptions = [{
+        value: 'canglang',
+        label: '沧浪街道',
+        children: [
+          {
+            value: 'shequ',
+            label: '社区',
+            children: [
+              {
+                value: 'xiaoqu',
+                label: '小区'
+              }
+            ]
+          },
+          {
+            value: 'shequ1',
+            label: '社区1'
+          }
+        ]
+      }
+      ]
+      commit('SET_PLOT', plotOptions)
+      resolve('success')
+    })
+  }
 }
 export default {
   namespaced: true,

@@ -54,7 +54,7 @@
 </template>
 <script>
 import * as Validator from '@/utils/element-validator'
-
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -62,66 +62,6 @@ export default {
         city: [],
         plot: []
       },
-      addressOptions: [{
-        value: 'jiangsu',
-        label: '江苏',
-        children: [
-          {
-            value: 'suzhou',
-            label: '苏州',
-            children: [
-              {
-                value: 'gusu',
-                label: '姑苏区',
-                children: null
-              },
-              {
-                value: 'gyyq',
-                label: '工业园区'
-              }
-            ]
-          },
-          {
-            value: 'wuxi',
-            label: '无锡'
-          }
-        ]
-      }, {
-        value: 'zhejiang',
-        label: '浙江',
-        children: [
-          {
-            value: 'hangzhou',
-            label: '杭州'
-          },
-          {
-            value: 'ningbo',
-            label: '宁波'
-          }
-        ]
-      }
-      ],
-      plotOptions: [{
-        value: 'canglang',
-        label: '沧浪街道',
-        children: [
-          {
-            value: 'shequ',
-            label: '社区',
-            children: [
-              {
-                value: 'xiaoqu',
-                label: '小区'
-              }
-            ]
-          },
-          {
-            value: 'shequ1',
-            label: '社区1'
-          }
-        ]
-      }
-      ],
       vertifyDisable: false,
       countDown: 60,
       timer: null,
@@ -148,7 +88,8 @@ export default {
   computed: {
     unitShow() {
       return this.address.city.length
-    }
+    },
+    ...mapGetters('common', ['addressOptions', 'plotOptions'])
   },
   methods: {
     // 注册用户
