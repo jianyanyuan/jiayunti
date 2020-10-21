@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 09:15:58
- * @LastEditTime: 2020-10-21 08:35:14
+ * @LastEditTime: 2020-10-21 15:24:29
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\App.vue
@@ -21,16 +21,17 @@ export default {
 }
 </script>
 <style lang="scss">
-.el-upload-dragger {
-  padding: 40px 5px;
-  border: 2px solid #e5e5e5;
-  color: #777;
-  -webkit-transition: background-color 0.2s linear;
-  transition: background-color 0.2s linear;
-}
-.el-upload-dragger:hover {
-  background: #f6f6f6;
-}
+// .el-upload-dragger {
+//   padding: 40px 5px;
+//   border: 2px solid #e5e5e5;
+//   color: #777;
+//   -webkit-transition: background-color 0.2s linear;
+//   transition: background-color 0.2s linear;
+// }
+// .el-upload-dragger:hover{
+//   background: #f6f6f6;
+//   border:2px solid #efefef;
+// }
 li{
   list-style: none;
 }

@@ -2,8 +2,8 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-21 10:37:03
- * @Description:
+ * @LastEditTime: 2020-10-21 13:24:51
+ * @Description: 居民申请基本资料
 -->
 <template>
   <div>
@@ -35,7 +35,7 @@
           {{ room.val }}
         </el-form-item>
         <div style="text-align:center">
-          <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess">下一步</el-button>
+          <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
         </div>
       </el-form>
       <!-- 修改保存 -->
@@ -80,7 +80,7 @@ const defaultForm = {
   rooms: ['401', '402', '403']
 }
 export default {
-  name: 'Resident',
+  name: 'Basic',
   data() {
     return {
       // 修改后重新保存
@@ -125,8 +125,8 @@ export default {
         this.form.rooms.splice(index, 1)
       }
     },
-    nextProcess() {
-      this.$emit('nextProcess')
+    nextProcess(arrow) {
+      this.$emit('nextProcess', arrow)
     },
     postApply() {
       this.$refs.form.validate(valid => {
