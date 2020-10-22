@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-10-21 16:33:22
+ * @LastEditTime: 2020-10-22 15:31:05
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -21,14 +21,6 @@
       <keep-alive>
         <component :is="curComponent" @nextProcess="handleProcess" />
       </keep-alive>
-    </div>
-    <div class="step-container">
-      <el-button-group>
-        <!-- <el-button v-show="curStep > 0" type="primary" icon="el-icon-arrow-left" @click="curStep--">上一步</el-button> -->
-        <!-- <el-button v-show="curStep < stepBtnGroup.length - 1" type="primary" icon="el-icon-arrow-right" @click="curStep++">下一步</el-button> -->
-        <!-- <el-button v-show="curStep === stepBtnGroup.length - 1" type="primary" icon="el-icon-upload2" @click="submitApplay">提交申请</el-button> -->
-
-      </el-button-group>
     </div>
 
   </div>
@@ -73,6 +65,17 @@ export default {
     submitApplay() {
 
     }
+  },
+  // 获得申请Id
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      // if (to.query.type === "today") {
+      //   let today = new Date();
+      //   vm.query.StartTime = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()} 00:00:00`;
+      //   vm.query.EndTime = new Date();
+      //   vm.getTickets();
+      // }
+    })
   }
 
 }

@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-21 10:02:52
+ * @LastEditTime: 2020-10-22 15:05:51
  * @Description:申请列表
 -->
 
@@ -37,19 +37,15 @@
       <el-table-column align="center" label="操作" min-width="200">
         <template slot-scope="scope">
           <el-row type="flex" justify="space-around">
-            <el-button v-if="scope.row.status === 0" size="mini" type="primary">
-              <router-link :to="{path:'/resident/apply',query:{applyId:scope.row.Id}}">提交材料</router-link>
-            </el-button>
+            <el-button v-if="scope.row.status === 0" size="mini" type="primary" @click="$router.push({path:'/resident/apply',query:{applyId:scope.row.Id}})">提交材料</el-button>
 
             <el-popconfirm v-if="scope.row.status !== 10 && scope.row.status !== 2" title="确认撤销申请吗？" @onConfirm="cancelApply(scope.row)">
               <el-button slot="reference" size="mini" type="info">撤销申请</el-button>
             </el-popconfirm>
-            <el-button v-if="scope.row.status === 1 && scope.row.dissent" size="mini" type="success" @click="dissentResult(scope.row)">
-              <router-link :to="{path:'/collapse/index',query:{applyId:scope.row.Id}}">查看反馈</router-link>
-            </el-button>
+            <el-button v-if="scope.row.status === 1 && scope.row.dissent" size="mini" type="success" @click="dissentView"> 查看反馈</el-button>
             <el-button v-if="scope.row.status === 10" size="mini" type="danger" @click="viewAudit(scope.row)">审核意见</el-button>
             <el-tag v-if="scope.row.status === 2" size="medium" type="success">申请已通过</el-tag>
-            <el-button v-if="scope.row.status !== 0" size="mini" type="primary" @click="viewProcess(scope.row)">查看流程</el-button>
+            <el-button v-if="scope.row.status !== 0" size="mini" type="primary" @click="flowView">查看流程</el-button>
           </el-row>
         </template>
       </el-table-column>
@@ -89,6 +85,36 @@
         <el-button type="primary" @click="postApply">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 异议结果 -->
+    <el-dialog v-el-drag-dialog title="异议处理结果" center :visible.sync="dissentVisible" :close-on-click-modal="false" min-width="800px">
+      <el-collapse>
+        <el-collapse-item v-for="(item, index) in dissents" :key="index">
+          <template slot="title">
+            建议人：{{ item.name }}
+            <el-tag :type="item.status | keyToVal(handleTag)">{{ item.status | keyToVal(handleStatus) }}</el-tag>
+          </template>
+          <!-- <div>
+          建议人：{{ item.name }}
+          <el-tag :type="item.status | keyToVal(handleTag)">{{ item.status | keyToVal(handleStatus) }}</el-tag>
+        </div> -->
+          <p>时间：{{ item.time }}</p>
+          <p>联系方式：{{ item.phone }}</p>
+          <p>详细地址：{{ item.address }}</p>
+          <div>
+            <p>异议详情：</p>
+            <el-input v-model="item.detail" type="textarea" />
+          </div>
+          <div v-if="item.status === 1">
+            <p>异议反馈</p>
+            <el-input v-model="item.feedback" type="textarea" />
+          </div>
+        </el-collapse-item>
+      </el-collapse>
+    </el-dialog>
+    <!-- 查看流程 -->
+    <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
+      <flow />
+    </el-dialog>
   </div>
 </template>
 
@@ -96,6 +122,8 @@
 import { mapState, mapGetters } from 'vuex'
 import { keyToVal, deepClone } from '@/utils'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
+import Flow from '@/components/street/Flow'
+import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 
 const defaultForm = {
   name: '',
@@ -108,10 +136,16 @@ export default {
   filters: {
     keyToVal
   },
+  components: {
+    Flow
+  },
+  directives: { elDragDialog },
   data() {
     return {
       formLoading: false,
       listLoading: false,
+      dissentVisible: false,
+      flowVisible: false,
       model: {
         visible: false,
         form: deepClone(defaultForm),
@@ -123,6 +157,25 @@ export default {
         }
       },
       plot: [],
+      dissents: [
+        {
+          name: '李先生',
+          time: '2020-10-12 09:00',
+          phone: '15988800123',
+          address: '苏州高新区',
+          detail: '设计方案不合理',
+          status: 0
+        },
+        {
+          name: '张先生',
+          time: '2020-10-13 08:00',
+          phone: '15988800456',
+          address: '苏州高新区',
+          detail: '设计方案不合理',
+          feedback: '你的需求已知晓，将之后联系',
+          status: 1
+        }
+      ],
       list: [
         {
           code: 'xxx小区xxxx幢xxx单元',
@@ -160,13 +213,18 @@ export default {
     }
   },
   computed: {
-    ...mapState('common', ['applyStatus', 'applyTag']),
+    ...mapState('common', ['applyStatus', 'applyTag', 'handleStatus', 'handleTag']),
     ...mapGetters('common', ['addressOptions', 'plotOptions'])
-
   },
   created() {
   },
   methods: {
+    dissentView() {
+      this.dissentVisible = true
+    },
+    flowView() {
+      this.flowVisible = true
+    },
     addApply() {
       this.model.form.name = '张飞达'
       this.model.form.address = ['jiangsu', 'suzhou', 'gusu']
