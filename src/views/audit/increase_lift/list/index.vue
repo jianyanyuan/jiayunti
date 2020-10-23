@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-23 14:16:39
+ * @LastEditTime: 2020-10-23 16:16:58
  * @Description:图审列表
 -->
 
@@ -40,7 +40,7 @@
       </el-table-column>
       <el-table-column type="expand">
         <template slot-scope="{ row }">
-          <el-card style="margin-bottom:30px" class="expand-info">
+          <!-- <el-card style="margin-bottom:30px" class="expand-info">
             <div slot="header">
               <span>设计信息</span>
             </div>
@@ -58,7 +58,7 @@
                 <span>{{ row.design.phone }}</span>
               </el-form-item>
             </el-form>
-          </el-card>
+          </el-card> -->
           <el-card style="margin-bottom:30px" class="expand-info">
             <div slot="header">
               <span>申请信息</span>
@@ -95,7 +95,7 @@
           <span>{{ scope.row.apply.time }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="设计单位" min-width="200" align="center">
+      <!-- <el-table-column label="设计单位" min-width="200" align="center">
         <template slot-scope="{row}">
           <span>{{ row.design.org }}</span>
         </template>
@@ -105,7 +105,7 @@
           <i class="el-icon-time" />
           <span>{{ scope.row.design.time }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="审核时间" min-width="200" prop="auditTime" sortable align="center">
         <template v-if="scope.row.auditTime" slot-scope="scope">
           <i class="el-icon-time" />
@@ -117,15 +117,11 @@
           <el-tag :type="scope.row.status | keyToVal(designTag)">{{ scope.row.status | keyToVal(designStatus) }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" min-width="200">
+      <el-table-column align="center" label="操作" min-width="250">
         <template slot-scope="scope">
           <el-row type="flex" justify="space-around">
-            <el-button size="mini" type="success" @click="$route.push({path:'/increase_lift/report',query:{applyId:scope.row.Id}})">
-              联合审查报告
-            </el-button>
-            <el-button size="mini" type="success" @click="$route.push({path:'/increase_lift/pipe',query:{applyId:scope.row.Id}})">
-              管道踏勘
-            </el-button>
+            <el-button size="mini" type="warning" @click="$router.push({path:'/increase_lift/report',query:{applyId:scope.row.Id}})">审核</el-button>
+            <el-button size="mini" type="warning" @click="$router.push({path:'/increase_lift/pipe',query:{applyId:scope.row.Id}})">管道踏勘</el-button>
             <el-button size="mini" type="primary" @click="flowVisible = true">查看流程</el-button>
           </el-row>
         </template>
@@ -141,9 +137,18 @@
 
 <script>
 import { keyToVal } from '@/utils'
+import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
+import Flow from '@/components/street/Flow'
+
 export default {
   filters: {
     keyToVal
+  },
+  directives: {
+    elDragDialog
+  },
+  components: {
+    Flow
   },
   data() {
     return {
@@ -261,6 +266,12 @@ export default {
   created() {
   },
   methods: {
+    goSearch() {
+
+    },
+    clearQuery() {
+
+    },
     handleSizeChange(val) {
       this.pagination.pageSize = val
     },

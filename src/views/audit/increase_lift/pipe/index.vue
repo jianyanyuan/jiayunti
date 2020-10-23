@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-10-23 13:57:13
+ * @LastEditTime: 2020-10-23 15:58:38
  * @LastEditors: zfd
  * @Description: 增梯办管道踏勘
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -13,14 +13,29 @@
         <div slot="header">
           <span>基本信息</span>
         </div>
-        <div>
-          <p>姓名：{{ basic.name }}</p>
-          <p>详细地址：{{ basic.address }}</p>
-          <p>电话：{{ basic.phone }}</p>
-          <p>加装电梯地址：{{ basic.liftAddress }}</p>
-          <p>设计单位：{{ basic.company }}</p>
-          <p>设备规格：{{ basic.spec }}</p>
-        </div>
+        <el-form label-width="120px" class="show-form">
+          <el-form-item label="姓名">
+            {{ basic.name }}
+          </el-form-item>
+          <el-form-item label="详细地址">
+            <el-cascader v-model="basic.address" :options="addressOptions" />
+            <label for="address-detail" class="label-detail"> — </label>
+            <el-cascader v-model="plot" :options="plotOptions" />
+          </el-form-item>
+          <el-form-item label="电话">
+            {{ basic.phone }}
+          </el-form-item>
+          <el-form-item label="加装电梯地址">
+            {{ basic.liftAddress }}
+          </el-form-item>
+          <el-form-item label="设计单位">
+            {{ basic.company }}
+          </el-form-item>
+          <el-form-item label="设备">
+            {{ basic.spec }}
+          </el-form-item>
+        </el-form>
+
       </el-card>
     </div>
 
@@ -28,13 +43,14 @@
       <div slot="header">
         <el-row type="flex" justify="space-between" align="middle">
           <span>管道踏勘</span>
-          <el-button v-if="editable" type="primary" style="float:right" @click="editable = true">修改</el-button>
-          <el-button v-else type="primary" style="float:right" @click="editable = false">保存</el-button>
+          <el-button v-if="editable" type="primary" style="float:right" @click="editable = !editable">提 交</el-button>
+          <el-button v-if="editable" type="primary" style="float:right" @click="editable = !editable">保 存</el-button>
+          <el-button v-else type="primary" style="float:right" @click="editable = !editable">修 改</el-button>
         </el-row>
       </div>
       <!-- 修改保存 -->
-      <template v-if="editable">
-        <el-table v-if="editable" :data="model.tableData" border highlight-current-row style="width: 100%">
+      <div v-if="editable">
+        <el-table :data="model.tableData" border highlight-current-row style="width: 100%">
           <el-table-column label="序号" min-width="60" align="center">
             <template slot-scope="scope">
               {{ scope.$index + 1 }}
@@ -66,11 +82,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <span slot="footer">
-          <el-button v-if="!isFinished" type="primary" @click="saveRecord">保 存</el-button>
-          <el-button v-if="isFinished" type="primary" @click="completed">完 成</el-button>
-        </span>
-      </template>
+      </div>
       <!-- 查看 -->
       <el-table v-else :data="model.tableData" border highlight-current-row style="width: 100%">
         <el-table-column label="序号" min-width="60" align="center">
@@ -114,14 +126,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'Resident',
   data() {
     return {
+      plot: '',
       editable: false,
       basic: {
         name: '李先生',
-        address: '苏州高新区',
+        address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ', 'xiaoqu'],
         phone: '15988800323',
         liftAddress: '小区1楼',
         company: '苏州建研院',
@@ -157,6 +171,15 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters('common', ['addressOptions', 'plotOptions'])
+
+  },
+  created() {
+    this.plot = this.basic.address.slice(3)
+
+    this.basic.address = this.basic.address.slice(0, 3)
+  },
   methods: {
     saveRecord() {
       const isFinished = this.model.tableData.filter(v => {
@@ -176,7 +199,19 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.show-form ::v-deep {
+  .el-cascader,
+  .el-input__suffix-inner {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.8;
+  }
+}
+.basic-container ::v-deep .el-card__header:nth-child(1) {
+  background: #409eff;
+  color: #fff;
+}
 .expand-info .demo-table-expand ::v-deep label {
   width: 100px;
   color: #99a9bf;

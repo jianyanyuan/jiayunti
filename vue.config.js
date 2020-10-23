@@ -37,17 +37,17 @@ module.exports = {
       errors: true
     },
     // 配置跨域
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://192.168.0.127:8342', // 跨域的域名
-    //     // ws: true,  // 代理 websockets
-    //     changeOrigin: true, // 是否开启跨域
-    //     pathRewrite: {
-    //       '^/api': '/api'
-    //     }
-    //   }
-    // }
-    before: require('./mock/mock-server.js')
+    proxy: {
+      '/api': {
+        target: 'http://192.168.0.127:8342', // 跨域的域名
+        // ws: true,  // 代理 websockets
+        changeOrigin: true, // 是否开启跨域
+        pathRewrite: {
+          '^/api': '/api'
+        }
+      }
+    }
+    // before: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
