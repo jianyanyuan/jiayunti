@@ -2,48 +2,86 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-23 08:22:05
+ * @LastEditTime: 2020-10-23 16:16:17
  * @Description: 增梯办联合审查报告
 -->
 <template>
-  <div>
-    <el-row type="flex" justify="end" align="middle" style="padding:18px 20px">
-      <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
-      <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">保存</el-button>
-    </el-row>
-    <template v-if="hasChanged">
-      <el-card class="upload-card" style="margin-bottom:30px">
+  <div class="app-container">
+    <div class="basic-container">
+      <el-card style="margin-bottom:30px">
         <div slot="header">
-          <span>查看</span>
+          <span>基本信息</span>
         </div>
+        <el-form label-width="120px" class="show-form">
+          <el-form-item label="姓名">
+            {{ basic.name }}
+          </el-form-item>
+          <el-form-item label="详细地址">
+            <el-cascader v-model="basic.address" :options="addressOptions" />
+            <label for="address-detail" class="label-detail"> — </label>
+            <el-cascader v-model="plot" :options="plotOptions" />
+          </el-form-item>
+          <el-form-item label="电话">
+            {{ basic.phone }}
+          </el-form-item>
+          <el-form-item label="加装电梯地址">
+            {{ basic.liftAddress }}
+          </el-form-item>
+          <el-form-item label="设计单位">
+            {{ basic.company }}
+          </el-form-item>
+          <el-form-item label="设备">
+            {{ basic.spec }}
+          </el-form-item>
+        </el-form>
+
+      </el-card>
+    </div>
+    <el-card style="margin-bottom:30px">
+      <div slot="header">
+        <el-row type="flex" justify="space-between" align="middle">
+          <span>联合审批报告</span>
+          <el-button v-if="!hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">保 存</el-button>
+          <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">修 改</el-button>
+        </el-row>
+      </div>
+      <template v-if="hasChanged" class="upload-card">
+
         <div v-for="url in urls" :key="url" class="image-container">
           <img :src="url" alt="联合审查报告" srcset="">
         </div>
-      </el-card>
-      <div style="text-align:center">
-        <el-button type="success" icon="el-icon-upload2" @click.native.prevent="postApply">提交</el-button>
-      </div>
-    </template>
+      </template>
 
-    <template v-else>
-      <el-card class="upload-card" style="margin-bottom:30px">
-        <div slot="header">
-          <span>上传</span>
-        </div>
-        <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
-          <!-- <i class="el-icon-upload" /> -->
-          <div>将文件拖到此处，或点击添加</div>
-          <p>单个文件大小不超过20MB，可上传图片或PDF</p>
-        </el-upload>
-      </el-card>
-    </template>
+      <template v-else>
+        <el-form label-width="120px">
+          <el-form-item label="审核意见">
+            <el-input v-model="audit" type="textarea" :rows="4" />
+          </el-form-item>
+          <el-form-item label="报告">
+            <el-upload action="#" class="form-card" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
+              <!-- <i class="el-icon-upload" /> -->
+              <div class="enclosure-tips">
+                联合审查报告
+              </div>
+              <div>将文件拖到此处，或点击添加</div>
+              <div>单个文件大小不超过20MB，可上传图片或PDF</div>
+            </el-upload>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="danger">否决</el-button>
+            <el-button type="success">通过</el-button>
+          </el-form-item>
+        </el-form>
 
+      </template>
+    </el-card>
   </div>
 </template>
 
 <script>
 import * as File from '@/api/file'
 // import { deepClone } from '@/utils'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ConsultationForm',
@@ -54,6 +92,14 @@ export default {
       formLoading: false,
       rooms: ['401', '402', '403'],
       model: [],
+      basic: {
+        name: '李先生',
+        address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ', 'xiaoqu'],
+        phone: '15988800323',
+        liftAddress: '小区1楼',
+        company: '苏州建研院',
+        spec: '高端电梯'
+      },
       urls: [
         'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
         'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
@@ -67,12 +113,15 @@ export default {
   },
 
   computed: {
+    ...mapGetters('common', ['addressOptions', 'plotOptions'])
   },
   watch: {
 
   },
   created() {
-    console.log(11111)
+    this.plot = this.basic.address.slice(3)
+
+    this.basic.address = this.basic.address.slice(0, 3)
   },
   methods: {
     handleUploadRemove(file, fileList) {
@@ -156,19 +205,29 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.upload-card ::v-deep .el-card__body {
-  text-align: center;
-  margin-bottom: 30px;
+.basic-container ::v-deep .el-card__header:nth-child(1) {
+  background: #409eff;
+  color: #fff;
 }
 .enclosure-tips {
   color: #14274e;
-text-align: left;
-  li{
-    list-style: decimal;
-  }
+  text-align: center;
 
 }
-.upload-card ::v-deep .el-upload-dragger {
+.show-form ::v-deep {
+  .el-cascader,
+  .el-input__suffix-inner {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.8;
+  }
+}
+.upload-card {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-card ::v-deep .el-upload-dragger {
   width: 400px;
   padding: 40px 5px;
   border: 2px solid #e5e5e5;
@@ -177,6 +236,7 @@ text-align: left;
   transition: background-color 0.2s linear;
 }
 .image-container{
+  text-align: center;
   height: 200px;
   margin-bottom: 20px;
   img{
