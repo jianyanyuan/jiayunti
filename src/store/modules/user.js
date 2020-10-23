@@ -2,8 +2,8 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-16 16:19:47
- * @Description:
+ * @LastEditTime: 2020-10-21 08:22:51
+ * @Description: 用户仓库
  */
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken, getRoleToken, setRoleToken, removeRoleToken } from '@/utils/auth'

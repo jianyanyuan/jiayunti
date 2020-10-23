@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-10-16 14:30:38
+ * @LastEditTime: 2020-10-22 15:31:05
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -9,45 +9,43 @@
 <template>
   <div class="app-container">
     <div class="line-divider" />
-    <div class="step-btn-group" @click="change($event)">
-      <el-button v-show="curStep > 0" type="primary" icon="el-icon-arrow-left" @click="curStep--" />
+    <!-- @click="change($event)" -->
+    <div class="step-btn-group">
       <div v-for="(item,index) in stepBtnGroup" :key="item" class="stepBtn" :step-index="index" :class="{'step-actived': curStep === index}">
         {{ item }}
       </div>
-      <el-button v-show="curStep < stepBtnGroup.length - 1" type="primary" icon="el-icon-right" @click="curStep++" />
     </div>
     <div class="line-divider" />
 
     <div class="dynamic-component-container">
-      <component :is="curComponent" />
+      <keep-alive>
+        <component :is="curComponent" @nextProcess="handleProcess" />
+      </keep-alive>
     </div>
 
   </div>
 </template>
 
 <script>
-import Flow from '@/components/street/Flow'
-import Resident from '@/components/street/Resident'
-import Design from '@/components/street/Design'
-import Pipe from '@/components/street/Pipe'
-import Audit from '@/components/street/Audit'
+import Basic from '@/components/resident/basic'
+import ConclutationForm from '@/components/resident/conclutation-form'
+import SummaryForm from '@/components/resident/summary-form'
+import DelegateForm from '@/components/resident/delegate-form'
+import ProtocalForm from '@/components/resident/protocal-form'
 
 export default {
   components: {
-    Audit,
-    Design,
-    Resident,
-    Flow,
-    Pipe
+    Basic,
+    ConclutationForm,
+    SummaryForm,
+    DelegateForm,
+    ProtocalForm
   },
   data() {
     return {
-      stepBtnGroup: ['申请流程图', '居民申请材料', '设计院设计', '管道踏勘记录', '审核'],
-      componentGroup: ['Flow', 'Resident', 'Design', 'Pipe', 'Audit'],
-      curStep: {
-        step: 0,
-        component: 'Flow'
-      }
+      stepBtnGroup: ['基本资料', '意见征询表', '意见征询汇总表', '委托授权书', '项目协议书'],
+      componentGroup: ['Basic', 'ConclutationForm', 'SummaryForm', 'DelegateForm', 'ProtocalForm'],
+      curStep: 0
     }
   },
   computed: {
@@ -56,12 +54,30 @@ export default {
     }
   },
   methods: {
-    change(event) {
-      if (event.target.className === 'stepBtn') {
-        this.curStep = +event.target.attributes['step-index'].value
-      }
+    // change(event) {
+    //   if (event.target.className === 'stepBtn') {
+    //     this.curStep = +event.target.attributes['step-index'].value
+    //   }
+    // },
+    handleProcess(length) {
+      this.curStep += length
+    },
+    submitApplay() {
+
     }
+  },
+  // 获得申请Id
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      // if (to.query.type === "today") {
+      //   let today = new Date();
+      //   vm.query.StartTime = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()} 00:00:00`;
+      //   vm.query.EndTime = new Date();
+      //   vm.getTickets();
+      // }
+    })
   }
+
 }
 </script>
 
@@ -84,12 +100,16 @@ export default {
   color: #fff;
   text-align: center;
   line-height: 40px;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 .step-btn-group .step-actived {
   background: #82a7cb;
 }
 .dynamic-component-container{
   margin-top: 30px;
+}
+.step-container{
+  margin-top: 30px;
+  text-align: center;
 }
 </style>

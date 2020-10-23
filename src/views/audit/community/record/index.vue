@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-10-12 15:27:58
+ * @LastEditTime: 2020-10-22 15:23:55
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -52,7 +52,7 @@
     <div style="height:50px;text-align:center">
       <el-button type="primary" size="medium" @click="addDissent">新 增</el-button>
       <el-button v-show="dissents.length !== 0" type="primary" size="medium" @click="addDissent">提 交</el-button>
-      <el-button v-show="dissents.length === 0" type="success" size="medium" @click="addDissent">无 异 议</el-button>
+      <el-button v-show="dissents.length === 0" type="success" size="medium" @click="$router.go(-1)">无 异 议</el-button>
     </div>
   </div>
 </template>

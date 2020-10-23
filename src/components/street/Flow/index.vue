@@ -1,24 +1,22 @@
-<!--
- * User: CHT
- * Date: 2020/5/27
- * Time: 9:52
--->
+
 <template>
-  <div id="flow" class="main-chart" />
+  <div class="main-chart" />
 </template>
 
 <script>
 import echarts from 'echarts'
+import { debounce } from '@/utils'
+require('echarts/theme/macarons') // echarts theme
 
 export default {
   data() {
     return {
       option: {
-        title: {
-          text: '居民电梯申请流程图',
-          left: 'center',
-          top: 40
-        },
+        // title: {
+        //   text: '居民电梯申请流程图',
+        //   left: 'center',
+        //   top: 40
+        // },
         tooltip: {
           formatter: (params) => {
             return params.data.detail || params.name
@@ -33,6 +31,7 @@ export default {
             top: 120,
             left: '10%',
             symbolSize: 50,
+            zoom: 0.8,
             roam: true, // true false 'scale' 'move'
             label: {
               show: true
@@ -174,7 +173,8 @@ export default {
             }]
           }
         ]
-      }
+      },
+      charts: null
     }
   },
   computed: {
@@ -186,23 +186,27 @@ export default {
   created() {
   },
   mounted() {
-    window.onresize = () => {
-      this.resizeChart()
-    }
-    this.drawChart()
+    window.onresize = debounce(() => {
+      if (this.charts) {
+        this.charts.resize()
+      }
+    }, 100)
+    this.$nextTick(() => {
+      this.drawChart()
+    })
   },
   beforeDestroy() {
     window.onresize = null
+    if (!this.charts) {
+      return
+    }
+    this.charts.dispose()
+    this.charts = null
   },
   methods: {
     drawChart() {
-      this.charts = echarts.init(
-        document.getElementById('flow')
-      )
+      this.charts = echarts.init(this.$el, 'macarons')
       this.charts.setOption(this.option)
-    },
-    resizeChart() {
-      this.charts.resize()
     }
   }
 
@@ -213,7 +217,7 @@ export default {
 .main-chart {
   // background-color: aquamarine;
   margin: 0 auto;
-  width: 1000px;
-  height: 1200px;
+  width: 800;
+  height: 600px;
 }
 </style>

@@ -1,8 +1,8 @@
 <!--
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-10-15 09:06:25
+ * @LastEditors: zfd
+ * @LastEditTime: 2020-10-23 08:58:20
  * @Description:设计列表
 -->
 
@@ -94,13 +94,13 @@
 
             <el-button v-if="scope.row.status === 0" size="mini" :type="scope.row.status | keyToVal(designTag)" @click="uploadModal.visible = true">上传设计图</el-button>
             <el-button v-if="scope.row.status === 2" size="mini" :type="scope.row.status | keyToVal(designTag)" @click="editModal.visible = true">
-              <router-link :to="{path:'/design/edit',query:{applyId:scope.row.Id}}">修改设计图</router-link>
+              <router-link :to="{path:'/designer/edit',query:{applyId:scope.row.Id}}">修改设计图</router-link>
             </el-button>
 
             <el-button v-if="scope.row.status === 3 || scope.row.status === 1" size="mini" type="success">
-              <router-link :to="{path:'/design/view',query:{applyId:scope.row.Id}}">查看设计图</router-link>
+              <router-link :to="{path:'/designer/view',query:{applyId:scope.row.Id}}">查看设计图</router-link>
             </el-button>
-            <el-button size="mini" type="primary" @click="viewProcess(scope.row)">查看流程</el-button>
+            <el-button size="mini" type="primary" @click="flowVisible = true">查看流程</el-button>
           </el-row>
         </template>
       </el-table-column>
@@ -121,17 +121,31 @@
       <p>联系方式</p>
       <p>审核单位：XXX图审机构 审核人员：XXX 联系电话：0512XXXX 工作时间：周一至周五 9:00-11:00 14:00-17:00</p>
     </div> -->
+    <!-- 查看流程 -->
+    <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
+      <flow />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { keyToVal } from '@/utils'
+import Flow from '@/components/street/Flow'
+import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 export default {
   filters: {
     keyToVal
   },
+  components: {
+    Flow
+
+  },
+  directives: {
+    elDragDialog
+  },
   data() {
     return {
+      flowVisible: false,
       query: {
         code: '',
         applyName: '',

@@ -1,3 +1,10 @@
+/*
+ * @Author: zfd
+ * @Date: 2020-10-13 09:15:58
+ * @LastEditors: zfd
+ * @LastEditTime: 2020-10-21 14:38:13
+ * @Description:
+ */
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
@@ -19,6 +26,7 @@ service.interceptors.request.use(
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
+      // config.headers['Authorize'] = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjAzMjYwODk4LCJleHAiOjE2MDMyNjQ0OTh9.84WJfDqCJhhcaiD66XGBvhQyoPfiO7A_U7Y1r9AGpVxJdxF9IywDVUimj9jLhC3kRHqGkrHNrRPobfd1GgaUEA'
       config.headers['X-Token'] = getToken()
     }
     return config

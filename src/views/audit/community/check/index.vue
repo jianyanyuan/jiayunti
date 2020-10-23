@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-10-16 09:29:08
+ * @LastEditTime: 2020-10-22 16:00:48
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -28,26 +28,23 @@
 <script>
 import Flow from '@/components/street/Flow'
 import Resident from '@/components/street/Resident'
-import Design from '@/components/street/Design'
-import Pipe from '@/components/street/Pipe'
+// import Design from '@/components/street/Design'
+// import Pipe from '@/components/street/Pipe'
 import Audit from '@/components/street/Audit'
 
 export default {
   components: {
     Audit,
-    Design,
+    // Design,
     Resident,
-    Flow,
-    Pipe
+    Flow
+    // Pipe
   },
   data() {
     return {
-      stepBtnGroup: ['申请流程图', '居民申请材料', '设计院设计', '管道踏勘记录', '审核'],
-      componentGroup: ['Flow', 'Resident', 'Design', 'Pipe', 'Audit'],
-      curStep: {
-        step: 0,
-        component: 'Flow'
-      }
+      stepBtnGroup: ['申请流程图', '居民申请材料', '审核'],
+      componentGroup: ['Flow', 'Resident', 'Audit'],
+      curStep: 0
     }
   },
   computed: {

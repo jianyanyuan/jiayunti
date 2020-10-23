@@ -13,7 +13,7 @@ import Layout from '@/layout'
 const residentRouter = {
   path: '/resident',
   component: Layout,
-  redirect: '/resident/apply',
+  redirect: '/resident/list',
   name: 'Resident',
   meta: {
     title: '居民',
