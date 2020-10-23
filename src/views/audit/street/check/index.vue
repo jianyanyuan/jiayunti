@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-10-14 10:06:19
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-10-22 16:21:58
+ * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
 -->
@@ -44,10 +44,7 @@ export default {
     return {
       stepBtnGroup: ['申请流程图', '居民申请材料', '设计院设计', '管道踏勘记录', '审核'],
       componentGroup: ['Flow', 'Resident', 'Design', 'Pipe', 'Audit'],
-      curStep: {
-        step: 0,
-        component: 'Flow'
-      }
+      curStep: 0
     }
   },
   computed: {

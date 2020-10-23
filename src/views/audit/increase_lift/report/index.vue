@@ -3,7 +3,7 @@
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
  * @LastEditTime: 2020-10-23 08:22:05
- * @Description: 居民申请意见汇总表
+ * @Description: 增梯办联合审查报告
 -->
 <template>
   <div>
@@ -17,13 +17,11 @@
           <span>查看</span>
         </div>
         <div v-for="url in urls" :key="url" class="image-container">
-          <img :src="url" alt="意见征询表" srcset="">
+          <img :src="url" alt="联合审查报告" srcset="">
         </div>
       </el-card>
       <div style="text-align:center">
-        <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
-
-        <el-button type="success" icon="el-icon-upload2" @click.native.prevent="postApply">提交申请</el-button>
+        <el-button type="success" icon="el-icon-upload2" @click.native.prevent="postApply">提交</el-button>
       </div>
     </template>
 

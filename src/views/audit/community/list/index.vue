@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-22 15:27:41
+ * @LastEditTime: 2020-10-23 13:28:14
  * @Description:申请列表
 -->
 
@@ -36,7 +36,7 @@
         <template slot-scope="scope">
           <el-row type="flex" justify="space-around">
             <el-button v-if="scope.row.status === 1" size="mini" type="info" @click="$router.push({path:'/community/record',query:{applyId:scope.row.Id}})">异议记录</el-button>
-            <el-button v-if="scope.row.status === 0" size="mini" type="warning" @click="audit(scope.row)">审核</el-button>
+            <el-button v-if="scope.row.status === 0" size="mini" type="warning" @click="$router.push({path:'/community/check',query:{applyId:scope.row.Id}})">审核</el-button>
             <el-button v-if="scope.row.status === 3" size="mini" type="warning" @click="model.visible = true">踏勘记录</el-button>
             <el-button size="mini" type="primary" @click="flowView">查看流程</el-button>
           </el-row>
@@ -48,7 +48,7 @@
       <p>审核单位：XXX街道办 审核人员：XXX 联系电话：0512XXXX 工作时间：周一至周五 9:00-11:00 14:00-17:00</p>
     </div>
     <!-- 管道踏勘 -->
-    <el-dialog :title="model.title" :visible.sync="model.visible" :close-on-click-modal="false" center width="50%">
+    <!-- <el-dialog :title="model.title" :visible.sync="model.visible" :close-on-click-modal="false" center width="50%">
       <el-table :data="model.tableData" border highlight-current-row style="width: 100%">
         <el-table-column label="序号" min-width="60" align="center">
           <template slot-scope="scope">
@@ -82,7 +82,7 @@
         <el-button v-if="isFinished" type="primary" @click="completed">完 成</el-button>
       </span>
 
-    </el-dialog>
+    </el-dialog> -->
 
     <!-- 查看流程 -->
     <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">

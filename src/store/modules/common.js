@@ -2,7 +2,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-10-21 08:37:07
+ * @LastEditTime: 2020-10-23 08:32:13
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */

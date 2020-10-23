@@ -31,6 +31,7 @@ export default {
             top: 120,
             left: '10%',
             symbolSize: 50,
+            zoom: 0.8,
             roam: true, // true false 'scale' 'move'
             label: {
               show: true

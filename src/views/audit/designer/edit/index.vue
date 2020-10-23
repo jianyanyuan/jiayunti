@@ -1,12 +1,14 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-10-13 15:07:42
+ * @LastEditTime: 2020-10-23 08:59:29
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
 <template>
   <div class="app-container">
+    <el-page-header style="margin-bottom:20px" content="修改设计图" @back="$router.go(-1)" />
+
     <div class="basic-container">
       <el-card style="margin-bottom:30px">
         <div slot="header">

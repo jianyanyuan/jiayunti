@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-21 13:24:51
+ * @LastEditTime: 2020-10-23 08:46:36
  * @Description: 居民申请基本资料
 -->
 <template>
@@ -31,6 +31,12 @@
         <el-form-item label="加装电梯地址">
           {{ form.elevatorAddress }}
         </el-form-item>
+        <el-form-item label="设计单位">
+          {{ form.designer }}
+        </el-form-item>
+        <el-form-item label="设备">
+          {{ form.device }}
+        </el-form-item>
         <el-form-item v-for="(room, index) in form.rooms" :key="room.key" :label="'房间编号' + (index+1)">
           {{ room.val }}
         </el-form-item>
@@ -53,6 +59,18 @@
         </el-form-item>
         <el-form-item label="加装电梯地址" prop="elevatorAddress">
           <el-input v-model="form.elevatorAddress" placeholder="xxx小区xx幢xxx单元" />
+        </el-form-item>
+        <el-form-item label="设计单位" prop="designer">
+          <el-select v-model="form.designer">
+            <el-option v-for="item in designerOptions" :key="item.val" :label="item.val" :value="item.key" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="设备" prop="device">
+          <el-cascader v-model="form.device" :options="deviceOptions">
+            <template slot-scope="{ node, data }">
+              <span>{{ data.label }}</span>
+              <span v-if="node.isLeaf">kg</span>
+            </template></el-cascader>
         </el-form-item>
         <el-form-item v-for="(room, index) in form.rooms" :key="room.key" :label="'房间编号' + (index+1)" :prop="'rooms.' + index + '.val'" :rules="{required: true, message: '房间编号不能为空', trigger: 'blur'}">
           <el-input v-model="room.val" placeholder="400">
@@ -77,7 +95,9 @@ const defaultForm = {
   address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ', 'xiaoqu'],
   phone: '15988800323',
   elevatorAddress: 'xxx小区xxx幢xxx单元',
-  rooms: ['401', '402', '403']
+  rooms: ['401', '402', '403'],
+  designer: '',
+  device: ''
 }
 export default {
   name: 'Basic',
@@ -87,11 +107,43 @@ export default {
       hasChanged: false,
       formLoading: false,
       form: deepClone(defaultForm),
+      designerOptions: [
+        { key: 1, val: '建研院' },
+        { key: 2, val: '设计' }
+      ],
+      deviceOptions: [
+        {
+          label: '设备1',
+          value: '1',
+          children: [
+            {
+              label: '600',
+              value: '11'
+            },
+            {
+              label: '500',
+              value: '12'
+            }
+          ]
+        },
+        {
+          label: '设备2',
+          value: '2',
+          children: [
+            {
+              label: '600',
+              value: '22'
+            }
+          ]
+        }
+      ],
       rules: {
         name: [{ required: true, validator: validateTrueName, trigger: 'blur' }],
         address: [{ required: true, message: '地址不为空', trigger: 'blur' }],
         phone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-        elevatorAddress: [{ required: true, message: '电梯地址不为空', trigger: 'blur' }]
+        elevatorAddress: [{ required: true, message: '电梯地址不为空', trigger: 'blur' }],
+        designer: [{ required: true, message: '设计单位不为空', trigger: 'blur' }],
+        device: [{ required: true, message: '设备不为空', trigger: 'blur' }]
       },
       plot: []
     }

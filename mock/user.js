@@ -23,8 +23,8 @@ const tokens = {
   street: {
     token: 'street-token'
   },
-  'drawing-audit': {
-    token: 'drawing-audit-token'
+  'drawing_audit': {
+    token: 'drawing_audit-token'
   }
 }
 
@@ -59,8 +59,8 @@ const users = {
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Normal street'
   },
-  'drawing-audit-token': {
-    roles: ['drawing-audit'],
+  'drawing_audit-token': {
+    roles: ['drawing_audit'],
     introduction: 'I am an drawingAudit',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Normal drawingAudit'
