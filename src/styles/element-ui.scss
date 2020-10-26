@@ -47,3 +47,10 @@
 .el-range-separator {
   box-sizing: content-box;
 }
+
+// to custom el-input-disabled
+.el-input.is-disabled .el-input__inner{
+  background-color: #f6f5f5;
+  border-color: #eeeeee;
+  color: #555555;
+}

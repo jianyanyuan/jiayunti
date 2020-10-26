@@ -1,8 +1,8 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-10-26 13:10:16
- * @Description: card
+ * @LastEditTime: 2020-10-26 13:14:24
+ * @Description: 施工端违规处理
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
 <template>
@@ -25,23 +25,34 @@
     <el-collapse>
       <el-collapse-item v-for="(item, index) in dissents" :key="index">
         <template slot="title">
-          建议人：{{ item.name }}
+          监管单位：{{ item.name }}
           <el-tag :type="item.status | keyToVal(handleTag)">{{ item.status | keyToVal(handleStatus) }}</el-tag>
         </template>
         <!-- <div>
           建议人：{{ item.name }}
           <el-tag :type="item.status | keyToVal(handleTag)">{{ item.status | keyToVal(handleStatus) }}</el-tag>
         </div> -->
-        <p>时间：{{ item.time }}</p>
+        <p>时间{{ item.time }}</p>
+
         <p>联系方式：{{ item.phone }}</p>
+
         <p>详细地址：{{ item.address }}</p>
         <div>
-          <p>异议详情：</p>
+          <p>违规详情：</p>
           <el-input v-model="item.detail" type="textarea" />
+          <img v-for="url in urls" :key="url" :src="url" alt="违规图片">
         </div>
-        <div v-if="item.status === 1">
-          <p>异议反馈</p>
+        <div>
+          <p>违规处理：</p>
+          <el-input v-model="item.result" type="textarea" />
+        </div>
+        <div>
+          <p>整改回复：</p>
           <el-input v-model="item.feedback" type="textarea" />
+          <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
+            <div>将文件拖到此处，或点击添加</div>
+            <p>单个文件大小不超过20MB，可上传图片或PDF</p>
+          </el-upload>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -54,6 +65,7 @@
 import { mapState } from 'vuex'
 import { keyToVal } from '@/utils'
 export default {
+  name: 'Fault',
   filters: {
     keyToVal
   },
@@ -67,6 +79,10 @@ export default {
         company: '苏州建研院',
         spec: '高端电梯'
       },
+      urls: [
+        'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
+        'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
+      ],
       dissents: [
         {
           name: '李先生',
@@ -74,7 +90,8 @@ export default {
           phone: '15988800123',
           address: '苏州高新区',
           detail: '设计方案不合理',
-          status: 0
+          status: 0,
+          result: ''
         },
         {
           name: '张先生',
@@ -92,7 +109,7 @@ export default {
     ...mapState('common', ['handleStatus', 'handleTag'])
   },
   methods: {
-    submitFeedback() {},
+    submitFeedback() { },
     removeDissent(index) {
       if (index > 0) {
         this.model.dissents.splice(index, 1)
@@ -107,13 +124,47 @@ export default {
           address: '',
           detail: ''
         })
+    },
+    handleUploadRemove(file, fileList) {
+    },
+    // handleUploadChange(file, fileList) {
+    //   console.log(file)
+    //   console.log(fileList)
+    //   debugger
+    // },
+    nextProcess(arrow) {
+      this.$emit('nextProcess', arrow)
+    },
+    // 上传文件发生改变时
+    handleUploadChange(file, fileList, index) {
+      if (fileList.length > 0) {
+        this.model[index] = fileList.map(f => f.raw)
+      }
+    },
+    // 图片上传之前判断
+    uploadBefore(file) {
+      const isImage = file.type.indexOf('image') !== -1
+      const isBig = file.size <= 1024 * 1024 * 10
+      if (!file) {
+        this.$message.error('上传为空！')
+        return false
+      }
+      if (!isImage) {
+        this.$message.error('只能上传图片！')
+        return false
+      }
+      if (!isBig) {
+        this.$message.error('图片大小不能超过10MB！')
+        return false
+      }
+      return true
     }
   }
 }
 </script>
 
-<style scoped>
-.basic-container /deep/ .el-card__header:nth-child(1) {
+<style scoped lang="scss">
+.basic-container ::v-deep .el-card__header:nth-child(1) {
   background: #409eff;
   color: #fff;
 }

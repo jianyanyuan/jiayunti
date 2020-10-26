@@ -1,16 +1,15 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-09 19:47:59
- * @LastEditTime: 2020-10-16 10:42:31
+ * @LastEditTime: 2020-10-26 16:10:58
  * @Description: main.js
  * @FilePath: \vue-admin-template\src\main.js
  */
 import Vue from 'vue'
-
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
-
+import '@/styles/theme/index.css' // custom element ui theme
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
+// import 'element-ui/lib/theme-chalk/index.css'
 // import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
 import '@/styles/index.scss' // global css

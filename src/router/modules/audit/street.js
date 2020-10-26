@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-10-19 15:05:57
+ * @LastEditTime: 2020-10-26 15:49:51
  * @LastEditors: zfd
  * @Description: 审批端街道路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -38,6 +38,17 @@ const streetRouter = {
       // hidden: true,
       meta: {
         title: '审核',
+        icon: 'check',
+        roles: ['admin', 'street']
+      }
+    },
+    {
+      path: 'handle_fault',
+      component: () => import('@/views/audit/street/handle_fault/index'),
+      name: 'HandleFault',
+      // hidden: true,
+      meta: {
+        title: '违规处理',
         icon: 'check',
         roles: ['admin', 'street']
       }
