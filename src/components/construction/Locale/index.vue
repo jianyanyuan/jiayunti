@@ -2,23 +2,20 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-26 09:11:32
- * @Description: 居民申请意见征询表
+ * @LastEditTime: 2020-10-26 09:35:05
+ * @Description: 施工现场照片
 -->
 <template>
   <div>
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
-      <span>意见征询表</span>
+      <span>现场照片</span>
       <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
       <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">保存</el-button>
     </el-row>
     <template v-if="hasChanged">
-      <el-card v-for="(room,index) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
-        <div slot="header">
-          <span>{{ room }}</span>
-        </div>
+      <el-card title="查看" class="upload-card">
         <div v-for="url in urls[index]" :key="url" class="image-container">
-          <img :src="url" alt="意见征询表" srcset="">
+          <img :src="url" alt="施工现场照片" srcset="">
         </div>
       </el-card>
       <div style="text-align:center">
@@ -30,26 +27,10 @@
     </template>
 
     <template v-else>
-      <el-card v-for="(room, index) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
-        <div slot="header">
-          <span>{{ room }}</span>
-        </div>
+      <el-card title="上传" class="upload-card">
+
         <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
-          <div class="enclosure-tips">
-            所需附件：
-            <ul>
-              <li>
-                业主身份证
-              </li>
-              <li>
-                业主房产证
-              </li>
-              <li>
-                意见征询表 / 征询表+委托书+受委托人身份证
-              </li>
-            </ul>
-          </div>
           <div>将文件拖到此处，或点击添加</div>
           <p>单个文件大小不超过20MB，可上传图片或PDF</p>
         </el-upload>
@@ -178,6 +159,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.upload-card{
+  margin-bottom:30px
+}
 .upload-card ::v-deep .el-card__body {
   text-align: center;
   margin-bottom: 30px;

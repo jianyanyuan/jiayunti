@@ -1,9 +1,9 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-10-26 08:30:03
+ * @LastEditTime: 2020-10-26 08:46:32
  * @LastEditors: zfd
- * @Description: resident apply
+ * @Description: construction process
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
 -->
 <template>
@@ -27,24 +27,22 @@
 </template>
 
 <script>
-import Basic from '@/components/resident/basic'
-import ConclutationForm from '@/components/resident/conclutation-form'
-import SummaryForm from '@/components/resident/summary-form'
-import DelegateForm from '@/components/resident/delegate-form'
-import ProtocalForm from '@/components/resident/protocal-form'
+import Basic from '@/components/construction/Basic'
+import Locale from '@/components/construction/Locale'
+import Offer from '@/components/construction/Offer'
+// import DelegateForm from '@/components/resident/delegate-form'
+// import ProtocalForm from '@/components/resident/protocal-form'
 
 export default {
   components: {
     Basic,
-    ConclutationForm,
-    SummaryForm,
-    DelegateForm,
-    ProtocalForm
+    Locale,
+    Offer
   },
   data() {
     return {
-      stepBtnGroup: ['基本资料', '意见征询表', '意见征询汇总表', '委托授权书', '项目协议书'],
-      componentGroup: ['Basic', 'ConclutationForm', 'SummaryForm', 'DelegateForm', 'ProtocalForm'],
+      stepBtnGroup: ['施工资料', '查看现场', '报价', '委托授权书', '项目协议书'],
+      componentGroup: ['Basic', 'Locale', 'Offer', 'DelegateForm', 'ProtocalForm'],
       curStep: 0
     }
   },
