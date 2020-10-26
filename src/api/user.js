@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 
-const api_prefix_dev = '/api/user/'
+const api_prefix_dev = 'auth/'
 
 export function login(data) {
   return request({
-    url: api_prefix_dev + 'login',
+    url: api_prefix_dev + 'signin',
     method: 'post',
     data
   })

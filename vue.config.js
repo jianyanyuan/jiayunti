@@ -32,6 +32,8 @@ module.exports = {
   devServer: {
     port: port,
     open: true,
+    https: true,
+    host: '0.0.0.0',
     overlay: {
       warnings: false,
       errors: true
@@ -41,10 +43,10 @@ module.exports = {
       '/api': {
         target: 'http://192.168.0.127:8342', // 跨域的域名
         // ws: true,  // 代理 websockets
-        changeOrigin: true, // 是否开启跨域
-        pathRewrite: {
-          '^/api': '/api'
-        }
+        changeOrigin: true // 是否开启跨域
+        // pathRewrite: {
+        //   '^/api': '/api'
+        // }
       }
     }
     // before: require('./mock/mock-server.js')
