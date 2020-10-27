@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-23 14:08:58
+ * @LastEditTime: 2020-10-27 09:48:43
  * @Description:
  */
 import Vue from 'vue'
@@ -14,12 +14,15 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
+// audit
 import residentRouter from './modules/audit/resident.js'
 import communityRouter from './modules/audit/community.js'
 import designerRouter from './modules/audit/designer.js'
 import streetRouter from './modules/audit/street.js'
 import drawingAuditRouter from './modules/audit/drawing_audit.js'
 import IncreaseLiftRouter from './modules/audit/increase_lift.js'
+// implement
+import ConstructionRouter from './modules/implement/construction.js'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -99,12 +102,15 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/resident/apply'
   },
+  // audit
   residentRouter,
   communityRouter,
   designerRouter,
   streetRouter,
   drawingAuditRouter,
   IncreaseLiftRouter,
+  // implement
+  ConstructionRouter,
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

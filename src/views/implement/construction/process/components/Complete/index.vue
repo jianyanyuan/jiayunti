@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-26 11:15:36
+ * @LastEditTime: 2020-10-27 14:39:16
  * @Description: 施工档案归档、竣工验收
 -->
 <template>
@@ -11,13 +11,19 @@
       <el-button type="primary" style="float:right" @click="hasChanged = !hasChanged">{{ hasChanged ? '修改': '保存' }}</el-button>
     </el-row>
     <template v-if="hasChanged">
-      <el-card class="upload-card" title="档案归档">
+      <el-card class="upload-card">
+        <div slot="header">
+          <span>档案归档</span>
+        </div>
         <div v-for="url in urls[index]" :key="url" class="image-container">
           <img :src="url" alt="档案归档" srcset="">
         </div>
       </el-card>
 
-      <el-card class="upload-card" title="竣工验收">
+      <el-card class="upload-card">
+        <div slot="header">
+          <span>竣工验收</span>
+        </div>
         <div v-for="url in urls[index]" :key="url" class="image-container">
           <img :src="url" alt="竣工验收" srcset="">
         </div>
@@ -32,6 +38,9 @@
 
     <template v-else>
       <el-card class="upload-card" title="档案归档">
+        <div slot="header">
+          <span>档案归档</span>
+        </div>
         <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <!-- <div class="enclosure-tips">
@@ -54,6 +63,9 @@
       </el-card>
 
       <el-card class="upload-card" title="竣工验收">
+        <div slot="header">
+          <span>竣工验收</span>
+        </div>
         <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <!-- <div class="enclosure-tips">
@@ -208,8 +220,8 @@ export default {
     height: 0;
   }
 }
-.upload-card{
-  margin-bottom:30px
+.upload-card {
+  margin-bottom: 30px;
 }
 .upload-card ::v-deep .el-card__body {
   text-align: center;
@@ -217,11 +229,10 @@ export default {
 }
 .enclosure-tips {
   color: #14274e;
-text-align: left;
-  li{
+  text-align: left;
+  li {
     list-style: decimal;
   }
-
 }
 .upload-card ::v-deep .el-upload-dragger {
   width: 400px;
@@ -231,10 +242,10 @@ text-align: left;
   -webkit-transition: background-color 0.2s linear;
   transition: background-color 0.2s linear;
 }
-.image-container{
+.image-container {
   height: 200px;
   margin-bottom: 20px;
-  img{
+  img {
     width: auto;
     height: auto;
 

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-26 10:03:44
+ * @LastEditTime: 2020-10-27 10:07:46
  * @Description: 施工端资料查看
 -->
 <template>
@@ -53,7 +53,10 @@
       <!-- 展示 -->
       <ul>
         <li v-for="url in urls" :key="url" style="text-align:center">
-          <el-image :src="url" />
+          <a href="#" class="download-icon">
+            <i class="el-icon-download ">下载</i>
+          </a>
+          <img :src="url">
         </li>
       </ul>
 
@@ -160,7 +163,15 @@ export default {
 //     opacity: 0.8;
 // }
 li {
-  max-height: 300px;
+  position: relative;
+  .download-icon{
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    &:hover{
+      color: #409EFF;
+    }
+  }
   img {
     width: auto;
     height: auto;

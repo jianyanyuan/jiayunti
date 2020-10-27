@@ -1,16 +1,16 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-10-26 10:41:02
+ * @LastEditTime: 2020-10-27 14:31:26
  * @LastEditors: zfd
  * @Description: 施工报价
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
 -->
 <template>
   <div class="app-container">
-    <el-row type="flex" justify="space-between" align="middle">
-      <span>基本资料</span>
-      <el-button type="primary" style="float:right" @click="editable = !editable">{{ editable ? '修改' : '保存' }}</el-button>
+    <el-row type="flex" justify="end" align="middle">
+      <!-- <span>基本资料</span> -->
+      <el-button type="primary" style="float:right" @click="editable = !editable">{{ editable ? '保 存' : '修 改' }}</el-button>
     </el-row>
 
     <!-- 展示 -->
@@ -18,7 +18,7 @@
       <table class="input-form">
         <thead>
           <tr>
-            施工报价单
+            <td colspan="4">施 工 报 价 单</td>
           </tr>
         </thead>
         <tbody>
@@ -26,7 +26,7 @@
             <td>施工单位</td>
             <td>{{ construction.name }}</td>
             <td>联系人</td>
-            <td>{{ construction.contacts }}</td>
+            <td>{{ construction.contracts }}</td>
           </tr>
           <tr>
             <td>联系电话</td>
@@ -41,30 +41,43 @@
             <td>施工周期（天）</td>
             <td>{{ construction.dayCount }}</td>
           </tr>
-          <tr v-for="(item,index) in construction.projects" :key="index">
-            <td>项目</td>
+          <tr>
+            <td :rowspan="construction.projects.length">项目（元）</td>
+            <td>{{ construction.projects[0].name }}</td>
+            <td colspan="2">{{ construction.projects[0].price }}</td>
+
+          </tr>
+          <tr v-for="(item,index) in construction.projects.slice(1)" :key="index">
             <td>{{ item.name }}</td>
-            <td>金额</td>
-            <td>{{ item.price }}</td>
+            <td colspan="2">{{ item.price }}</td>
           </tr>
           <tr>
             <td>材料</td>
             <td colspan="3">
-              <p v-for="file in fileList" :key="file.name">
+              <a v-for="file in fileList" :key="file.name" class="file-display">
                 <i class="el-icon-document" />
                 {{ file.name }}
-              </p>
+                <i class="el-icon-download" style="float:right" />
+              </a>
             </td>
           </tr>
         </tbody>
       </table>
+      <div style="text-align:center">
+        <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
+
+        <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
+
+      </div>
     </div>
 
     <!-- 填写 -->
     <div v-else>
       <table class="input-form">
         <thead>
-          <tr>施工报价单</tr>
+          <tr>
+            <td colspan="4">施 工 报 价 单</td>
+          </tr>
         </thead>
         <tbody>
           <tr>
@@ -74,7 +87,7 @@
             </td>
             <td>联系人</td>
             <td>
-              <el-input v-model="construction.contacts" />
+              <el-input v-model="construction.contracts" />
             </td>
           </tr>
           <tr>
@@ -94,25 +107,35 @@
               <el-date-picker v-model="construction.time" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" />
             </td>
             <td>施工周期（天）</td>
-            <td>{{ construction.dayCount }}</td>
-          </tr>
-          <tr v-for="(item,index) in construction.projects" :key="index">
-            <td>项目</td>
             <td>
-              {{ item.name }}
-            </td>
-            <td>金额（元）</td>
-            <td>
-              <el-input v-model="item.price" />
+              <el-input v-model="construction.dayCount" />
             </td>
           </tr>
           <tr>
+            <td :rowspan="construction.projects.length">项目（元）</td>
+            <td>{{ construction.projects[0].name }}</td>
+            <td colspan="2">
+              <el-input v-model="construction.projects[0].price" />
+            </td>
+
+          </tr>
+          <tr v-for="(item,index) in construction.projects.slice(1)" :key="index">
+            <td>{{ item.name }}</td>
+            <td colspan="2">
+              <el-input v-model="item.price" />
+            </td>
+          </tr>
+
+          <tr>
             <td>材料</td>
-            <td colspan="3">
-              <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" drag multiple :auto-upload="false">
+            <td colspan="3" style="position:relative">
+
+              <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" multiple :auto-upload="false">
                 <!-- <i class="el-icon-upload" /> -->
-                <div>将文件拖到此处，或点击添加</div>
-                <p>单个文件大小不超过20MB，可上传图片或PDF</p>
+                <div class="upload-container">
+                  <el-button size="small" type="primary">点击上传</el-button>
+                  <span>支持文件格式：pdf、word、excel、txt</span>
+                </div>
               </el-upload>
             </td>
           </tr>
@@ -124,25 +147,26 @@
 
 <script>
 export default {
-  name: 'Resident',
+  name: 'Offer',
   data() {
     return {
       editable: false,
+      fileList: [{ name: '123213' }, { name: '456465' }, { name: '789798' }],
       construction: {
-        name: '',
-        address: '',
-        phone: '',
-        contracts: '',
-        time: '',
-        dayCount: '',
+        name: '中一建',
+        address: '中一建中一建',
+        phone: '15988800323',
+        contracts: '中一建',
+        time: '2020-10-12 15-：48',
+        dayCount: '3',
         projects: [
           {
             name: '人工费',
-            price: ''
+            price: '10000'
           },
           {
             name: '材料费',
-            price: ''
+            price: '100000'
           }
         ]
 
@@ -157,7 +181,9 @@ export default {
 
   },
   methods: {
-
+    nextProcess(arrow) {
+      this.$emit('nextProcess', arrow)
+    },
     handleUploadRemove(file, fileList) {
     },
     // 上传文件发生改变时
@@ -189,10 +215,21 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.upload-container {
+  position: absolute;
+  padding: 0 20px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .input-form {
   position: relative;
   width: 90%;
-  min-width: 1220px;
+  // min-width: 1220px;
   border-collapse: collapse;
   border: 1px solid #aaa;
   thead {
@@ -202,7 +239,7 @@ export default {
   }
   th,
   tr {
-    height: 33px;
+    height: 45px;
     border: 1px solid #aaa;
   }
   td,
@@ -224,5 +261,18 @@ export default {
   .el-date-editor .el-range-separator {
     margin: 4px;
   }
+}
+
+.file-display {
+  display: block;
+  text-align: left;
+  padding: 5px;
+  margin: 10px;
+  border-radius: 5px;
+  // background-color: chartreuse;
+}
+.file-display:hover {
+  color: #409eff;
+  background-color: #ebebeb;
 }
 </style>

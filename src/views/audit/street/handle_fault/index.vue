@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-26 13:33:24
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-26 16:50:42
+ * @LastEditTime: 2020-10-27 13:18:15
  * @Description:
 -->
 <template>
@@ -27,8 +27,8 @@
         <div class="image-container">
           <span class="image-inner">
             <img src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg" alt="违规照片">
-            <span class="icon-container">
-              <svg-icon icon-class="eye" />
+            <span class="icon-container" @click="picShow = true">
+              <i class="el-icon-view icon-center" />
             </span>
 
           </span>
@@ -38,9 +38,16 @@
         <el-input v-model="construction.feedback" disabled />
       </el-form-item>
       <el-form-item label="回复照片:">
-        <el-input v-model="construction.feedbackPic" disabled />
+        <div class="image-container">
+          <span class="image-inner">
+            <img src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg" alt="违规照片">
+            <span class="icon-container" @click="picShow = true">
+              <i class="el-icon-view icon-center" />
+            </span>
+          </span>
+        </div>
       </el-form-item>
-      <el-form-item label="处理说明:" prop="descResult">
+      <el-form-item label="处理回复:" prop="descResult">
         <el-input v-model="construction.descResult" type="textarea" autosize />
       </el-form-item>
       <el-form-item label="处理结果:" prop="result">
@@ -48,11 +55,14 @@
           <el-option v-for="item in resultOptions" :key="item.val" :value="item.key" :label="item.val" />
         </el-select>
       </el-form-item>
-      <el-row type="flex" justify="center" style="margin-top:50px">
+      <el-row type="flex" justify="center" style="margin:50px 0">
         <el-button type="primary">保 存</el-button>
         <el-button>返 回</el-button>
       </el-row>
     </el-form>
+    <el-dialog :visible.sync="picShow" class="dialog-image">
+      <img src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg" alt="">
+    </el-dialog>
   </div>
 </template>
 
@@ -61,6 +71,7 @@ export default {
   name: 'HandleFault',
   data() {
     return {
+      picShow: false,
       construction: {
         org: '中一建',
         code: '马家浜1号楼',
@@ -73,6 +84,10 @@ export default {
         descResult: '',
         result: 0
       },
+      rule: {
+        descResult: [{ required: true, message: '请给出处理回复', trigger: 'blur' }],
+        result: [{ required: true, message: '请给出处理结果', trigger: 'blur' }]
+      },
       resultOptions: [
         { key: 0, val: '通过' },
         { key: -1, val: '不通过' }
@@ -84,30 +99,61 @@ export default {
 
 <style scoped lang="scss">
 .handle-form {
-  width: 520px;
+  width: 820px;
   margin: 50px auto 0;
 }
 .image-container {
   width: 150px;
   height: 150px;
-  padding: 8px;
-  border: 1px solid #434343;
+  // padding: 2px;
+  border: 1px solid #c0ccda;
   border-radius: 2px;
+    position: relative;
+
   .image-inner {
     display: inline-block;
     height: 100%;
-    position: relative;
+
     img {
       width: 100%;
       height: 100%;
-      object-fit: fill;
+      // object-fit: fill;
     }
     .icon-container {
+      // visibility: hidden;
+      width: 100%;
+      height: 100%;
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      left: 0;
+      text-align: center;
+      vertical-align: middle;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      .icon-center{
+        visibility: hidden;
+         line-height: 150px;
+
+      }
+      // top: 50%;
+      // left: 50%;
+      // transform: translate(-50%, -50%);
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.5);
+        transition: opacity 0.3s;
+        .icon-center{
+          visibility: visible;
+        }
+        // opacity: 0;
+        // color: #fff;
+      }
     }
+  }
+}
+.dialog-image{
+  text-align: center;
+  img{
+    width: 100%;
   }
 }
 </style>>

@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-10-23 14:48:09
+ * @LastEditTime: 2020-10-27 09:04:58
  * @LastEditors: zfd
  * @Description: 增梯办路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -27,7 +27,7 @@ const drawingAuditRouter = {
       name: 'IncreaseLiftList',
       meta: {
         title: '申请列表',
-        icon: 'institution',
+        icon: 'list',
         roles: ['admin', 'increase_lift']
       }
     },
@@ -35,10 +35,10 @@ const drawingAuditRouter = {
       path: 'report',
       component: () => import('@/views/audit/increase_lift/report/index'),
       name: 'IncreaseLiftReport',
-      hidden: true,
+      // hidden: true,
       meta: {
         title: '上传报告',
-        icon: '',
+        icon: 'list',
         roles: ['admin', 'increase_lift']
       }
     },
@@ -46,10 +46,10 @@ const drawingAuditRouter = {
       path: 'pipe',
       component: () => import('@/views/audit/increase_lift/pipe/index'),
       name: 'IncreaseLiftPipe',
-      hidden: true,
+      // hidden: true,
       meta: {
         title: '管道踏勘',
-        icon: '',
+        icon: 'list',
         roles: ['admin', 'increase_lift']
       }
     }
