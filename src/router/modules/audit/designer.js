@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-10-19 15:05:41
+ * @LastEditTime: 2020-10-28 15:25:42
  * @LastEditors: zfd
  * @Description: 审批端设计路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -49,6 +49,28 @@ const designerRouter = {
       // hidden: true,
       meta: {
         title: '查看',
+        icon: 'eye',
+        roles: ['admin', 'designer']
+      }
+    },
+    {
+      path: 'intro_edit',
+      component: () => import('@/views/audit/designer/intro_edit/index'), // Parent router-view
+      name: 'DesignerIntroEdit',
+      // hidden: true,
+      meta: {
+        title: '公司介绍-编辑',
+        icon: 'eye',
+        roles: ['admin', 'designer']
+      }
+    },
+    {
+      path: 'introduction',
+      component: () => import('@/views/audit/designer/introduction/index'), // Parent router-view
+      name: 'DesignerIntro',
+      // hidden: true,
+      meta: {
+        title: '公司介绍',
         icon: 'eye',
         roles: ['admin', 'designer']
       }

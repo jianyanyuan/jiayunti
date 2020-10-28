@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-19 15:13:56
+ * @LastEditTime: 2020-10-28 14:00:53
  * @Description: user mock
  */
 const api_prefix_dev = '/api/user/'

@@ -2,7 +2,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-10-23 08:32:13
+ * @LastEditTime: 2020-10-27 15:35:50
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -47,11 +47,12 @@ const state = {
     { key: 4, val: '管道踏勘' },
     { key: 5, val: '施工图设计' },
     { key: 6, val: '施工图审核' },
-    { key: 7, val: '街道审核' },
-    { key: 8, val: '联合审查' },
-    { key: 9, val: '审核通过' },
-    { key: 10, val: '驳回' },
-    { key: 11, val: '已撤销' }
+    { key: 7, val: '施工报价' },
+    { key: 8, val: '街道审核' },
+    { key: 9, val: '联合审查' },
+    { key: 10, val: '审核通过' },
+    { key: 11, val: '驳回' },
+    { key: 12, val: '已撤销' }
   ],
   applyTag: [
     { key: 0, val: 'warning' },
@@ -63,9 +64,10 @@ const state = {
     { key: 6, val: 'warning' },
     { key: 7, val: 'warning' },
     { key: 8, val: 'warning' },
-    { key: 9, val: 'success' },
-    { key: 10, val: 'info' },
-    { key: 11, val: 'info' }
+    { key: 9, val: 'warning' },
+    { key: 10, val: 'success' },
+    { key: 11, val: 'info' },
+    { key: 12, val: 'info' }
   ],
   // 省份--城市--区县
   addressOptions: [],
