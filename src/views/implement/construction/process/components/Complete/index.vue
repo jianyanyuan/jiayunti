@@ -2,23 +2,30 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-26 09:11:32
- * @Description: 居民申请意见征询表
+ * @LastEditTime: 2020-10-27 14:39:16
+ * @Description: 施工档案归档、竣工验收
 -->
 <template>
   <div>
-    <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
-      <span>意见征询表</span>
-      <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
-      <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">保存</el-button>
+    <el-row class="clearfix" style="padding:18px 20px">
+      <el-button type="primary" style="float:right" @click="hasChanged = !hasChanged">{{ hasChanged ? '修改': '保存' }}</el-button>
     </el-row>
     <template v-if="hasChanged">
-      <el-card v-for="(room,index) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
+      <el-card class="upload-card">
         <div slot="header">
-          <span>{{ room }}</span>
+          <span>档案归档</span>
         </div>
         <div v-for="url in urls[index]" :key="url" class="image-container">
-          <img :src="url" alt="意见征询表" srcset="">
+          <img :src="url" alt="档案归档" srcset="">
+        </div>
+      </el-card>
+
+      <el-card class="upload-card">
+        <div slot="header">
+          <span>竣工验收</span>
+        </div>
+        <div v-for="url in urls[index]" :key="url" class="image-container">
+          <img :src="url" alt="竣工验收" srcset="">
         </div>
       </el-card>
       <div style="text-align:center">
@@ -30,13 +37,13 @@
     </template>
 
     <template v-else>
-      <el-card v-for="(room, index) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
+      <el-card class="upload-card" title="档案归档">
         <div slot="header">
-          <span>{{ room }}</span>
+          <span>档案归档</span>
         </div>
         <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
-          <div class="enclosure-tips">
+          <!-- <div class="enclosure-tips">
             所需附件：
             <ul>
               <li>
@@ -49,7 +56,32 @@
                 意见征询表 / 征询表+委托书+受委托人身份证
               </li>
             </ul>
-          </div>
+          </div> -->
+          <div>将文件拖到此处，或点击添加</div>
+          <p>单个文件大小不超过20MB，可上传图片或PDF</p>
+        </el-upload>
+      </el-card>
+
+      <el-card class="upload-card" title="竣工验收">
+        <div slot="header">
+          <span>竣工验收</span>
+        </div>
+        <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
+          <!-- <i class="el-icon-upload" /> -->
+          <!-- <div class="enclosure-tips">
+            所需附件：
+            <ul>
+              <li>
+                业主身份证
+              </li>
+              <li>
+                业主房产证
+              </li>
+              <li>
+                意见征询表 / 征询表+委托书+受委托人身份证
+              </li>
+            </ul>
+          </div> -->
           <div>将文件拖到此处，或点击添加</div>
           <p>单个文件大小不超过20MB，可上传图片或PDF</p>
         </el-upload>
@@ -64,7 +96,7 @@ import * as File from '@/api/file'
 // import { deepClone } from '@/utils'
 
 export default {
-  name: 'ConsultationForm',
+  name: 'Complete',
   data() {
     return {
       // 修改后重新保存
@@ -178,17 +210,29 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.clearfix {
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
+}
+.upload-card {
+  margin-bottom: 30px;
+}
 .upload-card ::v-deep .el-card__body {
   text-align: center;
   margin-bottom: 30px;
 }
 .enclosure-tips {
   color: #14274e;
-text-align: left;
-  li{
+  text-align: left;
+  li {
     list-style: decimal;
   }
-
 }
 .upload-card ::v-deep .el-upload-dragger {
   width: 400px;
@@ -198,10 +242,10 @@ text-align: left;
   -webkit-transition: background-color 0.2s linear;
   transition: background-color 0.2s linear;
 }
-.image-container{
+.image-container {
   height: 200px;
   margin-bottom: 20px;
-  img{
+  img {
     width: auto;
     height: auto;
 

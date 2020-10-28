@@ -2,8 +2,8 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-27 09:24:35
- * @Description:图审列表
+ * @LastEditTime: 2020-10-26 13:56:01
+ * @Description:街道施工违规处理
 -->
 
 <template>
@@ -106,7 +106,7 @@
           <span>{{ scope.row.design.time }}</span>
         </template>
       </el-table-column> -->
-      <el-table-column label="审核时间" min-width="200" prop="auditTime" sortable align="center">
+      <el-table-column label="违规时间" min-width="200" prop="auditTime" sortable align="center">
         <template v-if="scope.row.auditTime" slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.auditTime }}</span>
@@ -120,25 +120,19 @@
       <el-table-column align="center" label="操作" min-width="250">
         <template slot-scope="scope">
           <el-row type="flex" justify="space-around">
-            <el-button size="mini" type="warning" @click="$router.push({path:'/increase_lift/report',query:{applyId:scope.row.Id}})">审核</el-button>
-            <el-button size="mini" type="warning" @click="$router.push({path:'/increase_lift/pipe',query:{applyId:scope.row.Id}})">管道踏勘</el-button>
-            <el-button size="mini" type="primary" @click="flowVisible = true">查看流程</el-button>
+            <el-button size="mini" type="warning" @click="$router.push({path:'/street/supervise',query:{applyId:scope.row.Id}})">查看</el-button>
+            <el-button size="mini" type="warning" @click="$router.push({path:'/street/handle_default',query:{applyId:scope.row.Id}})">处理</el-button>
           </el-row>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
-    <!-- 查看流程 -->
-    <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
-      <flow />
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import { keyToVal } from '@/utils'
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
-import Flow from '@/components/street/Flow'
 
 export default {
   filters: {
@@ -148,7 +142,6 @@ export default {
     elDragDialog
   },
   components: {
-    Flow
   },
   data() {
     return {

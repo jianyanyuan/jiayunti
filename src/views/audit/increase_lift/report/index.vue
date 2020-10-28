@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-23 16:16:17
+ * @LastEditTime: 2020-10-27 09:38:53
  * @Description: 增梯办联合审查报告
 -->
 <template>
@@ -47,17 +47,25 @@
       </div>
       <template v-if="hasChanged" class="upload-card">
 
-        <div v-for="url in urls" :key="url" class="image-container">
-          <img :src="url" alt="联合审查报告" srcset="">
-        </div>
+        <el-form label-width="120px">
+          <el-form-item label="审核意见:">
+            {{ form.audit }}
+          </el-form-item>
+          <el-form-item label="报告:">
+            <image-card url="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg" @show="showPic" />
+          </el-form-item>
+          <el-form-item label="审核结果:">
+            {{ form.result }}
+          </el-form-item>
+        </el-form>
       </template>
 
       <template v-else>
-        <el-form label-width="120px">
-          <el-form-item label="审核意见">
-            <el-input v-model="audit" type="textarea" :rows="4" />
+        <el-form label-width="120px" :model="form" :rules="rule">
+          <el-form-item label="审核意见:" prop="audit">
+            <el-input v-model="form.audit" type="textarea" :rows="4" />
           </el-form-item>
-          <el-form-item label="报告">
+          <el-form-item label="报告:" prop="attachment">
             <el-upload action="#" class="form-card" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
               <!-- <i class="el-icon-upload" /> -->
               <div class="enclosure-tips">
@@ -67,14 +75,18 @@
               <div>单个文件大小不超过20MB，可上传图片或PDF</div>
             </el-upload>
           </el-form-item>
-          <el-form-item>
-            <el-button type="danger">否决</el-button>
-            <el-button type="success">通过</el-button>
+          <el-form-item label="审核结果:" prop="result">
+            <el-select v-model="form.result">
+              <el-option v-for="item in resultOptions" :key="item.val" :value="item.key" :label="item.val" />
+            </el-select>
           </el-form-item>
         </el-form>
 
       </template>
     </el-card>
+    <el-dialog :visible.sync="picShow" class="dialog-image">
+      <img src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg" alt="">
+    </el-dialog>
   </div>
 </template>
 
@@ -82,16 +94,29 @@
 import * as File from '@/api/file'
 // import { deepClone } from '@/utils'
 import { mapGetters } from 'vuex'
-
+import ImageCard from '@/components/Imagecard'
 export default {
   name: 'ConsultationForm',
+  components: {
+    ImageCard
+  },
   data() {
     return {
+      picShow: false,
       // 修改后重新保存
       hasChanged: false,
       formLoading: false,
       rooms: ['401', '402', '403'],
-      model: [],
+      form: {
+        audit: '的撒打算',
+        attachment: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
+        result: 0
+      },
+      rule: {
+        audit: [{ required: true, message: '请给出审核意见', trigger: 'blur' }],
+        attachment: [{ required: true, message: '请上传报告', trigger: 'blur' }],
+        result: [{ required: true, message: '请给出审核结果', trigger: 'blur' }]
+      },
       basic: {
         name: '李先生',
         address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ', 'xiaoqu'],
@@ -108,7 +133,11 @@ export default {
         [{ name: '身份证', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg' }],
         [{ name: '身份证', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg' }],
         [{ name: '身份证', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg' }]],
-      uploadFile: null
+      uploadFile: null,
+      resultOptions: [
+        { key: 0, val: '通过' },
+        { key: -1, val: '不通过' }
+      ]
     }
   },
 
@@ -124,6 +153,9 @@ export default {
     this.basic.address = this.basic.address.slice(0, 3)
   },
   methods: {
+    showPic() {
+      this.picShow = true
+    },
     handleUploadRemove(file, fileList) {
     },
     // handleUploadChange(file, fileList) {
@@ -212,7 +244,6 @@ export default {
 .enclosure-tips {
   color: #14274e;
   text-align: center;
-
 }
 .show-form ::v-deep {
   .el-cascader,
@@ -235,11 +266,11 @@ export default {
   -webkit-transition: background-color 0.2s linear;
   transition: background-color 0.2s linear;
 }
-.image-container{
+.image-container {
   text-align: center;
   height: 200px;
   margin-bottom: 20px;
-  img{
+  img {
     width: auto;
     height: auto;
 
