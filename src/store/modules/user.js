@@ -2,10 +2,10 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-21 08:22:51
+ * @LastEditTime: 2020-10-28 16:41:31
  * @Description: 用户仓库
  */
-import { login, logout, getInfo } from '@/api/user'
+import User from '@/api/user'
 import { getToken, setToken, removeToken, getRoleToken, setRoleToken, removeRoleToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 const getDefaultState = () => {
@@ -52,7 +52,7 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      User.login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data)
         setToken(data.token)
@@ -67,7 +67,7 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(getRoleToken()).then(response => {
+      User.getInfo(getRoleToken()).then(response => {
         const { data } = response
         if (!data) {
           return reject('Verification failed, please Login again.')
@@ -92,7 +92,7 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      User.logout(state.token).then(() => {
         removeToken() // must remove  token  first
         removeRoleToken()
         resetRouter()

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-19 15:13:56
+ * @LastEditTime: 2020-10-29 10:13:09
  * @Description: user mock
  */
 const api_prefix_dev = '/api/user/'
@@ -23,7 +23,7 @@ const tokens = {
   street: {
     token: 'street-token'
   },
-  'drawing_audit': {
+  drawing_audit: {
     token: 'drawing_audit-token'
   }
 }

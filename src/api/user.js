@@ -1,8 +1,16 @@
+/*
+ * @Author: zfd
+ * @Date: 2020-10-13 09:15:58
+ * @LastEditors: zfd
+ * @LastEditTime: 2020-10-29 10:08:54
+ * @Description:
+ */
 import request from '@/utils/request'
+// import qs from 'qs'
 
-const api_prefix_dev = 'auth/'
+const api_prefix_dev = '/auth/'
 
-export function login(data) {
+const login = (data) => {
   return request({
     url: api_prefix_dev + 'signin',
     method: 'post',
@@ -10,17 +18,38 @@ export function login(data) {
   })
 }
 
-export function getInfo(token) {
+const regist = (data) => {
   return request({
-    url: api_prefix_dev + 'info',
-    method: 'get',
-    params: { token }
+    url: api_prefix_dev + 'signup',
+    method: 'post',
+    data
   })
 }
 
-export function logout() {
+const getCode = params => {
   return request({
-    url: api_prefix_dev + 'logout',
-    method: 'post'
+    url: '/location',
+    method: 'get',
+    params
   })
+}
+// export function getInfo(token) {
+//   return request({
+//     url: api_prefix_dev + 'info',
+//     method: 'get',
+//     params: { token }
+//   })
+// }
+
+// export function logout() {
+//   return request({
+//     url: api_prefix_dev + 'logout',
+//     method: 'post'
+//   })
+// }
+
+export default {
+  login,
+  regist,
+  getCode
 }

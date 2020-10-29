@@ -55,6 +55,7 @@
 <script>
 import * as Validator from '@/utils/element-validator'
 import { mapGetters } from 'vuex'
+import User from '@/api/user'
 export default {
   data() {
     return {
@@ -94,18 +95,27 @@ export default {
   methods: {
     // 注册用户
     submit(formName) {
-      this.$refs[formName].validate((success) => {
-        if (success) {
-          if (this.address.city.length === 0 || this.address.plot.length === 0) {
-            this.$message.error('请选择地址')
-            return false
-          }
-          this.form.address = this.address.city.concat(this.address.plot)
-          console.log('注册')
-        } else {
-          this.$message.error('请补全注册信息')
-        }
-      })
+      // this.$refs[formName].validate((success) => {
+      //   if (success) {
+      //     if (this.address.city.length === 0 || this.address.plot.length === 0) {
+      //       this.$message.error('请选择地址')
+      //       return false
+      //     }
+      //     this.form.address = this.address.city.concat(this.address.plot)
+      //     console.log('注册')
+      //   } else {
+      //     this.$message.error('请补全注册信息')
+      //   }
+      // })
+      User.regist({
+        address: ['12'],
+        idcard: '111',
+        password: '1111',
+        phonenumber: '111',
+        username: '1111',
+        verificationcode: '111'
+      }).then(res => this.$message.success(res))
+        .catch(err => this.$message.error(err))
     },
     // 验证码focus事件
     checkPhone() {
@@ -115,20 +125,22 @@ export default {
     },
     // 获取验证码
     getVertification() {
-      const reg = /^1[3456789]\d{9}$/
-      if (this.form.phone && reg.test(this.form.phone)) {
-        this.vertifyDisable = true
-        this.timer = setInterval(() => {
-          if (this.countDown > 0 && this.timer) {
-            this.countDown--
-          } else {
-            this.timer = null
-            this.vertifyDisable = false
-          }
-        }, 1000)
-      } else {
-        this.$message.error('请输入手机号')
-      }
+      User.getCode({ page: 0, size: 30 }).then(res => this.$message.success(res))
+        .catch(err => this.$message.error(err))
+      // const reg = /^1[3456789]\d{9}$/
+      // if (this.form.phone && reg.test(this.form.phone)) {
+      //   this.vertifyDisable = true
+      //   this.timer = setInterval(() => {
+      //     if (this.countDown > 0 && this.timer) {
+      //       this.countDown--
+      //     } else {
+      //       this.timer = null
+      //       this.vertifyDisable = false
+      //     }
+      //   }, 1000)
+      // } else {
+      //   this.$message.error('请输入手机号')
+      // }
     }
   }
 }
