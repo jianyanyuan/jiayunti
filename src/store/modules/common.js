@@ -2,7 +2,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-10-27 15:35:50
+ * @LastEditTime: 2020-10-29 10:36:11
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -137,13 +137,7 @@ const actions = {
         children: [
           {
             value: 'shequ',
-            label: '社区',
-            children: [
-              {
-                value: 'xiaoqu',
-                label: '小区'
-              }
-            ]
+            label: '社区'
           },
           {
             value: 'shequ1',

@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-28 15:17:52
+ * @LastEditTime: 2020-10-29 15:28:31
  * @Description:申请列表
 -->
 
@@ -10,72 +10,91 @@
   <div class="app-container">
     <el-button type="primary" size="medium" style="margin-bottom:20px" @click="addApply">新增申请</el-button>
 
-    <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'applyTime', order: 'descending'}" border fit highlight-current-row @row-dblclick="flowView">
-      <el-table-column align="center" label="序号" min-width="50">
-        <template slot-scope="scope">
-          {{ scope.$index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column label="编号" prop="code" min-width="200" align="center" />
-      <el-table-column label="提交时间" min-width="200" align="center" prop="applyTime" sortable>
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.applyTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="审核时间" min-width="200" align="center" prop="auditTime" sortable>
-        <template v-if="scope.row.auditTime" slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.auditTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="状态" min-width="110" align="center" prop="status" sortable>
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | keyToVal(applyTag)">{{ scope.row.status | keyToVal(applyStatus) }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="操作">
-        <template slot-scope="scope">
-          <el-row type="flex" justify="space-around">
-            <el-button v-if="scope.row.status === 0" size="mini" type="primary" @click="$router.push({path:'/resident/apply',query:{applyId:scope.row.Id}})">提交材料</el-button>
-            <el-button v-if="scope.row.status === 1" size="mini" type="success" @click="viewAudit">审核结果</el-button>
+    <el-card>
+      <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'applyTime', order: 'descending'}" fit highlight-current-row @row-dblclick="flowView">
+        <el-table-column align="center" label="序号" width="50">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column label="编号" prop="code" align="center" />
+        <el-table-column label="提交时间" align="center" prop="applyTime" sortable>
+          <template slot-scope="scope">
+            <i class="el-icon-time" />
+            <span>{{ scope.row.applyTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="审核时间" align="center" prop="auditTime" sortable>
+          <template v-if="scope.row.auditTime" slot-scope="scope">
+            <i class="el-icon-time" />
+            <span>{{ scope.row.auditTime }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" align="center" prop="status" sortable>
+          <template slot-scope="scope">
+            <el-tag :type="scope.row.status | keyToVal(applyTag)">{{ scope.row.status | keyToVal(applyStatus) }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="操作">
+          <template slot-scope="scope">
+            <el-row type="flex" justify="space-around">
+              <el-button v-if="scope.row.status === 0" size="mini" type="warning" @click="$router.push({path:'/resident/apply',query:{applyId:scope.row.Id}})">提交材料</el-button>
+              <el-tag v-if="scope.row.status === 1 && !scope.row.auditTime" size="medium" type="warning" effect="dark">社区受理中</el-tag>
 
-            <!-- <el-button v-if="scope.row.status === 1 && scope.row.dissent" size="mini" type="success" @click="dissentView"> 查看反馈</el-button> -->
-            <el-button v-if="scope.row.status === 10" size="mini" type="danger" @click="viewAudit(scope.row)">审核意见</el-button>
-            <el-tag v-if="scope.row.status === 2" size="medium" type="success">申请已通过</el-tag>
+              <el-button v-if="[1,6,8,9].includes(scope.row.status) && scope.row.auditTime" size="mini" type="warning" @click="$router.push({name:'',params:{}})">审核结果</el-button>
+              <el-button v-if="scope.row.status === 3" size="mini" type="warning" @click="$router.push({name:'',params:{}})">异议反馈</el-button>
+              <el-tag v-if="scope.row.status === 4" size="medium" type="warning" effect="dark">管道踏勘中</el-tag>
+
+              <el-button v-if="scope.row.status === 2 || scope.row.status === 5" size="mini" type="success" @click="$router.push({name:'',params:{}})">查看设计</el-button>
+              <el-button v-if="scope.row.status === 7" size="mini" type="warning" @click="$router.push({name:'',params:{}})">查看报价</el-button>
+              <el-tag v-if="scope.row.status === 10" size="medium" type="success" effect="dark">申请已通过</el-tag>
+              <el-tag v-if="scope.row.status === 11" size="medium" type="danger" effect="dark">已驳回</el-tag>
+              <el-tag v-if="scope.row.status === 12" size="medium" type="danger" effect="dark">已撤销</el-tag>
+
+              <!-- <el-button v-if="scope.row.status === 1 && scope.row.dissent" size="mini" type="success" @click="dissentView"> 查看反馈</el-button> -->
+              <!-- <el-button v-if="scope.row.status === 10" size="mini" type="danger" @click="viewAudit(scope.row)">审核意见</el-button> -->
             <!-- <el-button v-if="scope.row.status !== 0" size="mini" type="primary" @click="flowView">查看流程</el-button> -->
-          </el-row>
-        </template>
-      </el-table-column>
-      <el-table-column label="撤销申请" min-width="80" align="center">
-        <template slot-scope="scope">
-          <el-popconfirm v-if="scope.row.status !== 10 && scope.row.status !== 2" title="确认撤销申请吗？" @onConfirm="cancelApply(scope.row)">
-            <el-button slot="reference" size="mini" type="text">撤销</el-button>
-          </el-popconfirm>
-        </template>
-      </el-table-column>
-    </el-table>
+            </el-row>
+          </template>
+        </el-table-column>
+        <el-table-column label="撤销申请" align="center">
+          <template slot-scope="scope">
+            <el-popconfirm v-if="scope.row.status !== 11 && scope.row.status !== 12" title="确认撤销申请吗？" @onConfirm="cancelApply(scope.row)">
+              <el-button slot="reference" size="mini" type="text" style="letter-spacing:1em">撤销</el-button>
+            </el-popconfirm>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
     <div>
       <p>双击行 查看当前申请流程</p>
       <p>联系方式：</p>
       <p>审核单位：XXX街道办 审核人员：XXX 联系电话：0512XXXX 工作时间：周一至周五 9:00-11:00 14:00-17:00</p>
     </div>
     <!-- 新增申请 -->
-    <el-dialog v-el-drag-dialog title="新增申请" center :visible.sync="model.visible" :close-on-click-modal="false" min-width="700px" @closed="resetForm">
+    <el-dialog v-el-drag-dialog title="新增申请" :visible.sync="model.visible" :close-on-click-modal="false" width="600px" top="10vh" @closed="resetForm">
       <el-form ref="form" v-loading="formLoading" :model="model.form" :rules="model.rules" label-width="120px">
         <el-form-item label="申请人" prop="name">
           <el-input v-model="model.form.name" />
         </el-form-item>
         <el-form-item label="地址" prop="address">
-          <el-cascader v-model="model.form.address" :options="addressOptions" />
-          <label for="address-detail" class="label-detail"> — </label>
-          <el-cascader v-model="plot" :options="plotOptions" />
+          <el-row>
+            <el-col :span="12">
+              <el-cascader v-model="model.form.address" :options="addressOptions" style="display:block" />
+            </el-col>
+            <el-col :span="2" style="text-align:center"><label for="address-detail" class="label-detail"> — </label></el-col>
+            <el-col :span="10">
+              <el-cascader v-model="plot" :options="plotOptions" style="display:block" />
+            </el-col>
+          </el-row>
         </el-form-item>
         <el-form-item label="电话" prop="phone">
           <el-input v-model="model.form.phone" />
         </el-form-item>
         <el-form-item label="加装电梯地址" prop="elevatorAddress">
-          <el-input v-model="model.form.elevatorAddress" placeholder="xxx小区xx幢xxx单元" />
+          <div> <input v-model="elevatorAddress.cell" type="text" name="cell" autocomplete="false"> 小区</div>
+          <div> <input v-model="elevatorAddress.building" type="text" name="building" autocomplete="false"> 幢</div>
+          <div> <input v-model="elevatorAddress.unit" type="text" name="unit" autocomplete="false"> 单元</div>
         </el-form-item>
         <el-form-item label="设计单位" prop="designer">
           <el-select v-model="model.form.designer">
@@ -99,11 +118,10 @@
           </el-input>
         </el-form-item>
       </el-form>
-
-      <span slot="footer">
+      <div style="text-align:center">
         <el-button @click="model.visible = false">取 消</el-button>
         <el-button type="primary" @click="postApply">确 定</el-button>
-      </span>
+      </div>
     </el-dialog>
     <!-- 审核结果 -->
     <el-dialog v-el-drag-dialog title="审核结果" center :visible.sync="auditVisible" :close-on-click-modal="false" min-width="700px">
@@ -167,7 +185,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { keyToVal, deepClone } from '@/utils'
+import { keyToVal, deepClone, parseTime } from '@/utils'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import Flow from '@/components/street/Flow'
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
@@ -175,14 +193,15 @@ const defaultForm = {
   name: '',
   address: [],
   phone: '',
-  elevatorAddress: '',
+  elevatorAddress: [],
   designer: '',
   device: '',
   rooms: [{ key: 'defaultRoom', val: '' }]
 }
 export default {
   filters: {
-    keyToVal
+    keyToVal,
+    parseTime
   },
   components: {
     Flow
@@ -190,6 +209,25 @@ export default {
   directives: { elDragDialog },
   data() {
     return {
+      elevatorAddress: {
+        cell: null,
+        building: null,
+        unit: null,
+        // 迭代器
+        [Symbol.iterator]: function() {
+          let index = 0
+          const keys = Object.keys(this)
+          const next = () => {
+            return {
+              value: this[keys[index]],
+              done: keys.length === index++
+            }
+          }
+          return {
+            next
+          }
+        }
+      },
       formLoading: false,
       listLoading: false,
       auditVisible: false,
@@ -233,9 +271,9 @@ export default {
         form: deepClone(defaultForm),
         rules: {
           name: [{ required: true, validator: validateTrueName, trigger: 'blur' }],
-          address: [{ required: true, message: '地址不为空', trigger: 'blur' }],
+          address: [{ required: true }],
           phone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-          elevatorAddress: [{ required: true, message: '电梯地址不为空', trigger: 'blur' }],
+          elevatorAddress: [{ required: true }],
           designer: [{ required: true, message: '设计单位不为空', trigger: 'blur' }],
           device: [{ required: true, message: '设备不为空', trigger: 'blur' }]
         }
@@ -263,35 +301,87 @@ export default {
       list: [
         {
           code: 'xxx小区xxxx幢xxx单元',
-          applyTime: '2020-10-12 10:56',
-          auditTime: '2020-10-14 10:56',
-          status: 1, // 公示阶段
-          dissent: false // 暂无异议
-        },
-        {
-          code: 'apply10131146',
-          applyTime: '2020-10-13 11:46',
-          auditTime: '2020-10-14 10:56',
-          status: 1, // 公示阶段
-          dissent: true // 暂无异议
-        },
-        {
-          code: 'apply10140800',
-          applyTime: '2020-10-14 08:00',
-          auditTime: '2020-10-14 10:56',
-          status: 10 // 已驳回
-        },
-        {
-          code: 'apply10140900',
-          applyTime: '2020-10-14 09:00',
-          auditTime: '2020-10-14 10:56',
-          status: 2 // 审核通过
-        },
-        {
-          code: 'apply10150900',
-          applyTime: '2020-10-15 09:00',
+          applyTime: '2020-10-12 10:53',
           auditTime: '',
-          status: 0 // 正在审核中
+          status: 0 // 申请中
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          applyTime: '2020-10-12 10:52',
+          auditTime: '',
+          status: 1 // 社区受理
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          applyTime: '2020-10-12 10:51',
+          auditTime: '2020-10-12 10:56',
+          status: 1 // 社区受理
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          applyTime: '2020-10-12 10:50',
+          auditTime: '2020-10-12 10:56',
+          status: 2 // 方案设计
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          applyTime: '2020-10-12 10:49',
+          auditTime: '2020-10-12 10:56',
+          status: 3 // 公示阶段
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          applyTime: '2020-10-12 10:48',
+          auditTime: '2020-10-12 10:56',
+          status: 4 // 管道踏勘
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          applyTime: '2020-10-12 10:47',
+          auditTime: '2020-10-12 10:56',
+          status: 5 // 施工图设计
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          applyTime: '2020-10-12 10:46',
+          auditTime: '2020-10-12 10:56',
+          status: 6 // 施工图审核
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          applyTime: '2020-10-12 10:45',
+          auditTime: '2020-10-12 10:56',
+          status: 7 // 施工报价
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          applyTime: '2020-10-12 10:44',
+          auditTime: '2020-10-12 10:56',
+          status: 8 // 街道审核
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          applyTime: '2020-10-12 10:43',
+          auditTime: '2020-10-12 10:56',
+          status: 9 // 联合审查
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          applyTime: '2020-10-12 10:42',
+          auditTime: '2020-10-12 10:56',
+          status: 10 // 审核通过
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          applyTime: '2020-10-12 10:41',
+          auditTime: '2020-10-12 10:56',
+          status: 11 // 驳回
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          applyTime: '2020-10-12 10:40',
+          auditTime: '2020-10-12 10:56',
+          status: 12 // 已撤销
         }
       ]
     }
@@ -299,6 +389,15 @@ export default {
   computed: {
     ...mapState('common', ['applyStatus', 'applyTag', 'handleStatus', 'handleTag']),
     ...mapGetters('common', ['addressOptions', 'plotOptions'])
+  },
+  watch: {
+    elevatorAddress: {
+      handler(newValue) {
+        this.model.form.elevatorAddress = [...newValue]
+      },
+      deep: true,
+      immediate: true
+    }
   },
   created() {
   },
@@ -314,7 +413,7 @@ export default {
     addApply() {
       this.model.form.name = '张飞达'
       this.model.form.address = ['jiangsu', 'suzhou', 'gusu']
-      this.plot = ['canglang', 'shequ', 'xiaoqu']
+      this.plot = ['canglang', 'shequ']
       this.model.form.phone = '15988800323'
       this.model.visible = true
     },
@@ -327,12 +426,18 @@ export default {
     },
     resetForm() {
       this.model.form = deepClone(defaultForm)
+      this.plot = []
     },
+    // 新增申请
     postApply() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          if (this.plot.length === 0) {
+          if (!this.plot.length || !this.model.form.address.length) {
             this.$message.error('请选择地址')
+            return false
+          }
+          if (this.model.form.elevatorAddress.includes(null)) {
+            this.$message.error('请填写加装电梯地址')
             return false
           }
           this.formLoading = true
@@ -342,8 +447,8 @@ export default {
           this.formLoading = false
           this.listLoading = true
           this.list.push({
-            code: 'xxx小区' + Date.now,
-            applyTime: new Date(),
+            code: `${this.model.form.elevatorAddress[0]}小区${this.model.form.elevatorAddress[0]}幢${this.model.form.elevatorAddress[0]}单元`,
+            applyTime: new Date().getTime(),
             auditTime: '',
             status: 0
           })
@@ -358,4 +463,16 @@ export default {
 }
 </script>
 <style scoped lang="scss">
+.dialog-container {
+  min-width: 700px;
+}
+input {
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  height: 25px;
+  padding: 0 15px;
+}
+input:focus {
+  outline: none;
+}
 </style>
