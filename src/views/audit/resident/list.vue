@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-29 15:28:31
+ * @LastEditTime: 2020-10-30 16:07:43
  * @Description:申请列表
 -->
 
@@ -38,18 +38,21 @@
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="scope.row.status === 0" size="mini" type="warning" @click="$router.push({path:'/resident/apply',query:{applyId:scope.row.Id}})">提交材料</el-button>
-              <el-tag v-if="scope.row.status === 1 && !scope.row.auditTime" size="medium" type="warning" effect="dark">社区受理中</el-tag>
+              <el-button v-if="scope.row.status === 0" size="mini" type="warning" plain @click="$router.push({path:'/resident/apply',query:{applyId:scope.row.Id}})">提交材料</el-button>
+              <el-tag v-if="scope.row.status === 1 && !scope.row.auditTime" size="medium" type="warning" effect="light">社区受理中</el-tag>
 
-              <el-button v-if="[1,6,8,9].includes(scope.row.status) && scope.row.auditTime" size="mini" type="warning" @click="$router.push({name:'',params:{}})">审核结果</el-button>
-              <el-button v-if="scope.row.status === 3" size="mini" type="warning" @click="$router.push({name:'',params:{}})">异议反馈</el-button>
-              <el-tag v-if="scope.row.status === 4" size="medium" type="warning" effect="dark">管道踏勘中</el-tag>
+              <el-button v-if="[1,6,8,9].includes(scope.row.status) && scope.row.auditTime" size="mini" plain type="warning" @click="$router.push({name:'ResidentAuditDetail',params:{}})">审核结果</el-button>
+              <el-button v-if="scope.row.status === 3" size="mini" type="primary" plain @click="$router.push({name:'',params:{}})">提交材料</el-button>
 
-              <el-button v-if="scope.row.status === 2 || scope.row.status === 5" size="mini" type="success" @click="$router.push({name:'',params:{}})">查看设计</el-button>
-              <el-button v-if="scope.row.status === 7" size="mini" type="warning" @click="$router.push({name:'',params:{}})">查看报价</el-button>
-              <el-tag v-if="scope.row.status === 10" size="medium" type="success" effect="dark">申请已通过</el-tag>
-              <el-tag v-if="scope.row.status === 11" size="medium" type="danger" effect="dark">已驳回</el-tag>
-              <el-tag v-if="scope.row.status === 12" size="medium" type="danger" effect="dark">已撤销</el-tag>
+              <el-button v-if="scope.row.status === 3" size="mini" type="warning" plain @click="$router.push({name:'ResidentAssentsDetail',params:{}})">异议反馈</el-button>
+
+              <el-tag v-if="scope.row.status === 4" size="medium" type="warning" effect="light">管道踏勘中</el-tag>
+
+              <el-button v-if="scope.row.status === 2 || scope.row.status === 5" size="mini" type="success" plain @click="$router.push({name:'ResidentDesignDetail',params:{}})">查看设计</el-button>
+              <el-button v-if="scope.row.status === 7" size="mini" type="warning" plain @click="$router.push({name:'ResidentOffer',params:{}})">查看报价</el-button>
+              <el-tag v-if="scope.row.status === 10" size="medium" type="success" effect="light">申请已通过</el-tag>
+              <el-tag v-if="scope.row.status === 11" size="medium" type="danger" effect="light">已驳回</el-tag>
+              <el-tag v-if="scope.row.status === 12" size="medium" type="danger" effect="light">已撤销</el-tag>
 
               <!-- <el-button v-if="scope.row.status === 1 && scope.row.dissent" size="mini" type="success" @click="dissentView"> 查看反馈</el-button> -->
               <!-- <el-button v-if="scope.row.status === 10" size="mini" type="danger" @click="viewAudit(scope.row)">审核意见</el-button> -->
@@ -66,11 +69,8 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <div>
-      <p>双击行 查看当前申请流程</p>
-      <p>联系方式：</p>
-      <p>审核单位：XXX街道办 审核人员：XXX 联系电话：0512XXXX 工作时间：周一至周五 9:00-11:00 14:00-17:00</p>
-    </div>
+    <p class="contract-tip">审核单位：<span>XXX街道办</span> 审核人员：<span>XXX</span> 联系电话：<span>0512XXXX</span> 工作时间：周一至周五 9:00-11:00 14:00-17:00</p>
+
     <!-- 新增申请 -->
     <el-dialog v-el-drag-dialog title="新增申请" :visible.sync="model.visible" :close-on-click-modal="false" width="600px" top="10vh" @closed="resetForm">
       <el-form ref="form" v-loading="formLoading" :model="model.form" :rules="model.rules" label-width="120px">
@@ -126,22 +126,22 @@
     <!-- 审核结果 -->
     <el-dialog v-el-drag-dialog title="审核结果" center :visible.sync="auditVisible" :close-on-click-modal="false" min-width="700px">
       <el-form ref="form" v-loading="formLoading" label-width="120px">
-        <el-form-item label="审核人">
+        <el-form-item label="审核人" disabled>
           {{ audit.name }}
         </el-form-item>
-        <el-form-item label="单位">
+        <el-form-item label="单位" disabled>
           {{ audit.org }}
         </el-form-item>
-        <el-form-item label="电话">
+        <el-form-item label="电话" disabled>
           {{ audit.phone }}
         </el-form-item>
-        <el-form-item label="审核意见">
+        <el-form-item label="审核意见" disabled>
           {{ audit.remarks }}
         </el-form-item>
-        <el-form-item label="附件">
+        <el-form-item label="附件" disabled>
           {{ audit.attachments }}
         </el-form-item>
-        <el-form-item label="审核结果">
+        <el-form-item label="审核结果" disabled>
           {{ audit.result }}
         </el-form-item>
       </el-form>
@@ -474,5 +474,13 @@ input {
 }
 input:focus {
   outline: none;
+}
+.contract-tip{
+  padding: 0 10px;
+  color: #686d76;
+  line-height: 30px;
+  span{
+    margin-right: 20px;
+  }
 }
 </style>

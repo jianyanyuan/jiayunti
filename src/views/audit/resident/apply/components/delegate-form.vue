@@ -2,12 +2,13 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-23 08:22:05
+ * @LastEditTime: 2020-10-30 14:10:08
  * @Description: 居民申请意见汇总表
 -->
 <template>
   <div>
-    <el-row type="flex" justify="end" align="middle" style="padding:18px 20px">
+    <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
+      <span>委托授权书</span>
       <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
       <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">保存</el-button>
     </el-row>
@@ -16,14 +17,14 @@
         <div slot="header">
           <span>查看</span>
         </div>
-        <div v-for="url in urls" :key="url" class="image-container">
-          <img :src="url" alt="意见征询表" srcset="">
-        </div>
+        <upload-list :files="urls" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
+
       </el-card>
       <div style="text-align:center">
         <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
 
-        <el-button type="success" icon="el-icon-upload2" @click.native.prevent="postApply">提交申请</el-button>
+        <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
+
       </div>
     </template>
 
@@ -39,7 +40,9 @@
         </el-upload>
       </el-card>
     </template>
-
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+      <img :src="detailImgUrl" alt="委托授权书">
+    </el-dialog>
   </div>
 </template>
 
@@ -48,7 +51,7 @@ import * as File from '@/api/file'
 // import { deepClone } from '@/utils'
 
 export default {
-  name: 'ConsultationForm',
+  name: 'DelegateForm',
   data() {
     return {
       // 修改后重新保存
@@ -57,8 +60,16 @@ export default {
       rooms: ['401', '402', '403'],
       model: [],
       urls: [
-        'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-        'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
+        {
+          name: '身份证',
+          uid: '3302e58f9a181d2509f3dc0fa68b0jpeg',
+          url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
+        },
+        {
+          name: '身份证',
+          uid: '781c4fba33d8jpeg',
+          url: 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
+        }
       ],
       test: [
         [{ name: '身份证', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg' }],
@@ -77,6 +88,10 @@ export default {
     console.log(11111)
   },
   methods: {
+    detailImg(file) {
+      this.detailImgUrl = file.url
+      this.imgVisible = true
+    },
     handleUploadRemove(file, fileList) {
     },
     // handleUploadChange(file, fileList) {
@@ -135,7 +150,7 @@ export default {
       // }
     },
 
-    // 提交申请
+    // 更新投注单
     postApply() {
       this.$refs.form.validate(valid => {
         if (valid) {

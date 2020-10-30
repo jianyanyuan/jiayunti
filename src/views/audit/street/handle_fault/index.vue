@@ -7,7 +7,7 @@
 -->
 <template>
   <div>
-    <el-form :model="construction" :rules="rule" label-width="120px" class="handle-form">
+    <el-form :model="construction" :rules="rule" label-width="120px" class="center-form">
       <el-form-item label="申请编号:">
         <el-input v-model="construction.code" disabled />
       </el-form-item>
@@ -98,10 +98,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.handle-form {
-  width: 820px;
-  margin: 50px auto 0;
-}
+
 .image-container {
   width: 150px;
   height: 150px;

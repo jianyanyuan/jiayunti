@@ -2,23 +2,22 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-21 16:26:12
- * @Description: 居民申请意见汇总表
+ * @LastEditTime: 2020-10-30 13:57:49
+ * @Description: 居民申请意见征询表
 -->
 <template>
   <div>
-    <el-row type="flex" justify="end" align="middle" style="padding:18px 20px">
+    <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
+      <span>意见征询表</span>
       <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
       <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">保存</el-button>
     </el-row>
     <template v-if="hasChanged">
-      <el-card class="upload-card" style="margin-bottom:30px">
+      <el-card v-for="(room,index) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
         <div slot="header">
-          <span>查看</span>
+          <span>{{ room }}</span>
         </div>
-        <div v-for="url in urls" :key="url" class="image-container">
-          <img :src="url" alt="意见征询表" srcset="">
-        </div>
+        <upload-list :files="fileList[index]" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
       </el-card>
       <div style="text-align:center">
         <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
@@ -29,18 +28,34 @@
     </template>
 
     <template v-else>
-      <el-card class="upload-card" style="margin-bottom:30px">
+      <el-card v-for="(room, index) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
         <div slot="header">
-          <span>上传</span>
+          <span>{{ room }}</span>
         </div>
         <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
+          <div class="enclosure-tips">
+            所需附件：
+            <ul>
+              <li>
+                业主身份证
+              </li>
+              <li>
+                业主房产证
+              </li>
+              <li>
+                意见征询表 / 征询表+委托书+受委托人身份证
+              </li>
+            </ul>
+          </div>
           <div>将文件拖到此处，或点击添加</div>
           <p>单个文件大小不超过20MB，可上传图片或PDF</p>
         </el-upload>
       </el-card>
     </template>
-
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+      <img :src="detailImgUrl" alt="意见咨询表">
+    </el-dialog>
   </div>
 </template>
 
@@ -53,18 +68,50 @@ export default {
   data() {
     return {
       // 修改后重新保存
+      imgVisible: false,
+      detailImgUrl: '',
       hasChanged: false,
       formLoading: false,
       rooms: ['401', '402', '403'],
       model: [],
-      urls: [
-        'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-        'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
+      fileList: [
+        [
+          {
+            name: '身份证',
+            uid: '3302e58f9a181d2509f3dc0fa68b0jpeg',
+            url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
+          },
+          {
+            name: '身份证',
+            uid: '781c4fba33d8jpeg',
+            url: 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
+          }
+        ],
+        [
+          {
+            name: '身份证',
+            uid: 'd2509f3dc0fa68b2',
+            url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
+          },
+          {
+            name: '身份证',
+            uid: 'mecdn.com',
+            url: 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
+          }
+        ],
+        [
+          {
+            name: '身份证',
+            uid: 'https://fuss1',
+            url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
+          },
+          {
+            name: '身份证',
+            uid: 'peg.jpeg',
+            url: 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
+          }
+        ]
       ],
-      test: [
-        [{ name: '身份证', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg' }],
-        [{ name: '身份证', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg' }],
-        [{ name: '身份证', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg' }]],
       uploadFile: null
     }
   },
@@ -75,10 +122,17 @@ export default {
 
   },
   created() {
-    console.log(11111)
+    this.rooms = ['401', '402', '403']
+    this.rooms.forEach(v => {
+      this.model.push([])
+    })
   },
   methods: {
     handleUploadRemove(file, fileList) {
+    },
+    detailImg(file) {
+      this.detailImgUrl = file.url
+      this.imgVisible = true
     },
     // handleUploadChange(file, fileList) {
     //   console.log(file)
@@ -159,30 +213,29 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 .upload-card ::v-deep .el-card__body {
-  text-align: center;
   margin-bottom: 30px;
 }
 .enclosure-tips {
   color: #14274e;
-text-align: left;
-  li{
+  text-align: left;
+  li {
     list-style: decimal;
   }
-
 }
 .upload-card ::v-deep .el-upload-dragger {
   width: 400px;
-  padding: 40px 5px;
+  padding: 10px 5px;
   border: 2px solid #e5e5e5;
   color: #777;
   -webkit-transition: background-color 0.2s linear;
   transition: background-color 0.2s linear;
 }
-.image-container{
+.image-container {
   height: 200px;
   margin-bottom: 20px;
-  img{
+  img {
     width: auto;
     height: auto;
 

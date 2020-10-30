@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-26 10:36:53
+ * @LastEditTime: 2020-10-30 13:31:55
  * @Description: 居民申请基本资料
 -->
 <template>
@@ -92,12 +92,12 @@ import { deepClone } from '@/utils'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
 const defaultForm = {
   name: '张飞达',
-  address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ', 'xiaoqu'],
+  address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ'],
   phone: '15988800323',
   elevatorAddress: 'xxx小区xxx幢xxx单元',
   rooms: ['401', '402', '403'],
-  designer: '',
-  device: ''
+  designer: '建研院',
+  device: '高端电梯'
 }
 export default {
   name: 'Basic',
@@ -161,10 +161,8 @@ export default {
     this.form.address = this.form.address.slice(0, 3)
     this.form.rooms = this.form.rooms.map(v => {
       return {
-
         key: v + '1',
         val: v
-
       }
     }
     )

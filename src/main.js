@@ -22,6 +22,7 @@ import '@/icons' // icon
 import '@/permission' // permission control
 import * as filters from '@/filters' // global filters
 
+import UploadList from 'element-ui/packages/upload/src/upload-list'
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -45,6 +46,7 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
+Vue.component('UploadList', UploadList)
 Vue.config.productionTip = false
 
 new Vue({

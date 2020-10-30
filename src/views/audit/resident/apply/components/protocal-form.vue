@@ -2,60 +2,46 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-26 09:11:32
- * @Description: 居民申请意见征询表
+ * @LastEditTime: 2020-10-30 14:12:40
+ * @Description: 居民申请意见汇总表
 -->
 <template>
   <div>
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
-      <span>意见征询表</span>
+      <span>项目协议书</span>
       <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
       <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">保存</el-button>
     </el-row>
     <template v-if="hasChanged">
-      <el-card v-for="(room,index) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
+      <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
-          <span>{{ room }}</span>
+          <span>查看</span>
         </div>
-        <div v-for="url in urls[index]" :key="url" class="image-container">
-          <img :src="url" alt="意见征询表" srcset="">
-        </div>
+        <upload-list :files="urls" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
+
       </el-card>
       <div style="text-align:center">
         <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
 
-        <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
-
+        <el-button type="success" icon="el-icon-upload2" @click.native.prevent="postApply">提交申请</el-button>
       </div>
     </template>
 
     <template v-else>
-      <el-card v-for="(room, index) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
+      <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
-          <span>{{ room }}</span>
+          <span>上传</span>
         </div>
         <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
-          <div class="enclosure-tips">
-            所需附件：
-            <ul>
-              <li>
-                业主身份证
-              </li>
-              <li>
-                业主房产证
-              </li>
-              <li>
-                意见征询表 / 征询表+委托书+受委托人身份证
-              </li>
-            </ul>
-          </div>
           <div>将文件拖到此处，或点击添加</div>
           <p>单个文件大小不超过20MB，可上传图片或PDF</p>
         </el-upload>
       </el-card>
     </template>
-
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+      <img :src="detailImgUrl" alt="项目协议书">
+    </el-dialog>
   </div>
 </template>
 
@@ -64,7 +50,7 @@ import * as File from '@/api/file'
 // import { deepClone } from '@/utils'
 
 export default {
-  name: 'ConsultationForm',
+  name: 'ProtocalForm',
   data() {
     return {
       // 修改后重新保存
@@ -73,9 +59,16 @@ export default {
       rooms: ['401', '402', '403'],
       model: [],
       urls: [
-        ['https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg', 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'],
-        ['https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'],
-        ['https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg']
+        {
+          name: '身份证',
+          uid: '3302e58f9a181d2509f3dc0fa68b0jpeg',
+          url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
+        },
+        {
+          name: '身份证',
+          uid: '781c4fba33d8jpeg',
+          url: 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
+        }
       ],
       test: [
         [{ name: '身份证', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg' }],
@@ -91,12 +84,13 @@ export default {
 
   },
   created() {
-    this.rooms = ['401', '402', '403']
-    this.rooms.forEach(v => {
-      this.model.push([])
-    })
+    console.log(11111)
   },
   methods: {
+    detailImg(file) {
+      this.detailImgUrl = file.url
+      this.imgVisible = true
+    },
     handleUploadRemove(file, fileList) {
     },
     // handleUploadChange(file, fileList) {
@@ -155,7 +149,7 @@ export default {
       // }
     },
 
-    // 更新投注单
+    // 提交申请
     postApply() {
       this.$refs.form.validate(valid => {
         if (valid) {
@@ -192,7 +186,7 @@ text-align: left;
 }
 .upload-card ::v-deep .el-upload-dragger {
   width: 400px;
-  padding: 10px 5px;
+  padding: 40px 5px;
   border: 2px solid #e5e5e5;
   color: #777;
   -webkit-transition: background-color 0.2s linear;

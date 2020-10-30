@@ -32,6 +32,11 @@ export default {
 //   background: #f6f6f6;
 //   border:2px solid #efefef;
 // }
+// 单页面表格居中显示
+.center-form {
+  width: 820px;
+  margin: 50px auto 0;
+}
 li{
   list-style: none;
 }

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-10-28 15:21:10
+ * @LastEditTime: 2020-10-30 14:43:36
  * @LastEditors: zfd
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -27,11 +27,11 @@
 </template>
 
 <script>
-import Basic from '@/components/resident/basic'
-import ConclutationForm from '@/components/resident/conclutation-form'
-import SummaryForm from '@/components/resident/summary-form'
-import DelegateForm from '@/components/resident/delegate-form'
-import ProtocalForm from '@/components/resident/protocal-form'
+import Basic from './components/basic.vue'
+import ConclutationForm from './components/conclutation-form.vue'
+import SummaryForm from './components/summary-form.vue'
+import DelegateForm from './components/delegate-form.vue'
+import ProtocalForm from './components/protocal-form.vue'
 
 export default {
   components: {
