@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:14
- * @LastEditTime: 2020-10-27 09:47:22
+ * @LastEditTime: 2020-11-02 13:40:28
  * @LastEditors: zfd
  * @Description: 实施段施工路由表
  * @FilePath: \jiayunti\src\router\modules\implement\construction.js
@@ -47,6 +47,17 @@ const constructionRouter = {
       // hidden: true,
       meta: {
         title: '违规',
+        icon: 'card',
+        roles: ['admin', 'construction']
+      }
+    },
+    {
+      path: 'complete',
+      name: 'ConstructionFault',
+      component: () => import('@/views/implement/construction/complete/index'),
+      // hidden: true,
+      meta: {
+        title: '竣工验收',
         icon: 'card',
         roles: ['admin', 'construction']
       }

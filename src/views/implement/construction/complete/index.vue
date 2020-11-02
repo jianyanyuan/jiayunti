@@ -1,9 +1,9 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-11-02 14:38:22
+ * @LastEditTime: 2020-11-02 13:38:57
  * @LastEditors: zfd
- * @Description: resident apply
+ * @Description: construction process
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
 -->
 <template>
@@ -27,24 +27,19 @@
 </template>
 
 <script>
-import Basic from './components/basic.vue'
-import ConclutationForm from './components/conclutation-form.vue'
-import SummaryForm from './components/summary-form.vue'
-import DelegateForm from './components/delegate-form.vue'
-import ProtocalForm from './components/protocal-form.vue'
+import Attachment from './components/attachment.vue'
+// import DelegateForm from '@/components/resident/delegate-form'
+// import ProtocalForm from '@/components/resident/protocal-form'
 
 export default {
+  name: 'Complete',
   components: {
-    Basic,
-    ConclutationForm,
-    SummaryForm,
-    DelegateForm,
-    ProtocalForm
+    Attachment
   },
   data() {
     return {
-      stepBtnGroup: ['基本资料', '意见征询表', '意见征询汇总表', '委托授权书', '项目协议书'],
-      componentGroup: ['Basic', 'ConclutationForm', 'SummaryForm', 'DelegateForm', 'ProtocalForm'],
+      stepBtnGroup: ['竣工验收'],
+      componentGroup: ['Attachment'],
       curStep: 0
     }
   },
@@ -84,8 +79,7 @@ export default {
 <style scoped>
 .line-divider {
   height: 20px;
-  /* background: #646464; */
-  background: #14274e;
+  background: #19305c;
 }
 .step-btn-group {
   padding: 0 20px;
@@ -106,10 +100,10 @@ export default {
 .step-btn-group .step-actived {
   background: #82a7cb;
 }
-.dynamic-component-container{
+.dynamic-component-container {
   margin-top: 30px;
 }
-.step-container{
+.step-container {
   margin-top: 30px;
   text-align: center;
 }

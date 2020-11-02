@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-10-27 14:31:26
+ * @LastEditTime: 2020-11-02 13:22:16
  * @LastEditors: zfd
  * @Description: 施工报价
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -63,10 +63,12 @@
           </tr>
         </tbody>
       </table>
-      <div style="text-align:center">
+      <div style="text-align:center;margin-top:30px">
         <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
+        <el-button type="success" icon="el-icon-upload2" @click.native.prevent="postOffer">提 交</el-button>
+        <!-- <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
 
-        <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
+        <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button> -->
 
       </div>
     </div>
@@ -147,7 +149,7 @@
 
 <script>
 export default {
-  name: 'Offer',
+  name: 'Basic',
   data() {
     return {
       editable: false,
@@ -181,6 +183,9 @@ export default {
 
   },
   methods: {
+    postOffer() {
+
+    },
     nextProcess(arrow) {
       this.$emit('nextProcess', arrow)
     },

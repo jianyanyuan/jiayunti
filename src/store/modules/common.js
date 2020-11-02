@@ -2,7 +2,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-10-29 10:36:11
+ * @LastEditTime: 2020-11-02 11:23:14
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -32,7 +32,7 @@ const state = {
     { key: 3, val: 'info' }
   ],
   handleStatus: [
-    { key: 0, val: '未通过' },
+    { key: 0, val: '未处理' },
     { key: 1, val: '已解决' }
   ],
   handleTag: [
@@ -52,7 +52,9 @@ const state = {
     { key: 9, val: '联合审查' },
     { key: 10, val: '审核通过' },
     { key: 11, val: '驳回' },
-    { key: 12, val: '已撤销' }
+    { key: 12, val: '已撤销' },
+    { key: 13, val: '施工中' },
+    { key: 14, val: '竣工验收' }
   ],
   applyTag: [
     { key: 0, val: 'warning' },
@@ -67,7 +69,10 @@ const state = {
     { key: 9, val: 'warning' },
     { key: 10, val: 'success' },
     { key: 11, val: 'info' },
-    { key: 12, val: 'info' }
+    { key: 12, val: 'info' },
+    { key: 13, val: 'warning' },
+    { key: 14, val: 'warning' }
+
   ],
   // 省份--城市--区县
   addressOptions: [],

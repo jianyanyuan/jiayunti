@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-27 10:07:46
+ * @LastEditTime: 2020-11-02 11:16:27
  * @Description: 施工端资料查看
 -->
 <template>
@@ -72,7 +72,7 @@ import { mapGetters } from 'vuex'
 import { deepClone } from '@/utils'
 const defaultForm = {
   name: '张飞达',
-  address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ', 'xiaoqu'],
+  address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ'],
   phone: '15988800323',
   elevatorAddress: 'xxx小区xxx幢xxx单元',
   rooms: ['401', '402', '403'],

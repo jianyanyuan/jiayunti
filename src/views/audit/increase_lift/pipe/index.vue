@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-10-23 15:58:38
+ * @LastEditTime: 2020-11-02 11:01:59
  * @LastEditors: zfd
  * @Description: 增梯办管道踏勘
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -43,7 +43,7 @@
       <div slot="header">
         <el-row type="flex" justify="space-between" align="middle">
           <span>管道踏勘</span>
-          <el-button v-if="editable" type="primary" style="float:right" @click="editable = !editable">提 交</el-button>
+          <!-- <el-button v-if="editable" type="primary" style="float:right" @click="editable = !editable">提 交</el-button> -->
           <el-button v-if="editable" type="primary" style="float:right" @click="editable = !editable">保 存</el-button>
           <el-button v-else type="primary" style="float:right" @click="editable = !editable">修 改</el-button>
         </el-row>
@@ -135,7 +135,7 @@ export default {
       editable: false,
       basic: {
         name: '李先生',
-        address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ', 'xiaoqu'],
+        address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ'],
         phone: '15988800323',
         liftAddress: '小区1楼',
         company: '苏州建研院',

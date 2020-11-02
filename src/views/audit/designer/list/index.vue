@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-23 08:58:20
+ * @LastEditTime: 2020-11-02 10:06:48
  * @Description:设计列表
 -->
 
@@ -29,7 +29,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-table v-loading="listLoading" class="design-table" :data="list" element-loading-text="Loading" border fit highlight-current-row :default-sort="{prop: 'status', order: 'ascending'}">
+    <el-table v-loading="listLoading" class="design-table" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'status', order: 'ascending'}" @row-dblclick="flowView">
       <el-table-column align="center" label="序号" min-width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
@@ -85,22 +85,16 @@
       </el-table-column>
       <el-table-column label="状态" prop="status" sortable min-width="110" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | keyToVal(designTag)">{{ scope.row.status | keyToVal(designStatus) }}</el-tag>
+          <el-tag :type="scope.row.status | keyToVal(applyTag)">{{ scope.row.status | keyToVal(applyStatus) }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" min-width="200">
         <template slot-scope="scope">
           <el-row type="flex" justify="space-around">
 
-            <el-button v-if="scope.row.status === 0" size="mini" :type="scope.row.status | keyToVal(designTag)" @click="uploadModal.visible = true">上传设计图</el-button>
-            <el-button v-if="scope.row.status === 2" size="mini" :type="scope.row.status | keyToVal(designTag)" @click="editModal.visible = true">
-              <router-link :to="{path:'/designer/edit',query:{applyId:scope.row.Id}}">修改设计图</router-link>
-            </el-button>
+            <el-button v-if="scope.row.status === 2 || scope.row.status === 5" type="primary" size="mini" @click="uploadModal.visible = true">上 传</el-button>
+            <el-button v-if="scope.row.status === 6" size="mini" type="success" @click="$router.push({path:'/designer/edit',query:{applyId:scope.row.Id}})">修 改</el-button>
 
-            <el-button v-if="scope.row.status === 3 || scope.row.status === 1" size="mini" type="success">
-              <router-link :to="{path:'/designer/view',query:{applyId:scope.row.Id}}">查看设计图</router-link>
-            </el-button>
-            <el-button size="mini" type="primary" @click="flowVisible = true">查看流程</el-button>
           </el-row>
         </template>
       </el-table-column>
@@ -129,6 +123,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { keyToVal } from '@/utils'
 import Flow from '@/components/street/Flow'
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
@@ -138,7 +133,6 @@ export default {
   },
   components: {
     Flow
-
   },
   directives: {
     elDragDialog
@@ -153,21 +147,7 @@ export default {
       },
       list: [
         {
-          code: 'apply10121056',
-          designTime: '',
-          auditTime: '',
-          apply: {
-            name: '李先生',
-            address: '苏州高新区',
-            phone: '15988800323',
-            liftAddress: '小区1楼',
-            spec: '高端电梯',
-            time: '2020-10-12 10:56'
-          },
-          status: 0 // 未设计
-        },
-        {
-          code: 'apply10131146',
+          code: 'xxx小区xxxx幢xxx单元',
           designTime: '2020-10-14 10:56',
           auditTime: '',
           apply: {
@@ -179,10 +159,10 @@ export default {
             time: '2020-10-13 11:46'
 
           },
-          status: 1 // 审核中
+          status: 5 // 施工图设计
         },
         {
-          code: 'apply10140800',
+          code: 'xxx小区xxxx幢xxx单元',
           designTime: '2020-10-14 10:56',
           auditTime: '2020-10-14 10:56',
           apply: {
@@ -194,10 +174,10 @@ export default {
             time: '2020-10-14 08:00'
 
           },
-          status: 2 // 审核未通过
+          status: 2 // 方案设计
         },
         {
-          code: 'apply10140900',
+          code: 'xxx小区xxxx幢xxx单元',
           designTime: '2020-10-14 10:56',
           auditTime: '2020-10-14 10:56',
           apply: {
@@ -209,7 +189,7 @@ export default {
             time: '2020-10-14 09:00'
 
           },
-          status: 3 // 审核通过
+          status: 6 // 施工图审核
         }
       ],
       listLoading: false,
@@ -235,10 +215,15 @@ export default {
     }
   },
   computed: {
+    ...mapState('common', ['applyStatus', 'applyTag'])
+
   },
   created() {
   },
   methods: {
+    flowView() {
+      this.flowVisible = true
+    },
     goSearch() {},
     clearQuery() {},
     handleSizeChange(val) {

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-10-27 14:29:10
+ * @LastEditTime: 2020-11-02 13:33:52
  * @LastEditors: zfd
  * @Description: construction process
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -27,10 +27,9 @@
 </template>
 
 <script>
-import Basic from './components/Basic'
-import Locale from './components/Locale'
-import Offer from './components/Offer'
-import Complete from './components/Complete'
+import Basic from './components/basic.vue'
+import Locale from './components/locale.vue'
+import Offer from './components/offer.vue'
 // import DelegateForm from '@/components/resident/delegate-form'
 // import ProtocalForm from '@/components/resident/protocal-form'
 
@@ -38,13 +37,12 @@ export default {
   components: {
     Basic,
     Locale,
-    Offer,
-    Complete
+    Offer
   },
   data() {
     return {
-      stepBtnGroup: ['施工资料', '查看现场', '报价', '竣工'],
-      componentGroup: ['Basic', 'Locale', 'Offer', 'Complete'],
+      stepBtnGroup: ['施工资料', '查看现场', '报价'],
+      componentGroup: ['Basic', 'Locale', 'Offer'],
       curStep: 0
     }
   },
@@ -105,10 +103,10 @@ export default {
 .step-btn-group .step-actived {
   background: #82a7cb;
 }
-.dynamic-component-container{
+.dynamic-component-container {
   margin-top: 30px;
 }
-.step-container{
+.step-container {
   margin-top: 30px;
   text-align: center;
 }
