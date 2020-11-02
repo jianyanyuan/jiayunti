@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-29 16:05:50
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-30 16:22:30
+ * @LastEditTime: 2020-11-02 08:31:46
  * @Description: 报价列表
 -->
 <template>
@@ -110,7 +110,7 @@ export default {
     font-size: 14px;
     color: #14274e;
     border-bottom: 1px dashed #9ba4b4;
-    ::v-deep .el-input--small {
+    &::v-deep .el-input--small {
       width: 200px;
       margin-right: 20px;
     }

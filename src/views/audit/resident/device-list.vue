@@ -2,11 +2,13 @@
  * @Author: zfd
  * @Date: 2020-10-29 16:05:50
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-29 16:11:41
+ * @LastEditTime: 2020-11-02 09:04:58
  * @Description: 设计单位列表
 -->
 <template>
-  <article-list :source="source" />
+  <div class="app-container">
+    <article-list :source="source" />
+  </div>
 </template>
 
 <script>

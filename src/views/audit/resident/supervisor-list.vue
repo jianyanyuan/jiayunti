@@ -2,8 +2,8 @@
  * @Author: zfd
  * @Date: 2020-10-29 16:05:50
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-02 09:05:31
- * @Description: 施工单位列表
+ * @LastEditTime: 2020-11-02 09:06:30
+ * @Description: 监理单位列表
 -->
 <template>
   <div class="app-container">
@@ -22,7 +22,7 @@ export default {
     return {
       source: [
         {
-          name: '贝特斯电梯',
+          name: '监理单位111',
           address: '中国江苏省南京市玄武区珠江路687号2幢',
           detail: {
             name: '东莞市六田精密电子有限公司',
@@ -37,7 +37,7 @@ export default {
           // url: 'http://www.jsyuantian.com/contact/' // 文章地址
         },
         {
-          name: 'http://www.jsyuantian.com/contact/',
+          name: '监理单位222',
           address: '广东省深圳市坪山新区坑梓街道金沙工业区',
           url: 'http://www.matiz.com.cn/plus/list.php?tid=30' // 文章地址
         }

@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-10-30 16:23:34
+ * @LastEditTime: 2020-11-02 09:09:21
  * @LastEditors: zfd
  * @Description: 审批端居民路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -36,7 +36,7 @@ const residentRouter = {
       component: () => import('@/views/audit/resident/list'),
       name: 'ResidentList',
       meta: {
-        title: '列表',
+        title: '我的申请',
         icon: 'list',
         roles: ['admin', 'resident']
       }
@@ -67,6 +67,16 @@ const residentRouter = {
       name: 'ResidentConstruction',
       meta: {
         title: '施工单位',
+        icon: 'list',
+        roles: ['admin', 'resident']
+      }
+    },
+    {
+      path: 'supervisor-list',
+      component: () => import('@/views/audit/resident/supervisor-list'),
+      name: 'ResidentSupervisor',
+      meta: {
+        title: '监理单位',
         icon: 'list',
         roles: ['admin', 'resident']
       }

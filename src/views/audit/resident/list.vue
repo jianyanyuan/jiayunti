@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-30 16:07:43
+ * @LastEditTime: 2020-11-02 09:01:29
  * @Description:申请列表
 -->
 
@@ -49,7 +49,7 @@
               <el-tag v-if="scope.row.status === 4" size="medium" type="warning" effect="light">管道踏勘中</el-tag>
 
               <el-button v-if="scope.row.status === 2 || scope.row.status === 5" size="mini" type="success" plain @click="$router.push({name:'ResidentDesignDetail',params:{}})">查看设计</el-button>
-              <el-button v-if="scope.row.status === 7" size="mini" type="warning" plain @click="$router.push({name:'ResidentOffer',params:{}})">查看报价</el-button>
+              <el-button v-if="scope.row.status === 7" size="mini" type="warning" plain @click="$router.push({name:'ResidentOffer',params:{}})">选择报价</el-button>
               <el-tag v-if="scope.row.status === 10" size="medium" type="success" effect="light">申请已通过</el-tag>
               <el-tag v-if="scope.row.status === 11" size="medium" type="danger" effect="light">已驳回</el-tag>
               <el-tag v-if="scope.row.status === 12" size="medium" type="danger" effect="light">已撤销</el-tag>
@@ -122,59 +122,6 @@
         <el-button @click="model.visible = false">取 消</el-button>
         <el-button type="primary" @click="postApply">确 定</el-button>
       </div>
-    </el-dialog>
-    <!-- 审核结果 -->
-    <el-dialog v-el-drag-dialog title="审核结果" center :visible.sync="auditVisible" :close-on-click-modal="false" min-width="700px">
-      <el-form ref="form" v-loading="formLoading" label-width="120px">
-        <el-form-item label="审核人" disabled>
-          {{ audit.name }}
-        </el-form-item>
-        <el-form-item label="单位" disabled>
-          {{ audit.org }}
-        </el-form-item>
-        <el-form-item label="电话" disabled>
-          {{ audit.phone }}
-        </el-form-item>
-        <el-form-item label="审核意见" disabled>
-          {{ audit.remarks }}
-        </el-form-item>
-        <el-form-item label="附件" disabled>
-          {{ audit.attachments }}
-        </el-form-item>
-        <el-form-item label="审核结果" disabled>
-          {{ audit.result }}
-        </el-form-item>
-      </el-form>
-
-      <span slot="footer">
-        <el-button @click="auditVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!-- 异议结果 -->
-    <el-dialog v-el-drag-dialog title="异议处理结果" center :visible.sync="dissentVisible" :close-on-click-modal="false" min-width="800px">
-      <el-collapse>
-        <el-collapse-item v-for="(item, index) in dissents" :key="index">
-          <template slot="title">
-            建议人：{{ item.name }}
-            <el-tag :type="item.status | keyToVal(handleTag)">{{ item.status | keyToVal(handleStatus) }}</el-tag>
-          </template>
-          <!-- <div>
-          建议人：{{ item.name }}
-          <el-tag :type="item.status | keyToVal(handleTag)">{{ item.status | keyToVal(handleStatus) }}</el-tag>
-        </div> -->
-          <p>时间：{{ item.time }}</p>
-          <p>联系方式：{{ item.phone }}</p>
-          <p>详细地址：{{ item.address }}</p>
-          <div>
-            <p>异议详情：</p>
-            <el-input v-model="item.detail" type="textarea" />
-          </div>
-          <div v-if="item.status === 1">
-            <p>异议反馈</p>
-            <el-input v-model="item.feedback" type="textarea" />
-          </div>
-        </el-collapse-item>
-      </el-collapse>
     </el-dialog>
     <!-- 查看流程 -->
     <el-dialog v-el-drag-dialog title="申请流程" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">

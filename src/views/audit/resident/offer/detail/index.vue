@@ -1,13 +1,15 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-10-30 16:35:21
+ * @LastEditTime: 2020-11-02 08:50:22
  * @LastEditors: zfd
  * @Description: 居民查看报价单详情
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
 -->
 <template>
   <div class="app-container">
+    <el-page-header content="施工报价" style="margin-bottom:50px" @back="$router.go(-1)" />
+
     <table class="input-form">
       <thead>
         <tr>
@@ -17,7 +19,7 @@
       <tbody>
         <tr>
           <td>施工单位</td>
-          <td>{{ construction.name }}</td>
+          <td><router-link to="/resident/construction-list">{{ construction.name }}</router-link></td>
           <td>联系人</td>
           <td>{{ construction.contracts }}</td>
         </tr>
@@ -47,11 +49,27 @@
         <tr>
           <td>材料</td>
           <td colspan="3" style="text-align:left">
-            <upload-list :files="fileList" list-type="" :disabled="true" :handle-preview="downloadFile" class="upload-list" />
+            <upload-list :files="fileList" list-type="" :disabled="true" :handle-preview="downloadFile" />
           </td>
         </tr>
       </tbody>
     </table>
+    <div class="confirm-container">
+      <el-button type="success" @click="superviseVisible = true">选 定</el-button>
+    </div>
+    <el-dialog center title="选择监理单位" :visible.sync="superviseVisible" :close-on-click-modal="false">
+      <el-form>
+        <el-form-item label="监理单位">
+          <el-select v-model="supervisor">
+            <el-option v-for="item in supervisors" :key="item.val" :label="item.val" :value="item.key" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div class="confirm-container">
+        <el-button @click="superviseVisible = false">取 消</el-button>
+        <el-button type="success" @click="superviseVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -60,6 +78,8 @@ export default {
   name: 'Offer',
   data() {
     return {
+      supervisor: '',
+      superviseVisible: false,
       fileList: [{ name: '123213', url: '', uid: 'dsdsd' }, { name: '456465', url: '', uid: 'dsadsd' }, { name: '789798', url: '', uid: 'sdasdasdasd' }],
       construction: {
         name: '中一建',
@@ -79,8 +99,11 @@ export default {
           }
         ]
 
-      }
-
+      },
+      supervisors: [
+        { key: 1, val: '监理人' },
+        { key: 2, val: '监理人2' }
+      ]
     }
   },
   computed: {
@@ -102,6 +125,7 @@ export default {
 .input-form {
   position: relative;
   width: 90%;
+  margin: 0 auto;
   // min-width: 1220px;
   border-collapse: collapse;
   border: 1px solid #aaa;
@@ -136,9 +160,11 @@ export default {
   }
 }
 
-.upload-list{
-  &::after{
-    content: "\e77c";
-  }
+.confirm-container{
+  margin-top: 30px;
+  text-align: center;
+}
+a:hover{
+  color: cornflowerblue;
 }
 </style>

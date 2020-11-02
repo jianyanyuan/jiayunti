@@ -1,12 +1,14 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-10-30 15:27:35
+ * @LastEditTime: 2020-11-02 08:30:23
  * @Description: 居民异议反馈查看
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
 <template>
   <div class="app-container">
+    <el-page-header content="异议反馈" style="margin-bottom:50px" @back="$router.go(-1)" />
+
     <!-- <div class="basic-container">
       <el-card style="margin-bottom:30px">
         <div slot="header">
