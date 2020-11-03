@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-03 10:02:19
+ * @LastEditTime: 2020-11-03 15:11:57
  * @Description: 居民申请意见汇总表
 -->
 <template>
@@ -12,37 +12,30 @@
       <el-button v-if="!hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
       <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">保存</el-button>
     </el-row>
-    <template v-if="hasChanged">
-      <el-card>
-        <div slot="header">
-          <span>记录</span>
-        </div>
-        <!-- 修改保存 -->
-        <el-table :data="model.tableData" border highlight-current-row style="width: 100%">
-          <el-table-column label="序号" min-width="60" align="center">
-            <template slot-scope="scope">
-              {{ scope.$index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column label="项目" min-width="180" prop="project" align="center">
-            <template slot-scope="{row}">
-              <el-input v-model="row.company" size="small" />
-            </template>
-          </el-table-column>
-          <el-table-column label="是否完成" min-width="180" align="center">
-            <template slot-scope="{row}">
-              <el-checkbox v-model="row.isComplete">是</el-checkbox>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-card>
-    </template>
-    <template v-else>
-      <el-card>
-        <div slot="header">
-          <span>查看</span>
-        </div>
-        <!-- 查看 -->
+    <el-card>
+      <div slot="header">
+        <span>{{ hasChanged ? "修改" :"保存" }}</span>
+      </div>
+      <!-- 修改保存 -->
+      <el-table v-if="hasChanged" :data="model.tableData" border highlight-current-row style="width: 100%">
+        <el-table-column label="序号" min-width="60" align="center">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column label="项目" min-width="180" prop="project" align="center">
+          <template slot-scope="{row}">
+            <el-input v-model="row.company" size="small" />
+          </template>
+        </el-table-column>
+        <el-table-column label="是否完成" min-width="180" align="center">
+          <template slot-scope="{row}">
+            <el-checkbox v-model="row.isComplete">是</el-checkbox>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 查看 -->
+      <div v-else>
         <el-table :data="model.tableData" border highlight-current-row style="width: 100%">
           <el-table-column label="序号" min-width="60" align="center">
             <template slot-scope="scope">
@@ -57,15 +50,16 @@
           <el-table-column label="是否完成" min-width="180" align="center">
             <template slot-scope="{row}">
               {{ row.isComplete }}
-            <!-- <el-checkbox v-model="row.isComplete">是</el-checkbox> -->
+              <!-- <el-checkbox v-model="row.isComplete">是</el-checkbox> -->
             </template>
           </el-table-column>
         </el-table>
         <div style="text-align:center; margin-top:30px">
           <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
         </div>
-      </el-card>
-    </template>
+      </div>
+
+    </el-card>
   </div>
 </template>
 
@@ -227,11 +221,10 @@ export default {
 }
 .enclosure-tips {
   color: #14274e;
-text-align: left;
-  li{
+  text-align: left;
+  li {
     list-style: decimal;
   }
-
 }
 .upload-card ::v-deep .el-upload-dragger {
   width: 400px;
@@ -241,10 +234,10 @@ text-align: left;
   -webkit-transition: background-color 0.2s linear;
   transition: background-color 0.2s linear;
 }
-.image-container{
+.image-container {
   height: 200px;
   margin-bottom: 20px;
-  img{
+  img {
     width: auto;
     height: auto;
 

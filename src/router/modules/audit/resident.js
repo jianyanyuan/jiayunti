@@ -151,6 +151,16 @@ const residentRouter = {
         title: '违规查看',
         roles: ['admin', 'resident']
       }
+    },
+    {
+      path: 'apply-notice',
+      component: () => import('@/views/audit/resident/apply-notice.vue'),
+      name: 'ResidentApplyNotice',
+      hidden: true,
+      meta: {
+        title: '提交材料',
+        roles: ['admin', 'resident']
+      }
     }
     // {
     //   path: 'assents-detail',

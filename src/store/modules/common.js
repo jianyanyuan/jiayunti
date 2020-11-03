@@ -2,7 +2,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-11-02 11:23:14
+ * @LastEditTime: 2020-11-03 14:48:31
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -51,10 +51,10 @@ const state = {
     { key: 8, val: '街道审核' },
     { key: 9, val: '联合审查' },
     { key: 10, val: '审核通过' },
-    { key: 11, val: '驳回' },
-    { key: 12, val: '已撤销' },
-    { key: 13, val: '施工中' },
-    { key: 14, val: '竣工验收' }
+    { key: 11, val: '施工中' },
+    { key: 12, val: '竣工验收' },
+    { key: 13, val: '驳回' },
+    { key: 14, val: '已撤销' }
   ],
   applyTag: [
     { key: 0, val: 'warning' },

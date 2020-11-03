@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-03 11:16:31
+ * @LastEditTime: 2020-11-03 15:22:11
  * @Description:申请列表
 -->
 
@@ -42,7 +42,7 @@
               <el-tag v-if="scope.row.status === 1 && !scope.row.auditTime" size="medium" type="warning" effect="light">社区受理中</el-tag>
 
               <el-button v-if="[1,6,8,9].includes(scope.row.status) && scope.row.auditTime" size="mini" plain type="warning" @click="$router.push({name:'ResidentAuditDetail',params:{}})">审核结果</el-button>
-              <el-button v-if="scope.row.status === 3" size="mini" type="primary" plain @click="$router.push({name:'',params:{}})">提交材料</el-button>
+              <el-button v-if="scope.row.status === 3" size="mini" type="primary" plain @click="$router.push({name:'ResidentApplyNotice',params:{applyId:scope.row.Id}})">提交材料</el-button>
 
               <el-button v-if="scope.row.status === 3" size="mini" type="warning" plain @click="$router.push({name:'ResidentAssentsDetail',params:{}})">异议反馈</el-button>
 
@@ -51,11 +51,11 @@
               <el-button v-if="scope.row.status === 2 || scope.row.status === 5" size="mini" type="success" plain @click="$router.push({name:'ResidentDesignDetail',params:{}})">查看设计</el-button>
               <el-button v-if="scope.row.status === 7" size="mini" type="warning" plain @click="$router.push({name:'ResidentOffer',params:{}})">选择报价</el-button>
               <el-tag v-if="scope.row.status === 10" size="medium" type="success" effect="light">申请已通过</el-tag>
-              <el-tag v-if="scope.row.status === 11" size="medium" type="danger" effect="light">已驳回</el-tag>
-              <el-tag v-if="scope.row.status === 12" size="medium" type="danger" effect="light">已撤销</el-tag>
-              <el-button v-if="scope.row.status === 13" size="mini" type="warning" plain @click="$router.push({name:'ResidentFaultView',params:{}})">违规查看</el-button>
-              <!-- <el-button v-if="scope.row.status === 14" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button> -->
-              <el-button v-if="scope.row.status === 14" size="mini" type="warning" @click="subsidyVisible = true">补贴查看</el-button>
+              <el-tag v-if="scope.row.status === 13" size="medium" type="danger" effect="light">已驳回</el-tag>
+              <el-tag v-if="scope.row.status === 14" size="medium" type="danger" effect="light">已撤销</el-tag>
+              <el-button v-if="scope.row.status === 11" size="mini" type="warning" plain @click="$router.push({name:'ResidentFaultView',params:{}})">违规查看</el-button>
+              <!-- <el-button v-if="scope.row.status === 12" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button> -->
+              <el-button v-if="scope.row.status === 12" size="mini" type="warning" @click="subsidyVisible = true">补贴查看</el-button>
 
               <!-- <el-button v-if="scope.row.status === 1 && scope.row.dissent" size="mini" type="success" @click="dissentView"> 查看反馈</el-button> -->
               <!-- <el-button v-if="scope.row.status === 10" size="mini" type="danger" @click="viewAudit(scope.row)">审核意见</el-button> -->
@@ -346,51 +346,26 @@ export default {
           code: 'xxx小区xxxx幢xxx单元',
           applyTime: '2020-10-12 10:41',
           auditTime: '2020-10-12 10:56',
-          status: 11 // 驳回
+          status: 11 // 施工中
         },
         {
           code: 'xxx小区xxxx幢xxx单元',
           applyTime: '2020-10-12 10:40',
           auditTime: '2020-10-12 10:56',
-          status: 12 // 已撤销
+          status: 12 // 竣工验收
         },
         {
           code: 'xxx小区xxxx幢xxx单元',
-          auditTime: '',
-          apply: {
-            name: '李先生',
-            address: '苏州高新区',
-            phone: '15988800323',
-            liftAddress: '小区1楼',
-            spec: '高端电梯',
-            time: '2020-10-12 10:56'
-          },
-          design: {
-            org: '建研院',
-            time: '2020-10-12 10:56',
-            address: '苏州高新区',
-            phone: '15988800323'
-          },
-          status: 13 // 施工中
+          auditTime: '2020-10-12 10:56',
+          applyTime: '2020-10-12 10:30',
+
+          status: 13 // 驳回
         },
         {
           code: 'xxx小区xxxx幢xxx单元',
-          auditTime: '',
-          apply: {
-            name: '李先生',
-            address: '苏州高新区',
-            phone: '15988800323',
-            liftAddress: '小区1楼',
-            spec: '高端电梯',
-            time: '2020-10-12 10:56'
-          },
-          design: {
-            org: '建研院',
-            time: '2020-10-12 10:56',
-            address: '苏州高新区',
-            phone: '15988800323'
-          },
-          status: 14 // 竣工验收
+          auditTime: '2020-10-12 10:56',
+          applyTime: '2020-10-12 10:20',
+          status: 14 // 已撤销
         }
       ]
     }

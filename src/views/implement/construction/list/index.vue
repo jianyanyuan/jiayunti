@@ -73,8 +73,8 @@
         <template slot-scope="{row}">
           <el-row type="flex" justify="space-around">
             <el-button v-if="row.status === 7" size="mini" type="warning" plain @click="$router.push({path:'/construction/process',query:{applyId:row.Id}})">报价</el-button>
-            <el-button v-if="row.status === 13" size="mini" type="warning" plain @click="$router.push({path:'/construction/fault',query:{applyId:row.Id}})">违规查看</el-button>
-            <el-button v-if="row.status === 14" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button>
+            <el-button v-if="row.status === 11" size="mini" type="warning" plain @click="$router.push({path:'/construction/fault',query:{applyId:row.Id}})">违规查看</el-button>
+            <el-button v-if="row.status === 12" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button>
 
           </el-row>
         </template>

@@ -2,36 +2,52 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-03 15:18:29
- * @Description: 居民申请意见汇总表
+ * @LastEditTime: 2020-11-03 15:23:44
+ * @Description: 公示/公告上传
 -->
 <template>
-  <div>
+  <div class="app-container">
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
-      <span>委托授权书</span>
-      <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
-      <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">保存</el-button>
+      <span>材料上传</span>
+      <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修 改</el-button>
+      <el-button v-else type="success" style="float:right" @click="hasChanged = !hasChanged">提 交</el-button>
     </el-row>
     <template v-if="hasChanged">
       <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
-          <span>查看</span>
+          <span>公示内容</span>
         </div>
         <upload-list :files="urls" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
 
       </el-card>
-      <div style="text-align:center">
-        <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
+      <el-card class="upload-card" style="margin-bottom:30px">
+        <div slot="header">
+          <span>公示公告</span>
+        </div>
+        <upload-list :files="urls" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
 
-        <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
+      </el-card>
+      <!-- <div style="text-align:center">
 
-      </div>
+        <el-button type="success" icon="el-icon-upload2" @click="postApply">提交</el-button>
+
+      </div> -->
     </template>
 
     <template v-else>
       <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
-          <span>上传</span>
+          <span>公示内容</span>
+        </div>
+        <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
+          <!-- <i class="el-icon-upload" /> -->
+          <div>将文件拖到此处，或点击添加</div>
+          <p>单个文件大小不超过20MB，可上传图片或PDF</p>
+        </el-upload>
+      </el-card>
+      <el-card class="upload-card" style="margin-bottom:30px">
+        <div slot="header">
+          <span>公示公告</span>
         </div>
         <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
@@ -41,7 +57,7 @@
       </el-card>
     </template>
     <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
-      <img :src="detailImgUrl" alt="委托授权书">
+      <img :src="detailImgUrl" alt="意见咨询表">
     </el-dialog>
   </div>
 </template>
@@ -51,10 +67,12 @@ import * as File from '@/api/file'
 // import { deepClone } from '@/utils'
 
 export default {
-  name: 'DelegateForm',
+  name: 'SummaryForm',
   data() {
     return {
       // 修改后重新保存
+      imgVisible: false,
+      detailImgUrl: '',
       hasChanged: false,
       formLoading: false,
       rooms: ['401', '402', '403'],
@@ -88,10 +106,6 @@ export default {
     console.log(11111)
   },
   methods: {
-    detailImg(file) {
-      this.detailImgUrl = file.url
-      this.imgVisible = true
-    },
     handleUploadRemove(file, fileList) {
     },
     // handleUploadChange(file, fileList) {
@@ -107,6 +121,10 @@ export default {
       if (fileList.length > 0) {
         this.model[index] = fileList.map(f => f.raw)
       }
+    },
+    detailImg(file) {
+      this.detailImgUrl = file.url
+      this.imgVisible = true
     },
     // 图片上传之前判断
     uploadBefore(file) {

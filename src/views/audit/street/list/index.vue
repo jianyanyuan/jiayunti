@@ -64,10 +64,10 @@
             <el-button v-if="scope.row.status === 8" size="mini" type="warning" @click="$router.push({name:'StreetCheck',params:{applyId:scope.row.Id,status:scope.row.status}})">
               审 核
             </el-button>
-            <el-button v-if="scope.row.status === 13" size="mini" type="warning" @click="$router.push({path:'/street/record_fault',query:{applyId:scope.row.Id}})">
+            <el-button v-if="scope.row.status === 11" size="mini" type="warning" @click="$router.push({path:'/street/record_fault',query:{applyId:scope.row.Id}})">
               违规记录
             </el-button>
-            <el-button v-if="scope.row.status === 13" size="mini" type="warning" @click="$router.push({path:'/street/handle_fault',query:{applyId:scope.row.Id}})">
+            <el-button v-if="scope.row.status === 11" size="mini" type="warning" @click="$router.push({path:'/street/handle_fault',query:{applyId:scope.row.Id}})">
               查看回复
             </el-button>
           </el-row>

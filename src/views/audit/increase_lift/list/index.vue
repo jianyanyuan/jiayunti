@@ -77,8 +77,8 @@
           <el-row type="flex" justify="space-around">
             <el-button v-if="scope.row.status=== 9" size="mini" type="warning" @click="$router.push({path:'/increase_lift/report',query:{applyId:scope.row.Id}})">上传报告</el-button>
             <el-button v-if="scope.row.status=== 4" size="mini" type="warning" @click="$router.push({path:'/increase_lift/pipe',query:{applyId:scope.row.Id}})">管道踏勘</el-button>
-            <el-button v-if="scope.row.status === 13" size="mini" type="warning" @click="$router.push({name:'IncreaseLiftFaultView',params:{}})">违规查看</el-button>
-            <el-button v-if="scope.row.status === 14" size="mini" type="warning" @click="subsidyVisible = true">补贴派发</el-button>
+            <el-button v-if="scope.row.status === 11" size="mini" type="warning" @click="$router.push({name:'IncreaseLiftFaultView',params:{}})">违规查看</el-button>
+            <el-button v-if="scope.row.status === 12" size="mini" type="warning" @click="subsidyVisible = true">补贴派发</el-button>
 
           </el-row>
         </template>
