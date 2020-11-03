@@ -25,6 +25,7 @@ const residentRouter = {
       path: 'apply',
       component: () => import('@/views/audit/resident/apply/index'), // Parent router-view
       name: 'ResidentApply',
+      hidden: true,
       meta: {
         title: '申请',
         icon: 'apply',
@@ -142,15 +143,25 @@ const residentRouter = {
       }
     },
     {
-      path: 'assents-detail',
-      component: () => import('@/views/audit/resident/assents-detail'),
-      name: 'ResidentAssentsDetail',
+      path: 'fault-view',
+      component: () => import('@/views/audit/resident/fault-view.vue'),
+      name: 'ResidentFaultView',
       hidden: true,
       meta: {
-        title: '异议反馈',
+        title: '违规查看',
         roles: ['admin', 'resident']
       }
     }
+    // {
+    //   path: 'assents-detail',
+    //   component: () => import('@/views/audit/resident/assents-detail'),
+    //   name: 'ResidentAssentsDetail',
+    //   hidden: true,
+    //   meta: {
+    //     title: '异议反馈',
+    //     roles: ['admin', 'resident']
+    //   }
+    // }
   ]
 }
 

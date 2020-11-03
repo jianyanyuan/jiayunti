@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-02 10:33:20
+ * @LastEditTime: 2020-11-03 09:12:10
  * @Description:街道审核列表
 -->
 
@@ -61,7 +61,7 @@
       <el-table-column align="center" label="操作" min-width="200">
         <template slot-scope="scope">
           <el-row type="flex" justify="space-around">
-            <el-button v-if="scope.row.status === 8" size="mini" type="warning" @click="$router.push({path:'/street/check',query:{applyId:scope.row.Id}})">
+            <el-button v-if="scope.row.status === 8" size="mini" type="warning" @click="$router.push({name:'StreetCheck',params:{applyId:scope.row.Id,status:scope.row.status}})">
               审 核
             </el-button>
             <el-button v-if="scope.row.status === 13" size="mini" type="warning" @click="$router.push({path:'/street/record_fault',query:{applyId:scope.row.Id}})">

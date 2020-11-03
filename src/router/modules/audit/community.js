@@ -33,7 +33,7 @@ const communityRouter = {
       path: 'view',
       component: () => import('@/views/audit/community/view/index'),
       name: 'CommunityView',
-      // hidden: true,
+      hidden: true,
       meta: {
         title: '异议查看',
         icon: 'collapse',
@@ -44,7 +44,7 @@ const communityRouter = {
       path: 'record',
       name: 'CommunityRecord',
       component: () => import('@/views/audit/community/record/index'),
-      // hidden: true,
+      hidden: true,
       meta: {
         title: '异议记录',
         icon: 'card',
@@ -55,7 +55,7 @@ const communityRouter = {
       path: 'check',
       name: 'CommunityCheck',
       component: () => import('@/views/audit/community/check/index'),
-      // hidden: true,
+      hidden: true,
       meta: {
         title: '审核',
         icon: 'check',

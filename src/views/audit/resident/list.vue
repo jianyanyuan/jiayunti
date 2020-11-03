@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-02 09:01:29
+ * @LastEditTime: 2020-11-03 11:16:31
  * @Description:申请列表
 -->
 
@@ -53,10 +53,13 @@
               <el-tag v-if="scope.row.status === 10" size="medium" type="success" effect="light">申请已通过</el-tag>
               <el-tag v-if="scope.row.status === 11" size="medium" type="danger" effect="light">已驳回</el-tag>
               <el-tag v-if="scope.row.status === 12" size="medium" type="danger" effect="light">已撤销</el-tag>
+              <el-button v-if="scope.row.status === 13" size="mini" type="warning" plain @click="$router.push({name:'ResidentFaultView',params:{}})">违规查看</el-button>
+              <!-- <el-button v-if="scope.row.status === 14" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button> -->
+              <el-button v-if="scope.row.status === 14" size="mini" type="warning" @click="subsidyVisible = true">补贴查看</el-button>
 
               <!-- <el-button v-if="scope.row.status === 1 && scope.row.dissent" size="mini" type="success" @click="dissentView"> 查看反馈</el-button> -->
               <!-- <el-button v-if="scope.row.status === 10" size="mini" type="danger" @click="viewAudit(scope.row)">审核意见</el-button> -->
-            <!-- <el-button v-if="scope.row.status !== 0" size="mini" type="primary" @click="flowView">查看流程</el-button> -->
+              <!-- <el-button v-if="scope.row.status !== 0" size="mini" type="primary" @click="flowView">查看流程</el-button> -->
             </el-row>
           </template>
         </el-table-column>
@@ -123,6 +126,21 @@
         <el-button type="primary" @click="postApply">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 补贴查看 -->
+    <el-dialog v-el-drag-dialog title="补贴查看" center :visible.sync="subsidyVisible" :close-on-click-modal="false" class="uploadModal">
+      <el-form :model="subsidy" label-position="top">
+        <el-form-item label="补助金额（元）:">
+          {{ subsidy.money | numberFormat }}
+        </el-form-item>
+        <el-form-item label="证明材料:" prop="attachment">
+          <a v-for="file in fileList" :key="file.name" class="file-display">
+            <i class="el-icon-document" />
+            {{ file.name }}
+            <i class="el-icon-download" style="float:right" />
+          </a>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
     <!-- 查看流程 -->
     <el-dialog v-el-drag-dialog title="申请流程" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
       <flow />
@@ -132,7 +150,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { keyToVal, deepClone, parseTime } from '@/utils'
+import { keyToVal, deepClone, parseTime, numberFormat } from '@/utils'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import Flow from '@/components/street/Flow'
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
@@ -148,7 +166,8 @@ const defaultForm = {
 export default {
   filters: {
     keyToVal,
-    parseTime
+    parseTime,
+    numberFormat
   },
   components: {
     Flow
@@ -175,6 +194,11 @@ export default {
           }
         }
       },
+      fileList: [{ name: '123213' }, { name: '456465' }, { name: '789798' }],
+      subsidy: {
+        money: '79746464'
+      },
+      subsidyVisible: false,
       formLoading: false,
       listLoading: false,
       auditVisible: false,
@@ -329,6 +353,44 @@ export default {
           applyTime: '2020-10-12 10:40',
           auditTime: '2020-10-12 10:56',
           status: 12 // 已撤销
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          auditTime: '',
+          apply: {
+            name: '李先生',
+            address: '苏州高新区',
+            phone: '15988800323',
+            liftAddress: '小区1楼',
+            spec: '高端电梯',
+            time: '2020-10-12 10:56'
+          },
+          design: {
+            org: '建研院',
+            time: '2020-10-12 10:56',
+            address: '苏州高新区',
+            phone: '15988800323'
+          },
+          status: 13 // 施工中
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          auditTime: '',
+          apply: {
+            name: '李先生',
+            address: '苏州高新区',
+            phone: '15988800323',
+            liftAddress: '小区1楼',
+            spec: '高端电梯',
+            time: '2020-10-12 10:56'
+          },
+          design: {
+            org: '建研院',
+            time: '2020-10-12 10:56',
+            address: '苏州高新区',
+            phone: '15988800323'
+          },
+          status: 14 // 竣工验收
         }
       ]
     }
@@ -422,12 +484,24 @@ input {
 input:focus {
   outline: none;
 }
-.contract-tip{
+.contract-tip {
   padding: 0 10px;
   color: #686d76;
   line-height: 30px;
-  span{
+  span {
     margin-right: 20px;
   }
+}
+.file-display {
+  display: block;
+  text-align: left;
+  padding: 5px;
+  margin: 10px;
+  border-radius: 5px;
+  // background-color: chartreuse;
+}
+.file-display:hover {
+  color: #409eff;
+  background-color: #ebebeb;
 }
 </style>

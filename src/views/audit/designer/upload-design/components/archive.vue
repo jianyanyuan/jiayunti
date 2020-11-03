@@ -2,46 +2,70 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-03 08:24:50
+ * @LastEditTime: 2020-11-03 10:02:19
  * @Description: 居民申请意见汇总表
 -->
 <template>
   <div>
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
-      <span>项目协议书</span>
-      <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
+      <span>档案调取</span>
+      <el-button v-if="!hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
       <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">保存</el-button>
     </el-row>
     <template v-if="hasChanged">
-      <el-card class="upload-card" style="margin-bottom:30px">
+      <el-card>
+        <div slot="header">
+          <span>记录</span>
+        </div>
+        <!-- 修改保存 -->
+        <el-table :data="model.tableData" border highlight-current-row style="width: 100%">
+          <el-table-column label="序号" min-width="60" align="center">
+            <template slot-scope="scope">
+              {{ scope.$index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column label="项目" min-width="180" prop="project" align="center">
+            <template slot-scope="{row}">
+              <el-input v-model="row.company" size="small" />
+            </template>
+          </el-table-column>
+          <el-table-column label="是否完成" min-width="180" align="center">
+            <template slot-scope="{row}">
+              <el-checkbox v-model="row.isComplete">是</el-checkbox>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-card>
+    </template>
+    <template v-else>
+      <el-card>
         <div slot="header">
           <span>查看</span>
         </div>
-        <upload-list :files="urls" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
-
-      </el-card>
-      <div style="text-align:center">
-        <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
-
-        <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
-      </div>
-    </template>
-
-    <template v-else>
-      <el-card class="upload-card" style="margin-bottom:30px">
-        <div slot="header">
-          <span>上传</span>
+        <!-- 查看 -->
+        <el-table :data="model.tableData" border highlight-current-row style="width: 100%">
+          <el-table-column label="序号" min-width="60" align="center">
+            <template slot-scope="scope">
+              {{ scope.$index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column label="项目" min-width="180" prop="project" align="center">
+            <template slot-scope="{row}">
+              {{ row.project }}
+            </template>
+          </el-table-column>
+          <el-table-column label="是否完成" min-width="180" align="center">
+            <template slot-scope="{row}">
+              {{ row.isComplete }}
+            <!-- <el-checkbox v-model="row.isComplete">是</el-checkbox> -->
+            </template>
+          </el-table-column>
+        </el-table>
+        <div style="text-align:center; margin-top:30px">
+          <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
         </div>
-        <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
-          <!-- <i class="el-icon-upload" /> -->
-          <div>将文件拖到此处，或点击添加</div>
-          <p>单个文件大小不超过20MB，可上传图片或PDF</p>
-        </el-upload>
       </el-card>
     </template>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
-      <img :src="detailImgUrl" alt="项目协议书">
-    </el-dialog>
   </div>
 </template>
 
@@ -57,7 +81,32 @@ export default {
       hasChanged: false,
       formLoading: false,
       rooms: ['401', '402', '403'],
-      model: [],
+      model: {
+        title: '踏勘记录',
+        visible: false,
+        tableData: [
+          {
+            project: '建筑图（必选）',
+            isComplete: false
+          },
+          {
+            project: '结构图（必选）',
+            isComplete: false
+          },
+          {
+            project: '地址踏勘报告（必选）',
+            isComplete: false
+          },
+          {
+            project: '水电图',
+            isComplete: false
+          },
+          {
+            project: '总平面图',
+            isComplete: false
+          }
+        ]
+      },
       urls: [
         {
           name: '身份证',

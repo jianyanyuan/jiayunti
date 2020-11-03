@@ -35,7 +35,7 @@ const streetRouter = {
       path: 'check',
       component: () => import('@/views/audit/street/check/index'),
       name: 'StreetCheck',
-      // hidden: true,
+      hidden: true,
       meta: {
         title: '审核',
         icon: 'check',
@@ -45,8 +45,8 @@ const streetRouter = {
     {
       path: 'handle_fault',
       component: () => import('@/views/audit/street/handle_fault.vue'),
-      name: 'HandleFault',
-      // hidden: true,
+      name: 'StreetHandleFault',
+      hidden: true,
       meta: {
         title: '违规处理',
         icon: 'check',
@@ -56,8 +56,8 @@ const streetRouter = {
     {
       path: 'record_fault',
       component: () => import('@/views/audit/street/record_fault.vue'),
-      name: 'RecordFault',
-      // hidden: true,
+      name: 'StreetRecordFault',
+      hidden: true,
       meta: {
         title: '违规记录',
         icon: 'check',

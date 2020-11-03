@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-02 11:02:59
+ * @LastEditTime: 2020-11-03 11:09:31
  * @Description:图审列表
 -->
 
@@ -77,11 +77,32 @@
           <el-row type="flex" justify="space-around">
             <el-button v-if="scope.row.status=== 9" size="mini" type="warning" @click="$router.push({path:'/increase_lift/report',query:{applyId:scope.row.Id}})">上传报告</el-button>
             <el-button v-if="scope.row.status=== 4" size="mini" type="warning" @click="$router.push({path:'/increase_lift/pipe',query:{applyId:scope.row.Id}})">管道踏勘</el-button>
+            <el-button v-if="scope.row.status === 13" size="mini" type="warning" @click="$router.push({name:'IncreaseLiftFaultView',params:{}})">违规查看</el-button>
+            <el-button v-if="scope.row.status === 14" size="mini" type="warning" @click="subsidyVisible = true">补贴派发</el-button>
+
           </el-row>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
+    <!-- 补贴派发 -->
+    <el-dialog v-el-drag-dialog title="补贴派发" center :visible.sync="subsidyVisible" :close-on-click-modal="false" class="uploadModal">
+      <el-form :model="model" :rules="model.rule">
+        <el-form-item label="补助金额（元）:" prop="money">
+          <el-input v-model="model.money" @blur="formatterDecimal" />
+        </el-form-item>
+        <el-form-item label="证明材料:" prop="attachment">
+          <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
+            <!-- <i class="el-icon-upload" /> -->
+            <div>将文件拖到此处，或点击添加</div>
+            <p>单个文件大小不超过20MB</p>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <span slot="footer">
+        <el-button size="small" type="primary" @click="submitUpload">上 传</el-button>
+      </span>
+    </el-dialog>
     <!-- 查看流程 -->
     <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
       <flow />
@@ -106,7 +127,18 @@ export default {
     Flow
   },
   data() {
+    const formatterDecimal = (rule, value, callback) => {
+      const number = +value
+      if (isNaN(number)) {
+        callback('请输入补助金额,数字格式')
+      } else {
+        const reg = /(?=(\B\d{3})+$)/g
+        this.model.money = value.toString().replace(reg, ',')
+        callback()
+      }
+    }
     return {
+      subsidyVisible: false,
       query: {
         code: '',
         applyName: '',
@@ -114,6 +146,14 @@ export default {
         status: ''
       },
       flowVisible: false,
+      model: {
+        money: '',
+        attachment: [],
+        rule: {
+          money: [{ required: true, validator: formatterDecimal, trigger: 'blur' }],
+          attachment: [{ required: true }]
+        }
+      },
       list: [
         {
           code: 'apply10121056',
@@ -153,6 +193,44 @@ export default {
             phone: '15988800323'
           },
           status: 9 // 联合审查
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          auditTime: '',
+          apply: {
+            name: '李先生',
+            address: '苏州高新区',
+            phone: '15988800323',
+            liftAddress: '小区1楼',
+            spec: '高端电梯',
+            time: '2020-10-12 10:56'
+          },
+          design: {
+            org: '建研院',
+            time: '2020-10-12 10:56',
+            address: '苏州高新区',
+            phone: '15988800323'
+          },
+          status: 13 // 施工中
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          auditTime: '',
+          apply: {
+            name: '李先生',
+            address: '苏州高新区',
+            phone: '15988800323',
+            liftAddress: '小区1楼',
+            spec: '高端电梯',
+            time: '2020-10-12 10:56'
+          },
+          design: {
+            org: '建研院',
+            time: '2020-10-12 10:56',
+            address: '苏州高新区',
+            phone: '15988800323'
+          },
+          status: 14 // 竣工验收
         }
         // {
         //   code: 'apply10140900',
@@ -217,13 +295,61 @@ export default {
     },
     handleCurrentPageChange(val) {
       this.pagination.pageIndex = val
+    },
+    handleUploadRemove(file, fileList) {
+    },
+    // handleUploadChange(file, fileList) {
+    //   console.log(file)
+    //   console.log(fileList)
+    //   debugger
+    // },
+
+    // 上传文件发生改变时
+    handleUploadChange(file, fileList, index) {
+      if (fileList.length > 0) {
+        this.model[index] = fileList.map(f => f.raw)
+      }
+    },
+    // 图片上传之前判断
+    uploadBefore(file) {
+      const isImage = file.type.indexOf('image') !== -1
+      const isBig = file.size <= 1024 * 1024 * 10
+      if (!file) {
+        this.$message.error('上传为空！')
+        return false
+      }
+      if (!isImage) {
+        this.$message.error('只能上传图片！')
+        return false
+      }
+      if (!isBig) {
+        this.$message.error('图片大小不能超过10MB！')
+        return false
+      }
+      return true
+    },
+    submitUpload() {
+
     }
 
   }
 }
 </script>
 <style lang="scss" scoped>
- .manage-query {
+.uploadModal ::v-deep .el-upload-dragger {
+  padding: 40px 5px;
+  border: 2px solid #e5e5e5;
+  color: #777;
+  -webkit-transition: background-color 0.2s linear;
+  transition: background-color 0.2s linear;
+}
+.uploadModal ::v-deep .el-upload-dragger:hover {
+  background: #f6f6f6;
+}
+.uploadModal ::v-deep .el-dialog__body {
+  text-align: center;
+}
+.manage-query {
   height: 45px;
   padding: 5px 20px;
   background: #efefef;

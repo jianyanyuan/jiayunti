@@ -2,13 +2,13 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-03 08:24:50
+ * @LastEditTime: 2020-11-03 09:58:16
  * @Description: 居民申请意见汇总表
 -->
 <template>
   <div>
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
-      <span>项目协议书</span>
+      <span>方案设计稿</span>
       <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
       <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">保存</el-button>
     </el-row>
@@ -23,7 +23,7 @@
       <div style="text-align:center">
         <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
 
-        <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
+        <el-button type="success" icon="el-icon-upload2" @click.native.prevent="postApply">上 传</el-button>
       </div>
     </template>
 
@@ -40,7 +40,7 @@
       </el-card>
     </template>
     <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
-      <img :src="detailImgUrl" alt="项目协议书">
+      <img :src="detailImgUrl" alt="专用账户授权委托书">
     </el-dialog>
   </div>
 </template>
@@ -50,7 +50,7 @@ import * as File from '@/api/file'
 // import { deepClone } from '@/utils'
 
 export default {
-  name: 'ProtocalForm',
+  name: 'Upload',
   data() {
     return {
       // 修改后重新保存

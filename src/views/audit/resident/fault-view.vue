@@ -1,37 +1,28 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-11-02 14:30:34
+ * @LastEditTime: 2020-11-03 10:26:26
  * @Description: 施工端违规处理
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
 <template>
   <div class="app-container">
+    <el-page-header content="违规查看" style="margin-bottom:20px" @back="$router.go(-1)" />
+
     <div class="basic-container">
       <el-card style="margin-bottom:30px">
         <div slot="header">
-          <span>基本信息</span>
+          <span>施工单位信息</span>
         </div>
         <el-form label-width="120px" class="show-form">
-          <el-form-item label="姓名:">
+          <el-form-item label="施工单位：">
             {{ basic.name }}
           </el-form-item>
-          <el-form-item label="详细地址:">
-            <el-cascader v-model="basic.address" :options="addressOptions" />
-            <label for="address-detail" class="label-detail"> — </label>
-            <el-cascader v-model="plot" :options="plotOptions" />
+          <el-form-item label="地址：">
+            {{ basic.address }}
           </el-form-item>
-          <el-form-item label="电话:">
+          <el-form-item label="电话：">
             {{ basic.phone }}
-          </el-form-item>
-          <el-form-item label="加装电梯地址:">
-            {{ basic.liftAddress }}
-          </el-form-item>
-          <el-form-item label="设计单位:">
-            {{ basic.company }}
-          </el-form-item>
-          <el-form-item label="设备:">
-            {{ basic.spec }}
           </el-form-item>
         </el-form>
       </el-card>
@@ -67,22 +58,15 @@
 
           </el-form-item>
           <el-form-item label="违规回复:">
-            <el-input v-model="item.feedback" />
+            <el-input v-model="item.feedback" disabled />
           </el-form-item>
           <el-form-item label="整改照片:">
-            <el-upload action="#" class="form-card" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
+            <upload-list :files="attachments" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
 
-              <div>将文件拖到此处，或点击添加</div>
-              <div>单个文件大小不超过20MB，可上传图片或PDF</div>
-            </el-upload>
           </el-form-item>
           <el-form-item label="处理回复:" prop="descResult">
-            <el-input v-model="item.descResult" type="textarea" autosize />
+            <el-input v-model="item.descResult" type="textarea" autosize disabled />
           </el-form-item>
-          <el-row type="flex" justify="center" style="margin:50px 0">
-            <el-button type="primary">保 存</el-button>
-            <el-button>返 回</el-button>
-          </el-row>
         </el-form>
       </el-collapse-item>
     </el-collapse>
@@ -96,7 +80,7 @@
 import { mapState } from 'vuex'
 import { keyToVal } from '@/utils'
 export default {
-  name: 'Fault',
+  name: 'FaultView',
   components: {
   },
   filters: {
@@ -107,11 +91,8 @@ export default {
       picShow: false,
       basic: {
         name: '李先生',
-        address: '苏州高新区',
-        phone: '15988800323',
-        liftAddress: '小区1楼',
-        company: '苏州建研院',
-        spec: '高端电梯'
+        address: 'dsadasdsad',
+        phone: '15988800323'
       },
       rule: {
 

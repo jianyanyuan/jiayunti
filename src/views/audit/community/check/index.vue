@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-10-27 16:44:54
+ * @LastEditTime: 2020-11-03 08:50:23
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -19,7 +19,7 @@
     <div class="line-divider" />
 
     <div class="dynamic-component-container">
-      <component :is="curComponent" />
+      <component :is="curComponent" :params="params" />
     </div>
 
   </div>
@@ -33,6 +33,7 @@ import Resident from '@/components/street/Resident'
 import Audit from '@/components/street/Audit'
 
 export default {
+  name: 'Check',
   components: {
     Audit,
     // Design,
@@ -42,6 +43,10 @@ export default {
   },
   data() {
     return {
+      params: {
+        applyId: '',
+        status: ''
+      },
       stepBtnGroup: ['申请流程图', '居民申请材料', '审核'],
       componentGroup: ['Flow', 'Resident', 'Audit'],
       curStep: 0
@@ -58,6 +63,15 @@ export default {
         this.curStep = +event.target.attributes['step-index'].value
       }
     }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (!to.params.status) {
+        vm.$router.push(from.fullPath)
+        return false
+      }
+      vm.params.status = to.params.status
+    })
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-10-23 08:59:29
+ * @LastEditTime: 2020-11-03 10:08:48
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -12,31 +12,29 @@
     <div class="basic-container">
       <el-card style="margin-bottom:30px">
         <div slot="header">
-          <span>审核信息</span>
+          <span style="margin-right:20px">审核信息</span>
+          <el-tag :type="audit.status | keyToVal(auditTag)">{{ audit.status | keyToVal(auditStatus) }}</el-tag>
         </div>
-        <div>
-          审核状态：<el-tag :type="audit.status | keyToVal(auditTag)">{{ audit.status | keyToVal(auditStatus) }}</el-tag>
-          <el-form v-if="audit.status !== 0" label-position="left" inline class="demo-table-expand">
-            <el-form-item label="审核人">
-              <span>{{ audit.name }}</span>
-            </el-form-item>
-            <el-form-item label="审核机构">
-              <span>{{ audit.insitution }}</span>
-            </el-form-item>
-            <el-form-item label="机构地址：">
-              <span>{{ audit.address }}</span>
-            </el-form-item>
-            <el-form-item label="电话：">
-              <span>{{ audit.phone }}</span>
-            </el-form-item>
-            <el-form-item label="审核时间：">
-              <span>{{ audit.time }}</span>
-            </el-form-item>
-            <el-form-item label="审核意见：">
-              <span>{{ audit.comments }}</span>
-            </el-form-item>
-          </el-form>
-        </div>
+        <el-form v-if="audit.status !== 0" label-position="left" inline class="demo-table-expand">
+          <el-form-item label="审核人">
+            <span>{{ audit.name }}</span>
+          </el-form-item>
+          <el-form-item label="审核机构">
+            <span>{{ audit.insitution }}</span>
+          </el-form-item>
+          <el-form-item label="机构地址：">
+            <span>{{ audit.address }}</span>
+          </el-form-item>
+          <el-form-item label="电话：">
+            <span>{{ audit.phone }}</span>
+          </el-form-item>
+          <el-form-item label="审核时间：">
+            <span>{{ audit.time }}</span>
+          </el-form-item>
+          <el-form-item label="审核意见：">
+            <span>{{ audit.comments }}</span>
+          </el-form-item>
+        </el-form>
         <!-- <div slot=" header">
             <span>基本信息</span>
         </div>

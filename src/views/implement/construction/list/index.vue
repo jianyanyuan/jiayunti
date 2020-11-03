@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-02 13:44:28
+ * @LastEditTime: 2020-11-03 11:29:24
  * @Description:图审列表
 -->
 
@@ -15,9 +15,6 @@
         </el-form-item>
         <el-form-item label="申请人" prop="applyName " style="margin-right: 30px">
           <el-input v-model="query.applyName" />
-        </el-form-item>
-        <el-form-item label="设计单位" prop="designName " style="margin-right: 30px">
-          <el-input v-model="query.designName" />
         </el-form-item>
         <el-form-item label="状态" prop="status " style="margin-right: 30px">
           <el-select v-model="query.status">

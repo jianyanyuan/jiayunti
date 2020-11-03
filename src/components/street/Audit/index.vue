@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-16 16:35:29
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-02 14:04:28
+ * @LastEditTime: 2020-11-03 09:08:29
  * @Description:
 -->
 <template>
@@ -15,7 +15,7 @@
         <el-upload action="#" class="form-card" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div class="enclosure-tips">
-            初步审核意见表
+            审核意见表
           </div>
           <div>将文件拖到此处，或点击添加</div>
           <div>单个文件大小不超过20MB，可上传图片或PDF</div>
@@ -37,6 +37,13 @@
 <script>
 export default {
   name: 'Resident',
+  props: {
+    params: {
+      type: Object,
+      default: {},
+      required: true
+    }
+  },
   data() {
     return {
       form: {
