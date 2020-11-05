@@ -1,9 +1,9 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-11-02 13:33:52
+ * @LastEditTime: 2020-11-03 08:29:28
  * @LastEditors: zfd
- * @Description: construction process
+ * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
 -->
 <template>
@@ -27,22 +27,19 @@
 </template>
 
 <script>
-import Basic from './components/basic.vue'
-import Locale from './components/locale.vue'
-import Offer from './components/offer.vue'
-// import DelegateForm from '@/components/resident/delegate-form'
-// import ProtocalForm from '@/components/resident/protocal-form'
+import Archive from './components/archive.vue'
+import Upload from './components/upload.vue'
 
 export default {
+  name: 'UploadDesign',
   components: {
-    Basic,
-    Locale,
-    Offer
+    Archive,
+    Upload
   },
   data() {
     return {
-      stepBtnGroup: ['施工资料', '查看现场', '报价'],
-      componentGroup: ['Basic', 'Locale', 'Offer'],
+      stepBtnGroup: ['档案调取', '上传设计'],
+      componentGroup: ['Archive', 'Upload'],
       curStep: 0
     }
   },
@@ -82,7 +79,8 @@ export default {
 <style scoped>
 .line-divider {
   height: 20px;
-  background: #19305c;
+  /* background: #646464; */
+  background: #14274e;
 }
 .step-btn-group {
   padding: 0 20px;
@@ -103,10 +101,10 @@ export default {
 .step-btn-group .step-actived {
   background: #82a7cb;
 }
-.dynamic-component-container {
+.dynamic-component-container{
   margin-top: 30px;
 }
-.step-container {
+.step-container{
   margin-top: 30px;
   text-align: center;
 }

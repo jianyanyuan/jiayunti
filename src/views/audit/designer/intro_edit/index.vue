@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-28 13:42:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-28 15:27:27
+ * @LastEditTime: 2020-10-29 15:33:50
  * @Description: 设计单位介绍
 -->
 <template>
@@ -11,6 +11,12 @@
     <el-form :model="designer" :rules="rule" label-width="120px" label-position="top" class="handle-form">
       <el-form-item label="公司名称:" prop="name">
         <el-input v-model="designer.name" />
+      </el-form-item>
+      <el-form-item label="公司地址:" prop="address">
+        <el-input v-model="designer.address" />
+      </el-form-item>
+      <el-form-item label="联系方式:" prop="phone">
+        <el-input v-model="designer.phone" />
       </el-form-item>
       <el-form-item label="文章来源:" prop="source">
         <el-input v-model="designer.source" />
@@ -49,13 +55,17 @@ export default {
         source: '',
         link: '',
         author: '',
-        desc: ''
+        desc: '',
+        address: '',
+        phone: ''
       },
       rule: {
         name: [{ required: true, message: '请输入公司名称', trigger: 'blur' }],
         source: [{ required: true, message: '请输入文章来源', trigger: 'blur' }],
         author: [{ required: true, message: '请输入作者', trigger: 'blur' }],
-        desc: [{ required: true, message: '请输入公司简介', trigger: 'blur' }]
+        desc: [{ required: true, message: '请输入公司简介', trigger: 'blur' }],
+        address: [{ required: true, message: '请输入公司简介', trigger: 'blur' }],
+        phone: [{ required: true, message: '请输入公司简介', trigger: 'blur' }]
 
       },
       myConfig: {
