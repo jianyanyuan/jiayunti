@@ -35,7 +35,7 @@ const drawingAuditRouter = {
       path: 'check',
       component: () => import('@/views/audit/drawing_audit/check/index'),
       name: 'DrawingAuditCheck',
-      // hidden: true,
+      hidden: true,
       meta: {
         title: '审核',
         icon: 'check',

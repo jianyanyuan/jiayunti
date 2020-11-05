@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-10-22 16:21:58
+ * @LastEditTime: 2020-11-03 09:44:32
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -42,6 +42,10 @@ export default {
   },
   data() {
     return {
+      params: {
+        applyId: '',
+        status: ''
+      },
       stepBtnGroup: ['申请流程图', '居民申请材料', '设计院设计', '管道踏勘记录', '审核'],
       componentGroup: ['Flow', 'Resident', 'Design', 'Pipe', 'Audit'],
       curStep: 0
@@ -58,6 +62,15 @@ export default {
         this.curStep = +event.target.attributes['step-index'].value
       }
     }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (!to.params.status) {
+        vm.$router.push(from.fullPath)
+        return false
+      }
+      vm.params.status = to.params.status
+    })
   }
 }
 </script>

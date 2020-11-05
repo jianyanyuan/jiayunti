@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 09:15:58
- * @LastEditTime: 2020-10-21 15:24:29
+ * @LastEditTime: 2020-11-03 10:17:30
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\App.vue
@@ -32,6 +32,11 @@ export default {
 //   background: #f6f6f6;
 //   border:2px solid #efefef;
 // }
+// 单页面表格居中显示
+.center-form {
+  width: 820px;
+  margin: 50px auto 0;
+}
 li{
   list-style: none;
 }

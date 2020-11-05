@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-10-19 15:05:41
+ * @LastEditTime: 2020-11-03 09:50:18
  * @LastEditors: zfd
  * @Description: 审批端设计路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -35,9 +35,20 @@ const designerRouter = {
       path: 'edit',
       component: () => import('@/views/audit/designer/edit/index'),
       name: 'DesignerEdit',
-      // hidden: true,
+      hidden: true,
       meta: {
         title: '编辑',
+        icon: 'edit',
+        roles: ['admin', 'designer']
+      }
+    },
+    {
+      path: 'upload-design',
+      component: () => import('@/views/audit/designer/upload-design/index'),
+      name: 'UploadDesign',
+      hidden: true,
+      meta: {
+        title: '上传',
         icon: 'edit',
         roles: ['admin', 'designer']
       }
@@ -46,9 +57,31 @@ const designerRouter = {
       path: 'view',
       component: () => import('@/views/audit/designer/view/index'), // Parent router-view
       name: 'DesignerView',
-      // hidden: true,
+      hidden: true,
       meta: {
         title: '查看',
+        icon: 'eye',
+        roles: ['admin', 'designer']
+      }
+    },
+    {
+      path: 'intro_edit',
+      component: () => import('@/views/audit/designer/intro_edit/index'), // Parent router-view
+      name: 'DesignerIntroEdit',
+      // hidden: true,
+      meta: {
+        title: '公司介绍-编辑',
+        icon: 'eye',
+        roles: ['admin', 'designer']
+      }
+    },
+    {
+      path: 'introduction',
+      component: () => import('@/views/audit/designer/introduction/index'), // Parent router-view
+      name: 'DesignerIntro',
+      // hidden: true,
+      meta: {
+        title: '公司介绍',
         icon: 'eye',
         roles: ['admin', 'designer']
       }

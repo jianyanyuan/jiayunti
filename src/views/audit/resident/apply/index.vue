@@ -1,9 +1,9 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-10-22 15:31:05
+ * @LastEditTime: 2020-11-03 08:29:28
  * @LastEditors: zfd
- * @Description: In User Settings Edit
+ * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
 -->
 <template>
@@ -27,11 +27,12 @@
 </template>
 
 <script>
-import Basic from '@/components/resident/basic'
-import ConclutationForm from '@/components/resident/conclutation-form'
-import SummaryForm from '@/components/resident/summary-form'
-import DelegateForm from '@/components/resident/delegate-form'
-import ProtocalForm from '@/components/resident/protocal-form'
+import Basic from './components/basic.vue'
+import ConclutationForm from './components/conclutation-form.vue'
+import SummaryForm from './components/summary-form.vue'
+import DelegateForm from './components/delegate-form.vue'
+import ProtocalForm from './components/protocal-form.vue'
+import Special from './components/special.vue'
 
 export default {
   components: {
@@ -39,12 +40,13 @@ export default {
     ConclutationForm,
     SummaryForm,
     DelegateForm,
-    ProtocalForm
+    ProtocalForm,
+    Special
   },
   data() {
     return {
-      stepBtnGroup: ['基本资料', '意见征询表', '意见征询汇总表', '委托授权书', '项目协议书'],
-      componentGroup: ['Basic', 'ConclutationForm', 'SummaryForm', 'DelegateForm', 'ProtocalForm'],
+      stepBtnGroup: ['基本资料', '意见征询表', '意见征询汇总表', '委托授权书', '项目协议书', '账户授权委托书'],
+      componentGroup: ['Basic', 'ConclutationForm', 'SummaryForm', 'DelegateForm', 'ProtocalForm', 'Special'],
       curStep: 0
     }
   },
@@ -84,7 +86,8 @@ export default {
 <style scoped>
 .line-divider {
   height: 20px;
-  background: #19305c;
+  /* background: #646464; */
+  background: #14274e;
 }
 .step-btn-group {
   padding: 0 20px;

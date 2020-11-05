@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-10-23 14:08:07
+ * @LastEditTime: 2020-11-03 10:25:13
  * @LastEditors: zfd
  * @Description: 增梯办路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -27,29 +27,41 @@ const drawingAuditRouter = {
       name: 'IncreaseLiftList',
       meta: {
         title: '申请列表',
-        icon: 'institution',
+        icon: 'list',
         roles: ['admin', 'increase_lift']
       }
     },
     {
       path: 'report',
       component: () => import('@/views/audit/increase_lift/report/index'),
-      name: 'IncreaseLiftCheck',
+      name: 'IncreaseLiftReport',
       hidden: true,
       meta: {
         title: '上传报告',
-        icon: '',
+        icon: 'list',
         roles: ['admin', 'increase_lift']
       }
     },
     {
-      path: 'report',
-      component: () => import('@/views/audit/increase_lift/report/index'),
-      name: 'IncreaseLiftCheck',
+      path: 'pipe',
+      component: () => import('@/views/audit/increase_lift/pipe/index'),
+      name: 'IncreaseLiftPipe',
       hidden: true,
       meta: {
         title: '管道踏勘',
-        icon: '',
+        icon: 'list',
+        roles: ['admin', 'increase_lift']
+      }
+
+    },
+    {
+      path: 'fault-view',
+      component: () => import('@/views/audit/increase_lift/fault-view.vue'),
+      name: 'IncreaseLiftFaultView',
+      hidden: true,
+      meta: {
+        title: '违规查看',
+        icon: 'list',
         roles: ['admin', 'increase_lift']
       }
     }

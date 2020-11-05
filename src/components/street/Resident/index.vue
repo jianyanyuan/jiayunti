@@ -22,7 +22,7 @@
           </el-form>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="意见征询表">
+      <el-tab-pane v-if="params.status !== 3" label="意见征询表">
         <el-card>
           <ul>
             <li v-for="url in urls" :key="url" style="text-align:center">
@@ -31,7 +31,7 @@
           </ul>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="意见征询汇总表">
+      <el-tab-pane v-if="params.status !== 3" label="意见征询汇总表">
         <el-card>
           <ul>
             <li v-for="url in urls" :key="url" style="text-align:center">
@@ -40,7 +40,7 @@
           </ul>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="委托授权书">
+      <el-tab-pane v-if="params.status !== 3" label="委托授权书">
         <el-card>
           <ul>
             <li v-for="url in urls" :key="url" style="text-align:center">
@@ -49,7 +49,7 @@
           </ul>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="项目协议书">
+      <el-tab-pane v-if="params.status !== 3" label="项目协议书">
         <el-card>
           <ul>
             <li v-for="url in urls" :key="url" style="text-align:center">
@@ -58,7 +58,7 @@
           </ul>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="公示内容">
+      <el-tab-pane v-if="params.status !== 1" label="公示内容">
         <el-card>
           <ul>
             <li v-for="url in urls" :key="url" style="text-align:center">
@@ -67,7 +67,7 @@
           </ul>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="公示报告">
+      <el-tab-pane v-if="params.status !== 1" label="公示报告">
         <el-card>
           <ul>
             <li v-for="url in urls" :key="url" style="text-align:center">
@@ -83,6 +83,13 @@
 <script>
 export default {
   name: 'Resident',
+  props: {
+    params: {
+      type: Object,
+      default: {},
+      required: true
+    }
+  },
   data() {
     return {
       apply: {

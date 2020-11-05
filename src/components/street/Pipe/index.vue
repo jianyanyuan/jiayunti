@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-10-15 09:06:01
- * @LastEditors: your name
+ * @LastEditTime: 2020-11-03 09:24:10
+ * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
 -->
@@ -12,14 +12,14 @@
       <el-tab-pane label="基本信息">
         <el-card class="expand-info">
           <el-form label-position="left" inline class="demo-table-expand">
-            <el-form-item label="社区单位">
-              <span>{{ community.name }}</span>
+            <el-form-item label="增梯办">
+              <span>{{ increaseLift.name }}</span>
             </el-form-item>
             <el-form-item label="电话">
-              <span>{{ community.phone }}</span>
+              <span>{{ increaseLift.phone }}</span>
             </el-form-item>
-            <el-form-item label="详细地址">
-              <span>{{ community.address }}</span>
+            <el-form-item label="地址">
+              <span>{{ increaseLift.address }}</span>
             </el-form-item>
           </el-form>
         </el-card>
@@ -47,8 +47,8 @@ export default {
   name: 'Resident',
   data() {
     return {
-      community: {
-        name: '姑苏区社区1',
+      increaseLift: {
+        name: '增梯办',
         phone: '15988800323',
         address: '枫桥街道'
       },

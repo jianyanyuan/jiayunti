@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-28 16:41:31
+ * @LastEditTime: 2020-11-05 09:47:08
  * @Description: 用户仓库
  */
 import User from '@/api/user'
@@ -53,6 +53,7 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       User.login({ username: username.trim(), password: password }).then(response => {
+        debugger
         const { data } = response
         commit('SET_TOKEN', data)
         setToken(data.token)

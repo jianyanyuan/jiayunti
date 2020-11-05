@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-10-22 15:23:55
+ * @LastEditTime: 2020-11-03 16:29:39
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -12,14 +12,28 @@
         <div slot="header">
           <span>基本信息</span>
         </div>
-        <div>
-          <p>姓名：{{ basic.name }}</p>
-          <p>详细地址：{{ basic.address }}</p>
-          <p>电话：{{ basic.phone }}</p>
-          <p>加装电梯地址：{{ basic.liftAddress }}</p>
-          <p>设计单位：{{ basic.company }}</p>
-          <p>设备规格：{{ basic.spec }}</p>
-        </div>
+        <el-form label-width="120px" class="show-form">
+          <el-form-item label="姓名">
+            {{ basic.name }}
+          </el-form-item>
+          <el-form-item label="地址">
+            <el-cascader v-model="basic.address" :options="addressOptions" />
+            <label for="address-detail" class="label-detail"> — </label>
+            <el-cascader v-model="plot" :options="plotOptions" />
+          </el-form-item>
+          <el-form-item label="电话">
+            {{ basic.phone }}
+          </el-form-item>
+          <el-form-item label="加装电梯地址">
+            {{ basic.liftAddress }}
+          </el-form-item>
+          <el-form-item label="设计单位">
+            {{ basic.company }}
+          </el-form-item>
+          <el-form-item label="设备">
+            {{ basic.spec }}
+          </el-form-item>
+        </el-form>
       </el-card>
     </div>
 
@@ -47,23 +61,30 @@
         <el-form-item label="异议反馈" prop="feedback">
           <el-input v-model="item.feedback" type="textarea" />
         </el-form-item>
+        <el-form-item label="处理结果" prop="feedback">
+          <el-select v-model="item.result">
+            <el-option v-for="res in resultOptions" :key="res.val" :value="res.key" :label="res.val" />
+          </el-select>
+        </el-form-item>
       </el-form>
     </el-card>
     <div style="height:50px;text-align:center">
       <el-button type="primary" size="medium" @click="addDissent">新 增</el-button>
-      <el-button v-show="dissents.length !== 0" type="primary" size="medium" @click="addDissent">提 交</el-button>
+      <el-button v-show="dissents.length !== 0" type="success" size="medium" @click="addDissent">提 交</el-button>
       <el-button v-show="dissents.length === 0" type="success" size="medium" @click="$router.go(-1)">无 异 议</el-button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
       basic: {
         name: '李先生',
-        address: '苏州高新区',
+        address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ'],
         phone: '15988800323',
         liftAddress: '小区1楼',
         company: '苏州建研院',
@@ -86,15 +107,29 @@ export default {
         //   feedback: ''
         // }
       ],
+      resultOptions: [
+        { key: 0, val: '通过' },
+        { key: -1, val: '不通过' }
+      ],
       rules: {
         name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
         time: [{ required: true, message: '请选择时间', trigger: 'blur' }],
         phone: [{ required: true, message: '请输入联系方式', trigger: 'blur' }],
         address: [{ required: true, message: '请输入详细地址', trigger: 'blur' }],
         detail: [{ required: true, message: '请输入异议详情', trigger: 'blur' }],
-        feedback: [{ required: true, message: '请输入异议反馈', trigger: 'blur' }]
+        feedback: [{ required: true, message: '请输入异议反馈', trigger: 'blur' }],
+        result: [{ required: true, message: '请输入异议反馈', trigger: 'blur' }]
       }
     }
+  },
+  computed: {
+    ...mapGetters('common', ['addressOptions', 'plotOptions'])
+
+  },
+  created() {
+    this.plot = this.basic.address.slice(3)
+
+    this.basic.address = this.basic.address.slice(0, 3)
   },
   methods: {
     removeDissent(index) {
@@ -110,7 +145,8 @@ export default {
           phone: '',
           address: '',
           detail: '',
-          feedback: ''
+          feedback: '',
+          result: ''
         })
     },
     onSubmit() {

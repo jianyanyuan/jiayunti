@@ -1,8 +1,8 @@
 <!--
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-10-15 16:07:45
+ * @LastEditors: zfd
+ * @LastEditTime: 2020-11-03 09:12:10
  * @Description:街道审核列表
 -->
 
@@ -29,7 +29,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-table v-loading="listLoading" class="design-table" :data="list" element-loading-text="Loading" border fit highlight-current-row :default-sort="{prop: 'status', order: 'ascending'}">
+    <el-table v-loading="listLoading" class="design-table" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'status', order: 'ascending'}" @row-dblclick="flowView">
       <el-table-column align="center" label="序号" min-width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
@@ -55,21 +55,30 @@
       </el-table-column>
       <el-table-column label="状态" prop="status" sortable min-width="110" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | keyToVal(designTag)">{{ scope.row.status | keyToVal(designStatus) }}</el-tag>
+          <el-tag :type="scope.row.status | keyToVal(applyTag)">{{ scope.row.status | keyToVal(applyStatus) }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" min-width="200">
         <template slot-scope="scope">
           <el-row type="flex" justify="space-around">
-            <el-button v-if="scope.row.status === 0" size="mini" :type="scope.row.status | keyToVal(designTag)">
-              <router-link :to="{path:'/street/audit',query:{applyId:scope.row.Id}}">审 核</router-link>
+            <el-button v-if="scope.row.status === 8" size="mini" type="warning" @click="$router.push({name:'StreetCheck',params:{applyId:scope.row.Id,status:scope.row.status}})">
+              审 核
             </el-button>
-            <el-button size="mini" type="primary" @click="viewProcess(scope.row)">查看流程</el-button>
+            <el-button v-if="scope.row.status === 11" size="mini" type="warning" @click="$router.push({path:'/street/record_fault',query:{applyId:scope.row.Id}})">
+              违规记录
+            </el-button>
+            <el-button v-if="scope.row.status === 11" size="mini" type="warning" @click="$router.push({path:'/street/handle_fault',query:{applyId:scope.row.Id}})">
+              查看回复
+            </el-button>
           </el-row>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
+    <!-- 查看流程 -->
+    <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
+      <flow />
+    </el-dialog>
     <!-- <div>
       <p>联系方式</p>
       <p>审核单位：XXX图审机构 审核人员：XXX 联系电话：0512XXXX 工作时间：周一至周五 9:00-11:00 14:00-17:00</p>
@@ -79,12 +88,23 @@
 
 <script>
 import { keyToVal } from '@/utils'
+import { mapState } from 'vuex'
+
+import Flow from '@/components/street/Flow'
+import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 export default {
   filters: {
     keyToVal
   },
+  components: {
+    Flow
+  },
+  directives: {
+    elDragDialog
+  },
   data() {
     return {
+      flowVisible: false,
       query: {
         code: '',
         applyName: '',
@@ -92,26 +112,7 @@ export default {
       },
       list: [
         {
-          code: 'apply10121056',
-          auditTime: '',
-          apply: {
-            name: '李先生',
-            address: '苏州高新区',
-            phone: '15988800323',
-            liftAddress: '小区1楼',
-            spec: '高端电梯',
-            time: '2020-10-12 10:56'
-          },
-          design: {
-            org: '建研院',
-            time: '2020-10-12 10:56',
-            address: '苏州高新区',
-            phone: '15988800323'
-          },
-          status: 0 // 未审核
-        },
-        {
-          code: 'apply10131146',
+          code: 'xxx小区xxxx幢xxx单元',
           designTime: '2020-10-14 10:56',
           auditTime: '2020-10-14 10:56',
           apply: {
@@ -128,10 +129,10 @@ export default {
             address: '苏州高新区',
             phone: '15988800323'
           },
-          status: 1 // 审核未通过
+          status: 13 // 施工中
         },
         {
-          code: 'apply10140800',
+          code: 'xxx小区xxxx幢xxx单元',
           designTime: '2020-10-14 10:56',
           auditTime: '2020-10-14 10:56',
           apply: {
@@ -148,7 +149,7 @@ export default {
             address: '苏州高新区',
             phone: '15988800323'
           },
-          status: 2 // 审核通过
+          status: 8 // 街道审核
         }
         // {
         //   code: 'apply10140900',
@@ -193,10 +194,15 @@ export default {
     }
   },
   computed: {
+    ...mapState('common', ['applyStatus', 'applyTag'])
+
   },
   created() {
   },
   methods: {
+    flowView() {
+      this.flowVisible = true
+    },
     handleSizeChange(val) {
       this.pagination.pageSize = val
     },
