@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-03 11:29:24
+ * @LastEditTime: 2020-11-04 09:05:30
  * @Description:图审列表
 -->
 
@@ -73,8 +73,12 @@
         <template slot-scope="{row}">
           <el-row type="flex" justify="space-around">
             <el-button v-if="row.status === 7" size="mini" type="warning" plain @click="$router.push({path:'/construction/process',query:{applyId:row.Id}})">报价</el-button>
+            <el-button v-if="row.status === 10" size="mini" type="success" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">开始施工</el-button>
+
             <el-button v-if="row.status === 11" size="mini" type="warning" plain @click="$router.push({path:'/construction/fault',query:{applyId:row.Id}})">违规查看</el-button>
-            <el-button v-if="row.status === 12" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button>
+            <el-button v-if="row.status === 11" size="mini" type="warning" plain @click="$router.push({path:'/construction/fault',query:{applyId:row.Id}})">竣工验收</el-button>
+
+            <!-- <el-button v-if="row.status === 12" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button> -->
 
           </el-row>
         </template>
@@ -151,7 +155,7 @@ export default {
             address: '苏州高新区',
             phone: '15988800323'
           },
-          status: 13 // 施工中
+          status: 10 // 审核通过
         },
         {
           code: 'xxx小区xxxx幢xxx单元',
@@ -170,8 +174,27 @@ export default {
             address: '苏州高新区',
             phone: '15988800323'
           },
-          status: 14 // 竣工验收
+          status: 11 // 施工中
         }
+        // {
+        //   code: 'xxx小区xxxx幢xxx单元',
+        //   auditTime: '',
+        //   apply: {
+        //     name: '李先生',
+        //     address: '苏州高新区',
+        //     phone: '15988800323',
+        //     liftAddress: '小区1楼',
+        //     spec: '高端电梯',
+        //     time: '2020-10-12 10:56'
+        //   },
+        //   design: {
+        //     org: '建研院',
+        //     time: '2020-10-12 10:56',
+        //     address: '苏州高新区',
+        //     phone: '15988800323'
+        //   },
+        //   status: 12 // 竣工验收
+        // }
 
         // {
         //   code: 'apply10140900',
@@ -242,7 +265,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
- .manage-query {
+.manage-query {
   height: 45px;
   padding: 5px 20px;
   background: #efefef;

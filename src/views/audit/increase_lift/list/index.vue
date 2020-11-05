@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-03 13:04:10
+ * @LastEditTime: 2020-11-04 09:02:17
  * @Description:图审列表
 -->
 
@@ -211,7 +211,7 @@ export default {
             address: '苏州高新区',
             phone: '15988800323'
           },
-          status: 13 // 施工中
+          status: 11 // 施工中
         },
         {
           code: 'xxx小区xxxx幢xxx单元',
@@ -230,7 +230,7 @@ export default {
             address: '苏州高新区',
             phone: '15988800323'
           },
-          status: 14 // 竣工验收
+          status: 12 // 竣工验收
         }
         // {
         //   code: 'apply10140900',

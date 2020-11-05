@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-11-02 09:40:42
+ * @LastEditTime: 2020-11-03 16:29:39
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -61,6 +61,11 @@
         <el-form-item label="异议反馈" prop="feedback">
           <el-input v-model="item.feedback" type="textarea" />
         </el-form-item>
+        <el-form-item label="处理结果" prop="feedback">
+          <el-select v-model="item.result">
+            <el-option v-for="res in resultOptions" :key="res.val" :value="res.key" :label="res.val" />
+          </el-select>
+        </el-form-item>
       </el-form>
     </el-card>
     <div style="height:50px;text-align:center">
@@ -102,13 +107,18 @@ export default {
         //   feedback: ''
         // }
       ],
+      resultOptions: [
+        { key: 0, val: '通过' },
+        { key: -1, val: '不通过' }
+      ],
       rules: {
         name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
         time: [{ required: true, message: '请选择时间', trigger: 'blur' }],
         phone: [{ required: true, message: '请输入联系方式', trigger: 'blur' }],
         address: [{ required: true, message: '请输入详细地址', trigger: 'blur' }],
         detail: [{ required: true, message: '请输入异议详情', trigger: 'blur' }],
-        feedback: [{ required: true, message: '请输入异议反馈', trigger: 'blur' }]
+        feedback: [{ required: true, message: '请输入异议反馈', trigger: 'blur' }],
+        result: [{ required: true, message: '请输入异议反馈', trigger: 'blur' }]
       }
     }
   },
@@ -135,7 +145,8 @@ export default {
           phone: '',
           address: '',
           detail: '',
-          feedback: ''
+          feedback: '',
+          result: ''
         })
     },
     onSubmit() {
