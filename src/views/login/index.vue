@@ -74,6 +74,9 @@ export default {
         this.$refs.password.focus()
       })
     },
+    set() {
+
+    },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -154,23 +157,23 @@ $bg: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
-  .title-container {
-    position: relative;
+.title-container {
+  position: relative;
 
-    .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
-      letter-spacing: 0.4em;
-    }
+  .title {
+    font-size: 26px;
+    color: $light_gray;
+    margin: 0px auto 40px auto;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: 0.4em;
   }
+}
 
 .login-container {
   min-height: 100%;
   width: 100%;
-    padding-top: 10%;
+  padding-top: 10%;
 
   background-color: $bg;
   overflow: hidden;
@@ -190,8 +193,8 @@ $light_gray: #eee;
     color: #fff;
     margin-bottom: 10px;
     text-align: right;
-    &:hover{
-      color: #409EFF;
+    &:hover {
+      color: #409eff;
     }
   }
 
