@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-27 09:48:43
+ * @LastEditTime: 2020-11-06 14:37:46
  * @Description:
  */
 import Vue from 'vue'
@@ -14,15 +14,13 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-// audit
-import residentRouter from './modules/audit/resident.js'
-import communityRouter from './modules/audit/community.js'
-import designerRouter from './modules/audit/designer.js'
-import streetRouter from './modules/audit/street.js'
-import drawingAuditRouter from './modules/audit/drawing_audit.js'
-import IncreaseLiftRouter from './modules/audit/increase_lift.js'
-// implement
-import ConstructionRouter from './modules/implement/construction.js'
+const modulesFiles = require.context('./modules', true, /\.js$/)
+const modules = modulesFiles.keys().reduce((modules, modulesPath) => {
+  // const moduleName = modulesPath.replace(/^\.\/(.*)\.\w+$/, '$1')
+  const value = modulesFiles(modulesPath)
+  modules.push(value.default)
+  return modules
+}, [])
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -96,30 +94,12 @@ export const constantRoutes = [
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
  */
-export const asyncRoutes = [
-  {
-    path: '/admin',
-    component: Layout,
-    redirect: '/resident/apply'
-  },
-  // audit
-  residentRouter,
-  communityRouter,
-  designerRouter,
-  streetRouter,
-  drawingAuditRouter,
-  IncreaseLiftRouter,
-  // implement
-  ConstructionRouter,
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
-]
+export const asyncRoutes = modules.concat({ path: '*', redirect: '/404', hidden: true })
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
-
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
