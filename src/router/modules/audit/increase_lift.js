@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-11-03 10:25:13
+ * @LastEditTime: 2020-11-06 14:50:19
  * @LastEditors: zfd
  * @Description: 增梯办路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -18,39 +18,39 @@ const drawingAuditRouter = {
   meta: {
     title: '增梯办',
     icon: 'institution',
-    roles: ['admin', 'increase_lift']
+    roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
   },
   children: [
     {
       path: 'list',
-      component: () => import('@/views/audit/increase_lift/list/index'), // Parent router-view
+      component: () => import('@/views/audit/increase_lift/list/index.vue'), // Parent router-view
       name: 'IncreaseLiftList',
       meta: {
         title: '申请列表',
         icon: 'list',
-        roles: ['admin', 'increase_lift']
+        roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
       }
     },
     {
       path: 'report',
-      component: () => import('@/views/audit/increase_lift/report/index'),
+      component: () => import('@/views/audit/increase_lift/report/index.vue'),
       name: 'IncreaseLiftReport',
       hidden: true,
       meta: {
         title: '上传报告',
         icon: 'list',
-        roles: ['admin', 'increase_lift']
+        roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
       }
     },
     {
       path: 'pipe',
-      component: () => import('@/views/audit/increase_lift/pipe/index'),
+      component: () => import('@/views/audit/increase_lift/pipe/index.vue'),
       name: 'IncreaseLiftPipe',
       hidden: true,
       meta: {
         title: '管道踏勘',
         icon: 'list',
-        roles: ['admin', 'increase_lift']
+        roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
       }
 
     },
@@ -62,7 +62,7 @@ const drawingAuditRouter = {
       meta: {
         title: '违规查看',
         icon: 'list',
-        roles: ['admin', 'increase_lift']
+        roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
       }
     }
   ]

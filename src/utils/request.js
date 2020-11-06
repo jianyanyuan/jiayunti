@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-29 09:57:27
+ * @LastEditTime: 2020-11-06 16:42:28
  * @Description:
  */
 import axios from 'axios'
@@ -59,7 +59,7 @@ service.interceptors.response.use(
     const res = response.data
 
     // if the status not startsWith '2', it is judged as an error.
-    if (!String(res.status).startsWith('2')) {
+    if (!String(response.status).startsWith('2')) {
       Message({
         message: res.message || 'Error',
         type: 'error',
@@ -67,7 +67,7 @@ service.interceptors.response.use(
       })
 
       // 401: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.status === 401 || res.status === 50012 || res.status === 50014) {
+      if (response.status === 401) {
         // to re-login
         MessageBox.confirm('登录超时，请重新登录', '重新登录', {
           confirmButtonText: '确认',

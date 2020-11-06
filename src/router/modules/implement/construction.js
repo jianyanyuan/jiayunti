@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:14
- * @LastEditTime: 2020-11-03 09:53:25
+ * @LastEditTime: 2020-11-06 14:53:23
  * @LastEditors: zfd
  * @Description: 实施段施工路由表
  * @FilePath: \jiayunti\src\router\modules\implement\construction.js
@@ -16,50 +16,50 @@ const constructionRouter = {
   meta: {
     title: '施工单位',
     icon: 'community',
-    roles: ['admin', 'construction']
+    roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
   },
   children: [
     {
       path: 'list',
-      component: () => import('@/views/implement/construction/list/index'),
+      component: () => import('@/views/implement/construction/list/index.vue'),
       name: 'ConstructionList',
       meta: {
         title: '申请列表',
         icon: 'community',
-        roles: ['admin', 'construction']
+        roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
       }
     },
     {
       path: 'process',
-      component: () => import('@/views/implement/construction/process/index'),
+      component: () => import('@/views/implement/construction/process/index.vue'),
       name: 'ConstructionProcess',
       hidden: true,
       meta: {
         title: '报价',
         icon: 'collapse',
-        roles: ['admin', 'construction']
+        roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
       }
     },
     {
       path: 'fault',
       name: 'ConstructionFault',
-      component: () => import('@/views/implement/construction/fault/index'),
+      component: () => import('@/views/implement/construction/fault/index.vue'),
       hidden: true,
       meta: {
         title: '违规',
         icon: 'card',
-        roles: ['admin', 'construction']
+        roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
       }
     },
     {
       path: 'complete',
       name: 'ConstructionComplete',
-      component: () => import('@/views/implement/construction/complete/index'),
+      component: () => import('@/views/implement/construction/complete/index.vue'),
       hidden: true,
       meta: {
         title: '竣工验收',
         icon: 'card',
-        roles: ['admin', 'construction']
+        roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
       }
     }
   ]

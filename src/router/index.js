@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-06 14:37:46
+ * @LastEditTime: 2020-11-06 16:28:54
  * @Description:
  */
 import Vue from 'vue'
@@ -54,7 +54,7 @@ export const constantRoutes = [
     children: [
       {
         path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/index')
+        component: () => import('@/views/redirect/index.vue')
       }
     ]
   },
@@ -65,27 +65,27 @@ export const constantRoutes = [
   // },
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: () => import('@/views/login/index.vue'),
     hidden: true
   },
   {
     path: '/regist',
-    component: () => import('@/views/regist/index'),
+    component: () => import('@/views/regist/index.vue'),
     hidden: true
   },
   {
     path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
+    component: () => import('@/views/login/auth-redirect.vue'),
     hidden: true
   },
   {
     path: '/404',
-    component: () => import('@/views/error-page/404'),
+    component: () => import('@/views/error-page/404.vue'),
     hidden: true
   },
   {
     path: '/401',
-    component: () => import('@/views/error-page/401'),
+    component: () => import('@/views/error-page/401.vue'),
     hidden: true
   }
 ]

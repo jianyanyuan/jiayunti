@@ -2,27 +2,31 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-05 09:47:08
+ * @LastEditTime: 2020-11-06 16:49:40
  * @Description: 用户仓库
  */
 import User from '@/api/user'
-import { getToken, setToken, removeToken, getRoleToken, setRoleToken, removeRoleToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, removeRoleToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 const getDefaultState = () => {
   return {
+    id: '',
+    username: '',
     token: '',
-    name: '',
-    avatar: '',
-    introduction: '',
+    // name: '',
+    // avatar: '',
+    // introduction: '',
     roles: []
   }
 }
 
 const state = {
   token: getToken(),
-  name: '',
-  avatar: '',
-  introduction: '',
+  id: '',
+  username: '',
+  // name: '',
+  // avatar: '',
+  // introduction: '',
   roles: []
 }
 
@@ -33,15 +37,21 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_INTRODUCTION: (state, introduction) => {
-    state.introduction = introduction
+  SET_Id: (state, id) => {
+    state.id = id
   },
-  SET_NAME: (state, name) => {
-    state.name = name
+  SET_USER_NAME: (state, username) => {
+    state.username = username
   },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
-  },
+  // SET_INTRODUCTION: (state, introduction) => {
+  //   state.introduction = introduction
+  // },
+  // SET_NAME: (state, name) => {
+  //   state.name = name
+  // },
+  // SET_AVATAR: (state, avatar) => {
+  //   state.avatar = avatar
+  // },
   SET_ROLES: (state, roles) => {
     state.roles = roles
   }
@@ -53,11 +63,19 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       User.login({ username: username.trim(), password: password }).then(response => {
-        debugger
-        const { data } = response
-        commit('SET_TOKEN', data)
-        setToken(data.token)
-        setRoleToken(data.roleToken)
+        const token = `${response.tokenType} ${response.accessToken}`
+        commit('SET_TOKEN', token)
+        commit('SET_Id', response.id)
+        commit('SET_USER_NAME', response.username)
+
+        if (Array.isArray(response.roles) && response.roles.length > 0) {
+          commit('SET_ROLES', response.roles)
+        } else {
+          reject('error')
+          return false
+        }
+
+        setToken(token)
         resolve()
       }).catch(error => {
         reject(error)
