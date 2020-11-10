@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-06 16:49:40
+ * @LastEditTime: 2020-11-10 10:36:00
  * @Description: 用户仓库
  */
 import User from '@/api/user'
@@ -108,6 +108,15 @@ const actions = {
     })
   },
 
+  // get verificationCode
+  getCode(context, params) {
+    return new Promise((resolve, reject) => {
+      User.getCode(params).then(res => {
+        resolve(res)
+      }).catch(err => reject(err))
+    })
+  },
+
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
@@ -131,6 +140,7 @@ const actions = {
       resolve()
     })
   }
+
 }
 
 export default {

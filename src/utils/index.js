@@ -3,6 +3,26 @@
  */
 
 /**
+ * 检测类型
+ * 返回string
+ * @param {any} value
+ */
+export function checkType(value) {
+  return Object.prototype.toString.call(value).slice(8, -1)
+}
+
+/**
+ * 检测空数组
+ * 返回boolean
+ * @param {array} value
+ */
+export function checkEmptyArray(value) {
+  if (Array.isArray(value) && value.length > 0) {
+    return false
+  }
+  return true
+}
+/**
  * Parse the time to string
  * @param {(Object|string|number)} time
  * @param {string} cFormat
@@ -45,7 +65,7 @@ export function parseTime(time, cFormat) {
   const time_str = format.replace(/{([ymdhisa])+}/g, (result, key) => {
     const value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value] }
     return value.toString().padStart(2, '0')
   })
   return time_str

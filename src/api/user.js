@@ -2,17 +2,17 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-23 14:31:55
+ * @LastEditTime: 2020-11-10 10:45:36
  * @Description:
  */
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const api_prefix_dev = '/auth/'
+const api_prefix_dev = '/auth'
 
 const login = (data) => {
   return request({
-    url: api_prefix_dev + 'signin',
+    url: api_prefix_dev + '/signin',
     method: 'post',
     data
   })
@@ -20,26 +20,27 @@ const login = (data) => {
 
 const regist = (data) => {
   return request({
-    url: api_prefix_dev + 'signup',
+    url: api_prefix_dev + '/signup',
     method: 'post',
     data
   })
 }
-
+// 获取短信验证码
 const getCode = params => {
   return request({
-    url: '/location',
+    url: '/sendsms/getSendsms',
     method: 'get',
     params
   })
 }
-// export function getInfo(token) {
-//   return request({
-//     url: api_prefix_dev + 'info',
-//     method: 'get',
-//     params: { token }
-//   })
-// }
+
+// 获取用户信息（角色....）
+const getUserInfo = () => {
+  return request({
+    url: '/users/me',
+    method: 'get'
+  })
+}
 
 // export function logout() {
 //   return request({
@@ -51,5 +52,6 @@ const getCode = params => {
 export default {
   login,
   regist,
-  getCode
+  getCode,
+  getUserInfo
 }

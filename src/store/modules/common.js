@@ -6,6 +6,8 @@
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
+import Common from '@/api/common'
+
 const state = {
   isOrNo: [
     { key: true, val: '是' },
@@ -74,85 +76,29 @@ const state = {
     { key: 14, val: 'warning' }
 
   ],
-  // 省份--城市--区县
-  addressOptions: [],
-  // 街道--社区--小区
-  plotOptions: []
+
+  // county: 省份--城市--区县
+  // community: 街道--社区--小区
+  address: null
 }
 const getters = {
-  addressOptions: state => state.addressOptions,
-  plotOptions: state => state.plotOptions
+  address: state => state.address
 }
+
 const mutations = {
   SET_ADDRESS: (state, address) => {
-    state.addressOptions = address
-  },
-  SET_PLOT: (state, plot) => {
-    state.plotOptions = plot
+    state.address = address
   }
 }
 const actions = {
-  // app.vue 获取
+  // get address
   getAddress({ commit }) {
     return new Promise((resolve, reject) => {
-      const addressOptions = [{
-        value: 'jiangsu',
-        label: '江苏',
-        children: [
-          {
-            value: 'suzhou',
-            label: '苏州',
-            children: [
-              {
-                value: 'gusu',
-                label: '姑苏区',
-                children: null
-              },
-              {
-                value: 'gyyq',
-                label: '工业园区'
-              }
-            ]
-          },
-          {
-            value: 'wuxi',
-            label: '无锡'
-          }
-        ]
-      }, {
-        value: 'zhejiang',
-        label: '浙江',
-        children: [
-          {
-            value: 'hangzhou',
-            label: '杭州'
-          },
-          {
-            value: 'ningbo',
-            label: '宁波'
-          }
-        ]
-      }
-      ]
-      commit('SET_ADDRESS', addressOptions)
-
-      const plotOptions = [{
-        value: 'canglang',
-        label: '沧浪街道',
-        children: [
-          {
-            value: 'shequ',
-            label: '社区'
-          },
-          {
-            value: 'shequ1',
-            label: '社区1'
-          }
-        ]
-      }
-      ]
-      commit('SET_PLOT', plotOptions)
-      resolve('success')
+      Common.getAddress().then(res => {
+        commit('SET_ADDRESS', res)
+      }).catch(err => {
+        reject(err)
+      })
     })
   }
 }

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-20 08:23:03
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-20 11:02:51
+ * @LastEditTime: 2020-11-10 09:10:55
  * @Description: 适用于element ui form rule validator
  */
 
@@ -18,9 +18,10 @@ export function validateUsername(rule, value, callback) {
     // 非 '' undefined null
     callback(new Error('请输入用户名'))
   } else {
-    const reg = /^[a-zA-z][a-zA-z0-9_.@~!?]{2,16}$/
+    const reg = /^[^0-9][a-zA-z0-9_.@~!?\u4e00-\u9fa5]{2,16}$/
+
     if (!reg.test(value)) {
-      callback(new Error('用户名需字母开头，3-17位数字和英文符号组合'))
+      callback(new Error('用户名非数字开头，3-17位中英文和数字组合'))
     } else {
       callback()
     }
@@ -51,7 +52,7 @@ export function validatePassword(rule, value, callback) {
 /**
  * 确认密码校验
  * @param {规则} rule
- * @param {带校验值} value
+ * @param {待校验值} value
  * @param {回调函数} callback
  */
 export function validateConfirmPassword(rule, value, callback) {
