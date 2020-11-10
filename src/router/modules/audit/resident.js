@@ -43,6 +43,16 @@ const residentRouter = {
       }
     },
     {
+      path: 'apply-notice',
+      component: () => import('@/views/audit/resident/apply-notice.vue'),
+      name: 'ResidentApplyNotice',
+      hidden: true,
+      meta: {
+        title: '提交材料',
+        roles: ['admin', 'resident']
+      }
+    },
+    {
       path: 'device-list',
       component: () => import('@/views/audit/resident/device-list'),
       name: 'ResidentDevice',
@@ -149,16 +159,6 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '违规查看',
-        roles: ['admin', 'resident']
-      }
-    },
-    {
-      path: 'apply-notice',
-      component: () => import('@/views/audit/resident/apply-notice.vue'),
-      name: 'ResidentApplyNotice',
-      hidden: true,
-      meta: {
-        title: '提交材料',
         roles: ['admin', 'resident']
       }
     }

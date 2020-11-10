@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-03 09:51:37
+ * @LastEditTime: 2020-11-10 13:33:21
  * @Description:设计列表
 -->
 
@@ -91,10 +91,11 @@
       <el-table-column align="center" label="操作" min-width="200">
         <template slot-scope="scope">
           <el-row type="flex" justify="space-around">
-            <el-button v-if="scope.row.status === 2" type="primary" size="mini" @click="$router.push({name:'UploadDesign',params:{applyId:scope.row.Id,status:scope.row.status}})">上 传</el-button>
+            <el-button v-if="scope.row.status === 2" type="primary" size="mini" @click="$router.push({name:'DesignerUpload',params:{applyId:scope.row.Id,status:scope.row.status}})">上 传</el-button>
 
             <el-button v-if="scope.row.status === 5" type="primary" size="mini" @click="uploadModal.visible = true">上 传</el-button>
             <el-button v-if="scope.row.status === 6" size="mini" type="warning" @click="$router.push({path:'/designer/edit',query:{applyId:scope.row.Id}})">修 改</el-button>
+            <!-- <el-button v-if="scope.row.status === 6" size="mini" type="warning" @click="$router.push({path:'/designer/view',query:{applyId:scope.row.Id}})">审核意见</el-button> -->
 
           </el-row>
         </template>

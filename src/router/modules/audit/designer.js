@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-11-03 09:50:18
+ * @LastEditTime: 2020-11-10 13:29:13
  * @LastEditors: zfd
  * @Description: 审批端设计路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -43,9 +43,9 @@ const designerRouter = {
       }
     },
     {
-      path: 'upload-design',
-      component: () => import('@/views/audit/designer/upload-design/index'),
-      name: 'UploadDesign',
+      path: 'upload',
+      component: () => import('@/views/audit/designer/upload/index'),
+      name: 'DesignerUpload',
       hidden: true,
       meta: {
         title: '上传',
