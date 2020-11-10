@@ -1,3 +1,10 @@
+/*
+ * @Author: zfd
+ * @Date: 2020-10-23 14:19:52
+ * @LastEditors: zfd
+ * @LastEditTime: 2020-11-09 10:26:07
+ * @Description:
+ */
 import Vue from 'vue'
 import Clipboard from 'clipboard'
 
