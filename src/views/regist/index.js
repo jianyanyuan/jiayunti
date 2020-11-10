@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-10 08:42:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-10 10:58:43
+ * @LastEditTime: 2020-11-10 15:00:24
  * @Description:
  */
 import * as Validator from '@/utils/element-validator'
@@ -30,7 +30,7 @@ const data = {
   form: {
     username: 'zfd',
     password: '123456',
-    name: '张飞达',
+    // name: '张飞达',
     idcard: '321323199802254916',
     address: { county: [], community: [] },
     phonenumber: '15988800323',
@@ -39,7 +39,7 @@ const data = {
   rule: {
     username: [{ required: true, trigger: 'blur', validator: Validator.validateUsername }],
     password: [{ required: true, trigger: 'blur', validator: Validator.validatePassword }],
-    name: [{ required: true, trigger: 'blur', validator: Validator.validateTrueName }],
+    // name: [{ required: true, trigger: 'blur', validator: Validator.validateTrueName }],
     idcard: [{ required: true, trigger: 'blur', validator: Validator.validateIdCard }],
     phonenumber: [{ required: true, trigger: 'blur', validator: validateAddress }],
     address: [{ required: true, trigger: 'blur', message: '请选择地址' }],
@@ -48,7 +48,18 @@ const data = {
   vertifyDisabled: false,
   countDown: 60,
   timer: null,
-  loading: false
+  loading: false,
+  countyProps: {
+    value: 'id',
+    label: 'name',
+    children: 'areas'
+  },
+  communityProps: {
+    value: 'id',
+    label: 'name',
+    children: 'communities'
+  },
+  communityOptions: []
 }
 export default {
   data() {
@@ -56,9 +67,12 @@ export default {
   },
   computed: {
     communityShow() {
+      if (this.form.address.county.length) {
+        this.communityOptions = this.$store.getters.common.communityOptions(this.form.address.county)
+      }
       return this.form.address.county.length
     },
-    ...mapGetters('common', ['countyOptions', 'communityOptions'])
+    ...mapGetters('common', ['countyOptions'])
   },
   created() {
 

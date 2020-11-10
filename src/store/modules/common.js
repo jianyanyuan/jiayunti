@@ -2,7 +2,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-11-03 14:48:31
+ * @LastEditTime: 2020-11-10 15:43:46
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -77,12 +77,46 @@ const state = {
 
   ],
 
-  // county: 省份--城市--区县
-  // community: 街道--社区--小区
+  // county: 城市--区县
+  // community: 街道--社区
   address: null
 }
 const getters = {
-  address: state => state.address
+  // 城市--区县
+  // id,name,areas
+  countyOptions: state => state.address.map(v => {
+    return {
+      id: v.id,
+      name: v.name,
+      areas: v.areas.map(v => {
+        return {
+          value: v.id,
+          label: v.name
+        }
+      })
+    }
+  }),
+
+  // 根据城市id--区县id 筛选街道--社区
+  // id,name,communities
+  communityOptions: (state) => (countySelected) => {
+    const communityOptions = []
+    if (Array.isArray(countySelected) && countySelected.length === 2) {
+      const cityId = countySelected[0]
+      const areaId = countySelected[1]
+      for (const city of state.address) {
+        if (city.id === cityId) {
+          for (const area of city.areas) {
+            if (area.id === areaId) {
+              communityOptions.push(area.streets)
+            }
+          }
+        }
+      }
+    }
+
+    return communityOptions
+  }
 }
 
 const mutations = {
@@ -96,11 +130,21 @@ const actions = {
     return new Promise((resolve, reject) => {
       Common.getAddress().then(res => {
         commit('SET_ADDRESS', res)
+        resolve(res)
       }).catch(err => {
         reject(err)
       })
     })
+  },
+  // get device
+  getDevice({ commit }) {
+
+  },
+  // get design
+  getDesign({ commit }) {
+
   }
+
 }
 export default {
   namespaced: true,

@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-11-06 16:37:03
+ * @LastEditTime: 2020-11-10 16:24:09
  * @LastEditors: zfd
  * @Description: 审批端居民路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -34,7 +34,7 @@ const residentRouter = {
     },
     {
       path: 'list',
-      component: () => import('@/views/audit/resident/list.vue'),
+      component: () => import('@/views/audit/resident/list/index.vue'),
       name: 'ResidentList',
       meta: {
         title: '我的申请',

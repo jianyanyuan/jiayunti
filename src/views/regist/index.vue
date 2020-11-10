@@ -11,16 +11,16 @@
             <el-form-item prop="password" label="登录密码">
               <el-input v-model="form.password" type="password" autocomplete="off" placeholder="请输入6-12位密码" />
             </el-form-item>
-            <el-form-item prop="name" label="姓名">
+            <!-- <el-form-item prop="name" label="姓名">
               <el-input v-model="form.name" placeholder="请输入真实姓名" autocomplete="off" />
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item prop="idcard" label="身份证">
               <el-input v-model="form.idcard" placeholder="请输入身份证" autocomplete="off" />
             </el-form-item>
             <el-form-item prop="address" label="地址">
-              <el-cascader v-model="form.address.county" :options="addressOptions" />
+              <el-cascader v-model="form.address.county" :options="addressOptions" :props="countyProps" />
               <label v-if="communityShow" for="address-detail" class="regist-address-d"> — </label>
-              <el-cascader v-if="communityShow" v-model="form.address.community" :options="plotOptions" />
+              <el-cascader v-if="communityShow" v-model="form.address.community" :options="plotOptions" :props="communityProps" />
               <!-- <el-input v-model="form.address" placeholder="请选择地址" autocomplete="off" /> -->
             </el-form-item>
             <el-form-item prop="phonenumber" label="手机号">
