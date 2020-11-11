@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-11 14:01:37
+ * @LastEditTime: 2020-11-11 16:05:38
  * @Description:
  */
 import { validateUsername, validatePassword } from '@/utils/element-validator'
@@ -12,13 +12,13 @@ export default {
   data() {
     return {
       loginForm: {
-        username: '1234567',
+        username: 'regist',
         password: '123456'
       },
       loginRules: {
         // validator: validateUsername
-        // username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        username: [{ required: true, trigger: 'blur' }],
+        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        // username: [{ required: true, trigger: 'blur' }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       loading: false,

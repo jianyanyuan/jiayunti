@@ -18,15 +18,15 @@
               <el-input v-model="form.idcard" placeholder="请输入身份证" autocomplete="off" />
             </el-form-item>
             <el-form-item prop="address" label="地址">
-              <el-cascader v-model="form.address.county" :options="addressOptions" :props="countyProps" />
+              <el-cascader v-model="form.address.county" :options="countyOptions" :props="countyProps" />
               <label v-if="communityShow" for="address-detail" class="regist-address-d"> — </label>
-              <el-cascader v-if="communityShow" v-model="form.address.community" :options="plotOptions" :props="communityProps" />
+              <el-cascader v-if="communityShow" v-model="form.address.community" :options="communityOptions" :props="communityProps" />
               <!-- <el-input v-model="form.address" placeholder="请选择地址" autocomplete="off" /> -->
             </el-form-item>
             <el-form-item prop="phonenumber" label="手机号">
               <el-input v-model="form.phonenumber" placeholder="请输入手机号" />
             </el-form-item>
-            <el-form-item prop="verificationcode" label="验证码">
+            <el-form-item prop="verificationcode" label="验证码" class="regist-code-container">
               <slot name="-">
                 <el-input v-model="form.verificationcode" placeholder="请输入验证码" class="regist-vertify" @focus="checkPhone" />
                 <div class="regist-vertify-g">
@@ -36,7 +36,7 @@
               </slot>
 
             </el-form-item>
-            <el-form-item style="text-align:center">
+            <el-form-item style="text-align:center;margin-top:40px">
               <el-button type="success" :loading="loading" class="regist-submit" @click="submit('form')">注 册</el-button>
             </el-form-item>
           </el-form>
@@ -63,7 +63,7 @@ export default {
   text-align: center;
   line-height: 150px;
   height: 150px;
-  background-color: #00acc1;
+  background-color: #394867;
   font-size: 41px;
   letter-spacing: 4px;
   color: #fff;
@@ -83,6 +83,9 @@ export default {
 .regist-address-d{
   margin:0 5px;
   color:#394867
+}
+.regist-code-container ::v-deep .el-form-item__content{
+  height:50px
 }
 .regist-vertify {
   width: 310px;

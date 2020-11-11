@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-11 11:25:52
+ * @LastEditTime: 2020-11-11 15:55:24
  * @Description: 用户仓库
  */
 import User from '@/api/user'
@@ -74,21 +74,21 @@ const actions = {
         commit('SET_TOKEN', token)
         setToken(token)
         resolve('登录成功')
-        // commit('SET_Id', res.id)
-        // commit('SET_USER_NAME', res.username)
-
-        // if (Array.isArray(res.roles) && res.roles.length > 0) {
-        //   commit('SET_ROLES', res.roles)
-        // } else {
-        //   reject('error')
-        //   return false
-        // }
       }).catch(() => {
         reject('登录失败')
       })
     })
   },
 
+  regist(context, data) {
+    return new Promise((resolve, reject) => {
+      User.regist(data).then(res => {
+        resolve('注册成功')
+      }).catch(() => {
+        reject('注册失败')
+      })
+    })
+  },
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {

@@ -223,7 +223,7 @@ export default {
   },
   computed: {
     ...mapState('common', ['applyStatus', 'applyTag', 'handleStatus', 'handleTag']),
-    ...mapGetters('common', ['countyOptions', 'plotOptions', 'deviceOptions', 'deviceOptions'])
+    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'deviceOptions'])
   },
   watch: {
     elevatorAddress: {

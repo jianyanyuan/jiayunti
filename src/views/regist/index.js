@@ -2,47 +2,43 @@
  * @Author: zfd
  * @Date: 2020-11-10 08:42:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-10 15:00:24
+ * @LastEditTime: 2020-11-11 16:04:42
  * @Description:
  */
 import * as Validator from '@/utils/element-validator'
 import { mapGetters } from 'vuex'
-import User from '@/api/user'
 import { checkType, checkEmptyArray } from '@/utils'
 
-function validateAddress(rule, address, callback) {
+function validateAddress(address) {
   if (checkType(address) !== 'Object') {
-    callback(new Error('请选择地址'))
-    return false
+    return '请选择地址'
   }
   if (checkEmptyArray(address.county)) {
-    callback(new Error('请选择区县'))
-    return false
+    return '请选择区县'
   }
   if (checkEmptyArray(address.community)) {
-    callback(new Error('请选择社区'))
-    return false
+    return '请选择社区'
   }
-  callback()
+  return true
 }
 
 const data = {
   form: {
-    username: 'zfd',
+    username: 'regist',
     password: '123456',
     // name: '张飞达',
     idcard: '321323199802254916',
     address: { county: [], community: [] },
-    phonenumber: '15988800323',
-    verificationcode: '1234'
+    phonenumber: '13776050390',
+    verificationcode: ''
   },
   rule: {
     username: [{ required: true, trigger: 'blur', validator: Validator.validateUsername }],
     password: [{ required: true, trigger: 'blur', validator: Validator.validatePassword }],
     // name: [{ required: true, trigger: 'blur', validator: Validator.validateTrueName }],
     idcard: [{ required: true, trigger: 'blur', validator: Validator.validateIdCard }],
-    phonenumber: [{ required: true, trigger: 'blur', validator: validateAddress }],
-    address: [{ required: true, trigger: 'blur', message: '请选择地址' }],
+    phonenumber: [{ required: true, trigger: 'blur', validator: Validator.validatePhone }],
+    address: [{ required: true }],
     verificationcode: [{ required: true, trigger: 'blur', validator: Validator.validateNumberCode, length: 6 }]
   },
   vertifyDisabled: false,
@@ -62,49 +58,48 @@ const data = {
   communityOptions: []
 }
 export default {
+  name: 'Regist',
   data() {
     return data
   },
   computed: {
     communityShow() {
       if (this.form.address.county.length) {
-        this.communityOptions = this.$store.getters.common.communityOptions(this.form.address.county)
+        this.communityOptions = this.$store.getters['common/communityOptions'](this.form.address.county)
       }
       return this.form.address.county.length
     },
     ...mapGetters('common', ['countyOptions'])
   },
   created() {
-
+    this.$store.dispatch('common/getAddress').catch(() => this.$message.error('地址获取失败'))
   },
   methods: {
     // 注册用户
     submit(formName) {
       this.$refs[formName].validate((success, err) => {
         if (success) {
+          const validAddress = validateAddress(this.form.address)
+          if (validAddress !== true) {
+            this.$message.error(validAddress)
+            return
+          }
           this.form.address = this.form.address.county.concat(this.form.address.community)
           this.loading = true
-          this.$store.dispatch('user/regist', this.form).then(res => {
-            this.loading = false
-            this.$router.push('/login')
+          this.$store.dispatch('user/regist', this.form).then(() => {
+            this.$message.success('注册成功')
+            setTimeout(() => {
+              this.loading = false
+              this.$router.push('/login')
+            }, 2000)
           }).catch(err => {
             this.$message.error(err)
             this.loading = false
           })
         } else {
-          console.log(err)
-          // this.$message.error('请补全注册信息')
+          this.$message.error(Object.entries(err)[0][1][0].message)
         }
       })
-      User.regist({
-        address: ['12'],
-        idcard: '111',
-        password: '1111',
-        phonenumber: '111',
-        username: '1111',
-        verificationcode: '111'
-      }).then(res => this.$message.success(res))
-        .catch(err => this.$message.error(err))
     },
     // 验证码focus事件
     checkPhone() {
@@ -118,7 +113,6 @@ export default {
       if (this.form.phonenumber && reg.test(this.form.phonenumber)) {
         this.vertifyDisabled = true
         this.$store.dispatch('user/getCode', { role: this.form.phonenumber })
-          .then(res => { this.form.verificationcode = res })
           .catch(err => this.$message.error(err))
 
         this.timer = setInterval(() => {

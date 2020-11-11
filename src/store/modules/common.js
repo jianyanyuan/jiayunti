@@ -2,7 +2,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-11-11 08:21:30
+ * @LastEditTime: 2020-11-11 15:03:41
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -84,14 +84,14 @@ const state = {
 const getters = {
   // 城市--区县
   // id,name,areas
-  countyOptions: state => state.address.map(v => {
+  countyOptions: state => state.address?.map(v => {
     return {
       id: v.id,
       name: v.name,
-      areas: v.areas.map(v => {
+      areas: v.areas?.map(v => {
         return {
-          value: v.id,
-          label: v.name
+          id: v.id,
+          name: v.name
         }
       })
     }
@@ -100,7 +100,7 @@ const getters = {
   // 根据城市id--区县id 筛选街道--社区
   // id,name,communities
   communityOptions: (state) => (countySelected) => {
-    const communityOptions = []
+    let communityOptions = []
     if (Array.isArray(countySelected) && countySelected.length === 2) {
       const cityId = countySelected[0]
       const areaId = countySelected[1]
@@ -108,7 +108,7 @@ const getters = {
         if (city.id === cityId) {
           for (const area of city.areas) {
             if (area.id === areaId) {
-              communityOptions.push(area.streets)
+              communityOptions = area.streets
             }
           }
         }
@@ -139,8 +139,12 @@ const actions = {
   getAddress({ commit }) {
     return new Promise((resolve, reject) => {
       Common.getAddress().then(res => {
-        commit('SET_ADDRESS', res)
-        resolve(res)
+        if (res.content) {
+          commit('SET_ADDRESS', res.content)
+          resolve(res.content)
+        } else {
+          reject(res)
+        }
       }).catch(err => {
         reject(err)
       })
