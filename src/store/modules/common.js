@@ -2,7 +2,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-11-10 15:43:46
+ * @LastEditTime: 2020-11-11 08:21:30
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -116,12 +116,22 @@ const getters = {
     }
 
     return communityOptions
-  }
+  },
+  // 设备列表
+  deviceOptions: state => state.deviceOptions,
+  // 设计院列表
+  designOptions: state => state.designOptions
 }
 
 const mutations = {
   SET_ADDRESS: (state, address) => {
     state.address = address
+  },
+  SET_DEVICE: (state, device) => {
+    state.device = device
+  },
+  SET_DESIGN: (state, design) => {
+    state.design = design
   }
 }
 const actions = {
@@ -138,11 +148,25 @@ const actions = {
   },
   // get device
   getDevice({ commit }) {
-
+    return new Promise((resolve, reject) => {
+      Common.getDevice().then(res => {
+        commit('SET_DEVICE', res)
+        resolve(res)
+      }).catch(err => {
+        reject(err)
+      })
+    })
   },
   // get design
   getDesign({ commit }) {
-
+    return new Promise((resolve, reject) => {
+      Common.getDesign().then(res => {
+        commit('SET_DESIGN', res)
+        resolve(res)
+      }).catch(err => {
+        reject(err)
+      })
+    })
   }
 
 }

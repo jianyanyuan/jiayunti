@@ -5,9 +5,9 @@ import Flow from '@/components/street/Flow'
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 const defaultForm = {
   applicantName: '',
-  address: [],
+  location: [],
   phoneNumber: '',
-  elevatorAddress: [],
+  address: [],
   designId: '',
   deviceId: '',
   rooms: [{ key: 'defaultRoom', val: '' }]
@@ -223,7 +223,7 @@ export default {
   },
   computed: {
     ...mapState('common', ['applyStatus', 'applyTag', 'handleStatus', 'handleTag']),
-    ...mapGetters('common', ['addressOptions', 'plotOptions'])
+    ...mapGetters('common', ['countyOptions', 'plotOptions', 'deviceOptions', 'deviceOptions'])
   },
   watch: {
     elevatorAddress: {

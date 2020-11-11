@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-10 13:58:25
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-10 15:58:11
+ * @LastEditTime: 2020-11-11 08:11:19
  * @Description:
  */
 import request from '@/utils/request'
@@ -18,7 +18,7 @@ const getAddress = () => {
 // 获取设备选择项
 const getDevice = () => {
   return request({
-    url: '/location',
+    url: '/device',
     method: 'get'
   })
 }
@@ -26,7 +26,7 @@ const getDevice = () => {
 // 获取设计单位选择项
 const getDesign = () => {
   return request({
-    url: '',
+    url: '/design',
     method: 'get'
   })
 }

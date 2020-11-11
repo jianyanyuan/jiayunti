@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-10 16:19:50
+ * @LastEditTime: 2020-11-11 08:39:07
  * @Description:申请列表
 -->
 
@@ -97,13 +97,13 @@
           <el-input v-model="model.form.phoneNumber" />
         </el-form-item>
         <el-form-item label="加装电梯地址" prop="location">
-          <div> <input v-model="elevatorAddress.cell" type="text" name="cell" autocomplete="false"> 小区</div>
-          <div> <input v-model="elevatorAddress.building" type="text" name="building" autocomplete="false"> 幢</div>
-          <div> <input v-model="elevatorAddress.unit" type="text" name="unit" autocomplete="false"> 单元</div>
+          <div> <input v-model="location[0]" type="text" name="cell" autocomplete="false"> 小区</div>
+          <div> <input v-model="location[1]" type="text" name="building" autocomplete="false"> 幢</div>
+          <div> <input v-model="location[2]" type="text" name="unit" autocomplete="false"> 单元</div>
         </el-form-item>
         <el-form-item label="设计单位" prop="designId">
           <el-select v-model="model.form.designId">
-            <el-option v-for="item in designerOptions" :key="item.val" :label="item.val" :value="item.key" />
+            <el-option v-for="item in deviceOptions" :key="item.val" :label="item.val" :value="item.key" />
           </el-select>
         </el-form-item>
         <el-form-item label="设备" prop="deviceId">
