@@ -41,7 +41,7 @@ module.exports = {
     // 配置跨域
     proxy: {
       '/api': {
-        target: 'http://192.168.0.191:8342', // 跨域的域名
+        target: 'http://192.168.0.127:8342', // 跨域的域名
         // logLevel: 'debug',
         // ws: true,  // 代理 websockets
         changeOrigin: true // 是否开启跨域
