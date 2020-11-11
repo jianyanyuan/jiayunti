@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-16 08:37:55
- * @LastEditTime: 2020-10-16 16:03:56
+ * @LastEditTime: 2020-11-11 13:39:38
  * @LastEditors: zfd
  * @Description: router permission
  * @FilePath: \jiayunti\src\store\modules\permission.js
@@ -37,7 +37,6 @@ export function filterAsyncRoutes(routes, roles) {
       res.push(tmp)
     }
   })
-
   return res
 }
 
@@ -57,7 +56,7 @@ const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
       let accessRoutes
-      if (roles.includes('admin')) {
+      if (roles.includes('ROLE_ADMIN')) {
         accessRoutes = asyncRoutes || []
       } else {
         accessRoutes = filterAsyncRoutes(asyncRoutes, roles)

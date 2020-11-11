@@ -2,12 +2,13 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-10 10:36:00
+ * @LastEditTime: 2020-11-11 11:25:52
  * @Description: 用户仓库
  */
 import User from '@/api/user'
-import { getToken, setToken, removeToken, removeRoleToken } from '@/utils/auth'
+import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import { checkEmptyArray } from '@/utils'
 const getDefaultState = () => {
   return {
     id: '',
@@ -43,6 +44,12 @@ const mutations = {
   SET_USER_NAME: (state, username) => {
     state.username = username
   },
+  SET_PHONE: (state, phone) => {
+    state.phone = phone
+  },
+  SET_ADDRESS: (state, address) => {
+    state.address = address
+  },
   // SET_INTRODUCTION: (state, introduction) => {
   //   state.introduction = introduction
   // },
@@ -62,23 +69,22 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      User.login({ username: username.trim(), password: password }).then(response => {
-        const token = `${response.tokenType} ${response.accessToken}`
+      User.login({ username: username.trim(), password: password }).then(res => {
+        const token = `${res.tokenType} ${res.accessToken}`
         commit('SET_TOKEN', token)
-        commit('SET_Id', response.id)
-        commit('SET_USER_NAME', response.username)
-
-        if (Array.isArray(response.roles) && response.roles.length > 0) {
-          commit('SET_ROLES', response.roles)
-        } else {
-          reject('error')
-          return false
-        }
-
         setToken(token)
-        resolve()
-      }).catch(error => {
-        reject(error)
+        resolve('登录成功')
+        // commit('SET_Id', res.id)
+        // commit('SET_USER_NAME', res.username)
+
+        // if (Array.isArray(res.roles) && res.roles.length > 0) {
+        //   commit('SET_ROLES', res.roles)
+        // } else {
+        //   reject('error')
+        //   return false
+        // }
+      }).catch(() => {
+        reject('登录失败')
       })
     })
   },
@@ -86,24 +92,21 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      User.getInfo(getRoleToken()).then(response => {
-        const { data } = response
-        if (!data) {
-          return reject('Verification failed, please Login again.')
-        }
-        const { roles, name, avatar, introduction } = data
-
+      User.getUserInfo().then(res => {
+        const { id, username, address, roles, phonenumber } = res
         // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
+        if (checkEmptyArray(roles)) {
+          reject('用户无权限')
+        } else {
+          commit('SET_Id', id)
+          commit('SET_USER_NAME', username)
+          commit('SET_ADDRESS', address)
+          commit('SET_ROLES', roles)
+          commit('SET_PHONE', phonenumber)
+          resolve(res)
         }
-        commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
+      }).catch(() => {
+        reject('用户信息获取失败')
       })
     })
   },
@@ -120,15 +123,11 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      User.logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        removeRoleToken()
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      removeToken() // must remove  token  first
+      // removeRoleToken()
+      resetRouter()
+      commit('RESET_STATE')
+      resolve()
     })
   },
 

@@ -14,6 +14,7 @@ export function checkType(value) {
 /**
  * 检测空数组
  * 返回boolean
+ * 空数组则返回true
  * @param {array} value
  */
 export function checkEmptyArray(value) {

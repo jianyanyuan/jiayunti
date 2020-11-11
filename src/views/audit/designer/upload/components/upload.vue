@@ -141,7 +141,6 @@ export default {
       formData.append('file', this.uploadFile)
       // 上传附件
       File.upload(formData, { desciption: 'sssss' }).then(res => {
-        debugger
       }).catch(err => {
         this.$message.error(err)
       })

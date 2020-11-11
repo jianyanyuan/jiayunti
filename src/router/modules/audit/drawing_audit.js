@@ -11,9 +11,9 @@
 import Layout from '@/layout'
 
 const drawingAuditRouter = {
-  path: '/drawing_audit',
+  path: '/drawing-audit',
   component: Layout,
-  redirect: '/drawing_audit/list',
+  redirect: '/drawing-audit/list',
   name: 'DrawingAudit',
   meta: {
     title: '图审',

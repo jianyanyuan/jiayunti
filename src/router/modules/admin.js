@@ -13,7 +13,10 @@ import Layout from '@/layout'
 const adminRouter = {
   path: '/admin',
   component: Layout,
-  redirect: '/resident/apply'
+  redirect: '/resident/apply',
+  meta: {
+    roles: ['ROLE_ADMIN']
+  }
 }
 
 export default adminRouter

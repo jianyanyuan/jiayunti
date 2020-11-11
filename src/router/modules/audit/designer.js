@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-11-10 13:59:38
+ * @LastEditTime: 2020-11-11 13:25:04
  * @LastEditors: zfd
  * @Description: 审批端设计路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -66,7 +66,7 @@ const designerRouter = {
     },
     {
       path: 'intro_edit',
-      component: () => import('@/views/audit/designer/intro_edit/index.vue'), // Parent router-view
+      component: () => import('@/views/audit/designer/intro-edit/index.vue'), // Parent router-view
       name: 'DesignerIntroEdit',
       // hidden: true,
       meta: {

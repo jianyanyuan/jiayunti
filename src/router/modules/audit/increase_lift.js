@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-11-06 14:50:19
+ * @LastEditTime: 2020-11-11 13:26:28
  * @LastEditors: zfd
  * @Description: 增梯办路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -11,9 +11,9 @@
 import Layout from '@/layout'
 
 const drawingAuditRouter = {
-  path: '/increase_lift',
+  path: '/increase-lift',
   component: Layout,
-  redirect: '/increase_lift/list',
+  redirect: '/increase-lift/list',
   name: 'IncreaseLift',
   meta: {
     title: '增梯办',

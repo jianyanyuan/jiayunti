@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 09:15:58
- * @LastEditTime: 2020-11-03 10:17:30
+ * @LastEditTime: 2020-11-11 10:23:33
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\App.vue
@@ -14,10 +14,7 @@
 
 <script>
 export default {
-  name: 'App',
-  created() {
-    this.$store.dispatch('common/getAddress')
-  }
+  name: 'App'
 }
 </script>
 <style lang="scss">
