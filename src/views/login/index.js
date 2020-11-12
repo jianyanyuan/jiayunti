@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-11 16:05:38
+ * @LastEditTime: 2020-11-12 11:06:46
  * @Description:
  */
 import { validateUsername, validatePassword } from '@/utils/element-validator'
@@ -12,7 +12,7 @@ export default {
   data() {
     return {
       loginForm: {
-        username: 'regist',
+        username: 'resident',
         password: '123456'
       },
       loginRules: {
@@ -57,7 +57,6 @@ export default {
             // ROLE_STREET ---> string
             const roleHome = roles[0].split('_').slice(1).join('-').toLocaleLowerCase()
             accessRoutes.splice(accessRoutes.length - 1, 0, { path: '/', redirect: '/' + roleHome, hidden: true })
-
             this.$router.addRoutes(accessRoutes)
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
