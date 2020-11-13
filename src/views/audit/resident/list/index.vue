@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-11 08:39:07
+ * @LastEditTime: 2020-11-13 10:12:31
  * @Description:申请列表
 -->
 
@@ -85,11 +85,11 @@
         <el-form-item label="地址" prop="address">
           <el-row>
             <el-col :span="12">
-              <el-cascader v-model="model.form.address" :options="addressOptions" style="display:block" />
+              <el-cascader v-model="model.form.address.county" :options="countyOptions" :props="countyProps" style="display:block" />
             </el-col>
             <el-col :span="2" style="text-align:center"><label for="address-detail" class="label-detail"> — </label></el-col>
             <el-col :span="10">
-              <el-cascader v-model="plot" :options="plotOptions" style="display:block" />
+              <el-cascader v-model="model.form.address.community" :options="communityOptions" :props="communityProps" style="display:block" />
             </el-col>
           </el-row>
         </el-form-item>
@@ -97,9 +97,9 @@
           <el-input v-model="model.form.phoneNumber" />
         </el-form-item>
         <el-form-item label="加装电梯地址" prop="location">
-          <div> <input v-model="location[0]" type="text" name="cell" autocomplete="false"> 小区</div>
-          <div> <input v-model="location[1]" type="text" name="building" autocomplete="false"> 幢</div>
-          <div> <input v-model="location[2]" type="text" name="unit" autocomplete="false"> 单元</div>
+          <div> <input v-model="model.form.location[0]" type="text" name="cell" autocomplete="false"> 小区</div>
+          <div> <input v-model="model.form.location[1]" type="text" name="building" autocomplete="false"> 幢</div>
+          <div> <input v-model="model.form.location[2]" type="text" name="unit" autocomplete="false"> 单元</div>
         </el-form-item>
         <el-form-item label="设计单位" prop="designId">
           <el-select v-model="model.form.designId">
@@ -151,7 +151,10 @@
 </template>
 
 <script>
-
+import index from './index'
+export default {
+  ...index
+}
 </script>
 <style scoped lang="scss">
 .dialog-container {

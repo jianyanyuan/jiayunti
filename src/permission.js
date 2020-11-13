@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-19 13:40:21
+ * @LastEditTime: 2020-11-13 14:06:15
  * @Description:
  */
 import router from './router'
@@ -44,9 +44,10 @@ router.beforeEach(async(to, from, next) => {
           const { roles } = await store.dispatch('user/getInfo')
           // generate accessible routes map based on roles
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-          if (Array.isArray(roles) && roles.length > 0) {
-            accessRoutes.push({ path: '/', redirect: '/' + roles[0], hidden: true })
-          }
+
+          const roleHome = roles[0].split('_').slice(1).join('-').toLocaleLowerCase()
+          accessRoutes.splice(accessRoutes.length - 1, 0, { path: '/', redirect: '/' + roleHome, hidden: true })
+
           // dynamically add accessible routes
           router.addRoutes(accessRoutes)
 

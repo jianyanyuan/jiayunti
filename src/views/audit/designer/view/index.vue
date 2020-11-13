@@ -85,12 +85,8 @@
 </template>
 
 <script>
-import { keyToVal } from '@/utils'
 
 export default {
-  filters: {
-    keyToVal
-  },
   data() {
     return {
       audit: {

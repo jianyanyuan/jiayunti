@@ -11,24 +11,22 @@ import { resetRouter } from '@/router'
 import { checkEmptyArray } from '@/utils'
 const getDefaultState = () => {
   return {
-    id: '',
-    username: '',
-    token: '',
-    // name: '',
-    // avatar: '',
-    // introduction: '',
-    roles: []
+    token: getToken(),
+    id: null,
+    username: null,
+    address: null,
+    phone: null,
+    roles: null
   }
 }
 
 const state = {
   token: getToken(),
-  id: '',
-  username: '',
-  // name: '',
-  // avatar: '',
-  // introduction: '',
-  roles: []
+  id: null,
+  username: null,
+  address: null,
+  phone: null,
+  roles: null
 }
 
 const mutations = {
@@ -50,15 +48,6 @@ const mutations = {
   SET_ADDRESS: (state, address) => {
     state.address = address
   },
-  // SET_INTRODUCTION: (state, introduction) => {
-  //   state.introduction = introduction
-  // },
-  // SET_NAME: (state, name) => {
-  //   state.name = name
-  // },
-  // SET_AVATAR: (state, avatar) => {
-  //   state.avatar = avatar
-  // },
   SET_ROLES: (state, roles) => {
     state.roles = roles
   }

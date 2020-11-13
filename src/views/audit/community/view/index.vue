@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-10-26 13:10:16
+ * @LastEditTime: 2020-11-13 13:14:56
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -52,11 +52,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { keyToVal } from '@/utils'
 export default {
-  filters: {
-    keyToVal
-  },
   data() {
     return {
       basic: {

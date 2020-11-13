@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-11-03 10:08:48
+ * @LastEditTime: 2020-11-13 13:15:27
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -63,12 +63,8 @@
 </template>
 
 <script>
-import { keyToVal } from '@/utils'
 
 export default {
-  filters: {
-    keyToVal
-  },
   data() {
     return {
       audit: {

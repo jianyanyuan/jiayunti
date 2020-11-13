@@ -1,37 +1,37 @@
 import { mapState, mapGetters } from 'vuex'
-import { keyToVal, deepClone, parseTime, numberFormat } from '@/utils'
+import { deepClone, checkType, checkEmptyArray } from '@/utils'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import Flow from '@/components/street/Flow'
-import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
+import Project from '@/api/projects'
 const defaultForm = {
   applicantName: '',
   location: [],
   phoneNumber: '',
-  address: [],
+  address: { county: [], community: [] },
   designId: '',
   deviceId: '',
   rooms: [{ key: 'defaultRoom', val: '' }]
 }
 const data = {
-  elevatorAddress: {
-    cell: null,
-    building: null,
-    unit: null,
-    // 迭代器
-    [Symbol.iterator]: function() {
-      let index = 0
-      const keys = Object.keys(this)
-      const next = () => {
-        return {
-          value: this[keys[index]],
-          done: keys.length === index++
-        }
-      }
-      return {
-        next
-      }
-    }
-  },
+  // elevatorAddress: {
+  //   cell: null,
+  //   building: null,
+  //   unit: null,
+  //   // 迭代器
+  //   [Symbol.iterator]: function() {
+  //     let index = 0
+  //     const keys = Object.keys(this)
+  //     const next = () => {
+  //       return {
+  //         value: this[keys[index]],
+  //         done: keys.length === index++
+  //       }
+  //     }
+  //     return {
+  //       next
+  //     }
+  //   }
+  // },
   fileList: [{ name: '123213' }, { name: '456465' }, { name: '789798' }],
   subsidy: {
     money: '79746464'
@@ -42,52 +42,21 @@ const data = {
   auditVisible: false,
   dissentVisible: false,
   flowVisible: false,
-  designerOptions: [
-    { key: 1, val: '建研院' },
-    { key: 2, val: '设计' }
-  ],
   audit: {
 
   },
-  deviceOptions: [
-    {
-      label: '设备1',
-      value: '1',
-      children: [
-        {
-          label: '600',
-          value: '11'
-        },
-        {
-          label: '500',
-          value: '12'
-        }
-      ]
-    },
-    {
-      label: '设备2',
-      value: '2',
-      children: [
-        {
-          label: '600',
-          value: '22'
-        }
-      ]
-    }
-  ],
   model: {
     visible: false,
     form: deepClone(defaultForm),
     rules: {
-      name: [{ required: true, validator: validateTrueName, trigger: 'blur' }],
+      applicantName: [{ required: true, validator: validateTrueName, trigger: 'blur' }],
       address: [{ required: true }],
-      phone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-      elevatorAddress: [{ required: true }],
-      designer: [{ required: true, message: '设计单位不为空', trigger: 'blur' }],
-      device: [{ required: true, message: '设备不为空', trigger: 'blur' }]
+      phoneNumber: [{ required: true, validator: validatePhone, trigger: 'blur' }],
+      location: [{ required: true }]
+      // designId: [{ required: true, message: '请选择设计单位', trigger: 'blur' }],
+      // deviceId: [{ required: true, message: '请选择设备', trigger: 'blur' }]
     }
   },
-  plot: [],
   dissents: [
     {
       name: '李先生',
@@ -205,78 +174,92 @@ const data = {
       applyTime: '2020-10-12 10:20',
       status: 14 // 已撤销
     }
-  ]
+  ],
+  countyProps: {
+    value: 'id',
+    label: 'name',
+    children: 'areas'
+  },
+  communityProps: {
+    value: 'id',
+    label: 'name',
+    children: 'communities'
+  }
+}
+function validateAddress(address) {
+  if (checkType(address) !== 'Object') {
+    return '请选择地址'
+  }
+  if (checkEmptyArray(address.county)) {
+    return '请选择区县'
+  }
+  if (checkEmptyArray(address.community)) {
+    return '请选择社区'
+  }
+  return true
 }
 export default {
   name: 'List',
-  filters: {
-    keyToVal,
-    parseTime,
-    numberFormat
-  },
   components: {
     Flow
   },
-  directives: { elDragDialog },
   data() {
     return data
   },
   computed: {
     ...mapState('common', ['applyStatus', 'applyTag', 'handleStatus', 'handleTag']),
-    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'deviceOptions'])
-  },
-  watch: {
-    elevatorAddress: {
-      handler(newValue) {
-        this.model.form.elevatorAddress = [...newValue]
-      },
-      deep: true,
-      immediate: true
+    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'deviceOptions']),
+    communityOptions() {
+      if (this.model.form.address.county.length) {
+        return this.$store.getters['common/communityOptions'](this.model.form.address.county)
+      }
+      return []
     }
   },
+  watch: {
+    // elevatorAddress: {
+    //   handler(newValue) {
+    //     this.model.form.elevatorAddress = [...newValue]
+    //   },
+    //   deep: true,
+    //   immediate: true
+    // }
+  },
   created() {
+    this.$store.dispatch('common/getAddress').catch(() => this.$message.error('地址获取失败'))
+    this.$store.dispatch('common/getDevice').catch(err => {
+      console.log(err)
+      this.$message.error('获取电梯设备失败')
+    })
+    this.$store.dispatch('common/getDesign').catch(err => {
+      console.log(err)
+      this.$message.error('获取设计单位失败')
+    })
+    this.listApplys()
   },
   methods: {
-    dissentView() {
-      this.dissentVisible = true
-    },
-    flowView(row, column, event) {
-      if (row.status !== 0) {
-        this.flowVisible = true
-      }
-    },
+    // 打开申请Modal
     addApply() {
-      this.model.form.name = '张飞达'
-      this.model.form.address = ['jiangsu', 'suzhou', 'gusu']
-      this.plot = ['canglang', 'shequ']
-      this.model.form.phone = '15988800323'
+      this.model.form.address.county = this.$store.getters['address']?.slice(0, 2)
+      this.model.form.address.community = this.$store.getters['address']?.slice(2)
+      this.model.form.phoneNumber = this.$store.getters['phone'] ?? ''
       this.model.visible = true
     },
-    handleRoom(index) {
-      if (index === 0) {
-        this.model.form.rooms.push({ key: Date.now(), val: '' })
-      } else {
-        this.model.form.rooms.splice(index, 1)
-      }
-    },
-    resetForm() {
-      this.model.form = deepClone(defaultForm)
-      this.plot = []
-    },
-    // 新增申请
+    // 提交申请
     postApply() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          if (!this.plot.length || !this.model.form.address.length) {
-            this.$message.error('请选择地址')
-            return false
+          const validAddress = validateAddress(this.form.address)
+          if (validAddress !== true) {
+            this.$message.error(validAddress)
+            return
           }
-          if (this.model.form.elevatorAddress.includes(null)) {
+          if (this.model.form.location.length !== 3) {
             this.$message.error('请填写加装电梯地址')
-            return false
+            return
           }
           this.formLoading = true
-          this.model.form.address = this.model.form.address.concat(this.plot)
+          this.form.address = this.form.address.county.concat(this.form.address.community)
           this.model.form.rooms = this.model.form.rooms.map(v => v.val)
           console.log(this.model.form)
           this.formLoading = false
@@ -293,6 +276,30 @@ export default {
           this.$message.error('请补全信息')
         }
       })
+    },
+    // 获取申请列表
+    listApplys() {
+      Project.list().then(res => console.log(res)).catch(err => console.log(err))
+    },
+    dissentView() {
+      this.dissentVisible = true
+    },
+    flowView(row, column, event) {
+      if (row.status !== 0) {
+        this.flowVisible = true
+      }
+    },
+
+    handleRoom(index) {
+      if (index === 0) {
+        this.model.form.rooms.push({ key: Date.now(), val: '' })
+      } else {
+        this.model.form.rooms.splice(index, 1)
+      }
+    },
+    resetForm() {
+      this.model.form = deepClone(defaultForm)
     }
+
   }
 }

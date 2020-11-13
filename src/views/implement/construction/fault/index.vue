@@ -94,13 +94,9 @@
 
 <script>
 import { mapState } from 'vuex'
-import { keyToVal } from '@/utils'
 export default {
   name: 'Fault',
   components: {
-  },
-  filters: {
-    keyToVal
   },
   data() {
     return {

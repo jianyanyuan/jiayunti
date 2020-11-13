@@ -131,16 +131,8 @@
 </template>
 
 <script>
-import { keyToVal } from '@/utils'
-import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 
 export default {
-  filters: {
-    keyToVal
-  },
-  directives: {
-    elDragDialog
-  },
   components: {
   },
   data() {

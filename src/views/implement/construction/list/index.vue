@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-04 09:05:30
+ * @LastEditTime: 2020-11-13 13:17:15
  * @Description:图审列表
 -->
 
@@ -93,19 +93,11 @@
 </template>
 
 <script>
-import { keyToVal } from '@/utils'
 import { mapState } from 'vuex'
 
-import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 import Flow from '@/components/street/Flow'
 
 export default {
-  filters: {
-    keyToVal
-  },
-  directives: {
-    elDragDialog
-  },
   components: {
     Flow
   },

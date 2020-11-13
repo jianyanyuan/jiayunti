@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-09 19:47:59
- * @LastEditTime: 2020-10-26 16:10:58
+ * @LastEditTime: 2020-11-13 14:10:59
  * @Description: main.js
  * @FilePath: \vue-admin-template\src\main.js
  */
@@ -23,6 +23,8 @@ import '@/permission' // permission control
 import * as filters from '@/filters' // global filters
 
 import UploadList from 'element-ui/packages/upload/src/upload-list'
+import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui modal-drag
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -40,15 +42,15 @@ if (process.env.NODE_ENV === 'production') {
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 Vue.use(ElementUI)
+Vue.use(elDragDialog) // 注册插件
 
 // register global utility filters
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
-
+// Vue.directive('elDragDialog', elDragDialog)
 Vue.component('UploadList', UploadList)
 Vue.config.productionTip = false
-
 new Vue({
   el: '#app',
   router,

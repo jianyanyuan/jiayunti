@@ -92,16 +92,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import { keyToVal } from '@/utils'
-import ImageCard from '@/components/Imagecard'
 export default {
   name: 'Fault',
-  components: {
-    ImageCard
-  },
-  filters: {
-    keyToVal
-  },
   data() {
     return {
       picShow: false,

@@ -60,11 +60,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { keyToVal } from '@/utils'
 export default {
-  filters: {
-    keyToVal
-  },
   data() {
     return {
       basic: {

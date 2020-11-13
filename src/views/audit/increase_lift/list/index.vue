@@ -111,18 +111,10 @@
 </template>
 
 <script>
-import { keyToVal } from '@/utils'
-import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 import Flow from '@/components/street/Flow'
 import { mapState } from 'vuex'
 
 export default {
-  filters: {
-    keyToVal
-  },
-  directives: {
-    elDragDialog
-  },
   components: {
     Flow
   },
