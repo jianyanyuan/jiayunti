@@ -47,8 +47,11 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.component('UploadList', UploadList)
-Vue.config.productionTip = false
-
+// Vue.config.productionTip = false
+const isDebug_mode = process.env.NODE_ENV !== 'production'
+Vue.config.debug = isDebug_mode
+Vue.config.devtools = isDebug_mode
+Vue.config.productionTip = isDebug_mode
 new Vue({
   el: '#app',
   router,

@@ -9,7 +9,7 @@
               <el-input v-model="form.username" placeholder="请输入用户名" autocomplete="off" />
             </el-form-item>
             <el-form-item prop="password" label="登录密码">
-              <el-input v-model="form.password" type="password" autocomplete="off" placeholder="请输入6-12位密码" />
+              <el-input v-model="form.password" type="password" autocomplete="off" placeholder="请设置密码（6-12位数字与字母组合）" />
             </el-form-item>
             <el-form-item prop="name" label="姓名">
               <el-input v-model="form.name" placeholder="请输入真实姓名" autocomplete="off" />
