@@ -208,7 +208,7 @@ export default {
   },
   computed: {
     ...mapState('common', ['applyStatus', 'applyTag', 'handleStatus', 'handleTag']),
-    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'deviceOptions']),
+    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'designOptions']),
     communityOptions() {
       if (this.model.form.address.county.length) {
         return this.$store.getters['common/communityOptions'](this.model.form.address.county)
@@ -249,7 +249,7 @@ export default {
     postApply() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          const validAddress = validateAddress(this.form.address)
+          const validAddress = validateAddress(this.model.form.address)
           if (validAddress !== true) {
             this.$message.error(validAddress)
             return
@@ -259,9 +259,10 @@ export default {
             return
           }
           this.formLoading = true
-          this.form.address = this.form.address.county.concat(this.form.address.community)
+          this.model.form.address = this.model.form.address.county.concat(this.model.form.address.community)
           this.model.form.rooms = this.model.form.rooms.map(v => v.val)
           console.log(this.model.form)
+          debugger
           this.formLoading = false
           this.listLoading = true
           this.list.push({
@@ -297,6 +298,7 @@ export default {
         this.model.form.rooms.splice(index, 1)
       }
     },
+    // 重置表单
     resetForm() {
       this.model.form = deepClone(defaultForm)
     }

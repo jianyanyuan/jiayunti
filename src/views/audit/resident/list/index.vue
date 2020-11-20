@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-13 10:12:31
+ * @LastEditTime: 2020-11-20 16:23:52
  * @Description:申请列表
 -->
 
@@ -103,7 +103,7 @@
         </el-form-item>
         <el-form-item label="设计单位" prop="designId">
           <el-select v-model="model.form.designId">
-            <el-option v-for="item in deviceOptions" :key="item.val" :label="item.val" :value="item.key" />
+            <el-option v-for="item in designOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="设备" prop="deviceId">

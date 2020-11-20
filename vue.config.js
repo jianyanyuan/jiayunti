@@ -24,7 +24,8 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: '/',
+  // publicPath: '/',
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
@@ -41,7 +42,7 @@ module.exports = {
     // 配置跨域
     proxy: {
       '/api': {
-        target: 'http://192.168.0.191:8344', // 跨域的域名
+        target: 'http://192.168.0.191:8342', // 跨域的域名
         // logLevel: 'debug',
         // ws: true,  // 代理 websockets
         changeOrigin: true // 是否开启跨域

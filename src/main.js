@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-09 19:47:59
- * @LastEditTime: 2020-11-13 14:10:59
+ * @LastEditTime: 2020-11-20 15:23:39
  * @Description: main.js
  * @FilePath: \vue-admin-template\src\main.js
  */
@@ -50,7 +50,12 @@ Object.keys(filters).forEach(key => {
 })
 // Vue.directive('elDragDialog', elDragDialog)
 Vue.component('UploadList', UploadList)
-Vue.config.productionTip = false
+// Vue.config.productionTip = false
+const isDebug_mode = process.env.NODE_ENV !== 'production'
+Vue.config.debug = isDebug_mode
+Vue.config.devtools = isDebug_mode
+Vue.config.productionTip = isDebug_mode
+
 new Vue({
   el: '#app',
   router,

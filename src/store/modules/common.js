@@ -2,7 +2,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-11-11 15:03:41
+ * @LastEditTime: 2020-11-20 16:23:01
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -79,7 +79,9 @@ const state = {
 
   // county: 城市--区县
   // community: 街道--社区
-  address: null
+  address: null,
+  device: null,
+  design: null
 }
 const getters = {
   // 城市--区县
@@ -118,9 +120,25 @@ const getters = {
     return communityOptions
   },
   // 设备列表
-  deviceOptions: state => state.deviceOptions,
+  deviceOptions: state => state.device?.map(v => {
+    return {
+      value: v.id,
+      label: v.devicename,
+      children: v.deviceTypes?.map(v => {
+        return {
+          value: v.id,
+          label: v.type
+        }
+      })
+    }
+  }),
   // 设计院列表
-  designOptions: state => state.designOptions
+  designOptions: state => state.design?.map(v => {
+    return {
+      value: v.id,
+      label: v.designname
+    }
+  })
 }
 
 const mutations = {
@@ -154,8 +172,12 @@ const actions = {
   getDevice({ commit }) {
     return new Promise((resolve, reject) => {
       Common.getDevice().then(res => {
-        commit('SET_DEVICE', res)
-        resolve(res)
+        if (res.content) {
+          commit('SET_DEVICE', res.content)
+          resolve(res.content)
+        } else {
+          reject(res)
+        }
       }).catch(err => {
         reject(err)
       })
@@ -165,8 +187,12 @@ const actions = {
   getDesign({ commit }) {
     return new Promise((resolve, reject) => {
       Common.getDesign().then(res => {
-        commit('SET_DESIGN', res)
-        resolve(res)
+        if (res.content) {
+          commit('SET_DESIGN', res.content)
+          resolve(res.content)
+        } else {
+          reject(res)
+        }
       }).catch(err => {
         reject(err)
       })
