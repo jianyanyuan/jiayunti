@@ -2,9 +2,10 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-12 11:06:46
+ * @LastEditTime: 2020-12-01 15:53:38
  * @Description:
  */
+import { notEmptyArray } from '@/utils'
 import { validateUsername, validatePassword } from '@/utils/element-validator'
 
 export default {
@@ -50,7 +51,11 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(async() => {
-            const { roles } = await this.$store.dispatch('user/getInfo')
+            const { roles } = await this.$store.dispatch('user/getInfo').catch(err => {
+              this.$message.error(err)
+              this.$router.push('/login') // 无权限返回登录界面
+              return
+            })
             const accessRoutes = await this.$store.dispatch('permission/generateRoutes', roles)
             // dynamically add accessible routes
             // repair the problem of '/' not found, must place 404 at the end

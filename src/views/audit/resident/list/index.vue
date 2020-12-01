@@ -2,29 +2,29 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-01 14:17:17
+ * @LastEditTime: 2020-12-01 16:03:37
  * @Description:申请列表
 -->
 
 <template>
   <div class="app-container">
-    <el-button type="primary" size="medium" style="margin-bottom:20px" @click="openAddModal">新增申请</el-button>
+    <el-button type="primary" size="medium" style="margin-bottom:20px" :loading="openLoading" @click="openAddModal">新增申请</el-button>
 
     <el-card>
-      <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'applyTime', order: 'descending'}" fit highlight-current-row @row-dblclick="flowView">
+      <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row @row-dblclick="flowView">
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="编号" prop="projectName" align="center" />
-        <el-table-column label="提交时间" align="center" prop="addTime" sortable>
+        <el-table-column label="编号" prop="projectName" />
+        <el-table-column label="提交时间" align="center" prop="addTime" sortable min-width="145px">
           <template slot-scope="{row}">
             <i class="el-icon-time" />
             <span>{{ new Date(row.addTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="最新处理时间" align="center" prop="updateTime" sortable>
+        <el-table-column label="最新处理时间" align="center" prop="updateTime" sortable min-width="145px">
           <template v-if="scope.row.updateTime" slot-scope="scope">
             <i class="el-icon-time" />
             <span>{{ new Date(scope.row.updateTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
@@ -51,7 +51,7 @@
               <el-button v-if="scope.row.statusId === 7" size="mini" type="warning" plain @click="$router.push({name:'ResidentOffer',params:{}})">选择报价</el-button>
               <el-tag v-if="scope.row.statusId === 10" size="medium" type="success" effect="light">申请已通过</el-tag>
               <el-tag v-if="scope.row.statusId === 13" size="medium" type="danger" effect="light">已驳回</el-tag>
-              <el-tag v-if="scope.row.statusId === 14" size="medium" type="danger" effect="light">已撤销</el-tag>
+              <el-tag v-if="scope.row.statusId === 14" size="medium" type="info" effect="light">已撤销</el-tag>
               <el-button v-if="scope.row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'ResidentFaultView',params:{}})">违规查看</el-button>
               <!-- <el-button v-if="scope.row.statusId === 12" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button> -->
               <el-button v-if="scope.row.statusId === 12" size="mini" type="warning" @click="subsidyVisible = true">补贴查看</el-button>
@@ -74,10 +74,10 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <p class="contract-tip">审核单位：<span>XXX街道办</span> 审核人员：<span>XXX</span> 联系电话：<span>0512XXXX</span> 工作时间：周一至周五 9:00-11:00 14:00-17:00</p>
+    <!-- <p class="contract-tip">审核单位：<span>XXX街道办</span> 审核人员：<span>XXX</span> 联系电话：<span>0512XXXX</span> 工作时间：周一至周五 9:00-11:00 14:00-17:00</p> -->
 
     <!-- 新增申请 -->
-    <el-dialog v-el-drag-dialog title="新增申请" :visible.sync="model.visible" :close-on-click-modal="false" width="600px" top="10vh" @close="resetForm">
+    <el-dialog v-el-drag-dialog title="新增申请" :visible.sync="model.visible" :close-on-click-modal="false" width="600px" top="10vh" @close="resetFrom('form')">
       <el-form ref="form" v-loading="formLoading" :model="model.form" :rules="model.rules" label-width="120px">
         <el-form-item label="申请人" prop="applicantName">
           <el-input v-model="model.form.applicantName" auto-complete="off" />
@@ -169,14 +169,14 @@ input {
 input:focus {
   outline: none;
 }
-.contract-tip {
-  padding: 0 10px;
-  color: #686d76;
-  line-height: 30px;
-  span {
-    margin-right: 20px;
-  }
-}
+// .contract-tip {
+//   padding: 0 10px;
+//   color: #686d76;
+//   line-height: 30px;
+//   span {
+//     margin-right: 20px;
+//   }
+// }
 .file-display {
   display: block;
   text-align: left;

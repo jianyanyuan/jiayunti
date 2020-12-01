@@ -1,5 +1,5 @@
 import { mapState, mapGetters } from 'vuex'
-import { deepClone, checkType, checkEmptyArray } from '@/utils'
+import { deepClone, checkType, notEmptyArray } from '@/utils'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import Flow from '@/components/street/Flow'
 import Project from '@/api/projects'
@@ -7,9 +7,9 @@ const defaultForm = {
   applicantName: '许王鹏',
   location: [],
   phoneNumber: '15988800323',
-  address: { county: [], community: [] },
+  address: { county: [], community: [] }, //
   designId: '',
-  typeAndDevice: '',
+  typeAndDevice: [], // []
   rooms: [{ key: 'defaultRoom', val: '' }]
 }
 const data = {
@@ -42,6 +42,7 @@ const data = {
   subsidyVisible: false,
   formLoading: false,
   listLoading: false,
+  openLoading: false,
   auditVisible: false,
   dissentVisible: false,
   flowVisible: false,
@@ -220,34 +221,52 @@ export default {
     // }
   },
   created() {
+    // this.$store.dispatch('common/getAddress').catch(() => this.$message.error('地址获取失败'))
+    // this.$store.dispatch('common/getDevice').catch(err => {
+    //   console.log(err)
+    //   this.$message.error('获取电梯设备失败')
+    // })
+    // this.$store.dispatch('common/getDesign').catch(err => {
+    //   console.log(err)
+    //   this.$message.error('获取设计单位失败')
+    // })
     this.listApplies()
   },
   methods: {
     // 打开申请Modal
     openAddModal() {
-      // const address = this.$store.dispatch('common/getAddress')
-      // const device = this.$store.dispatch('common/getDevice')
-      // const design = this.$store.dispatch('common/getDesign')
-      this.model.form.address.county = this.$store.getters['address']?.slice(0, 2)
-      this.model.form.address.community = this.$store.getters['address']?.slice(2)
-      this.model.form.phoneNumber = this.$store.getters['phone'] ?? ''
-      this.model.visible = true
-      // Promise.all([address, device, design]).then(res => {
-      //   console.log(res)
-      // }).catch(() => this.$message.error('信息获取失败'))
+      // 重置表格
+      this.openLoading = true
+      const { address } = this.model.form
+      this.model.form = deepClone(defaultForm)
+      this.model.form.address = address // 修复el-cascader bug
+      const addressAsync = this.$store.dispatch('common/getAddress')
+      const deviceAsync = this.$store.dispatch('common/getDevice')
+      const designAsync = this.$store.dispatch('common/getDesign')
+
+      Promise.all([addressAsync, deviceAsync, designAsync]).then(() => {
+        this.openLoading = false
+        this.model.form.address.county = this.$store.getters['address']?.slice(0, 2)
+        this.model.form.address.community = this.$store.getters['address']?.slice(2)
+        this.model.form.phoneNumber = this.$store.getters['phone'] ?? ''
+        this.model.visible = true
+      }).catch(() => {
+        this.$message.error('信息获取失败')
+        this.openLoading = false
+      })
     },
     // 提交申请
     postApply() {
       this.$refs.form.validate(valid => {
         if (valid) {
           const { location, rooms, address } = this.model.form
-          if (!checkEmptyArray(location) && location.length === 3) {
+          if (notEmptyArray(location) && location.length === 3) {
             this.model.form.location = location.map(v => v.replace(/[<>&"']/gi, ' ').trim()) // 防止xss攻击
           } else {
             this.$message.error('请填写加装电梯地址')
             return
           }
-          if (!checkEmptyArray(rooms)) {
+          if (notEmptyArray(rooms)) {
             this.model.form.rooms = Array.from(new Set(rooms.map(v => v.val.replace(/[<>&"']/gi, ' ').trim()))) // 过滤 + 去重
           } else {
             this.$message.error('请填写单位下业主房间编号')
@@ -283,7 +302,7 @@ export default {
     async listApplies() {
       this.listLoading = true
       await Project.list().then(res => {
-        if (!checkEmptyArray(res.content)) {
+        if (notEmptyArray(res.content)) {
           this.list = res.content
         }
       }).catch(err => {
@@ -308,11 +327,8 @@ export default {
         this.model.form.rooms.splice(index, 1)
       }
     },
-    // 重置表单
-    resetForm() {
-      this.model.form = deepClone(defaultForm)
-      this.$refs.form.clearValidate()
+    resetFrom(formName) {
+      this.$refs[formName].clearValidate()
     }
-
   }
 }

@@ -6,7 +6,7 @@
  * @Description: 申请项目仓库
  */
 import Project from '@/api/projects'
-import { checkEmptyArray } from '@/utils'
+import { notEmptyArray } from '@/utils'
 
 const getDefaultState = () => {
   return {

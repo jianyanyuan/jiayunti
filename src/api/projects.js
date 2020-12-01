@@ -10,10 +10,11 @@ import request from '@/utils/request'
 const api_prefix_dev = '/project'
 
 // 根据token获取工程列表
-const list = () => {
+const list = (params) => {
   return request({
     url: api_prefix_dev + '/getroleproject',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

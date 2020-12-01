@@ -2,21 +2,21 @@
  * @Author: zfd
  * @Date: 2020-11-10 08:42:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-01 09:49:08
+ * @LastEditTime: 2020-12-01 15:48:32
  * @Description:
  */
 import * as Validator from '@/utils/element-validator'
 import { mapGetters } from 'vuex'
-import { checkType, checkEmptyArray } from '@/utils'
+import { checkType, notEmptyArray } from '@/utils'
 
 function validateAddress(address) {
   if (checkType(address) !== 'Object') {
     return '请选择地址'
   }
-  if (checkEmptyArray(address.county)) {
+  if (!notEmptyArray(address.county)) {
     return '请选择区县'
   }
-  if (checkEmptyArray(address.community)) {
+  if (!notEmptyArray(address.community)) {
     return '请选择社区'
   }
   return true

@@ -14,11 +14,11 @@ export function checkType(value) {
  * 空数组则返回true
  * @param {array} value
  */
-export function checkEmptyArray(value) {
+export function notEmptyArray(value) {
   if (Array.isArray(value) && value.length > 0) {
-    return false
+    return true
   }
-  return true
+  return false
 }
 
 /**

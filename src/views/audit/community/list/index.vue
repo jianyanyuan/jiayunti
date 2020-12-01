@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-06 13:10:27
+ * @LastEditTime: 2020-12-01 16:25:34
  * @Description:申请列表
 -->
 
@@ -16,16 +16,16 @@
         <el-form-item label="申请人" prop="applyName " style="margin-right: 30px">
           <el-input v-model="query.applyName" />
         </el-form-item>
-        <el-form-item label="状态" prop="status " style="margin-right: 30px">
-          <el-select v-model="query.status">
-            <el-option v-for="item in designStatus" :key="item.val" :label="item.val" :value="item.key" />
+        <el-form-item label="状态" prop="statusId " style="margin-right: 30px">
+          <el-select v-model="query.statusId">
+            <el-option v-for="item in statusOptions" :key="item.val" :label="item.val" :value="item.key" />
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="goSearch">搜索</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="info" icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
+          <el-button icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -35,29 +35,29 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="编号" prop="code" align="center" />
-      <el-table-column label="提交时间" align="center" prop="applyTime" sortable>
+      <el-table-column label="编号" prop="projectName" />
+      <el-table-column label="提交时间" align="center" prop="addTime" sortable min-width="145px">
         <template slot-scope="scope">
           <i class="el-icon-time" />
-          <span>{{ scope.row.applyTime }}</span>
+          <span>{{ new Date(scope.row.addTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="审核时间" align="center" prop="auditTime" sortable>
-        <template v-if="scope.row.auditTime" slot-scope="scope">
+      <el-table-column label="最新处理时间" align="center" prop="updateTime" sortable min-width="145px">
+        <template v-if="scope.row.updateTime" slot-scope="scope">
           <i class="el-icon-time" />
-          <span>{{ scope.row.auditTime }}</span>
+          <span>{{ new Date(scope.row.updateTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="状态" align="center" prop="status" sortable>
+      <el-table-column label="状态" align="center" prop="statusId" sortable>
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | keyToVal(applyTag)">{{ scope.row.status | keyToVal(applyStatus) }}</el-tag>
+          <el-tag :type="scope.row.statusId | keyToVal(applyTag)">{{ scope.row.statusId | keyToVal(applyStatus) }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-row type="flex" justify="space-around">
-            <el-button size="mini" type="warning" @click="$router.push({name:'CommunityCheck',params:{applyId: scope.row.Id, status: scope.row.status}})">审核</el-button>
-            <el-button v-if="scope.row.status === 3" size="mini" type="info" @click="$router.push({path:'/community/record',query:{applyId:scope.row.Id}})">异议记录</el-button>
+            <el-button size="mini" type="warning" @click="$router.push({name:'CommunityCheck',params:{applyId: scope.row.Id, statusId: scope.row.statusId}})">审核</el-button>
+            <el-button v-if="scope.row.statusId === 3" size="mini" type="info" @click="$router.push({path:'/community/record',query:{applyId:scope.row.Id}})">异议记录</el-button>
           </el-row>
         </template>
       </el-table-column>

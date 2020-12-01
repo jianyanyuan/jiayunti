@@ -8,7 +8,7 @@
 import User from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
-import { checkEmptyArray } from '@/utils'
+import { notEmptyArray } from '@/utils'
 const getDefaultState = () => {
   return {
     token: getToken(),
@@ -84,15 +84,15 @@ const actions = {
       User.getUserInfo().then(res => {
         const { id, username, address, roles, phonenumber } = res
         // roles must be a non-empty array
-        if (checkEmptyArray(roles)) {
-          reject('用户无权限')
-        } else {
+        if (notEmptyArray(roles)) {
           commit('SET_Id', id)
           commit('SET_USER_NAME', username)
           commit('SET_ADDRESS', address)
           commit('SET_ROLES', roles)
           commit('SET_PHONE', phonenumber)
           resolve(res)
+        } else {
+          reject('用户无权限')
         }
       }).catch(() => {
         reject('用户信息获取失败')
