@@ -225,17 +225,16 @@ export default {
   methods: {
     // 打开申请Modal
     openAddModal() {
-      const address = this.$store.dispatch('common/getAddress')
-      const device = this.$store.dispatch('common/getDevice')
-      const design = this.$store.dispatch('common/getDesign')
-
-      Promise.all([address, device, design]).then(res => {
-        console.log(res)
-        this.model.form.address.county = this.$store.getters['address']?.slice(0, 2)
-        this.model.form.address.community = this.$store.getters['address']?.slice(2)
-        this.model.form.phoneNumber = this.$store.getters['phone'] ?? ''
-        this.model.visible = true
-      }).catch(() => this.$message.error('信息获取失败'))
+      // const address = this.$store.dispatch('common/getAddress')
+      // const device = this.$store.dispatch('common/getDevice')
+      // const design = this.$store.dispatch('common/getDesign')
+      this.model.form.address.county = this.$store.getters['address']?.slice(0, 2)
+      this.model.form.address.community = this.$store.getters['address']?.slice(2)
+      this.model.form.phoneNumber = this.$store.getters['phone'] ?? ''
+      this.model.visible = true
+      // Promise.all([address, device, design]).then(res => {
+      //   console.log(res)
+      // }).catch(() => this.$message.error('信息获取失败'))
     },
     // 提交申请
     postApply() {
