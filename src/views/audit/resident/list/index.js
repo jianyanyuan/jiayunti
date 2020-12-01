@@ -4,15 +4,16 @@ import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import Flow from '@/components/street/Flow'
 import Project from '@/api/projects'
 const defaultForm = {
-  applicantName: '',
+  applicantName: '许王鹏',
   location: [],
-  phoneNumber: '',
+  phoneNumber: '15988800323',
   address: { county: [], community: [] },
   designId: '',
-  deviceId: '',
+  typeAndDevice: '',
   rooms: [{ key: 'defaultRoom', val: '' }]
 }
 const data = {
+  // #region
   // elevatorAddress: {
   //   cell: null,
   //   building: null,
@@ -32,6 +33,8 @@ const data = {
   //     }
   //   }
   // },
+  // #endregion
+
   fileList: [{ name: '123213' }, { name: '456465' }, { name: '789798' }],
   subsidy: {
     money: '79746464'
@@ -50,9 +53,9 @@ const data = {
     form: deepClone(defaultForm),
     rules: {
       applicantName: [{ required: true, validator: validateTrueName, trigger: 'blur' }],
-      address: [{ required: true }],
+      address: [{ required: true, message: '请选择地址' }],
       phoneNumber: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-      location: [{ required: true }]
+      location: [{ required: true, message: '请输入地址' }]
       // designId: [{ required: true, message: '请选择设计单位', trigger: 'blur' }],
       // deviceId: [{ required: true, message: '请选择设备', trigger: 'blur' }]
     }
@@ -77,103 +80,105 @@ const data = {
     }
   ],
   list: [
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      applyTime: '2020-10-12 10:53',
-      auditTime: '',
-      status: 0 // 申请中
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      applyTime: '2020-10-12 10:52',
-      auditTime: '',
-      status: 1 // 社区受理
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      applyTime: '2020-10-12 10:51',
-      auditTime: '2020-10-12 10:56',
-      status: 1 // 社区受理
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      applyTime: '2020-10-12 10:50',
-      auditTime: '2020-10-12 10:56',
-      status: 2 // 方案设计
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      applyTime: '2020-10-12 10:49',
-      auditTime: '2020-10-12 10:56',
-      status: 3 // 公示阶段
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      applyTime: '2020-10-12 10:48',
-      auditTime: '2020-10-12 10:56',
-      status: 4 // 管道踏勘
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      applyTime: '2020-10-12 10:47',
-      auditTime: '2020-10-12 10:56',
-      status: 5 // 施工图设计
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      applyTime: '2020-10-12 10:46',
-      auditTime: '2020-10-12 10:56',
-      status: 6 // 施工图审核
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      applyTime: '2020-10-12 10:45',
-      auditTime: '2020-10-12 10:56',
-      status: 7 // 施工报价
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      applyTime: '2020-10-12 10:44',
-      auditTime: '2020-10-12 10:56',
-      status: 8 // 街道审核
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      applyTime: '2020-10-12 10:43',
-      auditTime: '2020-10-12 10:56',
-      status: 9 // 联合审查
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      applyTime: '2020-10-12 10:42',
-      auditTime: '2020-10-12 10:56',
-      status: 10 // 审核通过
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      applyTime: '2020-10-12 10:41',
-      auditTime: '2020-10-12 10:56',
-      status: 11 // 施工中
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      applyTime: '2020-10-12 10:40',
-      auditTime: '2020-10-12 10:56',
-      status: 12 // 竣工验收
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      auditTime: '2020-10-12 10:56',
-      applyTime: '2020-10-12 10:30',
+    // #region
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   applyTime: '2020-10-12 10:53',
+    //   auditTime: '',
+    //   status: 0 // 申请中
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   applyTime: '2020-10-12 10:52',
+    //   auditTime: '',
+    //   status: 1 // 社区受理
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   applyTime: '2020-10-12 10:51',
+    //   auditTime: '2020-10-12 10:56',
+    //   status: 1 // 社区受理
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   applyTime: '2020-10-12 10:50',
+    //   auditTime: '2020-10-12 10:56',
+    //   status: 2 // 方案设计
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   applyTime: '2020-10-12 10:49',
+    //   auditTime: '2020-10-12 10:56',
+    //   status: 3 // 公示阶段
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   applyTime: '2020-10-12 10:48',
+    //   auditTime: '2020-10-12 10:56',
+    //   status: 4 // 管道踏勘
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   applyTime: '2020-10-12 10:47',
+    //   auditTime: '2020-10-12 10:56',
+    //   status: 5 // 施工图设计
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   applyTime: '2020-10-12 10:46',
+    //   auditTime: '2020-10-12 10:56',
+    //   status: 6 // 施工图审核
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   applyTime: '2020-10-12 10:45',
+    //   auditTime: '2020-10-12 10:56',
+    //   status: 7 // 施工报价
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   applyTime: '2020-10-12 10:44',
+    //   auditTime: '2020-10-12 10:56',
+    //   status: 8 // 街道审核
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   applyTime: '2020-10-12 10:43',
+    //   auditTime: '2020-10-12 10:56',
+    //   status: 9 // 联合审查
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   applyTime: '2020-10-12 10:42',
+    //   auditTime: '2020-10-12 10:56',
+    //   status: 10 // 审核通过
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   applyTime: '2020-10-12 10:41',
+    //   auditTime: '2020-10-12 10:56',
+    //   status: 11 // 施工中
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   applyTime: '2020-10-12 10:40',
+    //   auditTime: '2020-10-12 10:56',
+    //   status: 12 // 竣工验收
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   auditTime: '2020-10-12 10:56',
+    //   applyTime: '2020-10-12 10:30',
 
-      status: 13 // 驳回
-    },
-    {
-      code: 'xxx小区xxxx幢xxx单元',
-      auditTime: '2020-10-12 10:56',
-      applyTime: '2020-10-12 10:20',
-      status: 14 // 已撤销
-    }
+    //   status: 13 // 驳回
+    // },
+    // {
+    //   code: 'xxx小区xxxx幢xxx单元',
+    //   auditTime: '2020-10-12 10:56',
+    //   applyTime: '2020-10-12 10:20',
+    //   status: 14 // 已撤销
+    // }
+    // #endregion
   ],
   countyProps: {
     value: 'id',
@@ -186,18 +191,7 @@ const data = {
     children: 'communities'
   }
 }
-function validateAddress(address) {
-  if (checkType(address) !== 'Object') {
-    return '请选择地址'
-  }
-  if (checkEmptyArray(address.county)) {
-    return '请选择区县'
-  }
-  if (checkEmptyArray(address.community)) {
-    return '请选择社区'
-  }
-  return true
-}
+
 export default {
   name: 'List',
   components: {
@@ -226,61 +220,78 @@ export default {
     // }
   },
   created() {
-    this.$store.dispatch('common/getAddress').catch(() => this.$message.error('地址获取失败'))
-    this.$store.dispatch('common/getDevice').catch(err => {
-      console.log(err)
-      this.$message.error('获取电梯设备失败')
-    })
-    this.$store.dispatch('common/getDesign').catch(err => {
-      console.log(err)
-      this.$message.error('获取设计单位失败')
-    })
-    this.listApplys()
+    this.listApplies()
   },
   methods: {
     // 打开申请Modal
-    addApply() {
-      this.model.form.address.county = this.$store.getters['address']?.slice(0, 2)
-      this.model.form.address.community = this.$store.getters['address']?.slice(2)
-      this.model.form.phoneNumber = this.$store.getters['phone'] ?? ''
-      this.model.visible = true
+    openAddModal() {
+      const address = this.$store.dispatch('common/getAddress')
+      const device = this.$store.dispatch('common/getDevice')
+      const design = this.$store.dispatch('common/getDesign')
+
+      Promise.all([address, device, design]).then(res => {
+        console.log(res)
+        this.model.form.address.county = this.$store.getters['address']?.slice(0, 2)
+        this.model.form.address.community = this.$store.getters['address']?.slice(2)
+        this.model.form.phoneNumber = this.$store.getters['phone'] ?? ''
+        this.model.visible = true
+      }).catch(() => this.$message.error('信息获取失败'))
     },
     // 提交申请
     postApply() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          const validAddress = validateAddress(this.model.form.address)
-          if (validAddress !== true) {
-            this.$message.error(validAddress)
-            return
-          }
-          if (this.model.form.location.length !== 3) {
+          const { location, rooms, address } = this.model.form
+          if (!checkEmptyArray(location) && location.length === 3) {
+            this.model.form.location = location.map(v => v.replace(/[<>&"']/gi, ' ').trim()) // 防止xss攻击
+          } else {
             this.$message.error('请填写加装电梯地址')
             return
           }
+          if (!checkEmptyArray(rooms)) {
+            this.model.form.rooms = Array.from(new Set(rooms.map(v => v.val.replace(/[<>&"']/gi, ' ').trim()))) // 过滤 + 去重
+          } else {
+            this.$message.error('请填写单位下业主房间编号')
+            return
+          }
+          this.model.form.address = address.community.concat(address.county)
           this.formLoading = true
-          this.model.form.address = this.model.form.address.county.concat(this.model.form.address.community)
-          this.model.form.rooms = this.model.form.rooms.map(v => v.val)
           console.log(this.model.form)
           debugger
-          this.formLoading = false
-          this.listLoading = true
-          this.list.push({
-            code: `${this.model.form.elevatorAddress[0]}小区${this.model.form.elevatorAddress[0]}幢${this.model.form.elevatorAddress[0]}单元`,
-            applyTime: new Date().getTime(),
-            auditTime: '',
-            status: 0
+          Project.add(this.model.form).then(res => {
+            console.log(res)
+            this.formLoading = false
+            this.model.visible = false
+          }).catch(err => {
+            console.log(err)
+            this.formLoading = false
           })
-          this.model.visible = false
-          this.listLoading = false
+          // this.listLoading = true
+          // this.list.push({
+          //   code: `${this.model.form.elevatorAddress[0]}小区${this.model.form.elevatorAddress[0]}幢${this.model.form.elevatorAddress[0]}单元`,
+          //   applyTime: new Date().getTime(),
+          //   auditTime: '',
+          //   status: 0
+          // })
+
+          // this.listLoading = false
         } else {
           this.$message.error('请补全信息')
         }
       })
     },
     // 获取申请列表
-    listApplys() {
-      Project.list().then(res => console.log(res)).catch(err => console.log(err))
+    async listApplies() {
+      this.listLoading = true
+      await Project.list().then(res => {
+        if (!checkEmptyArray(res.content)) {
+          this.list = res.content
+        }
+      }).catch(err => {
+        this.$message.error('数据获取失败')
+        console.log(err)
+      })
+      this.listLoading = false
     },
     dissentView() {
       this.dissentVisible = true
@@ -301,6 +312,7 @@ export default {
     // 重置表单
     resetForm() {
       this.model.form = deepClone(defaultForm)
+      this.$refs.form.clearValidate()
     }
 
   }

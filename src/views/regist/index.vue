@@ -27,13 +27,11 @@
               <el-input v-model="form.phonenumber" placeholder="请输入手机号" />
             </el-form-item>
             <el-form-item prop="verificationcode" label="验证码" class="regist-code-container">
-              <slot name="-">
-                <el-input v-model="form.verificationcode" placeholder="请输入验证码" class="regist-vertify" @focus="checkPhone" />
-                <div class="regist-vertify-g">
-                  <el-button v-if="!vertifyDisabled" type="primary" @click="getVertification">获取验证码</el-button>
-                  <span v-else>{{ countDown }} s后重试</span>
-                </div>
-              </slot>
+              <el-input v-model="form.verificationcode" placeholder="请输入验证码" class="regist-vertify" @focus="checkPhone" />
+              <div class="regist-vertify-g">
+                <el-button v-if="!vertifyDisabled" type="primary" @click="getVertification">获取验证码</el-button>
+                <span v-else>{{ countDown }} s后重试</span>
+              </div>
 
             </el-form-item>
             <el-form-item style="text-align:center;margin-top:40px">

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-10 08:42:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-11 16:04:42
+ * @LastEditTime: 2020-12-01 09:49:08
  * @Description:
  */
 import * as Validator from '@/utils/element-validator'
@@ -113,7 +113,10 @@ export default {
       if (this.form.phonenumber && reg.test(this.form.phonenumber)) {
         this.vertifyDisabled = true
         this.$store.dispatch('user/getCode', { role: this.form.phonenumber })
-          .catch(err => this.$message.error(err))
+          .catch((err) => {
+            console.log(err)
+            this.$message.error('验证码获取失败')
+          })
 
         this.timer = setInterval(() => {
           if (this.countDown > 0 && this.timer) {

@@ -2,13 +2,13 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-20 16:23:52
+ * @LastEditTime: 2020-12-01 14:17:17
  * @Description:申请列表
 -->
 
 <template>
   <div class="app-container">
-    <el-button type="primary" size="medium" style="margin-bottom:20px" @click="addApply">新增申请</el-button>
+    <el-button type="primary" size="medium" style="margin-bottom:20px" @click="openAddModal">新增申请</el-button>
 
     <el-card>
       <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'applyTime', order: 'descending'}" fit highlight-current-row @row-dblclick="flowView">
@@ -17,57 +17,57 @@
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="编号" prop="code" align="center" />
-        <el-table-column label="提交时间" align="center" prop="applyTime" sortable>
-          <template slot-scope="scope">
+        <el-table-column label="编号" prop="projectName" align="center" />
+        <el-table-column label="提交时间" align="center" prop="addTime" sortable>
+          <template slot-scope="{row}">
             <i class="el-icon-time" />
-            <span>{{ scope.row.applyTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+            <span>{{ new Date(row.addTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="审核时间" align="center" prop="auditTime" sortable>
-          <template v-if="scope.row.auditTime" slot-scope="scope">
+        <el-table-column label="最新处理时间" align="center" prop="updateTime" sortable>
+          <template v-if="scope.row.updateTime" slot-scope="scope">
             <i class="el-icon-time" />
-            <span>{{ scope.row.auditTime }}</span>
+            <span>{{ new Date(scope.row.updateTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center" prop="status" sortable>
+        <el-table-column label="状态" align="center" prop="statusId" sortable>
           <template slot-scope="scope">
-            <el-tag :type="scope.row.status | keyToVal(applyTag)">{{ scope.row.status | keyToVal(applyStatus) }}</el-tag>
+            <el-tag :type="scope.row.statusId | keyToVal(applyTag)">{{ scope.row.statusId | keyToVal(applyStatus) }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="scope.row.status === 0" size="mini" type="warning" plain @click="$router.push({path:'/resident/apply',query:{applyId:scope.row.Id}})">提交材料</el-button>
-              <el-tag v-if="scope.row.status === 1 && !scope.row.auditTime" size="medium" type="warning" effect="light">社区受理中</el-tag>
+              <el-button v-if="scope.row.statusId === 0" size="mini" type="warning" plain @click="$router.push({path:'/resident/apply',query:{applyId:scope.row.Id}})">提交材料</el-button>
+              <el-tag v-if="scope.row.statusId === 1 && !scope.row.auditTime" size="medium" type="warning" effect="light">社区受理中</el-tag>
 
-              <el-button v-if="scope.row.status === 3" size="mini" type="primary" plain @click="$router.push({name:'ResidentApplyNotice',params:{applyId:scope.row.Id}})">提交材料</el-button>
+              <el-button v-if="scope.row.statusId === 3" size="mini" type="primary" plain @click="$router.push({name:'ResidentApplyNotice',params:{applyId:scope.row.Id}})">提交材料</el-button>
 
-              <el-button v-if="scope.row.status === 3" size="mini" type="warning" plain @click="$router.push({name:'ResidentAssentsDetail',params:{}})">异议反馈</el-button>
+              <el-button v-if="scope.row.statusId === 3" size="mini" type="warning" plain @click="$router.push({name:'ResidentAssentsDetail',params:{}})">异议反馈</el-button>
 
-              <el-tag v-if="scope.row.status === 4" size="medium" type="warning" effect="light">管道踏勘中</el-tag>
+              <el-tag v-if="scope.row.statusId === 4" size="medium" type="warning" effect="light">管道踏勘中</el-tag>
 
-              <el-button v-if="scope.row.status === 2 || scope.row.status === 5" size="mini" type="success" plain @click="$router.push({name:'ResidentDesignDetail',params:{}})">查看设计</el-button>
-              <el-button v-if="scope.row.status === 7" size="mini" type="warning" plain @click="$router.push({name:'ResidentOffer',params:{}})">选择报价</el-button>
-              <el-tag v-if="scope.row.status === 10" size="medium" type="success" effect="light">申请已通过</el-tag>
-              <el-tag v-if="scope.row.status === 13" size="medium" type="danger" effect="light">已驳回</el-tag>
-              <el-tag v-if="scope.row.status === 14" size="medium" type="danger" effect="light">已撤销</el-tag>
-              <el-button v-if="scope.row.status === 11" size="mini" type="warning" plain @click="$router.push({name:'ResidentFaultView',params:{}})">违规查看</el-button>
-              <!-- <el-button v-if="scope.row.status === 12" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button> -->
-              <el-button v-if="scope.row.status === 12" size="mini" type="warning" @click="subsidyVisible = true">补贴查看</el-button>
-              <el-tag v-if="[1,6,8,9].includes(scope.row.status) && scope.row.auditTime" size="medium" type="success">审核已通过</el-tag>
+              <el-button v-if="scope.row.statusId === 2 || scope.row.statusId === 5" size="mini" type="success" plain @click="$router.push({name:'ResidentDesignDetail',params:{}})">查看设计</el-button>
+              <el-button v-if="scope.row.statusId === 7" size="mini" type="warning" plain @click="$router.push({name:'ResidentOffer',params:{}})">选择报价</el-button>
+              <el-tag v-if="scope.row.statusId === 10" size="medium" type="success" effect="light">申请已通过</el-tag>
+              <el-tag v-if="scope.row.statusId === 13" size="medium" type="danger" effect="light">已驳回</el-tag>
+              <el-tag v-if="scope.row.statusId === 14" size="medium" type="danger" effect="light">已撤销</el-tag>
+              <el-button v-if="scope.row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'ResidentFaultView',params:{}})">违规查看</el-button>
+              <!-- <el-button v-if="scope.row.statusId === 12" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button> -->
+              <el-button v-if="scope.row.statusId === 12" size="mini" type="warning" @click="subsidyVisible = true">补贴查看</el-button>
+              <el-tag v-if="[1,6,8,9].includes(scope.row.statusId) && scope.row.auditTime" size="medium" type="success">审核已通过</el-tag>
 
-              <el-button v-if="[0,5].includes(scope.row.status) && scope.row.auditTime" size="mini" plain type="warning" @click="$router.push({name:'ResidentAuditDetail',params:{}})">审核结果</el-button>
+              <el-button v-if="[0,5].includes(scope.row.statusId) && scope.row.auditTime" size="mini" plain type="warning" @click="$router.push({name:'ResidentAuditDetail',params:{}})">审核结果</el-button>
 
-              <!-- <el-button v-if="scope.row.status === 1 && scope.row.dissent" size="mini" type="success" @click="dissentView"> 查看反馈</el-button> -->
-              <!-- <el-button v-if="scope.row.status === 10" size="mini" type="danger" @click="viewAudit(scope.row)">审核意见</el-button> -->
-              <!-- <el-button v-if="scope.row.status !== 0" size="mini" type="primary" @click="flowView">查看流程</el-button> -->
+              <!-- <el-button v-if="scope.row.statusId === 1 && scope.row.dissent" size="mini" type="success" @click="dissentView"> 查看反馈</el-button> -->
+              <!-- <el-button v-if="scope.row.statusId === 10" size="mini" type="danger" @click="viewAudit(scope.row)">审核意见</el-button> -->
+              <!-- <el-button v-if="scope.row.statusId !== 0" size="mini" type="primary" @click="flowView">查看流程</el-button> -->
             </el-row>
           </template>
         </el-table-column>
         <el-table-column label="撤销申请" align="center">
           <template slot-scope="scope">
-            <el-popconfirm v-if="scope.row.status !== 11 && scope.row.status !== 12" title="确认撤销申请吗？" @onConfirm="cancelApply(scope.row)">
+            <el-popconfirm v-if="scope.row.statusId !== 13 && scope.row.statusId !== 14" title="确认撤销申请吗？" @onConfirm="cancelApply(scope.row)">
               <el-button slot="reference" size="mini" type="text" style="letter-spacing:1em">撤销</el-button>
             </el-popconfirm>
           </template>
@@ -77,37 +77,37 @@
     <p class="contract-tip">审核单位：<span>XXX街道办</span> 审核人员：<span>XXX</span> 联系电话：<span>0512XXXX</span> 工作时间：周一至周五 9:00-11:00 14:00-17:00</p>
 
     <!-- 新增申请 -->
-    <el-dialog v-el-drag-dialog title="新增申请" :visible.sync="model.visible" :close-on-click-modal="false" width="600px" top="10vh" @closed="resetForm">
+    <el-dialog v-el-drag-dialog title="新增申请" :visible.sync="model.visible" :close-on-click-modal="false" width="600px" top="10vh" @close="resetForm">
       <el-form ref="form" v-loading="formLoading" :model="model.form" :rules="model.rules" label-width="120px">
         <el-form-item label="申请人" prop="applicantName">
-          <el-input v-model="model.form.applicantName" />
+          <el-input v-model="model.form.applicantName" auto-complete="off" />
         </el-form-item>
         <el-form-item label="地址" prop="address">
           <el-row>
             <el-col :span="12">
-              <el-cascader v-model="model.form.address.county" :options="countyOptions" :props="countyProps" style="display:block" />
+              <el-cascader v-model="model.form.address.county" :options="countyOptions" :props="countyProps" style="display:block" disabled />
             </el-col>
             <el-col :span="2" style="text-align:center"><label for="address-detail" class="label-detail"> — </label></el-col>
             <el-col :span="10">
-              <el-cascader v-model="model.form.address.community" :options="communityOptions" :props="communityProps" style="display:block" />
+              <el-cascader v-model="model.form.address.community" :options="communityOptions" :props="communityProps" style="display:block" disabled />
             </el-col>
           </el-row>
         </el-form-item>
         <el-form-item label="电话" prop="phoneNumber">
-          <el-input v-model="model.form.phoneNumber" />
+          <el-input v-model="model.form.phoneNumber" auto-complete="off" />
         </el-form-item>
         <el-form-item label="加装电梯地址" prop="location">
-          <div> <input v-model="model.form.location[0]" type="text" name="cell" autocomplete="false"> 小区</div>
-          <div> <input v-model="model.form.location[1]" type="text" name="building" autocomplete="false"> 幢</div>
-          <div> <input v-model="model.form.location[2]" type="text" name="unit" autocomplete="false"> 单元</div>
+          <div> <input v-model="model.form.location[0]" type="text" name="cell" autocomplete="off"> 小区</div>
+          <div> <input v-model="model.form.location[1]" type="text" name="building" autocomplete="off"> 幢</div>
+          <div> <input v-model="model.form.location[2]" type="text" name="unit" autocomplete="off"> 单元</div>
         </el-form-item>
         <el-form-item label="设计单位" prop="designId">
           <el-select v-model="model.form.designId">
             <el-option v-for="item in designOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="设备" prop="deviceId">
-          <el-cascader v-model="model.form.deviceId" :options="deviceOptions">
+        <el-form-item label="设备" prop="typeAndDevice">
+          <el-cascader v-model="model.form.typeAndDevice" :options="deviceOptions">
             <template slot-scope="{ node, data }">
               <span>{{ data.label }}</span>
               <span v-if="node.isLeaf">kg</span>
@@ -116,7 +116,7 @@
         </el-form-item>
         <!-- 单元下业主 -->
         <el-form-item v-for="(room, index) in model.form.rooms" :key="room.key" :label="'房间编号' + (index+1)" :prop="'rooms.' + index + '.val'" :rules="{required: true, message: '房间编号不能为空', trigger: 'blur'}">
-          <el-input v-model="room.val" placeholder="400">
+          <el-input v-model="room.val" placeholder="400" auto-complete="off">
             <template slot="append">
               <el-button :icon="index == 0 ? 'el-icon-plus' : 'el-icon-minus'" @click="handleRoom(index)" />
             </template>

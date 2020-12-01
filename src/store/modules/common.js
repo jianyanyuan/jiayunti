@@ -2,12 +2,12 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-11-20 16:23:01
+ * @LastEditTime: 2020-11-27 16:31:11
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
 import Common from '@/api/common'
-
+import { checkEmptyArray } from '@/utils'
 const state = {
   isOrNo: [
     { key: true, val: '是' },
@@ -121,15 +121,22 @@ const getters = {
   },
   // 设备列表
   deviceOptions: state => state.device?.map(v => {
-    return {
-      value: v.id,
-      label: v.devicename,
-      children: v.deviceTypes?.map(v => {
-        return {
-          value: v.id,
-          label: v.type
-        }
-      })
+    if (checkEmptyArray(v.deviceTypes)) {
+      return {
+        value: v.id,
+        label: v.devicename
+      }
+    } else {
+      return {
+        value: v.id,
+        label: v.devicename,
+        children: v.deviceTypes?.map(v => {
+          return {
+            value: v.id,
+            label: v.type
+          }
+        })
+      }
     }
   }),
   // 设计院列表
