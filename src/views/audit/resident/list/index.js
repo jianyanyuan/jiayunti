@@ -1,5 +1,5 @@
 import { mapState, mapGetters } from 'vuex'
-import { deepClone, checkType, notEmptyArray } from '@/utils'
+import { deepClone, notEmptyArray } from '@/utils'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import Flow from '@/components/street/Flow'
 import Project from '@/api/projects'
@@ -250,7 +250,8 @@ export default {
         this.model.form.address.community = this.$store.getters['address']?.slice(2)
         this.model.form.phoneNumber = this.$store.getters['phone'] ?? ''
         this.model.visible = true
-      }).catch(() => {
+      }).catch((err) => {
+        console.log(err)
         this.$message.error('信息获取失败')
         this.openLoading = false
       })
@@ -275,7 +276,6 @@ export default {
           this.model.form.address = address.community.concat(address.county)
           this.formLoading = true
           console.log(this.model.form)
-          debugger
           Project.add(this.model.form).then(res => {
             console.log(res)
             this.formLoading = false

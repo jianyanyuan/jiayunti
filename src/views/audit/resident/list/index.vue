@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-01 16:03:37
+ * @LastEditTime: 2020-12-03 13:49:05
  * @Description:申请列表
 -->
 
@@ -38,7 +38,7 @@
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="scope.row.statusId === 0" size="mini" type="warning" plain @click="$router.push({path:'/resident/apply',query:{applyId:scope.row.Id}})">提交材料</el-button>
+              <el-button v-if="scope.row.statusId === 0" size="mini" type="warning" plain @click="$router.push({name:'ResidentApply',params:{id:scope.row.id}})">提交材料</el-button>
               <el-tag v-if="scope.row.statusId === 1 && !scope.row.auditTime" size="medium" type="warning" effect="light">社区受理中</el-tag>
 
               <el-button v-if="scope.row.statusId === 3" size="mini" type="primary" plain @click="$router.push({name:'ResidentApplyNotice',params:{applyId:scope.row.Id}})">提交材料</el-button>
@@ -102,11 +102,11 @@
           <div> <input v-model="model.form.location[2]" type="text" name="unit" autocomplete="off"> 单元</div>
         </el-form-item>
         <el-form-item label="设计单位" prop="designId">
-          <el-select v-model="model.form.designId">
-            <el-option v-for="item in designOptions" :key="item.value" :label="item.label" :value="item.value" />
+          <el-select v-model="model.form.designId" filterable >
+            <el-option v-for="item in designOptions" :key="item.value" :value="item.value" :label="item.label" />
           </el-select>
         </el-form-item>
-        <el-form-item label="设备" prop="typeAndDevice">
+        <el-form-item label="设备" prop="typeAndDevice" filterable>
           <el-cascader v-model="model.form.typeAndDevice" :options="deviceOptions">
             <template slot-scope="{ node, data }">
               <span>{{ data.label }}</span>

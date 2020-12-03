@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-02 10:54:04
+ * @LastEditTime: 2020-12-01 16:39:26
  * @Description:图审列表
 -->
 
@@ -83,7 +83,7 @@
           </el-card>
         </template>
       </el-table-column> -->
-      <el-table-column label="编号" prop="code" align="center" />
+      <el-table-column label="编号" prop="projectName" align="center" />
       <el-table-column label="申请人" min-width="200" align="center">
         <template slot-scope="{row}">
           {{ row.apply.name }}

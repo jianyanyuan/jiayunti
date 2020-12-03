@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-11-11 16:35:44
+ * @LastEditTime: 2020-12-03 14:10:37
  * @LastEditors: zfd
  * @Description: 审批端居民路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -15,14 +15,14 @@ const residentRouter = {
   component: Layout,
   redirect: '/resident/list',
   name: 'Resident',
-  meta: {
-    title: '居民',
-    icon: 'people',
-    roles: ['ROLE_ADMIN', 'ROLE_RESIDENT']
-  },
+  // meta: {
+  //   title: '居民',
+  //   icon: 'people',
+  //   roles: ['ROLE_ADMIN', 'ROLE_RESIDENT']
+  // },
   children: [
     {
-      path: 'apply',
+      path: 'apply/:id',
       component: () => import('@/views/audit/resident/apply/index.vue'), // Parent router-view
       name: 'ResidentApply',
       hidden: true,
