@@ -47,7 +47,9 @@ a:hover {
 div:focus {
   outline: none;
 }
-
+input:focus {
+  outline: none;
+}
 .clearfix {
   &:after {
     visibility: hidden;

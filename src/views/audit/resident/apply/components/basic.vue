@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-03 13:45:27
+ * @LastEditTime: 2020-12-03 16:16:38
  * @Description: 居民申请基本资料
 -->
 <template>
@@ -12,33 +12,40 @@
         <el-row type="flex" justify="space-between" align="middle">
           <span>基本资料</span>
           <el-button v-if="!hasChanged" type="primary" style="float:right" @click="hasChanged = true">修改</el-button>
-          <el-button v-else type="primary" style="float:right" @click="hasChanged = false">保存</el-button>
+          <el-button v-else type="primary" style="float:right" @click="postApply">保存</el-button>
         </el-row>
       </div>
-      <el-form ref="form" v-loading="formLoading" :model="form" :rules="rules" label-width="120px" :disabled="hasChanged">
+      <el-form ref="form" class="basic-form" v-loading="formLoading" :model="form" :rules="rules" label-width="120px" :disabled="!hasChanged">
         <el-form-item label="申请人" prop="applicantName">
           <el-input v-model="form.applicantName" />
         </el-form-item>
         <el-form-item label="地址" prop="address">
-          <el-cascader v-model="form.address.county" :options="countyOptions" :props="countyProps" style="display:block" disabled />
-          <label for="address-detail" class="label-detail"> — </label>
-          <el-cascader v-model="form.address.community" :options="communityOptions" :props="communityProps" style="display:block" disabled />
+          <el-row>
+            <el-col :span="12">
+              <el-cascader v-model="form.address.county" :options="countyOptions" :props="countyProps" style="display:block" disabled />
+            </el-col>
+            <el-col :span="2" style="text-align:center"> <label for="address-detail"> — </label>
+            </el-col>
+            <el-col :span="10">
+              <el-cascader v-model="form.address.community" :options="communityOptions" :props="communityProps" style="display:block" disabled />
+            </el-col>
+          </el-row>
         </el-form-item>
         <el-form-item label="电话" prop="phoneNumber">
           <el-input v-model="form.phoneNumber" />
         </el-form-item>
         <el-form-item label="加装电梯地址" prop="location">
-          <div> <input v-model="form.location[0]" type="text" name="cell" autocomplete="off"> 小区</div>
-          <div> <input v-model="form.location[1]" type="text" name="building" autocomplete="off"> 幢</div>
-          <div> <input v-model="form.location[2]" type="text" name="unit" autocomplete="off"> 单元</div>
+          <div> <input v-model="form.location[0]" class="basic-address-input" type="text" name="cell" autocomplete="off" :disabled="!hasChanged">小区</div>
+          <div> <input v-model="form.location[1]" class="basic-address-input" type="text" name="building" autocomplete="off" :disabled="!hasChanged"> 幢</div>
+          <div> <input v-model="form.location[2]" class="basic-address-input" type="text" name="unit" autocomplete="off" :disabled="!hasChanged"> 单元</div>
 
         </el-form-item>
         <el-form-item label="设计单位" prop="designId">
           <el-select v-model="form.designId" filterable>
-            <el-option v-for="item in designOptions" :key="item.value" />
+            <el-option v-for="item in designOptions" :key="item.value" :value="item.value" :label="item.label" />
           </el-select>
         </el-form-item>
-        <el-form-item label="设备" prop="typeAndDevice" filterable>
+        <el-form-item label="设备" prop="typeAndDevice">
           <el-cascader v-model="form.typeAndDevice" :options="deviceOptions">
             <template slot-scope="{ node, data }">
               <span>{{ data.label }}</span>
@@ -67,7 +74,7 @@ import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import Project from '@/api/projects'
 
 const defaultForm = {
-  applicantName: '许王鹏',
+  applicantName: '',
   location: [],
   address: { county: [], community: [] }, //
   phoneNumber: '',
@@ -77,7 +84,12 @@ const defaultForm = {
 }
 export default {
   name: 'ApplyBasic',
-  props: ['id'],
+  props: {
+    id: {
+      type: [Number, String],
+      required: true
+    }
+  },
   data() {
     return {
       // 修改后重新保存
@@ -134,6 +146,19 @@ export default {
       this.$message.error('信息获取失败')
     })
 
+    Project.detail(this.id).then(res => {
+      Object.assign(this.form, res)
+      const { deviceId, deviceTypeId, rooms, residentialQuarters, building, unit } = res
+
+      this.form.typeAndDevice = [deviceId, deviceTypeId]
+      this.form.location = [residentialQuarters, building, unit]
+      if (notEmptyArray(rooms)) {
+        this.form.rooms = rooms.map(v => ({ key: v+Date.now(), val: v }))
+      }
+    }).catch(err => {
+      console.log(err)
+      this.$message.error('信息获取失败')
+    })
   },
   methods: {
     mapToName(value, type) {
@@ -185,9 +210,11 @@ export default {
           }
           this.form.address = address.community.concat(address.county)
           this.formLoading = true
-          Project.add(this.form).then(res => {
+          console.log(this.form)
+          Project.update(this.id).then(res => {
             console.log(res)
             this.formLoading = false
+            this.hasChanged = false
           }).catch(err => {
             console.log(err)
             this.formLoading = false
@@ -220,12 +247,21 @@ export default {
 //     cursor: default;
 //     opacity: 0.8;
 // }
-.show-form ::v-deep {
-  .el-cascader,
-  .el-input__suffix-inner {
-    pointer-events: none;
-    cursor: default;
-    opacity: 0.8;
-  }
+.basic-form {
+  width: 600px;
 }
+.basic-address-input {
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  height: 25px;
+  padding: 0 15px;
+}
+// .show-form ::v-deep {
+//   .el-cascader,
+//   .el-input__suffix-inner {
+//     pointer-events: none;
+//     cursor: default;
+//     opacity: 0.8;
+//   }
+// }
 </style>

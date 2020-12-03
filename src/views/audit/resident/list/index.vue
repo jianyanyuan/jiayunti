@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-03 13:49:05
+ * @LastEditTime: 2020-12-03 15:21:52
  * @Description:申请列表
 -->
 
@@ -87,7 +87,7 @@
             <el-col :span="12">
               <el-cascader v-model="model.form.address.county" :options="countyOptions" :props="countyProps" style="display:block" disabled />
             </el-col>
-            <el-col :span="2" style="text-align:center"><label for="address-detail" class="label-detail"> — </label></el-col>
+            <el-col :span="2" style="text-align:center"><label for="address-detail"> — </label></el-col>
             <el-col :span="10">
               <el-cascader v-model="model.form.address.community" :options="communityOptions" :props="communityProps" style="display:block" disabled />
             </el-col>
@@ -106,7 +106,7 @@
             <el-option v-for="item in designOptions" :key="item.value" :value="item.value" :label="item.label" />
           </el-select>
         </el-form-item>
-        <el-form-item label="设备" prop="typeAndDevice" filterable>
+        <el-form-item label="设备" prop="typeAndDevice">
           <el-cascader v-model="model.form.typeAndDevice" :options="deviceOptions">
             <template slot-scope="{ node, data }">
               <span>{{ data.label }}</span>
@@ -166,9 +166,7 @@ input {
   height: 25px;
   padding: 0 15px;
 }
-input:focus {
-  outline: none;
-}
+
 // .contract-tip {
 //   padding: 0 10px;
 //   color: #686d76;

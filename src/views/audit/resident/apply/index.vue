@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-03 13:36:02
+ * @LastEditTime: 2020-12-03 15:49:08
  * @LastEditors: zfd
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -19,7 +19,7 @@
 
     <div class="dynamic-component-container">
       <keep-alive>
-        <component :is="curComponent" @nextProcess="handleProcess" :id="applyId" />
+        <component v-if="applyId" :is="curComponent" @nextProcess="handleProcess" :id="applyId" />
       </keep-alive>
     </div>
 
@@ -69,6 +69,8 @@ export default {
     submitApplay() {
 
     }
+  },
+  created() {
   },
   // 获得申请Id
   beforeRouteEnter(to, from, next) {
