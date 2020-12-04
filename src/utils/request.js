@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-03 16:32:34
+ * @LastEditTime: 2020-12-04 08:42:25
  * @Description:
  */
 import axios from 'axios'
@@ -15,7 +15,7 @@ const service = axios.create({
   timeout: 5000, // request timeout
   retry: 3, // 设置全局请求次数
   retryDelay: 1000, // 设置全局请求间隙
-  // headers: {'Content-Type': 'application/json'}
+  // headers: {'Content-Type': 'application/json;charset=UTF-8'}
 
   // headers: {
   //   post: {
@@ -36,6 +36,7 @@ service.interceptors.request.use(
       // please modify it according to the actual situation
       // config.headers['Authorize'] = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjAzMjYwODk4LCJleHAiOjE2MDMyNjQ0OTh9.84WJfDqCJhhcaiD66XGBvhQyoPfiO7A_U7Y1r9AGpVxJdxF9IywDVUimj9jLhC3kRHqGkrHNrRPobfd1GgaUEA'
       config.headers['Authorization'] = getToken()
+      // config.headers['Content-Type'] = 'application/json;charset=UTF-8'
     }
     return config
   },

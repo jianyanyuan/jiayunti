@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-10 13:58:25
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-03 16:28:53
+ * @LastEditTime: 2020-12-04 08:36:28
  * @Description:
  */
 import request from '@/utils/request'
@@ -37,6 +37,7 @@ const detail = id => {
 const update = (id,newprojectRequest) => {
   return request({
     url:api_prefix_dev + '/' + id,
+    // headers: { 'Content-Type': 'application/json' } ,
     method: 'put',
     data:newprojectRequest
   })

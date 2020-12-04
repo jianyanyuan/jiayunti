@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-03 16:16:38
+ * @LastEditTime: 2020-12-04 09:35:33
  * @Description: 居民申请基本资料
 -->
 <template>
@@ -12,7 +12,7 @@
         <el-row type="flex" justify="space-between" align="middle">
           <span>基本资料</span>
           <el-button v-if="!hasChanged" type="primary" style="float:right" @click="hasChanged = true">修改</el-button>
-          <el-button v-else type="primary" style="float:right" @click="postApply">保存</el-button>
+          <el-button v-else type="primary" style="float:right" @click="updateApply">保存</el-button>
         </el-row>
       </div>
       <el-form ref="form" class="basic-form" v-loading="formLoading" :model="form" :rules="rules" label-width="120px" :disabled="!hasChanged">
@@ -61,7 +61,9 @@
           </el-input>
         </el-form-item>
       </el-form>
-
+       <div style="text-align:center" v-if="!hasChanged">
+          <el-button  type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
+        </div>
     </el-card>
 
   </div>
@@ -102,6 +104,7 @@ export default {
         phoneNumber: [{ required: true, validator: validatePhone, trigger: 'blur' }],
         location: [{ required: true, message: '请输入地址' }]
       },
+      communityOptions: [],
       countyProps: {
         value: 'id',
         label: 'name',
@@ -115,13 +118,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'designOptions']),
-    communityOptions() {
-      if (this.form.address.county.length) {
-        return this.$store.getters['common/communityOptions'](this.form.address.county)
-      }
-      return []
-    }
+    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'designOptions'])
   },
   watch: {
 
@@ -133,54 +130,15 @@ export default {
 
     Promise.all([addressAsync, deviceAsync, designAsync]).then(() => {
       this.form.address.county = this.$store.getters['address']?.slice(0, 2)
-      this.form.address.community = this.$store.getters['address']?.slice(2)
+      this.communityOptions = this.$store.getters['common/communityOptions'](this.form.address.county)
+      this.form.address.community = this.$store.getters['address'].slice(2)
       this.form.phoneNumber = this.$store.getters['phone'] ?? ''
-      this.form.rooms = this.form.rooms.map(v => {
-        return {
-          key: v + '1',
-          val: v
-        }
-      }
-      )
     }).catch((err) => {
       this.$message.error('信息获取失败')
     })
-
-    Project.detail(this.id).then(res => {
-      Object.assign(this.form, res)
-      const { deviceId, deviceTypeId, rooms, residentialQuarters, building, unit } = res
-
-      this.form.typeAndDevice = [deviceId, deviceTypeId]
-      this.form.location = [residentialQuarters, building, unit]
-      if (notEmptyArray(rooms)) {
-        this.form.rooms = rooms.map(v => ({ key: v+Date.now(), val: v }))
-      }
-    }).catch(err => {
-      console.log(err)
-      this.$message.error('信息获取失败')
-    })
+    this.detailApply()
   },
   methods: {
-    mapToName(value, type) {
-      if (type === 'design') {
-        return this.designOptions.find(v => v.id === id).name || ''
-      } else if (type === 'device') {
-        let device = ''
-        if (notEmptyArray(value) && value.length === 2) {
-          for (let v of this.deviceOptions) {
-            if (v.id == value[0]) {
-              device += v.name
-              if (notEmptyArray(v.deviceTypes)) {
-                device += v.deviceTypes.find(t => t.id == value[1]).name || ''
-              }
-              return device
-            }
-          }
-        }
-        return device
-
-      }
-    },
     handleRoom(index) {
       if (index === 0) {
         this.form.rooms.push({ key: Date.now(), val: '' })
@@ -191,11 +149,11 @@ export default {
     nextProcess(arrow) {
       this.$emit('nextProcess', arrow)
     },
-    // 提交申请
-    postApply() {
+    // 修改申请
+    updateApply() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          const { location, rooms, address } = this.form
+          const { location, rooms } = this.form
           if (notEmptyArray(location) && location.length === 3) {
             this.form.location = location.map(v => v.replace(/[<>&"']/gi, ' ').trim()) // 防止xss攻击
           } else {
@@ -208,29 +166,47 @@ export default {
             this.$message.error('请填写单位下业主房间编号')
             return
           }
-          this.form.address = address.community.concat(address.county)
+          // this.form.address = address.community.concat(address.county)
           this.formLoading = true
-          console.log(this.form)
-          Project.update(this.id).then(res => {
-            console.log(res)
-            this.formLoading = false
-            this.hasChanged = false
+          Project.update(this.id, this.form).then(res => {
+            if (res.id == this.id) {
+              this.detailApply()
+              // this.$message.success('修改成功')
+            } else {
+              this.$message.error('修改失败')
+              this.formLoading = false
+            }
           }).catch(err => {
             console.log(err)
             this.formLoading = false
+            this.$message.error('修改失败')
           })
-          // this.listLoading = true
-          // this.list.push({
-          //   code: `${this.model.form.elevatorAddress[0]}小区${this.model.form.elevatorAddress[0]}幢${this.model.form.elevatorAddress[0]}单元`,
-          //   applyTime: new Date().getTime(),
-          //   auditTime: '',
-          //   status: 0
-          // })
-
-          // this.listLoading = false
         } else {
           this.$message.error('请补全信息')
         }
+      })
+    },
+    // 获取申请基本资料
+    detailApply() {
+      this.formLoading = true
+      Project.detail(this.id).then(res => {
+        // Object.assign(this.form, res)
+        const { applicantName, phoneNumber, designId, deviceId, deviceTypeId, rooms, residentialQuarters, building, unit } = res
+        this.form.applicantName = applicantName
+        this.form.designId = designId
+        this.form.phoneNumber = phoneNumber
+        this.form.typeAndDevice = [deviceId, deviceTypeId]
+        this.form.location = [residentialQuarters, building, unit]
+        if (notEmptyArray(rooms)) {
+          this.form.rooms = rooms.map(v => ({ key: v, val: v }))
+        }
+        this.hasChanged = false
+        this.formLoading = false
+
+      }).catch(err => {
+        console.log(err)
+        this.formLoading = false
+        this.$message.error('信息获取失败')
       })
     }
   },

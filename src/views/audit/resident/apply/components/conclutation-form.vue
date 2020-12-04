@@ -2,22 +2,22 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-30 13:57:49
+ * @LastEditTime: 2020-12-04 15:51:54
  * @Description: 居民申请意见征询表
 -->
 <template>
-  <div>
+  <div v-loading="pageLoading">
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
       <span>意见征询表</span>
       <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
-      <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">保存</el-button>
+      <el-button v-else type="primary" style="float:right" @click="postFile">保存</el-button>
     </el-row>
     <template v-if="hasChanged">
-      <el-card v-for="(room,index) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
+      <el-card v-for="(room) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
         <div slot="header">
           <span>{{ room }}</span>
         </div>
-        <upload-list :files="fileList[index]" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
+        <upload-list :files="fileList[room]" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
       </el-card>
       <div style="text-align:center">
         <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
@@ -28,11 +28,11 @@
     </template>
 
     <template v-else>
-      <el-card v-for="(room, index) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
+      <el-card v-for="(room) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
         <div slot="header">
           <span>{{ room }}</span>
         </div>
-        <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
+        <el-upload action="#" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,room)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,room)}" list-type="picture" drag multiple :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div class="enclosure-tips">
             所需附件：
@@ -61,58 +61,29 @@
 
 <script>
 import * as File from '@/api/file'
+import { notEmptyArray } from '@/utils'
 // import { deepClone } from '@/utils'
 
 export default {
-  name: 'ConsultationForm',
+  name: 'ApplyConsultation',
+  props: {
+    id: {
+      type: [Number, String],
+      required: true
+    }
+  },
   data() {
     return {
       // 修改后重新保存
       imgVisible: false,
       detailImgUrl: '',
       hasChanged: false,
-      formLoading: false,
+      // formLoading: false,
+      pageLoading: false,
       rooms: ['401', '402', '403'],
-      model: [],
-      fileList: [
-        [
-          {
-            name: '身份证',
-            uid: '3302e58f9a181d2509f3dc0fa68b0jpeg',
-            url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
-          },
-          {
-            name: '身份证',
-            uid: '781c4fba33d8jpeg',
-            url: 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
-          }
-        ],
-        [
-          {
-            name: '身份证',
-            uid: 'd2509f3dc0fa68b2',
-            url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
-          },
-          {
-            name: '身份证',
-            uid: 'mecdn.com',
-            url: 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
-          }
-        ],
-        [
-          {
-            name: '身份证',
-            uid: 'https://fuss1',
-            url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
-          },
-          {
-            name: '身份证',
-            uid: 'peg.jpeg',
-            url: 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
-          }
-        ]
-      ],
-      uploadFile: null
+      fileList: [], // 展示用
+      uploadList: [], // 上传用
+      deleteList: [] // 删除用
     }
   },
 
@@ -122,42 +93,96 @@ export default {
 
   },
   created() {
-    this.rooms = ['401', '402', '403']
-    this.rooms.forEach(v => {
-      this.model.push([])
-    })
+    this.detailApply()
   },
   methods: {
-    handleUploadRemove(file, fileList) {
+
+    // 获取已上传的意见征询表
+    detailApply() {
+      this.pageLoading = true
+      this.rooms = []
+      this.fileList = {}
+      this.uploadList = []
+      this.deleteList = []
+      File.consultation({ projectId: this.id }).then(res => {
+        console.log(res)
+        if (notEmptyArray(res.content)) {
+          for (let i in res.content) {
+            const { room, opinionFiles } = i
+            this.rooms.push(room)
+            if (Array.isArray(opinionFiles)) {
+              this.fileList[room] = []
+              opinionFiles.forEach(v => {
+                this.fileList[room].push({
+                  uid: v.id,
+                  name: v.fileName,
+                  url: v.path
+                })
+              })
+            }
+          }
+        }
+        this.pageLoading = false
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('信息获取失败')
+        this.pageLoading = false
+      })
     },
+
+    // 删除文件
+    handleUploadRemove(file, fileList, room) {
+      console.log(file)
+      const index = this.fileList[room].findIndex(v => v.uid === file.uid)
+      const file = this.fileList[room].splice(index, 1)
+      this.deleteList.push({
+        room,
+        projectId: this.id,
+        id: file.uid
+      })
+    },
+
+    // 展示图片
     detailImg(file) {
       this.detailImgUrl = file.url
       this.imgVisible = true
     },
-    // handleUploadChange(file, fileList) {
-    //   console.log(file)
-    //   console.log(fileList)
-    //   debugger
-    // },
+
     nextProcess(arrow) {
       this.$emit('nextProcess', arrow)
     },
-    // 上传文件发生改变时
-    handleUploadChange(file, fileList, index) {
+    // 上传文件发生改变时,支持选中多个文件
+    handleUploadChange(file, fileList, room) {
       if (fileList.length > 0) {
-        this.model[index] = fileList.map(f => f.raw)
+        fileList.forEach(file => {
+          if (this.uploadBefore(file)) {
+            this.fileList[room].push({
+              uid: file.uid,
+              name: file.name,
+              url: file.url
+            })
+            const formData = new FormData()
+            formData.append('file', file)
+            this.uploadList.push({
+              room,
+              projectId: this.id,
+              file: formData
+            })
+          }
+        })
       }
     },
+
     // 图片上传之前判断
     uploadBefore(file) {
-      const isImage = file.type.indexOf('image') !== -1
-      const isBig = file.size <= 1024 * 1024 * 10
-      if (!file) {
+      if (!file.size) {
         this.$message.error('上传为空！')
         return false
       }
-      if (!isImage) {
-        this.$message.error('只能上传图片！')
+      const typeAllowed = /\bpng|\bjpg/.test(file.type)
+      const isBig = file.size <= 1024 * 1024 * 10 // 单个文件最大10M
+      if (!typeAllowed) {
+        this.$message.error('只能上传图片或pdf！')
         return false
       }
       if (!isBig) {
@@ -167,53 +192,21 @@ export default {
       return true
     },
 
-    // 添加投注单
-    addBet() {
-      if (!this.uploadFile) {
-        this.$message.error('请上传附件')
-        this.formLoading = false
-        return false
+    // 保存修改
+    postFile() {
+      this.pageLoading = true
+      const uploadAsync, deleteAsync
+      if(notEmptyArray(this.uploadList)) {
+        uploadAsync = new Promise((resolove,reject) => {
+          this.uploadList.forEach
+        })
       }
-      if (!this.uploadBefore(this.uploadFile)) {
-        this.formLoading = false
-        return false
-      }
-      const formData = new FormData()
-      formData.append('file', this.uploadFile)
-      // 上传附件
-      File.upload(formData, { desciption: 'sssss' }).then(res => {
-        debugger
-      }).catch(err => {
-        this.$message.error(err)
-      })
-
-      // }
-    },
-
-    // 更新投注单
-    postApply() {
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          if (this.plot.length === 0) {
-            this.$message.error('请选择地址')
-            return false
-          }
-          this.formLoading = true
-          this.form.address = this.form.address.concat(this.plot)
-          this.form.rooms = this.form.rooms.map(v => v.val)
-          this.formLoading = false
-          console.log(this.form)
-        } else {
-          this.$message.error('请补全信息')
-        }
-      })
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-
 .upload-card ::v-deep .el-card__body {
   margin-bottom: 30px;
 }

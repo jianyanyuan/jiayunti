@@ -17,3 +17,20 @@ export function upload(data, params) {
     params
   })
 }
+
+export function remove(params) {
+  return request({
+    url: api_prefix_dev + 'upload',
+    method: 'delete',
+    params
+  })
+}
+
+// 查询意见征询表
+export function consultation(params) {
+  return request({
+    url: api_prefix_dev + 'getConsultationFile',
+    method: 'get',
+    params
+  })
+}
