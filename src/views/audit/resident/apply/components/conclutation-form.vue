@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-04 15:51:54
+ * @LastEditTime: 2020-12-04 15:58:58
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -104,7 +104,7 @@ export default {
       this.fileList = {}
       this.uploadList = []
       this.deleteList = []
-      File.consultation({ projectId: this.id }).then(res => {
+      File.getConsultation({ projectId: this.id }).then(res => {
         console.log(res)
         if (notEmptyArray(res.content)) {
           for (let i in res.content) {
@@ -198,7 +198,8 @@ export default {
       const uploadAsync, deleteAsync
       if(notEmptyArray(this.uploadList)) {
         uploadAsync = new Promise((resolove,reject) => {
-          this.uploadList.forEach
+          this.uploadList.forEach(async (v,i) => {
+          })
         })
       }
     }

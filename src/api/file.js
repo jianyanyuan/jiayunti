@@ -27,7 +27,7 @@ export function remove(params) {
 }
 
 // 查询意见征询表
-export function consultation(params) {
+export function getConsultation(params) {
   return request({
     url: api_prefix_dev + 'getConsultationFile',
     method: 'get',
