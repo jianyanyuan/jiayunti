@@ -83,7 +83,7 @@ export default {
       rooms: ['401', '402', '403'],
       fileList: [], // 展示用
       uploadList: [], // 上传用
-      deleteList: [] // 删除用
+      deleteFile: null // 删除用
     }
   },
 
@@ -103,11 +103,11 @@ export default {
       this.rooms = []
       this.fileList = {}
       this.uploadList = []
-      this.deleteList = []
+      this.deleteFile = null
       File.getConsultation({ projectId: this.id }).then(res => {
         console.log(res)
         if (notEmptyArray(res.content)) {
-          for (let i in res.content) {
+          for (const i in res.content) {
             const { room, opinionFiles } = i
             this.rooms.push(room)
             if (Array.isArray(opinionFiles)) {
@@ -133,13 +133,13 @@ export default {
     // 删除文件
     handleUploadRemove(file, fileList, room) {
       console.log(file)
-      const index = this.fileList[room].findIndex(v => v.uid === file.uid)
-      const file = this.fileList[room].splice(index, 1)
-      this.deleteList.push({
+      // const index = this.fileList[room].findIndex(v => v.uid === file.uid)
+      // const removed = this.fileList[room].splice(index, 1)
+      this.deleteFile = {
         room,
         projectId: this.id,
         id: file.uid
-      })
+      }
     },
 
     // 展示图片
@@ -166,6 +166,7 @@ export default {
             this.uploadList.push({
               room,
               projectId: this.id,
+              uid: file.uid,
               file: formData
             })
           }
@@ -195,13 +196,38 @@ export default {
     // 保存修改
     postFile() {
       this.pageLoading = true
-      const uploadAsync, deleteAsync
-      if(notEmptyArray(this.uploadList)) {
-        uploadAsync = new Promise((resolove,reject) => {
-          this.uploadList.forEach(async (v,i) => {
+      let uploadAsync = new Promise()
+      let deleteAsync = new Promise()
+      if (notEmptyArray(this.uploadList)) {
+        uploadAsync = new Promise((resolove, reject) => {
+          this.uploadList.forEach(async(v, i) => {
+            const { room, projectId, file } = v
+            const last = i === this.uploadList.length - 1
+            await File.upload({ file }, { room, projectId }).then(() => {
+              this.uploadList.splice(i, 1)
+              if (last) {
+                resolove('上传完成')
+              }
+            })
+              .catch(() => {
+                // 上传失败
+                const failIndx = this.fileList[room].findIndex(f => f.uid === v.uid)
+                this.fileList[room].splice(failIndx, 1)
+                if (last) {
+                  reject('部分文件上传失败')
+                }
+              })
           })
         })
       }
+      if (this.deleteFile) {
+        deleteAsync = File.remove({ id: this.deleteFile.id }).then(() => (this.deleteFile = null))
+      }
+      Promise.all([uploadAsync, deleteAsync]).then(() => {
+        this.hasChanged = true
+      }).catch(() => {
+        this.$message.error('修改失败')
+      })
     }
   }
 }
