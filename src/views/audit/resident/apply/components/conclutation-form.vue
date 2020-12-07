@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-07 16:28:45
+ * @LastEditTime: 2020-12-07 16:38:11
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -215,7 +215,6 @@ export default {
           projectId: this.id,
           uid: file.uid,
           name: file.name,
-          url: file.url,
           file: formData
         })
       } else {
@@ -251,8 +250,7 @@ export default {
             room,
             projectId: this.id,
             uid: file.uid,
-            name: file.name,
-            url: file.url
+            name: file.name
           }
         )
       }
@@ -273,7 +271,7 @@ export default {
             await File.uploadOpinion(file, { room, projectId }).then(() => {
               this.uploadList.splice(i, 1)
               if (last) {
-                error ? (resolove('上传完成')) : (reject('部分文件上传失败'))
+                error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
               }
             })
               .catch(() => {
@@ -295,7 +293,7 @@ export default {
               const delIndx = this.fileList[v.room].findIndex(f => f.uid === v.uid)
               this.fileList[v.room].splice(delIndx, 1)
               if (last) {
-                error ? (resolove('删除完成')) : (reject('部分文件删除失败'))
+                error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
               }
             }).catch((err) => {
               console.log(err)
