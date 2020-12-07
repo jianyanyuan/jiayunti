@@ -17,9 +17,9 @@ export default {
         password: '123456'
       },
       loginRules: {
-        // validator: validateUsername
+        // 用户名非数字开头，2-17位中英文和数字组合
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        // username: [{ required: true, trigger: 'blur' }],
+        // 6-17位数字和英文符号组合
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       loading: false,
@@ -65,7 +65,8 @@ export default {
             this.$router.addRoutes(accessRoutes)
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
-          }).catch((err) => {
+          })
+          .catch((err) => {
             this.$message.error(err)
             this.loading = false
           })

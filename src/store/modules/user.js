@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-11 15:55:24
+ * @LastEditTime: 2020-12-07 10:00:43
  * @Description: 用户仓库
  */
 import User from '@/api/user'
@@ -63,7 +63,8 @@ const actions = {
         commit('SET_TOKEN', token)
         setToken(token)
         resolve('登录成功')
-      }).catch(() => {
+      }).catch((err) => {
+        console.log(err)
         reject('登录失败')
       })
     })

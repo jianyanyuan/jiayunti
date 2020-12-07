@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-04 15:58:58
+ * @LastEditTime: 2020-12-07 16:28:45
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -17,14 +17,9 @@
         <div slot="header">
           <span>{{ room }}</span>
         </div>
-        <upload-list :files="fileList[room]" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
+        <upload-list :files="fileList[room]" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
       </el-card>
-      <div style="text-align:center">
-        <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
 
-        <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
-
-      </div>
     </template>
 
     <template v-else>
@@ -32,7 +27,7 @@
         <div slot="header">
           <span>{{ room }}</span>
         </div>
-        <el-upload action="#" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,room)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,room)}" list-type="picture" drag multiple :auto-upload="false">
+        <el-upload action="#" :file-list="fileList[room]" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,room)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,room)}" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div class="enclosure-tips">
             所需附件：
@@ -53,8 +48,24 @@
         </el-upload>
       </el-card>
     </template>
+    <div style="text-align:center">
+      <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
+
+      <el-button v-if="hasChanged" type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
+    </div>
     <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
       <img :src="detailImgUrl" alt="意见咨询表">
+    </el-dialog>
+
+    <el-dialog title="pdf预览" :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
+      <div ref="printContent">
+        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
+      </div>
+      <span slot="footer">
+        <el-button @click="printPDF">打印</el-button>
+        <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -63,7 +74,9 @@
 import * as File from '@/api/file'
 import { notEmptyArray } from '@/utils'
 // import { deepClone } from '@/utils'
-
+import Pdf from 'vue-pdf'
+import html2canvas from 'html2canvas'
+import printJS from 'print-js'
 export default {
   name: 'ApplyConsultation',
   props: {
@@ -72,18 +85,24 @@ export default {
       required: true
     }
   },
+  components: {
+    Pdf
+  },
   data() {
     return {
       // 修改后重新保存
       imgVisible: false,
+      pdfVisible: false,
       detailImgUrl: '',
+      pdfURL: '', // Pdf路径
+      pdfPages: undefined,// pdf内容
       hasChanged: false,
       // formLoading: false,
       pageLoading: false,
-      rooms: ['401', '402', '403'],
+      rooms: [],
       fileList: [], // 展示用
       uploadList: [], // 上传用
-      deleteFile: null // 删除用
+      deleteList: [], // 删除用
     }
   },
 
@@ -93,6 +112,9 @@ export default {
 
   },
   created() {
+    // this.detailApply()
+  },
+  activated() {
     this.detailApply()
   },
   methods: {
@@ -103,18 +125,17 @@ export default {
       this.rooms = []
       this.fileList = {}
       this.uploadList = []
-      this.deleteFile = null
+      this.deleteList = []
       File.getConsultation({ projectId: this.id }).then(res => {
-        console.log(res)
         if (notEmptyArray(res.content)) {
-          for (const i in res.content) {
-            const { room, opinionFiles } = i
+          for (const i of res.content) {
+            const { room, opinionFileList } = i
             this.rooms.push(room)
-            if (Array.isArray(opinionFiles)) {
+            if (Array.isArray(opinionFileList)) {
               this.fileList[room] = []
-              opinionFiles.forEach(v => {
+              opinionFileList.forEach(v => {
                 this.fileList[room].push({
-                  uid: v.id,
+                  uid: v.opinionFileId,
                   name: v.fileName,
                   url: v.path
                 })
@@ -130,57 +151,84 @@ export default {
       })
     },
 
-    // 删除文件
-    handleUploadRemove(file, fileList, room) {
-      console.log(file)
-      // const index = this.fileList[room].findIndex(v => v.uid === file.uid)
-      // const removed = this.fileList[room].splice(index, 1)
-      this.deleteFile = {
-        room,
-        projectId: this.id,
-        id: file.uid
-      }
-    },
-
-    // 展示图片
-    detailImg(file) {
-      this.detailImgUrl = file.url
-      this.imgVisible = true
-    },
-
-    nextProcess(arrow) {
-      this.$emit('nextProcess', arrow)
-    },
-    // 上传文件发生改变时,支持选中多个文件
-    handleUploadChange(file, fileList, room) {
-      if (fileList.length > 0) {
-        fileList.forEach(file => {
-          if (this.uploadBefore(file)) {
-            this.fileList[room].push({
-              uid: file.uid,
-              name: file.name,
-              url: file.url
-            })
-            const formData = new FormData()
-            formData.append('file', file)
-            this.uploadList.push({
-              room,
-              projectId: this.id,
-              uid: file.uid,
-              file: formData
-            })
-          }
+    // 展示文件
+    detailFile(file) {
+      if (/\bpdf/i.test(file.name)) {
+        // 展示pdf
+        this.pdfURL = Pdf.createLoadingTask('/teat.pdf')
+        this.pdfURL.promise.then(pdf => {
+          this.pdfPages = pdf.numPages
+          this.pdfVisible = true
+        }).catch(() => {
+          this.$message.error('pdf预览失败')
         })
+      } else {
+        this.detailImgUrl = file.url
+        this.imgVisible = true
+      }
+
+    },
+    // 打印pdf
+    printPDF() {
+      html2canvas(this.$refs.printContent, {
+        backgroundColor: null,
+        useCORS: true,
+        windowHeight: document.body.scrollHeight
+      }).then((canvas) => {
+        const url = canvas.toDataURL()
+        printJS({
+          printable: url,
+          type: 'image',
+          documentTitle: this.printName
+        })
+        // console.log(url)
+      })
+    },
+    nextProcess(arrow) {
+      if (arrow > 0) {
+        const count = this.rooms.reduce((c, v) => (this.fileList[v].length + c), 0)
+        if (count >= 9) {
+          this.$emit('nextProcess', arrow)
+        }
+        else {
+          this.$message.error('请补全附件')
+        }
+      } else {
+        this.$emit('nextProcess', arrow)
       }
     },
 
+    // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
+    // 限制了添加文件的逻辑，不支持多个文件选择
+    handleUploadChange(file, fileList, room) {
+      const valid = this.checkUpload(file.raw)
+      if (valid && file.status === 'ready') {
+        this.fileList[room].push({
+          uid: file.uid,
+          name: file.name,
+          url: file.url
+        })
+        const formData = new FormData()
+        formData.append('file', file.raw)
+        this.uploadList.push({
+          room,
+          projectId: this.id,
+          uid: file.uid,
+          name: file.name,
+          url: file.url,
+          file: formData
+        })
+      } else {
+        fileList.pop()
+      }
+    },
     // 图片上传之前判断
-    uploadBefore(file) {
+    checkUpload(file) {
       if (!file.size) {
         this.$message.error('上传为空！')
         return false
       }
-      const typeAllowed = /\bpng|\bjpg/.test(file.type)
+      const typeAllowed = /\bpdf|\bimage/i.test(file.type)
       const isBig = file.size <= 1024 * 1024 * 10 // 单个文件最大10M
       if (!typeAllowed) {
         this.$message.error('只能上传图片或pdf！')
@@ -192,41 +240,77 @@ export default {
       }
       return true
     },
+    // 删除文件
+    handleUploadRemove(file, fileList, room) {
+      console.log(file)
+      // const index = this.fileList[room].findIndex(v => v.uid === file.uid)
+      // const removed = this.fileList[room].splice(index, 1)
+      if (file.status === 'success') {
+        this.deleteList.push(
+          {
+            room,
+            projectId: this.id,
+            uid: file.uid,
+            name: file.name,
+            url: file.url
+          }
+        )
+      }
+    },
 
     // 保存修改
     postFile() {
       this.pageLoading = true
-      let uploadAsync = new Promise()
-      let deleteAsync = new Promise()
+      let uploadAsync = new Promise(resolove => resolove('未修改'))
+      let deleteAsync = new Promise(resolove => resolove('未修改'))
       if (notEmptyArray(this.uploadList)) {
+        let error = false
         uploadAsync = new Promise((resolove, reject) => {
-          this.uploadList.forEach(async(v, i) => {
+          this.uploadList.forEach(async (v, i) => {
             const { room, projectId, file } = v
+
             const last = i === this.uploadList.length - 1
-            await File.upload({ file }, { room, projectId }).then(() => {
+            await File.uploadOpinion(file, { room, projectId }).then(() => {
               this.uploadList.splice(i, 1)
               if (last) {
-                resolove('上传完成')
+                error ? (resolove('上传完成')) : (reject('部分文件上传失败'))
               }
             })
               .catch(() => {
                 // 上传失败
                 const failIndx = this.fileList[room].findIndex(f => f.uid === v.uid)
                 this.fileList[room].splice(failIndx, 1)
-                if (last) {
-                  reject('部分文件上传失败')
-                }
+                error = true
               })
           })
         })
       }
-      if (this.deleteFile) {
-        deleteAsync = File.remove({ id: this.deleteFile.id }).then(() => (this.deleteFile = null))
+      if (notEmptyArray(this.deleteList)) {
+        let error = false
+        deleteAsync = new Promise((resolove, reject) => {
+          this.deleteList.forEach(async (v, i) => {
+            const last = i === this.deleteList.length - 1
+            File.removeOpinion(v.uid).then(() => {
+              this.deleteList.splice(i, 1)
+              const delIndx = this.fileList[v.room].findIndex(f => f.uid === v.uid)
+              this.fileList[v.room].splice(delIndx, 1)
+              if (last) {
+                error ? (resolove('删除完成')) : (reject('部分文件删除失败'))
+              }
+            }).catch((err) => {
+              console.log(err)
+              this.fileList[v.room].push(v)
+              error = true
+            })
+          })
+        })
       }
       Promise.all([uploadAsync, deleteAsync]).then(() => {
+        this.pageLoading = false
         this.hasChanged = true
       }).catch(() => {
-        this.$message.error('修改失败')
+        this.$message.error('保存失败')
+        this.pageLoading = false
       })
     }
   }

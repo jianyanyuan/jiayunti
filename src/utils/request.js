@@ -2,19 +2,20 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-04 08:42:25
+ * @LastEditTime: 2020-12-07 10:14:34
  * @Description:
  */
 import axios from 'axios'
-// import { MessageBox, Message } from 'element-ui'
+import { Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import router from '@/router'
+import { getToken,removeToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   timeout: 5000, // request timeout
-  retry: 3, // 设置全局请求次数
-  retryDelay: 1000, // 设置全局请求间隙
+  // retry: 3, // 设置全局请求次数
+  // retryDelay: 1000, // 设置全局请求间隙
   // headers: {'Content-Type': 'application/json;charset=UTF-8'}
 
   // headers: {
@@ -23,7 +24,7 @@ const service = axios.create({
   //   }
   // },
   // emulateJSON: true,
-  // withCredentials: true // Check cross-site Access-Control
+  withCredentials: true // Check cross-site Access-Control
 })
 
 // request interceptor
@@ -60,32 +61,47 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    // 2开头的请求成功，返回响应体
-    if (String(response.status).startsWith('2')) {
-      return response.data
-    } else {
-      // 其他提示请求错误
-      // Message({
-      //   message: response.statusText || 'Error',
-      //   type: 'error',
-      //   duration: 5 * 1000
-      // })
-      return Promise.reject(response)
-    }
+    return response.data
   },
   error => {
-    console.log('err' + error) // for debug
-    // Message({
-    //   message: error.message,
-    //   type: 'error',
-    //   duration: 5 * 1000
-    // })
-    // 对响应错误做点什么
-    // if(error.message.includes('timeout')){   // 判断请求异常信息中是否含有超时timeout字符串
-    //   console.log("错误回调", error);
-    //   alert("网络超时");
-    // }
+    console.log(error)
 
+    // 对响应错误做点什么
+    switch (error.response.status) {
+      case 401:
+        Message({
+          message: '登录错误,请重新登录',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        removeToken()
+        router.push('/login')
+        break
+      case 403:
+        Message({
+          message: '操作无权限',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        break
+      case 500:
+        Message({
+          message: '服务器错误',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        break
+      default:
+        if (error.message.includes('timeout')) {   // 判断请求异常信息中是否含有超时timeout字符串
+          Message({
+            message: '请求超时',
+            type: 'error',
+            duration: 5 * 1000
+          })
+        }
+        break
+    }
+    return Promise.reject(error)
     // 超时处理
     // #region
     // var config = error.config
@@ -114,7 +130,6 @@ service.interceptors.response.use(
     //   return axios(config)
     // })
     // #endregion
-    return Promise.reject(error)
   }
 )
 

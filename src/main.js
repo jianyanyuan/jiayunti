@@ -22,7 +22,7 @@ import '@/icons' // icon
 import '@/permission' // permission control
 import * as filters from '@/filters' // global filters
 
-import UploadList from 'element-ui/packages/upload/src/upload-list'
+import UploadList from '@/components/UploadList'
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui modal-drag
 
 /**

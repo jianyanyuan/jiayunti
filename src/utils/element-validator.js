@@ -18,10 +18,10 @@ export function validateUsername(rule, value, callback) {
     // 非 '' undefined null
     callback(new Error('请输入用户名'))
   } else {
-    const reg = /^[^0-9][a-zA-z0-9_.@~!?\u4e00-\u9fa5]{2,16}$/
+    const reg = /^[^0-9][a-zA-z0-9_.@~!?\u4e00-\u9fa5]{1,16}$/
 
     if (!reg.test(value)) {
-      callback(new Error('用户名非数字开头，3-17位中英文和数字组合'))
+      callback(new Error('用户名非数字开头，2-17位中英文和数字组合'))
     } else {
       callback()
     }

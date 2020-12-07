@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-04 09:35:33
+ * @LastEditTime: 2020-12-07 16:25:37
  * @Description: 居民申请基本资料
 -->
 <template>
@@ -61,11 +61,10 @@
           </el-input>
         </el-form-item>
       </el-form>
-       <div style="text-align:center" v-if="!hasChanged">
-          <el-button  type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
-        </div>
     </el-card>
-
+    <div style="text-align:center" v-if="!hasChanged">
+      <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
+    </div>
   </div>
 </template>
 
@@ -132,10 +131,13 @@ export default {
       this.form.address.county = this.$store.getters['address']?.slice(0, 2)
       this.communityOptions = this.$store.getters['common/communityOptions'](this.form.address.county)
       this.form.address.community = this.$store.getters['address'].slice(2)
-      this.form.phoneNumber = this.$store.getters['phone'] ?? ''
+      // this.form.phoneNumber = this.$store.getters['phone'] ?? ''
     }).catch((err) => {
       this.$message.error('信息获取失败')
     })
+  },
+  activated() {
+    // 组件激活
     this.detailApply()
   },
   methods: {
@@ -147,7 +149,13 @@ export default {
       }
     },
     nextProcess(arrow) {
-      this.$emit('nextProcess', arrow)
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.$emit('nextProcess', arrow)
+        } else {
+          this.$message.error('请补全信息')
+        }
+      })
     },
     // 修改申请
     updateApply() {
@@ -182,7 +190,7 @@ export default {
             this.$message.error('修改失败')
           })
         } else {
-          this.$message.error('请补全信息')
+          this.$message.error('信息错误')
         }
       })
     },
@@ -209,8 +217,7 @@ export default {
         this.$message.error('信息获取失败')
       })
     }
-  },
-
+  }
 
 }
 </script>
