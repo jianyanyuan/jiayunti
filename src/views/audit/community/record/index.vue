@@ -1,37 +1,35 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-11-03 16:29:39
+ * @LastEditTime: 2020-12-08 15:09:04
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
 <template>
   <div class="app-container">
-    <div class="basic-container">
+    <div class="basic-container" v-loading="pageLoading">
       <el-card style="margin-bottom:30px">
         <div slot="header">
           <span>基本信息</span>
         </div>
         <el-form label-width="120px" class="show-form">
           <el-form-item label="姓名">
-            {{ basic.name }}
+            {{ basic.applicantName }}
           </el-form-item>
           <el-form-item label="地址">
-            <el-cascader v-model="basic.address" :options="addressOptions" />
-            <label for="address-detail" class="label-detail"> — </label>
-            <el-cascader v-model="plot" :options="plotOptions" />
+            {{ basic.address }}
           </el-form-item>
           <el-form-item label="电话">
-            {{ basic.phone }}
+            {{ basic.phoneNumber }}
           </el-form-item>
           <el-form-item label="加装电梯地址">
-            {{ basic.liftAddress }}
+            {{ basic.location }}
           </el-form-item>
           <el-form-item label="设计单位">
-            {{ basic.company }}
+            {{ basic.designName }}
           </el-form-item>
           <el-form-item label="设备">
-            {{ basic.spec }}
+            {{ basic.device }}
           </el-form-item>
         </el-form>
       </el-card>
@@ -42,7 +40,7 @@
         <span>{{ "异议" + (index + 1) }}</span>
         <el-button style="float: right; padding: 3px 0" type="text" @click="removeDissent(index)">删除</el-button>
       </div>
-      <el-form :ref="ruleForm + index" :model="item" :rules="rules" label-width="100px">
+      <el-form :ref="ruleForm + index" :model="item" :rules="rules" label-width="100px" :disabled="formDisabled">
         <el-form-item label="建议人" prop="name">
           <el-input v-model="item.name" />
         </el-form-item>
@@ -70,7 +68,7 @@
     </el-card>
     <div style="height:50px;text-align:center">
       <el-button type="primary" size="medium" @click="addDissent">新 增</el-button>
-      <el-button v-show="dissents.length !== 0" type="success" size="medium" @click="addDissent">提 交</el-button>
+      <el-button v-show="dissents.length !== 0" type="success" size="medium" @click="handleSubmit">提 交</el-button>
       <el-button v-show="dissents.length === 0" type="success" size="medium" @click="$router.go(-1)">无 异 议</el-button>
     </div>
   </div>
@@ -78,18 +76,14 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import Project from '@/api/projects'
 
 export default {
   data() {
     return {
-      basic: {
-        name: '李先生',
-        address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ'],
-        phone: '15988800323',
-        liftAddress: '小区1楼',
-        company: '苏州建研院',
-        spec: '高端电梯'
-      },
+      pageLoading: false,
+      formDisabled:false,
+      basic: null,
       ruleForm: {
         name: '',
         time: '',
@@ -97,16 +91,7 @@ export default {
         address: '',
         detail: ''
       },
-      dissents: [
-        // {
-        //   name: '',
-        //   time: '',
-        //   phone: '',
-        //   address: '',
-        //   detail: '',
-        //   feedback: ''
-        // }
-      ],
+      dissents: [],
       resultOptions: [
         { key: 0, val: '通过' },
         { key: -1, val: '不通过' }
@@ -122,16 +107,23 @@ export default {
       }
     }
   },
-  computed: {
-    ...mapGetters('common', ['addressOptions', 'plotOptions'])
-
-  },
   created() {
-    this.plot = this.basic.address.slice(3)
-
-    this.basic.address = this.basic.address.slice(0, 3)
+    this.getBasic()
   },
   methods: {
+    getBasic() {
+      this.pageLoading = true
+      this.$store.dispatch('getProjectBasic')
+        .then(res => {
+          this.basic = res
+          this.pageLoading = false
+        })
+        .catch(() => {
+          this.pageLoading = false
+          this.$message.error('信息获取失败')
+        })
+
+    },
     removeDissent(index) {
       if (index >= 0) {
         this.dissents.splice(index, 1)
@@ -149,8 +141,21 @@ export default {
           result: ''
         })
     },
-    onSubmit() {
-      this.$message('submit!')
+    handleSubmit() {
+      let valid = true
+      for(let i = 0; i < this.dissents.length; i++) {
+        if(!valid) break
+        this.$refs[ruleForm + i].validate(success => {
+          valid = success
+        })
+      }
+      if(valid) {
+        // this.dissents.forEach(v => {
+          
+        // })
+      }else {
+        this.$message.error('请补全信息')
+      }
     },
     onCancel() {
       this.$message({

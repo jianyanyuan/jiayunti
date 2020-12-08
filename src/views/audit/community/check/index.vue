@@ -19,7 +19,7 @@
     <div class="line-divider" />
 
     <div class="dynamic-component-container">
-      <component :is="curComponent" :params="params" />
+      <component v-if="applyId && status" :is="curComponent" :id="applyId" :status="status" />
     </div>
 
   </div>
@@ -33,22 +33,20 @@ import Resident from '@/components/street/Resident'
 import Audit from '@/components/street/Audit'
 
 export default {
-  name: 'Check',
+  name: 'CommunityCheck',
   components: {
     Audit,
     // Design,
     Resident,
-    Flow
+    // Flow
     // Pipe
   },
   data() {
     return {
-      params: {
-        applyId: '',
-        status: ''
-      },
-      stepBtnGroup: ['申请流程图', '居民申请材料', '审核'],
-      componentGroup: ['Flow', 'Resident', 'Audit'],
+      applyId: null,
+      status: null,
+      stepBtnGroup: [/*'申请流程图',*/  '居民申请材料', '审核'],
+      componentGroup: [/**'Flow', */ 'Resident', 'Audit'],
       curStep: 0
     }
   },
@@ -64,14 +62,20 @@ export default {
       }
     }
   },
+  // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (!to.params.status) {
-        vm.$router.push(from.fullPath)
-        return false
-      }
-      vm.params.status = to.params.status
-    })
+    const { id, statusId } = to.params
+    // 1社区受理 3社区第二次受理
+    const valid = statusId == 1 || statusId == 3
+    if (typeof +id === 'number' && valid) {
+      next(vm => {
+        vm.applyId = id
+        vm.status = statusId
+      })
+    } else {
+      // 没有id则跳转失败
+      next(false)
+    }
   }
 }
 </script>
@@ -100,7 +104,7 @@ export default {
 .step-btn-group .step-actived {
   background: #82a7cb;
 }
-.dynamic-component-container{
+.dynamic-component-container {
   margin-top: 30px;
 }
 </style>

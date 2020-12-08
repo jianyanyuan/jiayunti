@@ -2,7 +2,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-12-03 13:55:15
+ * @LastEditTime: 2020-12-08 10:53:52
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -40,6 +40,11 @@ const state = {
   handleTag: [
     { key: 0, val: 'danger' },
     { key: 1, val: 'success' }
+  ],
+  auditOptions: [
+    { key: 0, val: '暂未审核' },
+    { key: 1, val: '未通过' },
+    { key: 2, val: '已通过' }
   ],
   applyStatus: [
     { key: 0, val: '申请中' },

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-07 16:38:11
+ * @LastEditTime: 2020-12-08 08:27:45
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -187,11 +187,11 @@ export default {
     nextProcess(arrow) {
       if (arrow > 0) {
         const count = this.rooms.reduce((c, v) => (this.fileList[v].length + c), 0)
-        if (count >= 9) {
+        if (count >= this.rooms.length * 3) {
           this.$emit('nextProcess', arrow)
         }
         else {
-          this.$message.error('请补全附件')
+          this.$message.error('请补全附件，附件分开上传')
         }
       } else {
         this.$emit('nextProcess', arrow)

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-07 10:14:34
+ * @LastEditTime: 2020-12-08 08:23:11
  * @Description:
  */
 import axios from 'axios'
@@ -67,39 +67,41 @@ service.interceptors.response.use(
     console.log(error)
 
     // 对响应错误做点什么
-    switch (error.response.status) {
-      case 401:
-        Message({
-          message: '登录错误,请重新登录',
-          type: 'error',
-          duration: 5 * 1000
-        })
-        removeToken()
-        router.push('/login')
-        break
-      case 403:
-        Message({
-          message: '操作无权限',
-          type: 'error',
-          duration: 5 * 1000
-        })
-        break
-      case 500:
-        Message({
-          message: '服务器错误',
-          type: 'error',
-          duration: 5 * 1000
-        })
-        break
-      default:
-        if (error.message.includes('timeout')) {   // 判断请求异常信息中是否含有超时timeout字符串
+    if(error.response.status) {
+      switch (error.response.status) {
+        case 401:
           Message({
-            message: '请求超时',
+            message: '登录错误,请重新登录',
             type: 'error',
             duration: 5 * 1000
           })
-        }
-        break
+          removeToken()
+          router.push('/login')
+          break
+        case 403:
+          Message({
+            message: '操作无权限',
+            type: 'error',
+            duration: 5 * 1000
+          })
+          break
+        case 500:
+          Message({
+            message: '服务器错误',
+            type: 'error',
+            duration: 5 * 1000
+          })
+          break
+        default:
+          if (error.message.includes('timeout')) {   // 判断请求异常信息中是否含有超时timeout字符串
+            Message({
+              message: '请求超时',
+              type: 'error',
+              duration: 5 * 1000
+            })
+          }
+          break
+      }
     }
     return Promise.reject(error)
     // 超时处理

@@ -13,27 +13,6 @@ const defaultForm = {
   rooms: [{ key: 'defaultRoom', val: '' }]
 }
 const data = {
-  // #region
-  // elevatorAddress: {
-  //   cell: null,
-  //   building: null,
-  //   unit: null,
-  //   // 迭代器
-  //   [Symbol.iterator]: function() {
-  //     let index = 0
-  //     const keys = Object.keys(this)
-  //     const next = () => {
-  //       return {
-  //         value: this[keys[index]],
-  //         done: keys.length === index++
-  //       }
-  //     }
-  //     return {
-  //       next
-  //     }
-  //   }
-  // },
-  // #endregion
 
   fileList: [{ name: '123213' }, { name: '456465' }, { name: '789798' }],
   subsidy: {
@@ -80,107 +59,7 @@ const data = {
       status: 1
     }
   ],
-  list: [
-    // #region
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   applyTime: '2020-10-12 10:53',
-    //   auditTime: '',
-    //   status: 0 // 申请中
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   applyTime: '2020-10-12 10:52',
-    //   auditTime: '',
-    //   status: 1 // 社区受理
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   applyTime: '2020-10-12 10:51',
-    //   auditTime: '2020-10-12 10:56',
-    //   status: 1 // 社区受理
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   applyTime: '2020-10-12 10:50',
-    //   auditTime: '2020-10-12 10:56',
-    //   status: 2 // 方案设计
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   applyTime: '2020-10-12 10:49',
-    //   auditTime: '2020-10-12 10:56',
-    //   status: 3 // 公示阶段
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   applyTime: '2020-10-12 10:48',
-    //   auditTime: '2020-10-12 10:56',
-    //   status: 4 // 管道踏勘
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   applyTime: '2020-10-12 10:47',
-    //   auditTime: '2020-10-12 10:56',
-    //   status: 5 // 施工图设计
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   applyTime: '2020-10-12 10:46',
-    //   auditTime: '2020-10-12 10:56',
-    //   status: 6 // 施工图审核
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   applyTime: '2020-10-12 10:45',
-    //   auditTime: '2020-10-12 10:56',
-    //   status: 7 // 施工报价
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   applyTime: '2020-10-12 10:44',
-    //   auditTime: '2020-10-12 10:56',
-    //   status: 8 // 街道审核
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   applyTime: '2020-10-12 10:43',
-    //   auditTime: '2020-10-12 10:56',
-    //   status: 9 // 联合审查
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   applyTime: '2020-10-12 10:42',
-    //   auditTime: '2020-10-12 10:56',
-    //   status: 10 // 审核通过
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   applyTime: '2020-10-12 10:41',
-    //   auditTime: '2020-10-12 10:56',
-    //   status: 11 // 施工中
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   applyTime: '2020-10-12 10:40',
-    //   auditTime: '2020-10-12 10:56',
-    //   status: 12 // 竣工验收
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   auditTime: '2020-10-12 10:56',
-    //   applyTime: '2020-10-12 10:30',
-
-    //   status: 13 // 驳回
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   auditTime: '2020-10-12 10:56',
-    //   applyTime: '2020-10-12 10:20',
-    //   status: 14 // 已撤销
-    // }
-    // #endregion
-  ],
+  list: [],
   countyProps: {
     value: 'id',
     label: 'name',
@@ -212,24 +91,8 @@ export default {
     }
   },
   watch: {
-    // elevatorAddress: {
-    //   handler(newValue) {
-    //     this.model.form.elevatorAddress = [...newValue]
-    //   },
-    //   deep: true,
-    //   immediate: true
-    // }
   },
   created() {
-    // this.$store.dispatch('common/getAddress').catch(() => this.$message.error('地址获取失败'))
-    // this.$store.dispatch('common/getDevice').catch(err => {
-    //   console.log(err)
-    //   this.$message.error('获取电梯设备失败')
-    // })
-    // this.$store.dispatch('common/getDesign').catch(err => {
-    //   console.log(err)
-    //   this.$message.error('获取设计单位失败')
-    // })
     this.listApplies()
   },
   methods: {

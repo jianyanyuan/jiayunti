@@ -65,14 +65,11 @@ export default {
     // },
     handleProcess(length) {
       this.curStep += length
-    },
-    submitApplay() {
-
     }
   },
   created() {
   },
-  // 获得申请Id
+  // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id } = to.params
     if (typeof +id === 'number') {
@@ -83,10 +80,7 @@ export default {
       // 没有id则跳转失败
       next(false)
     }
-
-
   }
-
 }
 </script>
 

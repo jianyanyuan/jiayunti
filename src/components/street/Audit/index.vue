@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-16 16:35:29
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-03 09:08:29
+ * @LastEditTime: 2020-12-08 14:23:03
  * @Description:
 -->
 <template>
@@ -36,11 +36,14 @@
 
 <script>
 export default {
-  name: 'Resident',
+  name: 'Audit',
   props: {
-    params: {
-      type: Object,
-      default: {},
+    id: {
+      type: [Number, String],
+      required: true
+    },
+    status: {
+      type: [Number, String],
       required: true
     }
   },
