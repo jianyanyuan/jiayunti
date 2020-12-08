@@ -32,7 +32,7 @@ import ConclutationForm from './components/conclutation-form.vue'
 import SummaryForm from './components/summary-form.vue'
 import DelegateForm from './components/delegate-form.vue'
 import ProtocalForm from './components/protocal-form.vue'
-import Special from './components/special.vue'
+import SpecialForm from './components/special-form.vue'
 
 export default {
   name: 'ResidentApply',
@@ -42,13 +42,13 @@ export default {
     SummaryForm,
     DelegateForm,
     ProtocalForm,
-    Special
+    SpecialForm
   },
   data() {
     return {
       applyId: null,
       stepBtnGroup: ['基本资料', '意见征询表', '意见征询汇总表', '委托授权书', '项目协议书', '账户授权委托书'],
-      componentGroup: ['Basic', 'ConclutationForm', 'SummaryForm', 'DelegateForm', 'ProtocalForm', 'Special'],
+      componentGroup: ['Basic', 'ConclutationForm', 'SummaryForm', 'DelegateForm', 'ProtocalForm', 'SpecialForm'],
       curStep: 0
     }
   },

@@ -206,7 +206,6 @@ export default {
         this.fileList[room].push({
           uid: file.uid,
           name: file.name,
-          url: file.url
         })
         const formData = new FormData()
         formData.append('file', file.raw)

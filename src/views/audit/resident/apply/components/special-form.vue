@@ -2,15 +2,15 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-08 08:21:35
- * @Description: 居民申请意见汇总表
+ * @LastEditTime: 2020-12-08 16:41:49
+ * @Description: 居民申请专用账户授权委托书
 -->
 <template>
   <div v-loading="pageLoading">
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
-      <span>意见征询汇总表</span>
+      <span>专用账户授权委托书</span>
       <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
-      <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">保存</el-button>
+      <el-button v-else type="primary" style="float:right" @click="postApply(typeName)">保存</el-button>
     </el-row>
     <template v-if="hasChanged">
       <el-card class="upload-card" style="margin-bottom:30px">
@@ -33,13 +33,13 @@
           <p>单个文件大小不超过20MB，可上传图片或PDF</p>
         </el-upload>
       </el-card>
-      <div style="text-align:center">
-        <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
-        <el-button v-if="hasChanged" type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
-      </div>
     </template>
+    <div style="text-align:center">
+      <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
+      <el-button v-if="hasChanged" type="success" icon="el-icon-arrow-right" @click.native.prevent="submitApply">提交申请</el-button>
+    </div>
     <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
-      <img :src="detailImgUrl" alt="意见咨询表">
+      <img :src="detailImgUrl" alt="专用账户授权委托书">
     </el-dialog>
     <el-dialog title="pdf预览" :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
       <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
@@ -56,9 +56,26 @@
 
 <script>
 import mixin from './mixin'
+
 export default {
-  name: 'ApplySummary',
-  mixins: [mixin]
+  name: 'ApplySpecial',
+  props: {
+    id: {
+      type: [Number, String],
+      required: true
+    }
+  },
+  data() {
+    return {
+      typeName: 'special-form'
+    }
+  },
+  mixins: [mixin],
+  methods:{
+    submitApply() {
+      this.$message.success('提交申请')
+    }
+  }
 }
 </script>
 
