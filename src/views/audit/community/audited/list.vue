@@ -1,9 +1,9 @@
 <!--
- * @Author: 张飞达
- * @Date: 2020-10-12 09:38:42
+ * @Author: zfd
+ * @Date: 2020-12-09 08:27:43
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-09 08:58:08
- * @Description:申请列表
+ * @LastEditTime: 2020-12-09 08:58:27
+ * @Description: 已审核列表
 -->
 
 <template>
@@ -16,7 +16,7 @@
         <el-form-item label="申请人" prop="applyName " style="margin-right: 30px">
           <el-input v-model="query.applyName" />
         </el-form-item>
-        <el-form-item label="审核" prop="audit " style="margin-right: 30px">
+        <el-form-item label="状态" prop="audit " style="margin-right: 30px">
           <el-select v-model="query.audit">
             <el-option v-for="item in auditOptions" :key="item.val" :label="item.val" :value="item.key" />
           </el-select>
@@ -29,7 +29,7 @@
         </el-form-item>
       </el-form>
     </div>
-        <el-card>
+    <el-card>
       <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row @row-dblclick="flowView">
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
@@ -43,7 +43,7 @@
             <span>{{ new Date(row.addTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="最新处理时间" align="center" prop="updateTime" sortable min-width="145px">
+        <el-table-column label="审核时间" align="center" prop="updateTime" sortable min-width="145px">
           <template v-if="scope.row.updateTime" slot-scope="scope">
             <i class="el-icon-time" />
             <span>{{ new Date(scope.row.updateTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
@@ -51,32 +51,57 @@
         </el-table-column>
         <el-table-column label="状态" align="center" prop="statusId" sortable>
           <template slot-scope="scope">
-            <el-tag :type="scope.row.statusId | keyToVal(applyTag)">{{ scope.row.statusId | keyToVal(applyStatus) }}</el-tag>
+            <el-tag :type="scope.row.statusId | keyToVal(auditOptions)">{{ scope.row.statusId | keyToVal(applyStatus) }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
-        <template slot-scope="scope">
-          <el-row type="flex" justify="space-around">
-            <el-button size="mini" type="warning" @click="$router.push({name:'CommunityCheck',params:{id: scope.row.id, statusId: scope.row.statusId}})">审核</el-button>
-            <el-button v-if="scope.row.statusId === 3" size="mini" type="info" @click="$router.push({path:'/community/record',query:{applyId:scope.row.Id}})">异议记录</el-button>
-          </el-row>
-        </template>
-      </el-table-column>
+          <template slot-scope="scope">
+            <el-button size="mini" type="warning" @click="showAudit(scope.row.id)">审核意见</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </el-card>
     <el-pagination background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
-
-    <!-- 查看流程 -->
-    <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
-      <flow />
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import index from './index'
+import { mapState } from 'vuex'
+
 export default {
-  ...index
+  name: 'CommunityAudited',
+  data() {
+    return {
+      pagination: {
+        total: 0,
+        pageIndex: 1,
+        pageSize: 10
+      },
+      query: {
+        code: '',
+        applyName: '',
+        audit: ''
+      },
+      list: [],
+    }
+  },
+  created() { },
+  methods: {
+    // 获取已审核列表
+    async listApplies() {
+      this.listLoading = true
+      await Project.list({ page: this.pagination.pageIndex, size: this.pagination.pageSize }).then(res => {
+        if (notEmptyArray(res.content)) {
+          this.list = res.content
+          this.pagination.total = res.totalElements
+        }
+      }).catch(err => {
+        this.$message.error('数据获取失败')
+        console.log(err)
+      })
+      this.listLoading = false
+    },
+  }
 }
 
 </script>

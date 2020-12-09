@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-08 14:36:19
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-08 14:44:31
+ * @LastEditTime: 2020-12-09 17:30:34
  * @Description: 
  */
 
@@ -12,7 +12,9 @@ import Project from '@/api/projects'
 const actions = {
   // 获取工程基本信息（纯展示）
   getProjectBasic(context,projectId) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
+      let address = await context.dispatch('common/getAddress')
+      console.log(address)
       Project.detail(projectId).then(res => {
         const basic = {}
         const { applicantName, phoneNumber, designName, deviceName, deviceType, rooms, residentialQuarters, building, unit } = res

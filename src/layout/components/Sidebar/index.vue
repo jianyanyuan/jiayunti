@@ -1,3 +1,10 @@
+<!--
+ * @Author: zfd
+ * @Date: 2020-10-16 14:47:20
+ * @LastEditors: zfd
+ * @LastEditTime: 2020-12-09 08:57:36
+ * @Description: 
+-->
 <template>
   <div :class="{'has-logo':showLogo}">
     <logo v-if="showLogo" :collapse="isCollapse" />

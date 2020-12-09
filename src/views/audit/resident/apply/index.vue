@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-03 15:49:08
+ * @LastEditTime: 2020-12-09 17:07:08
  * @LastEditors: zfd
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -19,7 +19,7 @@
 
     <div class="dynamic-component-container">
       <keep-alive>
-        <component v-if="applyId" :is="curComponent" @nextProcess="handleProcess" :id="applyId" />
+        <component  :is="curComponent" v-if="applyId" @nextProcess="handleProcess" :id="applyId" />
       </keep-alive>
     </div>
 
@@ -28,7 +28,7 @@
 
 <script>
 import Basic from './components/basic.vue'
-import ConclutationForm from './components/conclutation-form.vue'
+import ConsultationForm from './components/consultation-form.vue'
 import SummaryForm from './components/summary-form.vue'
 import DelegateForm from './components/delegate-form.vue'
 import ProtocalForm from './components/protocal-form.vue'
@@ -38,7 +38,7 @@ export default {
   name: 'ResidentApply',
   components: {
     Basic,
-    ConclutationForm,
+    ConsultationForm,
     SummaryForm,
     DelegateForm,
     ProtocalForm,
@@ -48,7 +48,7 @@ export default {
     return {
       applyId: null,
       stepBtnGroup: ['基本资料', '意见征询表', '意见征询汇总表', '委托授权书', '项目协议书', '账户授权委托书'],
-      componentGroup: ['Basic', 'ConclutationForm', 'SummaryForm', 'DelegateForm', 'ProtocalForm', 'SpecialForm'],
+      componentGroup: ['Basic', 'ConsultationForm', 'SummaryForm', 'DelegateForm', 'ProtocalForm', 'SpecialForm'],
       curStep: 0
     }
   },

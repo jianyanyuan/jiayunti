@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-08 16:41:49
+ * @LastEditTime: 2020-12-09 14:57:26
  * @Description: 居民申请专用账户授权委托书
 -->
 <template>
@@ -41,13 +41,13 @@
     <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
       <img :src="detailImgUrl" alt="专用账户授权委托书">
     </el-dialog>
-    <el-dialog title="pdf预览" :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
       <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
       <div ref="printContent">
         <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
       </div>
       <span slot="footer">
-        <el-button @click="printPDF">打印</el-button>
+        <el-button @click="printPDF" type="success">打印</el-button>
         <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
       </span>
     </el-dialog>
@@ -56,7 +56,7 @@
 
 <script>
 import mixin from './mixin'
-
+import Project from '@/api/projects'
 export default {
   name: 'ApplySpecial',
   props: {
@@ -71,9 +71,20 @@ export default {
     }
   },
   mixins: [mixin],
-  methods:{
+  methods: {
     submitApply() {
-      this.$message.success('提交申请')
+      if (this.fileList.length > 0) {
+        Project.advance(this.id,0)
+        .then(() => {
+          // 回到我的申请
+          this.$router.push('/resident/list')
+        })
+        .catch(() => {
+          this.$message.error('申请提交失败')
+        })
+      }else {
+        this.$message.error('请先补全材料')
+      }
     }
   }
 }

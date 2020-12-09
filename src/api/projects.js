@@ -18,6 +18,7 @@ const list = (params) => {
   })
 }
 
+// 新增申请
 const add = (data) => {
   return request({
     url: api_prefix_dev,
@@ -34,6 +35,7 @@ const detail = id => {
   })
 }
 
+// 修改申请基本资料
 const update = (id,newprojectRequest) => {
   return request({
     url:api_prefix_dev + '/' + id,
@@ -42,9 +44,23 @@ const update = (id,newprojectRequest) => {
     data:newprojectRequest
   })
 }
+
+// 流程步骤更新
+const advance = (projectId,status) => {
+  return request({
+    url:'/flowchartlogic',
+    // headers: { 'Content-Type': 'application/json' } ,
+    method: 'post',
+    data: {
+      projectId,
+      whetherThrough: status
+    }
+  })
+}
 export default {
   list,
   add,
   detail,
-  update
+  update,
+  advance
 }

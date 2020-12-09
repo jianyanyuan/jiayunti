@@ -2,9 +2,10 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-13 10:27:29
+ * @LastEditTime: 2020-12-09 17:28:57
  * @Description:
  */
+import { notEmptyArray } from '@/utils'
 const getters = {
   sidebar: state => state.app.sidebar,
   device: state => state.app.device,
@@ -18,7 +19,7 @@ const getters = {
     if(!source) {
       return ''
     }
-    const idxMap = [[0, 'areas'], [1, 'streets'], [2, 'communities']]
+    const idxMap = new Map([[0, 'areas'], [1, 'streets'], [2, 'communities']])
     try {
       if (notEmptyArray(state.user.address)) {
         const result = state.user.address.reduce((init, value, index) => {
@@ -27,11 +28,13 @@ const getters = {
             throw new Error('数据异常')
           }
           source = target[idxMap.get(index)]
-          return init.concat(target.name)
+          return init.push(target.name)
         }, [])
         return result.join('/')
       }
-    }catch {
+    }catch(err) {
+      console.log(err)
+      console.log('地址')
       return ''
     }
   },

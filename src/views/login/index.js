@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-01 15:53:38
+ * @LastEditTime: 2020-12-09 15:35:40
  * @Description:
  */
 import { notEmptyArray } from '@/utils'
@@ -13,7 +13,7 @@ export default {
   data() {
     return {
       loginForm: {
-        username: 'resident',
+        username: 'community',
         password: '123456'
       },
       loginRules: {

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-13 14:06:15
+ * @LastEditTime: 2020-12-09 15:34:40
  * @Description:
  */
 import router from './router'
@@ -55,6 +55,7 @@ router.beforeEach(async(to, from, next) => {
           // set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true })
         } catch (error) {
+          console.log(error)
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')

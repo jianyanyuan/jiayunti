@@ -2,7 +2,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-12-08 10:53:52
+ * @LastEditTime: 2020-12-09 17:33:28
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -169,8 +169,10 @@ const actions = {
   getAddress({ commit }) {
     return new Promise((resolve, reject) => {
       Common.getAddress().then(res => {
+        debugger
         if (res.content) {
           commit('SET_ADDRESS', res.content)
+          debugger
           resolve(res.content)
         } else {
           reject(res)

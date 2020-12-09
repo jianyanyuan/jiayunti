@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:14
- * @LastEditTime: 2020-11-06 16:18:42
+ * @LastEditTime: 2020-12-09 09:00:10
  * @LastEditors: zfd
  * @Description: 审批端社区路由表
  * @FilePath: \jiayunti\src\router\modules\audit\community.js
@@ -25,6 +25,27 @@ const communityRouter = {
       name: 'CommunityList',
       meta: {
         title: '申请列表',
+        icon: 'list',
+        roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
+      }
+    },
+    {
+      path: 'audited-list',
+      component: () => import('@/views/audit/community/audited/list.vue'),
+      name: 'CommunityAuditedList',
+      meta: {
+        title: '已审核列表',
+        icon: 'list',
+        roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
+      }
+    },
+    {
+      path: 'audited-detail',
+      component: () => import('@/views/audit/community/audited/detail.vue'),
+      name: 'CommunityAuditedDetail',
+      hidden: true,
+      meta: {
+        title: '审核详情',
         icon: 'community',
         roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
       }
