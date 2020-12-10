@@ -2,33 +2,30 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:43:23
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-10 16:59:30
+ * @LastEditTime: 2020-12-10 17:19:43
  * @Description: 审核意见
 -->
 <template>
   <div class="app-container" v-loading="pageLoading">
     <el-page-header content="审核历史" @back="$router.go(-1)" />
-    <el-collapse class="audit-collapse">
-      <el-collapse-item v-for="(item, index) in list" :key="index">
-        <template slot="title">
-          <span class="audit-c-title">
-            {{ new Date(item.auditTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}
-          </span>
-        </template>
-        <el-form label-width="120px" class="center-form">
-          <el-form-item label="审核意见：">
-            {{ item.reviewOpinion }}
-          </el-form-item>
-          <el-form-item label="审核结果：">
-            <el-tag :type="item.reviewResult | keyToVal(handleTag)">{{ item.reviewResult | keyToVal(auditOptions) }}</el-tag>
-          </el-form-item>
-          <el-form-item label="附件：">
-            <upload-list :files="item.files" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
-          </el-form-item>
 
-        </el-form>
-      </el-collapse-item>
-    </el-collapse>
+    <el-timeline class="audit-timeline">
+      <el-timeline-item v-for="(item, index) in list" :key="index" :timestamp="new Date(item.auditTime) | parseTime('{y}-{m}-{d} {h}:{i}')" placement="top">
+        <el-card>
+          <p>
+            <span class="audit-tip">审核意见：</span>
+            {{ item.reviewOpinion }}
+            <span class="audit-tip audit-tip-r">审核结果：</span>
+            <el-tag :type="item.reviewResult | keyToVal(handleTag)">{{ item.reviewResult | keyToVal(auditOptions) }}</el-tag>
+          </p>
+          <p>
+            <span class="audit-tip">附件：</span>
+
+            <upload-list :files="item.files" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+          </p>
+        </el-card>
+      </el-timeline-item>
+    </el-timeline>
 
     <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
       <img :src="detailImgUrl" alt="意见咨询表">
@@ -119,11 +116,17 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.audit-collapse {
+.audit-timeline {
   margin-top: 30px;
-  .audit-c-title {
+  &::v-deep .el-card {
+    width: 800px;
+  }
+  .audit-tip{
     font-size: 18px;
-    line-height: 30px;
+    color: #7d8a9c;
+  }
+  .audit-tip-r {
+    margin-left: 20px;
   }
 }
 </style>

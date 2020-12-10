@@ -2,12 +2,13 @@
  * @Author: zfd
  * @Date: 2020-12-10 11:06:02
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-10 15:38:31
+ * @LastEditTime: 2020-12-10 17:26:38
  * @Description: 
  */
 import { mapState } from 'vuex'
 import Flow from '@/components/street/Flow'
 import * as File from '@/api/file'
+import Project from '@/api/projects'
 export default {
   components: {
     Flow
