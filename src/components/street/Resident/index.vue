@@ -7,6 +7,9 @@
             <el-form-item label="申请人">
               {{ basic.applicantName }}
             </el-form-item>
+            <el-form-item label="申请时间">
+              {{ basic.createTime }}
+            </el-form-item>
             <el-form-item label="地址">
               {{ basic.address }}
             </el-form-item>

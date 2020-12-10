@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-13 13:15:13
+ * @LastEditTime: 2020-12-10 15:31:54
  * @Description:设计列表
 -->
 
@@ -29,32 +29,32 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-table v-loading="listLoading" class="design-table" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'status', order: 'ascending'}" @row-dblclick="flowView">
+    <el-table v-loading="listLoading" class="design-table" @expand-change="handleExpand" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'status', order: 'ascending'}" @row-dblclick="flowView">
       <el-table-column align="center" label="序号" min-width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
       <el-table-column type="expand">
-        <template slot-scope="{ row }">
+        <template slot-scope="{ row }" v-if="row.apply" v-loading="expandLoading">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-form-item label="申请人">
-              <span>{{ row.apply.name }}</span>
+              {{ row.apply.applicantName }}
             </el-form-item>
             <el-form-item label="申请时间">
-              <span>{{ row.apply.time }}</span>
+              {{ row.apply.createTime }}
             </el-form-item>
-            <el-form-item label="详细地址">
-              <span>{{ row.apply.address }}</span>
+            <el-form-item label="用户地址">
+              {{ row.apply.address }}
             </el-form-item>
             <el-form-item label="电话">
-              <span>{{ row.apply.phone }}</span>
+              {{ row.apply.phoneNumber }}
             </el-form-item>
             <el-form-item label="加装电梯地址">
-              <span>{{ row.apply.liftAddress }}</span>
+              {{ row.apply.location }}
             </el-form-item>
-            <el-form-item label="设备规格">
-              <span>{{ row.apply.spec }}</span>
+            <el-form-item label="设备">
+              {{ row.apply.device }}
             </el-form-item>
           </el-form>
         </template>
@@ -101,14 +101,14 @@
       </el-table-column>
     </el-table>
     <el-pagination background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
-    <el-dialog center title="上传" :visible.sync="uploadModal.visible" :close-on-click-modal="false" class="uploadModal">
-      <el-upload ref="upload" action="/api/co/Attachment/UploadAttachment" :before-upload="uploadBefore" :on-success="uploadSuccess" :on-remove="uploadRemove" :on-error="uploadError" list-type="picture" drag multiple :auto-upload="false">
-        <!-- <i class="el-icon-upload" /> -->
+
+    <el-dialog center title="上传" :visible.sync="uploadVisible" :close-on-click-modal="false" class="uploadModal">
+      <el-upload action="#" class="form-card" :on-remove="handleUploadRemove" :on-change="handleUploadChange" drag :auto-upload="false">
         <div>将文件拖到此处，或点击添加</div>
-        <p>单个文件大小不超过20MB，可上传图片或PDF</p>
+        <div>单个文件大小不超过20MB，可上传图片或PDF</div>
       </el-upload>
       <span slot="footer">
-        <el-button size="small" type="primary" @click="submitUpload">上传设计图</el-button>
+        <el-button size="small" type="primary" @click="designUpload">上传设计图</el-button>
       </span>
 
     </el-dialog>
@@ -124,146 +124,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import Flow from '@/components/street/Flow'
+import index from './index'
 export default {
-  components: {
-    Flow
-  },
-  data() {
-    return {
-      flowVisible: false,
-      query: {
-        code: '',
-        applyName: '',
-        status: ''
-      },
-      list: [
-        {
-          code: 'xxx小区xxxx幢xxx单元',
-          designTime: '2020-10-14 10:56',
-          auditTime: '',
-          apply: {
-            name: '李先生',
-            address: '苏州高新区',
-            phone: '15988800323',
-            liftAddress: '小区1楼',
-            spec: '高端电梯',
-            time: '2020-10-13 11:46'
-
-          },
-          status: 5 // 施工图设计
-        },
-        {
-          code: 'xxx小区xxxx幢xxx单元',
-          designTime: '2020-10-14 10:56',
-          auditTime: '2020-10-14 10:56',
-          apply: {
-            name: '李先生',
-            address: '苏州高新区',
-            phone: '15988800323',
-            liftAddress: '小区1楼',
-            spec: '高端电梯',
-            time: '2020-10-14 08:00'
-
-          },
-          status: 2 // 方案设计
-        },
-        {
-          code: 'xxx小区xxxx幢xxx单元',
-          designTime: '2020-10-14 10:56',
-          auditTime: '2020-10-14 10:56',
-          apply: {
-            name: '李先生',
-            address: '苏州高新区',
-            phone: '15988800323',
-            liftAddress: '小区1楼',
-            spec: '高端电梯',
-            time: '2020-10-14 09:00'
-
-          },
-          status: 6 // 施工图审核
-        }
-      ],
-      listLoading: false,
-      designStatus: [
-        { key: 0, val: '未设计' },
-        { key: 1, val: '审核中' },
-        { key: 2, val: '审核未通过' },
-        { key: 3, val: '审核通过' }
-      ],
-      designTag: [
-        { key: 0, val: 'info' },
-        { key: 1, val: 'warning' },
-        { key: 2, val: 'danger' }
-      ],
-      pagination: {
-        total: 20,
-        pageIndex: 1,
-        pageSize: 10
-      },
-      uploadModal: {
-        visible: false
-      }
-    }
-  },
-  computed: {
-    ...mapState('common', ['applyStatus', 'applyTag'])
-
-  },
-  created() {
-  },
-  methods: {
-    flowView() {
-      this.flowVisible = true
-    },
-    goSearch() {},
-    clearQuery() {},
-    handleSizeChange(val) {
-      this.pagination.pageSize = val
-    },
-    handleCurrentPageChange(val) {
-      this.pagination.pageIndex = val
-    },
-    // 图片上传之前判断
-    uploadBefore(file) {
-      const fileType = file.type
-      const isImage = fileType.indexOf('image') !== -1
-      const isBig = file.size <= 1024 * 1024 * 10
-      if (!file) {
-        this.$refs.upload.onError()
-        this.$message.error('上传为空！')
-        return false
-      }
-      if (!isImage) {
-        this.$refs.upload.onError()
-        this.$message.error('只能上传图片！')
-        return false
-      }
-      if (!isBig) {
-        this.$refs.upload.onError()
-        this.$message.error('图片大小不能超过10MB！')
-        return false
-      }
-      return true
-    },
-    // 图片上传成功之后回传
-    uploadSuccess(res) { },
-    // 图片上传失败
-    uploadError() {
-      this.$message.error('上传失败！')
-    },
-    // 图片移除
-    uploadRemove(file) { },
-    // 手动上传
-    submitUpload() {
-      this.$refs.upload.submit()
-    }
-  }
+  ...index
 }
 </script>
 <style scoped>
- .manage-query {
+.manage-query {
   height: 45px;
   padding: 5px 20px;
   background: #efefef;

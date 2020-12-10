@@ -70,22 +70,7 @@ export default {
         this.pageLoading = false
       })
     },
-    // 展示文件
-    detailFile(file) {
-      if (/\bpdf/i.test(file.name)) {
-        // 展示pdf
-        this.pdfURL = Pdf.createLoadingTask('/teat.pdf')
-        this.pdfURL.promise.then(pdf => {
-          this.pdfPages = pdf.numPages
-          this.pdfVisible = true
-        }).catch(() => {
-          this.$message.error('pdf预览失败')
-        })
-      } else {
-        this.detailImgUrl = file.url
-        this.imgVisible = true
-      }
-    },
+
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
@@ -199,6 +184,22 @@ export default {
         this.$message.error('保存失败')
         this.pageLoading = false
       })
+    },
+    // 展示文件
+    detailFile(file) {
+      if (/\bpdf/i.test(file.name)) {
+        // 展示pdf
+        this.pdfURL = Pdf.createLoadingTask('/teat.pdf')
+        this.pdfURL.promise.then(pdf => {
+          this.pdfPages = pdf.numPages
+          this.pdfVisible = true
+        }).catch(() => {
+          this.$message.error('pdf预览失败')
+        })
+      } else {
+        this.detailImgUrl = file.url
+        this.imgVisible = true
+      }
     },
     // 打印pdf
     printPDF() {

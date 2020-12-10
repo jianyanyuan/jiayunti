@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:27:43
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-09 08:58:27
+ * @LastEditTime: 2020-12-10 16:44:37
  * @Description: 已审核列表
 -->
 
@@ -30,7 +30,7 @@
       </el-form>
     </div>
     <el-card>
-      <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row @row-dblclick="flowView">
+      <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row @row-dblclick="showAudit">
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
@@ -43,22 +43,22 @@
             <span>{{ new Date(row.addTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="审核时间" align="center" prop="updateTime" sortable min-width="145px">
-          <template v-if="scope.row.updateTime" slot-scope="scope">
+        <el-table-column label="审核时间" align="center" prop="auditTime" sortable min-width="145px">
+          <template v-if="scope.row.auditTime" slot-scope="scope">
             <i class="el-icon-time" />
-            <span>{{ new Date(scope.row.updateTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+            <span>{{ new Date(scope.row.auditTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center" prop="statusId" sortable>
+        <el-table-column label="状态" align="center" prop="whetherThrough" sortable>
           <template slot-scope="scope">
-            <el-tag :type="scope.row.statusId | keyToVal(auditOptions)">{{ scope.row.statusId | keyToVal(applyStatus) }}</el-tag>
+            <el-tag :type="scope.row.whetherThrough | keyToVal(auditOptions)">{{ scope.row.whetherThrough | keyToVal(auditOptions) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作">
+        <!-- <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="warning" @click="showAudit(scope.row.id)">审核意见</el-button>
+            <el-button size="mini" type="warning" @click="">审核意见</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
     </el-card>
     <el-pagination background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
@@ -67,7 +67,8 @@
 
 <script>
 import { mapState } from 'vuex'
-
+import Project from '@/api/projects'
+import { notEmptyArray } from '@/utils'
 export default {
   name: 'CommunityAudited',
   data() {
@@ -83,14 +84,19 @@ export default {
         audit: ''
       },
       list: [],
+      listLoading: false
     }
   },
-  created() { },
+  computed: {
+    ...mapState('common', ['auditOptions'])
+
+  },
+  created() { this.listApplies()},
   methods: {
     // 获取已审核列表
     async listApplies() {
       this.listLoading = true
-      await Project.list({ page: this.pagination.pageIndex, size: this.pagination.pageSize }).then(res => {
+      await Project.auditHistorylist({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
         if (notEmptyArray(res.content)) {
           this.list = res.content
           this.pagination.total = res.totalElements
@@ -101,6 +107,19 @@ export default {
       })
       this.listLoading = false
     },
+    handleSizeChange(val) {
+      this.pagination.pageSize = val
+      this.listApplies()
+    },
+    handleCurrentPageChange(val) {
+      this.pagination.pageIndex = val
+      this.listApplies()
+    },
+    showAudit(row){
+      this.$router.push({name:'CommunityAuditedDetail',params:{id:row.id,status:row.statusId}})
+    },
+    goSearch() { },
+    clearQuery() { },
   }
 }
 
@@ -111,6 +130,6 @@ export default {
   padding: 5px 20px;
   background: #efefef;
   border-bottom: 1px solid #ddd;
-  margin-bottom:20px
+  margin-bottom: 20px;
 }
 </style>

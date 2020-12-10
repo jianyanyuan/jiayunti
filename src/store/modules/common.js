@@ -42,9 +42,9 @@ const state = {
     { key: 1, val: 'success' }
   ],
   auditOptions: [
-    { key: 0, val: '暂未审核' },
-    { key: 1, val: '未通过' },
-    { key: 2, val: '已通过' }
+    { key: -1, val: '暂未审核' },
+    { key: 0, val: '不通过' },
+    { key: 1, val: '通过' }
   ],
   applyStatus: [
     { key: 0, val: '申请中' },

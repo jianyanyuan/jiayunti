@@ -7,7 +7,7 @@
  */
 
 import Project from '@/api/projects'
-
+import { parseTime } from '@/filters'
 // 公众方法
 const actions = {
   // 获取工程基本信息（纯展示）
@@ -16,9 +16,10 @@ const actions = {
       let address = await context.dispatch('common/getAddress')
       Project.detail(projectId).then(res => {
         const basic = {}
-        const { applicantName, phoneNumber, designName, deviceName, deviceType, rooms, residentialQuarters, building, unit } = res
+        const { applicantName, phoneNumber, designName, deviceName, deviceType, rooms, residentialQuarters, building, unit,address,createTime } = res
         basic.applicantName = applicantName
-        basic.address = context.getters.addressPlain
+        basic.createTime =  parseTime(new Date(createTime),'{y}-{m}-{d} {h}:{i}')
+        basic.address = address || context.getters.addressPlain
         basic.phoneNumber = phoneNumber
         basic.location = `${residentialQuarters}小区${building}幢${unit}单元`
         basic.designName = designName
@@ -27,7 +28,7 @@ const actions = {
         resolve(basic)
       }).catch(err => {
         console.log(err)
-        reject(false)
+        reject({})
       })
     })
   }

@@ -40,7 +40,7 @@ const communityRouter = {
       }
     },
     {
-      path: 'audited-detail',
+      path: 'audited-detail/:id/:status',
       component: () => import('@/views/audit/community/audited/detail.vue'),
       name: 'CommunityAuditedDetail',
       hidden: true,

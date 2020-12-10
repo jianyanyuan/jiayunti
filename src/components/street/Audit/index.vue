@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-16 16:35:29
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-10 10:24:08
+ * @LastEditTime: 2020-12-10 13:26:39
  * @Description:
 -->
 <template>
@@ -23,7 +23,7 @@
       </el-form-item>
       <el-form-item label="审核结果:" prop="reviewResults">
         <el-select v-model="form.reviewResults">
-          <el-option v-for="item in resultOptions" :key="item.val" :value="item.key" :label="item.val" />
+          <el-option v-for="item in auditOptions" :key="item.val" :value="item.key" :label="item.val" />
         </el-select>
       </el-form-item>
       <el-form-item class="audit-operation">
@@ -60,10 +60,6 @@ export default {
         reviewOpinions: [{ required: true, message: '请给出审核意见', trigger: 'blur' }],
         reviewResults: [{ required: true, message: '请给出审核结果', trigger: 'blur' }]
       },
-      resultOptions: [
-        { key: 1, val: '通过' },
-        { key: 0, val: '不通过' }
-      ],
       attachment: null,
     }
   },
@@ -74,7 +70,9 @@ export default {
       } else {
         return 'errors' // 错误
       }
-    }
+    },
+    ...mapState('common', ['auditOptions'])
+
   },
   methods: {
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
@@ -117,25 +115,29 @@ export default {
       fileList = []
     },
     handlePost() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate(async valid => {
         if (valid) {
           this.pageLoading = true
           this.form.projectId = this.id
-          const taskAsync = []
+          // const taskAsync = []
           if (this.attachment !== null) {
-            this.form.uid = this.attachment.uid
-            attachmentAsync = File.upload({ file: this.attachment.file }, { projectId: this.id, typeName: this.typeName }).then(() => {
+            const fileRes = await File.upload(this.attachment.file, { projectId: this.id, typeName: this.typeName })
+            if (fileRes.fileTypeId) {
               this.attachment = null
-            })
-            taskAsync.push(attachmentAsync)
-          }
-          const resultAsync = Project.communityCheck(this.form)
-          taskAsync.push(resultAsync)
-
-          Promise.all(taskAsync)
-            .then(() => {
+              this.form.fileTypeId = fileRes.fileTypeId
+            } else {
+              this.$message.error('附件上传失败')
               this.pageLoading = false
+              return
+            }
+          }
+          Project.communityCheck(this.form)
+            .then(async () => {
+              await Project.advance(this.id, 1).catch(() => {
+                this.$message.error('流程错误')
+              })
               this.$router.push('/community/list')
+              this.pageLoading = false
             })
             .catch(() => {
               this.$message.error('审核失败')

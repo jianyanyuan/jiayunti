@@ -88,4 +88,12 @@ export default {
   border-bottom: 1px solid #ddd;
   margin-bottom:20px
 }
+.form-card ::v-deep .el-upload-dragger {
+  width: 400px;
+  padding: 40px 5px;
+  border: 2px solid #e5e5e5;
+  color: #777;
+  -webkit-transition: background-color 0.2s linear;
+  transition: background-color 0.2s linear;
+}
 </style>

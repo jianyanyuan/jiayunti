@@ -59,18 +59,37 @@ const advance = (projectId,status) => {
 }
 
 // 社区审核
-const communityCheck = (data) => {
+const communityCheck = (communityReviewRequest ) => {
   return request({
     url:'/CommunityReview',
     method: 'post',
-    data
+    data:communityReviewRequest
   })
 }
+// 查看审核记录
+const checkSingle = (projectId ) => {
+  return request({
+    url:'/CommunityReview/' + projectId,
+    method: 'get',
+  })
+}
+
+// 审核历史记录
+const auditHistorylist = (params) => {
+  return request({
+    url: api_prefix_dev + '/getHistoryAccording/history',
+    method: 'get',
+    params
+  })
+}
+
 export default {
   list,
   add,
   detail,
   update,
   advance,
-  communityCheck
+  communityCheck,
+  auditHistorylist,
+  checkSingle
 }
