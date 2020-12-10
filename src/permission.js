@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-09 15:34:40
+ * @LastEditTime: 2020-12-10 08:24:13
  * @Description:
  */
 import router from './router'
@@ -50,7 +50,6 @@ router.beforeEach(async(to, from, next) => {
 
           // dynamically add accessible routes
           router.addRoutes(accessRoutes)
-
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true })

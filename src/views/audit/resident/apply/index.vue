@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-09 17:07:08
+ * @LastEditTime: 2020-12-10 08:40:28
  * @LastEditors: zfd
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -77,8 +77,8 @@ export default {
         vm.applyId = id
       })
     } else {
-      // 没有id则跳转失败
-      next(false)
+      // 没有id则返回跳转
+      next(from.fullPath)
     }
   }
 }

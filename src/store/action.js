@@ -14,7 +14,6 @@ const actions = {
   getProjectBasic(context,projectId) {
     return new Promise(async(resolve, reject) => {
       let address = await context.dispatch('common/getAddress')
-      console.log(address)
       Project.detail(projectId).then(res => {
         const basic = {}
         const { applicantName, phoneNumber, designName, deviceName, deviceType, rooms, residentialQuarters, building, unit } = res

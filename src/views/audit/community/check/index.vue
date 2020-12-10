@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-11-03 08:50:23
+ * @LastEditTime: 2020-12-10 09:23:55
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -19,7 +19,9 @@
     <div class="line-divider" />
 
     <div class="dynamic-component-container">
-      <component v-if="applyId && status" :is="curComponent" :id="applyId" :status="status" />
+      <keep-alive>
+        <component v-if="applyId && status" :is="curComponent" :id="applyId" :status="status" />
+      </keep-alive>
     </div>
 
   </div>
@@ -73,8 +75,8 @@ export default {
         vm.status = statusId
       })
     } else {
-      // 没有id则跳转失败
-      next(false)
+      // 没有id则返回跳转
+      next(from.fullPath)
     }
   }
 }

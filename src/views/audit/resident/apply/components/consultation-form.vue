@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-09 17:12:35
+ * @LastEditTime: 2020-12-10 09:52:56
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -240,10 +240,10 @@ export default {
     },
     // 删除文件
     handleUploadRemove(file, fileList, room) {
-      console.log(file)
       // const index = this.fileList[room].findIndex(v => v.uid === file.uid)
       // const removed = this.fileList[room].splice(index, 1)
       if (file.status === 'success') {
+        // 已上传的 --> 待删除
         this.deleteList.push(
           {
             room,
@@ -252,6 +252,12 @@ export default {
             name: file.name
           }
         )
+      } else {
+        // 未上传 --> 取消上传
+        const cancelIdx = this.fileList[room].findIndex(f => f.uid === file.uid)
+        this.fileList[room].splice(cancelIdx, 1)
+        const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
+        this.uploadList.splice(removeIdx, 1)
       }
     },
 
@@ -275,8 +281,8 @@ export default {
             })
               .catch(() => {
                 // 上传失败
-                const failIndx = this.fileList[room].findIndex(f => f.uid === v.uid)
-                this.fileList[room].splice(failIndx, 1)
+                const failIdx = this.fileList[room].findIndex(f => f.uid === v.uid)
+                this.fileList[room].splice(failIdx, 1)
                 error = true
               })
           })

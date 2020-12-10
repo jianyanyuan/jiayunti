@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:14
- * @LastEditTime: 2020-12-09 09:00:10
+ * @LastEditTime: 2020-12-10 08:34:27
  * @LastEditors: zfd
  * @Description: 审批端社区路由表
  * @FilePath: \jiayunti\src\router\modules\audit\community.js
@@ -73,7 +73,7 @@ const communityRouter = {
       }
     },
     {
-      path: 'check',
+      path: 'check/:id/:statusId',
       name: 'CommunityCheck',
       component: () => import('@/views/audit/community/check/index.vue'),
       hidden: true,

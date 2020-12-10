@@ -169,10 +169,8 @@ const actions = {
   getAddress({ commit }) {
     return new Promise((resolve, reject) => {
       Common.getAddress().then(res => {
-        debugger
         if (res.content) {
           commit('SET_ADDRESS', res.content)
-          debugger
           resolve(res.content)
         } else {
           reject(res)

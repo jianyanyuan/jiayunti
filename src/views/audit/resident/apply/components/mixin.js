@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-04 10:50:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-08 16:34:21
+ * @LastEditTime: 2020-12-10 09:54:35
  * @Description:
  */
 import * as File from '@/api/file'
@@ -128,6 +128,7 @@ export default {
     // 删除文件
     handleUploadRemove(file, fileList) {
       if (file.status === 'success') {
+        // 已上传的 --> 待删除
         this.deleteList.push(
           {
             projectId: this.id,
@@ -136,6 +137,12 @@ export default {
             url: file.url
           }
         )
+      } else {
+        // 未上传 --> 取消上传
+        const cancelIdx = this.fileList.findIndex(f => f.uid === file.uid)
+        this.fileList.splice(cancelIdx, 1)
+        const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
+        this.uploadList.splice(removeIdx, 1)
       }
     },
     // 提交材料
@@ -146,7 +153,7 @@ export default {
       if (notEmptyArray(this.uploadList)) {
         let error = false
         uploadAsync = new Promise((resolove, reject) => {
-          this.uploadList.forEach(async(v, i) => {
+          this.uploadList.forEach(async (v, i) => {
             const { projectId, file } = v
             const last = i === this.uploadList.length - 1
             await File.upload(file, { projectId, typeName }).then(() => {
@@ -157,8 +164,8 @@ export default {
             })
               .catch(() => {
                 // 上传失败
-                const failIndx = this.fileList.findIndex(f => f.uid === v.uid)
-                this.fileList.splice(failIndx, 1)
+                const failIdx = this.fileList.findIndex(f => f.uid === v.uid)
+                this.fileList.splice(failIdx, 1)
                 error = true
               })
           })
@@ -167,14 +174,14 @@ export default {
       if (notEmptyArray(this.deleteList)) {
         let error = false
         deleteAsync = new Promise((resolove, reject) => {
-          this.deleteList.forEach(async(v, i) => {
+          this.deleteList.forEach(async (v, i) => {
             const last = i === this.deleteList.length - 1
             File.remove(v.uid).then(() => {
               this.deleteList.splice(i, 1)
               const delIndx = this.fileList.findIndex(f => f.uid === v.uid)
               this.fileList.splice(delIndx, 1)
               if (last) {
-                error ?  (reject('部分文件删除失败')) : (resolove('删除完成'))
+                error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
               }
             }).catch((err) => {
               console.log(err)

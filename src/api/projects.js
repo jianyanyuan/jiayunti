@@ -57,10 +57,20 @@ const advance = (projectId,status) => {
     }
   })
 }
+
+// 社区审核
+const communityCheck = (data) => {
+  return request({
+    url:'/CommunityReview',
+    method: 'post',
+    data
+  })
+}
 export default {
   list,
   add,
   detail,
   update,
-  advance
+  advance,
+  communityCheck
 }

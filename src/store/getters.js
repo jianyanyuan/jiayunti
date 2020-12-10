@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-09 17:28:57
+ * @LastEditTime: 2020-12-10 08:27:17
  * @Description:
  */
 import { notEmptyArray } from '@/utils'
@@ -23,12 +23,12 @@ const getters = {
     try {
       if (notEmptyArray(state.user.address)) {
         const result = state.user.address.reduce((init, value, index) => {
-          const target = source.filter(v => v.id == value)
+          const target = source.find(v => v.id == value)
           if(!target){
             throw new Error('数据异常')
           }
           source = target[idxMap.get(index)]
-          return init.push(target.name)
+          return init.concat(target.name)
         }, [])
         return result.join('/')
       }

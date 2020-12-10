@@ -35,7 +35,8 @@
       </el-tab-pane>
       <el-tab-pane v-for="item in pageContent" :key="item.label" :label="item.label">
         <el-card>
-          <ul>
+          <upload-list :files="item.fileList" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+          <!-- <ul>
             <li v-for="file in item.fileList" :key="file.id" style="text-align:center">
               <div v-if="file.type === 'pdf'" :ref="'pdf' + file.id" @click="printPDF('pdf' + file.id)">
                 <Pdf v-for="i in file.pdfPages" :key="i" :src="file.pdfURL" :page="i" />
@@ -43,7 +44,7 @@
               <el-image v-else-if="file.type === 'pdfError'" :src="pdfURL"></el-image>
               <el-image v-else :src="file.url"></el-image>
             </li>
-          </ul>
+          </ul> -->
         </el-card>
       </el-tab-pane>
     </el-tabs>
@@ -83,9 +84,22 @@ export default {
       required: true
     }
   },
-  computed: {
-    pageContent() {
-      const source = [
+  components: {
+    Pdf
+  },
+  data() {
+    return {
+      pdfURL: require('@/assets/images/pdf.jpg'),
+      tabLoading: false,
+      basic: {},// 基础信息
+      imgVisible: false,
+      pdfVisible: false,
+      detailImgUrl: '',
+      pdfURL: '', // Pdf路径
+      pdfPages: undefined,// pdf内容
+      rooms: [],// 意见征询表
+      fileList: {}, // 意见征询表
+      pageContent: [
         {
           label: '意见征询汇总表',
           fileList: []
@@ -101,40 +115,8 @@ export default {
         {
           label: '专用账户授权委托书',
           fileList: []
-        },
-        {
-          label: '公示内容',
-          fileList: []
-        },
-        {
-          label: '公示报告',
-          fileList: []
-        },
+        }
       ]
-      if (this.status == 3) {
-        return source
-      } else if (this.status == 1) {
-        return source.slice(0, -2)
-      } else {
-        return []
-      }
-    }
-  },
-  components: {
-    Pdf
-  },
-  data() {
-    return {
-      pdfURL: require('@/assets/images/pdf.jpg'),
-      tabLoading: false,
-      basic: {},
-      imgVisible: false,
-      pdfVisible: false,
-      detailImgUrl: '',
-      pdfURL: '', // Pdf路径
-      pdfPages: undefined,// pdf内容
-      rooms: [],
-      fileList: {}, // 展示用
     }
   },
   created() {
@@ -175,6 +157,14 @@ export default {
       const typeMap = ['consultation-summary', 'delegate-form', 'protocal-form', 'special-form']
       if (this.status == 3) {
         typeMap.push('noticeContent', 'noticeReport')
+        this.pageContent.push({
+          label: '公示内容',
+          fileList: []
+        },
+          {
+            label: '公示报告',
+            fileList: []
+          })
       }
 
       for (let idx = 0; idx < typeMap.length; idx++) {
@@ -182,33 +172,38 @@ export default {
           .then(res => {
             if (notEmptyArray(res.content)) {
               for (const i of res.content) {
-                if (i.filename.includes('pdf')) {
-                  // pdf文件
-                  const obj = {
-                    uid: i.id,
-                    name: i.filename,
-                    url: i.path,
-                    type: 'pdf'
-                  }
-                  const pdfURL = Pdf.createLoadingTask('/teat.pdf')
-                  pdfURL.promise.then(pdf => {
-                    obj.pdfPages = pdf.numPages
-                    obj.pdfURL = pdfURL
-                    this.pageContent[idx].fileList.push(obj)
-                  }).catch(() => {
-                    obj.type = 'pdfError'
-                    this.pageContent[idx].fileList.push(obj)
-                  })
+                this.pageContent[idx].fileList.push({
+                  uid: i.id,
+                  name: i.filename,
+                  url: i.path
+                })
+                // if (i.filename.includes('pdf')) {
+                //   // pdf文件
+                //   const obj = {
+                //     uid: i.id,
+                //     name: i.filename,
+                //     url: i.path,
+                //     type: 'pdf'
+                //   }
+                //   const pdfURL = Pdf.createLoadingTask('/teat.pdf')
+                //   pdfURL.promise.then(pdf => {
+                //     obj.pdfPages = pdf.numPages
+                //     obj.pdfURL = pdfURL
+                //     this.pageContent[idx].fileList.push(obj)
+                //   }).catch(() => {
+                //     obj.type = 'pdfError'
+                //     this.pageContent[idx].fileList.push(obj)
+                //   })
 
-                } else {
-                  // image文件
-                  this.pageContent[idx].fileList.push({
-                    uid: i.id,
-                    name: i.filename,
-                    url: i.path,
-                    type: 'image'
-                  })
-                }
+                // } else {
+                //   // image文件
+                //   this.pageContent[idx].fileList.push({
+                //     uid: i.id,
+                //     name: i.filename,
+                //     url: i.path,
+                //     type: 'image'
+                //   })
+                // }
               }
             }
           })
