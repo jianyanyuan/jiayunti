@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-11 14:38:10
+ * @LastEditTime: 2020-12-11 14:43:50
  * @Description: 公示/公告上传
 -->
 <template>
@@ -112,6 +112,7 @@ export default {
       reportList: [], // 公示报告
       uploadList: [], // 上传用
       deleteList: [], // 删除用
+      dirName: ['']
     }
   },
 
@@ -131,7 +132,7 @@ export default {
       this.reportList = []
       this.uploadList = []
       this.deleteList = []
-            File.get({ projectId: this.id, typeName: this.typeName }).then(res => {
+            File.get({ projectId: this.id, typeName:  }).then(res => {
         if (notEmptyArray(res.content)) {
           for (const i of res.content) {
             this.fileList.push({
