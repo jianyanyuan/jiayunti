@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import * as File from '@/api/file'
+import File from '@/api/file'
 // import { deepClone } from '@/utils'
 import { mapGetters } from 'vuex'
 import ImageCard from '@/components/Imagecard'

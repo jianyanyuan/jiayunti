@@ -55,16 +55,10 @@
 </template>
 
 <script>
-import mixin from './mixin'
+import mixin from '@/mixin/upload-show'
 
 export default {
   name: 'ApplyProtocal',
-  props: {
-    id: {
-      type: [Number, String],
-      required: true
-    }
-  },
   data() {
     return {
       typeName: 'protocal-form'

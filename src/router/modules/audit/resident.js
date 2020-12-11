@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-03 15:03:50
+ * @LastEditTime: 2020-12-11 10:04:54
  * @LastEditors: zfd
  * @Description: 审批端居民路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -22,7 +22,7 @@ const residentRouter = {
   },
   children: [
     {
-      path: 'apply/:id',
+      path: 'apply/:id/:status',
       component: () => import('@/views/audit/resident/apply/index.vue'), // Parent router-view
       name: 'ResidentApply',
       hidden: true,

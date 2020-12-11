@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-16 16:35:29
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-10 13:26:39
+ * @LastEditTime: 2020-12-11 09:33:26
  * @Description:
 -->
 <template>
@@ -36,7 +36,7 @@
 
 <script>
 import Project from '@/api/projects'
-import * as File from '@/api/file'
+import File from '@/api/file'
 export default {
   name: 'Audit',
   props: {

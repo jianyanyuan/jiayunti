@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-10 15:31:54
+ * @LastEditTime: 2020-12-11 10:47:33
  * @Description:设计列表
 -->
 
@@ -29,77 +29,82 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-table v-loading="listLoading" class="design-table" @expand-change="handleExpand" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'status', order: 'ascending'}" @row-dblclick="flowView">
-      <el-table-column align="center" label="序号" min-width="95">
-        <template slot-scope="scope">
-          {{ scope.$index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column type="expand">
-        <template slot-scope="{ row }" v-if="row.apply" v-loading="expandLoading">
-          <el-form label-position="left" inline class="demo-table-expand">
-            <el-form-item label="申请人">
-              {{ row.apply.applicantName }}
-            </el-form-item>
-            <el-form-item label="申请时间">
-              {{ row.apply.createTime }}
-            </el-form-item>
-            <el-form-item label="用户地址">
-              {{ row.apply.address }}
-            </el-form-item>
-            <el-form-item label="电话">
-              {{ row.apply.phoneNumber }}
-            </el-form-item>
-            <el-form-item label="加装电梯地址">
-              {{ row.apply.location }}
-            </el-form-item>
-            <el-form-item label="设备">
-              {{ row.apply.device }}
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
-      <el-table-column label="编号" prop="code" min-width="200" align="center" />
-      <el-table-column label="申请人" min-width="200" align="center">
+    <el-card>
+      <el-table v-loading="listLoading" class="design-table" @expand-change="handleExpand" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'addTime', order: 'descending'}" @row-dblclick="flowView">
+        <el-table-column align="center" label="序号" width="50">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column type="expand">
+          <template slot-scope="{ row }"  >
+            <el-form label-position="left" v-loading="expandLoading" inline class="demo-table-expand">
+              <el-form-item label="申请人">
+                {{ row.apply.applicantName }}
+              </el-form-item>
+              <el-form-item label="申请时间">
+                {{ row.apply.createTime }}
+              </el-form-item>
+              <el-form-item label="用户地址">
+                {{ row.apply.address }}
+              </el-form-item>
+              <el-form-item label="电话">
+                {{ row.apply.phoneNumber }}
+              </el-form-item>
+              <el-form-item label="加装电梯地址">
+                {{ row.apply.location }}
+              </el-form-item>
+              <el-form-item label="设计单位">
+                {{ row.apply.designName }}
+              </el-form-item>
+              <el-form-item label="设备">
+                {{ row.apply.device }}
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+        <el-table-column label="编号" prop="projectName" min-width="200" align="center" />
+        <!-- <el-table-column label="申请人" min-width="200" align="center">
         <template slot-scope="{row}">
           {{ row.apply.name }}
         </template>
-      </el-table-column>
-      <el-table-column label="申请时间" min-width="200" sortable align="center">
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.apply.time }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="设计时间" min-width="200" prop="designTime" sortable align="center">
-        <template v-if="scope.row.designTime" slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.designTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="审核时间" min-width="200" prop="auditTime" sortable align="center">
-        <template v-if="scope.row.auditTime" slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.auditTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="状态" prop="status" sortable min-width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | keyToVal(applyTag)">{{ scope.row.status | keyToVal(applyStatus) }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="操作" min-width="200">
-        <template slot-scope="scope">
-          <el-row type="flex" justify="space-around">
-            <el-button v-if="scope.row.status === 2" type="primary" size="mini" @click="$router.push({name:'UploadDesign',params:{applyId:scope.row.Id,status:scope.row.status}})">上 传</el-button>
+      </el-table-column> -->
+        <el-table-column label="提交时间" align="center" prop="addTime" sortable min-width="145px">
+          <template slot-scope="{row}">
+            <i class="el-icon-time" />
+            <span>{{ new Date(row.addTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="设计时间" align="center" prop="designTime" sortable min-width="145px">
+          <template v-if="row.designTime" slot-scope="{row}">
+            <i class="el-icon-time" />
+            <span>{{ new Date(row.designTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="审核时间" align="center" prop="auditTime" sortable min-width="145px">
+          <template v-if="row.auditTime" slot-scope="{row}">
+            <i class="el-icon-time" />
+            <span>{{ new Date(row.auditTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" align="center" prop="statusId" sortable>
+          <template slot-scope="{row}">
+            <el-tag :type="row.statusId | keyToVal(applyTag)">{{ row.statusId | keyToVal(applyStatus) }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="操作">
+          <template slot-scope="{row}">
+            <el-row type="flex" justify="space-around">
+              <el-button v-if="row.statusId === 2" type="warning" plain size="mini" @click="$router.push({name:'DesignerUpload',params:{applyId:row.Id,status:row.statusId}})">上 传</el-button>
 
-            <el-button v-if="scope.row.status === 5" type="primary" size="mini" @click="uploadModal.visible = true">上 传</el-button>
-            <el-button v-if="scope.row.status === 6" size="mini" type="warning" @click="$router.push({path:'/designer/edit',query:{applyId:scope.row.Id}})">修 改</el-button>
+              <el-button v-if="row.statusId === 5" type="warning" plain size="mini" @click="uploadModal.visible = true">上 传</el-button>
+              <el-button v-if="row.statusId === 6" size="mini" plain type="primary" @click="$router.push({path:'/designer/edit',query:{applyId:row.Id}})">修 改</el-button>
 
-          </el-row>
-        </template>
-      </el-table-column>
-    </el-table>
+            </el-row>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
     <el-pagination background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
 
     <el-dialog center title="上传" :visible.sync="uploadVisible" :close-on-click-modal="false" class="uploadModal">
@@ -135,6 +140,7 @@ export default {
   padding: 5px 20px;
   background: #efefef;
   border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
 }
 .demo-table-expand {
   font-size: 0;

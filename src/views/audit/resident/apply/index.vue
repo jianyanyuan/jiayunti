@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-10 08:40:28
+ * @LastEditTime: 2020-12-11 10:16:39
  * @LastEditors: zfd
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -19,7 +19,7 @@
 
     <div class="dynamic-component-container">
       <keep-alive>
-        <component  :is="curComponent" v-if="applyId" @nextProcess="handleProcess" :id="applyId" />
+        <component  :is="curComponent" v-if="applyId" @nextProcess="handleProcess" :id="applyId" :status="status" />
       </keep-alive>
     </div>
 
@@ -47,6 +47,7 @@ export default {
   data() {
     return {
       applyId: null,
+      status:null,
       stepBtnGroup: ['基本资料', '意见征询表', '意见征询汇总表', '委托授权书', '项目协议书', '账户授权委托书'],
       componentGroup: ['Basic', 'ConsultationForm', 'SummaryForm', 'DelegateForm', 'ProtocalForm', 'SpecialForm'],
       curStep: 0
@@ -71,10 +72,13 @@ export default {
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    const { id } = to.params
-    if (typeof +id === 'number') {
+    const { id, statusId } = to.params
+    // 1社区受理 3社区第二次受理
+    const valid = statusId == 1 || statusId == 3
+    if (typeof +id === 'number' && valid) {
       next(vm => {
         vm.applyId = id
+        vm.status = statusId
       })
     } else {
       // 没有id则返回跳转

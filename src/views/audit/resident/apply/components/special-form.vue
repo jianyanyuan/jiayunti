@@ -55,16 +55,10 @@
 </template>
 
 <script>
-import mixin from './mixin'
+import mixin from '@/mixin/upload-show'
 import Project from '@/api/projects'
 export default {
   name: 'ApplySpecial',
-  props: {
-    id: {
-      type: [Number, String],
-      required: true
-    }
-  },
   data() {
     return {
       typeName: 'special-form'

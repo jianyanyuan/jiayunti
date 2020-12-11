@@ -55,16 +55,10 @@
 </template>
 
 <script>
-import mixin from './mixin'
+import mixin from '@/mixin/upload-show'
 
 export default {
   name: 'ApplySummary',
-  props: {
-    id: {
-      type: [Number, String],
-      required: true
-    }
-  },
   data() {
     return {
       typeName: 'consultation-summary'

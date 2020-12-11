@@ -70,7 +70,7 @@
 
 <script>
 import Project from '@/api/projects'
-import * as File from '@/api/file'
+import File from '@/api/file'
 import Pdf from 'vue-pdf'
 import html2canvas from 'html2canvas'
 import printJS from 'print-js'

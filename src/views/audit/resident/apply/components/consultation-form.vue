@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-10 09:52:56
+ * @LastEditTime: 2020-12-11 10:14:09
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import * as File from '@/api/file'
+import File from '@/api/file'
 import { notEmptyArray } from '@/utils'
 // import { deepClone } from '@/utils'
 import Pdf from 'vue-pdf'

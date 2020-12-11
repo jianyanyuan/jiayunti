@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import * as File from '@/api/file'
+import File from '@/api/file'
 // import { deepClone } from '@/utils'
 
 export default {

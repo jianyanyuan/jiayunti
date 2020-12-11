@@ -3,9 +3,9 @@
  * @Date: 2020-12-04 10:50:09
  * @LastEditors: zfd
  * @LastEditTime: 2020-12-10 09:54:35
- * @Description:
+ * @Description: 附件上传 + 预览通用模块
  */
-import * as File from '@/api/file'
+import File from '@/api/file'
 // import { deepClone } from '@/utils'
 import Pdf from 'vue-pdf'
 import html2canvas from 'html2canvas'
@@ -15,6 +15,12 @@ import { notEmptyArray } from '@/utils'
 export default {
   components: {
     Pdf
+  },
+  props: {
+    id: {
+      type: [Number, String],
+      required: true
+    }
   },
   data() {
     return {
@@ -27,7 +33,6 @@ export default {
       hasChanged: false,
       pageLoading: false,
       fileList: [], // 展示用
-
       uploadList: [], // 上传用
       deleteList: [] // 删除用
     }

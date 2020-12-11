@@ -43,8 +43,8 @@ const state = {
   ],
   auditOptions: [
     { key: -1, val: '暂未审核' },
-    { key: 0, val: '不通过' },
-    { key: 1, val: '通过' }
+    { key: 0, val: '通过' },
+    { key: 1, val: '不通过' } // 1社区不通过
   ],
   applyStatus: [
     { key: 0, val: '申请中' },

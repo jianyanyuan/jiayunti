@@ -10,7 +10,7 @@ import request from '@/utils/request'
 const api_prefix_dev = '/file/'
 
 // 其他附件上传
-export function upload(data, params) {
+const upload = (data, params) => {
   return request({
     url: api_prefix_dev + 'upload',
     method: 'post',
@@ -20,7 +20,7 @@ export function upload(data, params) {
 }
 
 // 删除文件
-export function remove(id) {
+const remove = (id) => {
   return request({
     url: api_prefix_dev + 'deleteFile/' + id,
     method: 'delete'
@@ -28,7 +28,7 @@ export function remove(id) {
 }
 
 // 意见征询表上传
-export function uploadOpinion(data, params) {
+const uploadOpinion = (data, params) => {
   return request({
     url: api_prefix_dev + 'uploadOpinion',
     method: 'post',
@@ -38,7 +38,7 @@ export function uploadOpinion(data, params) {
 }
 
 // 删除意见征询表
-export function removeOpinion(id) {
+const  removeOpinion =  (id) => {
   return request({
     url: api_prefix_dev + 'deleteOpinionFile/' + id,
     method: 'delete',
@@ -46,7 +46,7 @@ export function removeOpinion(id) {
 }
 
 // 查询意见征询表
-export function getConsultation(params) {
+const getConsultation =  (params) => {
   return request({
     url: api_prefix_dev + 'getConsultationFile',
     method: 'get',
@@ -55,10 +55,19 @@ export function getConsultation(params) {
 }
 
 // 查询文件
-export function get(params) {
+const get =  (params) => {
   return request({
     url: api_prefix_dev + 'getFile',
     method: 'get',
     params
   })
+}
+
+export default {
+  upload,
+  remove,
+  uploadOpinion,
+  removeOpinion,
+  getConsultation,
+  get
 }

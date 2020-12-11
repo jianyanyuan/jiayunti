@@ -2,13 +2,14 @@
  * @Author: zfd
  * @Date: 2020-12-10 11:06:02
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-10 17:26:38
+ * @LastEditTime: 2020-12-11 10:48:16
  * @Description: 
  */
 import { mapState } from 'vuex'
 import Flow from '@/components/street/Flow'
-import * as File from '@/api/file'
+import File from '@/api/file'
 import Project from '@/api/projects'
+import { notEmptyArray} from '@/utils'
 export default {
   components: {
     Flow
@@ -57,7 +58,10 @@ export default {
       this.listLoading = true
       await Project.list({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
         if (notEmptyArray(res.content)) {
-          this.list = res.content
+          res.content.forEach(v=>{
+            v.apply = {}
+            this.list.push(v)
+          })
           this.pagination.total = res.totalElements
         }
       }).catch(err => {
@@ -67,9 +71,11 @@ export default {
       this.listLoading = false
     },
     async handleExpand(row, expandedRows) {
-      if(!row.apply) {
+      if(Object.keys(row.apply).length === 0) {
         this.expandLoading = true
-        row.apply = await this.$store.dispatch('getProjectBasic', this.id)
+        const apply = await this.$store.dispatch('getProjectBasic', row.id)
+        const idx = this.list.findIndex(v => v.id === row.id)
+        this.$set(this.list[idx], 'apply',apply)
         this.expandLoading = false
       }
     },

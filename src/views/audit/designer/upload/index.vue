@@ -19,7 +19,7 @@
 
     <div class="dynamic-component-container">
       <keep-alive>
-        <component :is="curComponent" @nextProcess="handleProcess" />
+        <component :is="curComponent" v-if="applyId && status" @nextProcess="handleProcess" :id="applyId" :status="status" />
       </keep-alive>
     </div>
 
@@ -40,7 +40,9 @@ export default {
     return {
       stepBtnGroup: ['档案调取', '上传设计'],
       componentGroup: ['Archive', 'Upload'],
-      curStep: 0
+      curStep: 0,
+      applyId:null,
+      status:null
     }
   },
   computed: {
@@ -61,16 +63,19 @@ export default {
 
     }
   },
-  // 获得申请Id
+  // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      // if (to.query.type === "today") {
-      //   let today = new Date();
-      //   vm.query.StartTime = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()} 00:00:00`;
-      //   vm.query.EndTime = new Date();
-      //   vm.getTickets();
-      // }
-    })
+    const { id, statusId } = to.params
+    // 2方案设计
+    if (typeof +id === 'number' && statusId == 2 ) {
+      next(vm => {
+        vm.applyId = id
+        vm.status = statusId
+      })
+    } else {
+      // 没有id则返回跳转
+      next(from.fullPath)
+    }
   }
 
 }
@@ -101,10 +106,10 @@ export default {
 .step-btn-group .step-actived {
   background: #82a7cb;
 }
-.dynamic-component-container{
+.dynamic-component-container {
   margin-top: 30px;
 }
-.step-container{
+.step-container {
   margin-top: 30px;
   text-align: center;
 }
