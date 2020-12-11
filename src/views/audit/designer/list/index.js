@@ -11,6 +11,7 @@ import File from '@/api/file'
 import Project from '@/api/projects'
 import { notEmptyArray} from '@/utils'
 export default {
+  name:'DesignerList',
   components: {
     Flow
   },

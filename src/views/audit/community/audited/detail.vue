@@ -100,7 +100,7 @@ export default {
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
-    const valid = typeof +id === 'number' && typeof +status === 'number'
+    const valid = isNaN(+id) && typeof +status === 'number'
 
     if (valid) {
       next(vm => {
@@ -110,7 +110,8 @@ export default {
       })
     } else {
       // 没有id则返回跳转
-      next(from.fullPath)
+            next('/redirect' + from.fullPath)
+
     }
   }
 }

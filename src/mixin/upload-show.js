@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-04 10:50:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-10 09:54:35
+ * @LastEditTime: 2020-12-11 14:34:22
  * @Description: 附件上传 + 预览通用模块
  */
 import File from '@/api/file'
@@ -146,18 +146,19 @@ export default {
           this.uploadList.forEach(async (v, i) => {
             const { projectId, file } = v
             const last = i === this.uploadList.length - 1
-            await File.upload(file, { projectId, typeName }).then(() => {
-              this.uploadList.splice(i, 1)
-              if (last) {
-                error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
-              }
-            })
+            await File.upload(file, { projectId, typeName })
+              .then(() => {
+                if (last) {
+                  error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
+                }
+              })
               .catch(() => {
                 // 上传失败
                 const failIdx = this.fileList.findIndex(f => f.uid === v.uid)
                 this.fileList.splice(failIdx, 1)
                 error = true
               })
+            this.uploadList.splice(i, 1)
           })
         })
       }
@@ -166,18 +167,20 @@ export default {
         deleteAsync = new Promise((resolove, reject) => {
           this.deleteList.forEach(async (v, i) => {
             const last = i === this.deleteList.length - 1
-            File.remove(v.uid).then(() => {
-              this.deleteList.splice(i, 1)
-              const delIndx = this.fileList.findIndex(f => f.uid === v.uid)
-              this.fileList.splice(delIndx, 1)
-              if (last) {
-                error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
-              }
-            }).catch((err) => {
-              console.log(err)
-              this.fileList.push(v)
-              error = true
-            })
+            await File.remove(v.uid)
+              .then(() => {
+                const delIndx = this.fileList.findIndex(f => f.uid === v.uid)
+                this.fileList.splice(delIndx, 1)
+                if (last) {
+                  error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+                this.fileList.push(v)
+                error = true
+              })
+            this.deleteList.splice(i, 1)
           })
         })
       }

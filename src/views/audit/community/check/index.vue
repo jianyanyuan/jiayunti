@@ -68,15 +68,16 @@ export default {
   beforeRouteEnter(to, from, next) {
     const { id, statusId } = to.params
     // 1社区受理 3社区第二次受理
-    const valid = statusId == 1 || statusId == 3
-    if (typeof +id === 'number' && valid) {
+    const valid = status == 1 || status == 3
+    if (!isNaN(+id) && valid) {
       next(vm => {
         vm.applyId = id
-        vm.status = statusId
+        vm.status = status
       })
     } else {
       // 没有id则返回跳转
-      next(from.fullPath)
+            next('/redirect' + from.fullPath)
+
     }
   }
 }

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-11 09:56:55
+ * @LastEditTime: 2020-12-11 13:14:32
  * @Description: 居民申请意见汇总表
 -->
 <template>
@@ -30,13 +30,13 @@
         </el-table-column>
         <el-table-column label="是否完成" min-width="180" align="center">
           <template slot-scope="{row}">
-            <el-checkbox v-if="hasChanged" v-model="row.isComplete" @change="handleChange(value,row)">是</el-checkbox>
+            <el-checkbox v-if="hasChanged" v-model="row.isComplete" @change="handleChange(row)">是</el-checkbox>
             <span v-else>{{ row.isComplete ? '是' : '否' }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="完成时间" min-width="250" align="center">
+        <el-table-column label="完成时间" min-width="250" align="center" v-show="hasChanged">
           <template slot-scope="{row}">
-            <el-date-picker v-model="row.time" type="datetime" size="small" :disabled="!row.isComplete" />
+            {{ new Date(row.finishTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}
           </template>
         </el-table-column>
       </el-table>
@@ -93,11 +93,14 @@ export default {
     this.getRecored()
   },
   methods: {
-    getRecored(){
+    getRecored() {
 
     },
-    handleChange(value, row) {
-      // this.updateList.push(row)
+    handleChange(row) {
+      if (!this.updateList.includes(v => v.id === row.id)) {
+        // 引用传递
+        this.updateList.push(row)
+      }
     },
     nextProcess(arrow) {
       this.$emit('nextProcess', arrow)

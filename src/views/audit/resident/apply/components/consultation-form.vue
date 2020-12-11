@@ -273,18 +273,19 @@ export default {
             const { room, projectId, file } = v
 
             const last = i === this.uploadList.length - 1
-            await File.uploadOpinion(file, { room, projectId }).then(() => {
-              this.uploadList.splice(i, 1)
-              if (last) {
-                error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
-              }
-            })
+            await File.uploadOpinion(file, { room, projectId })
+              .then(() => {
+                if (last) {
+                  error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
+                }
+              })
               .catch(() => {
                 // 上传失败
                 const failIdx = this.fileList[room].findIndex(f => f.uid === v.uid)
                 this.fileList[room].splice(failIdx, 1)
                 error = true
               })
+            this.uploadList.splice(i, 1)
           })
         })
       }
@@ -293,18 +294,20 @@ export default {
         deleteAsync = new Promise((resolove, reject) => {
           this.deleteList.forEach(async (v, i) => {
             const last = i === this.deleteList.length - 1
-            File.removeOpinion(v.uid).then(() => {
-              this.deleteList.splice(i, 1)
+            await File.removeOpinion(v.uid)
+            .then(() => {
               const delIndx = this.fileList[v.room].findIndex(f => f.uid === v.uid)
               this.fileList[v.room].splice(delIndx, 1)
               if (last) {
                 error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
               }
-            }).catch((err) => {
+            })
+            .catch((err) => {
               console.log(err)
               this.fileList[v.room].push(v)
               error = true
             })
+            this.deleteList.splice(i, 1)
           })
         })
       }

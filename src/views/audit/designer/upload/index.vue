@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-11-03 08:29:28
+ * @LastEditTime: 2020-12-11 12:12:41
  * @LastEditors: zfd
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -41,8 +41,8 @@ export default {
       stepBtnGroup: ['档案调取', '上传设计'],
       componentGroup: ['Archive', 'Upload'],
       curStep: 0,
-      applyId:null,
-      status:null
+      applyId: null,
+      status: null
     }
   },
   computed: {
@@ -65,16 +65,23 @@ export default {
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    const { id, statusId } = to.params
+    const { id, status } = to.params
     // 2方案设计
-    if (typeof +id === 'number' && statusId == 2 ) {
+
+    if (!isNaN(+id) && status == 2) {
       next(vm => {
         vm.applyId = id
-        vm.status = statusId
+        vm.status = status
       })
     } else {
       // 没有id则返回跳转
-      next(from.fullPath)
+      // if (to.fullPath === '/designer/list') {
+      //   next();
+      // }
+      // next(false) 
+      // next 权限路由都会出错
+      next('/redirect' + from.fullPath)
+
     }
   }
 
