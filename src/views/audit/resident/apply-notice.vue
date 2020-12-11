@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-11 14:43:50
+ * @LastEditTime: 2020-12-11 14:53:27
  * @Description: 公示/公告上传
 -->
 <template>
@@ -39,10 +39,7 @@
         <div slot="header">
           <span>公示内容</span>
         </div>
-        <el-upload action="#" :file-list="contentList" 
-        :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,0)}" 
-        :on-change="function(file,fileList){return handleUploadChange(file,fileList,0)}" 
-        list-type="picture" drag :auto-upload="false">
+        <el-upload action="#" :file-list="contentList" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,0)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,0)}" list-type="picture" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div>将文件拖到此处，或点击添加</div>
           <p>单个文件大小不超过20MB，可上传图片或PDF</p>
@@ -52,10 +49,7 @@
         <div slot="header">
           <span>公示公告</span>
         </div>
-        <el-upload action="#" :file-list="reportList" 
-        :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,1)}" 
-        :on-change="function(file,fileList){return handleUploadChange(file,fileList,1)}" 
-        list-type="picture" drag :auto-upload="false">
+        <el-upload action="#" :file-list="reportList" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,1)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,1)}" list-type="picture" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div>将文件拖到此处，或点击添加</div>
           <p>单个文件大小不超过20MB，可上传图片或PDF</p>
@@ -112,7 +106,7 @@ export default {
       reportList: [], // 公示报告
       uploadList: [], // 上传用
       deleteList: [], // 删除用
-      dirName: ['']
+      dirName: ['notice-content', 'notice-report']
     }
   },
 
@@ -132,22 +126,26 @@ export default {
       this.reportList = []
       this.uploadList = []
       this.deleteList = []
-            File.get({ projectId: this.id, typeName:  }).then(res => {
-        if (notEmptyArray(res.content)) {
-          for (const i of res.content) {
-            this.fileList.push({
-              uid: i.id,
-              name: i.filename,
-              url: i.path
-            })
+      this.dirName.forEach(async (v, i) => {
+        await File.get({ projectId: this.id, typeName: v })
+        .then(res => {
+          if (notEmptyArray(res.content)) {
+            const arr = i === 0 ? 'contentList' : 'reportList'
+            for (const i of res.content) {
+              this[arr].push({
+                uid: i.id,
+                name: i.filename,
+                url: i.path
+              })
+            }
           }
-        }
-        this.pageLoading = false
-      }).catch(err => {
-        console.log(err)
-        this.$message.error('信息获取失败')
-        this.pageLoading = false
+        })
+        .catch(err => {
+          console.log(err)
+          this.$message.error('信息获取失败')
+        })
       })
+      this.pageLoading = false
     },
     // 展示文件
     detailFile(file) {
@@ -208,14 +206,13 @@ export default {
           name: file.name,
         }
         const upload = {
+          typeName: this.dirName[type],
           uid: file.uid,
           file: formData
         }
         if (type === 0) {
-          upload.typeName = 'notice-content'
           this.contentList.push(file)
         } else {
-          upload.typeName = 'notice-report'
           this.reportList.push(file)
 
         }
@@ -247,7 +244,7 @@ export default {
     handleUploadRemove(file, fileList, type) {
       // const index = this.fileList[room].findIndex(v => v.uid === file.uid)
       // const removed = this.fileList[room].splice(index, 1)
-      const typeName = type === 0 ? 'notice-content' : 'notice-report'
+      const typeName = this.dirName[type]
       const arr = type === 0 ? 'contentList' : 'reportList'
       if (file.status === 'success') {
         // 已上传的 --> 待删除
@@ -276,15 +273,15 @@ export default {
         let error = false
         uploadAsync = new Promise((resolove, reject) => {
           this.uploadList.forEach(async (v, i) => {
-            const { typeName, file } = v
-            const arr = typeName === 'notice-content' ? 'contentList' : 'reportList'
+            const { type, file } = v
+            const arr = type === 0 ? 'contentList' : 'reportList'
             const last = i === this.uploadList.length - 1
-            await File.upload(file, { typeName, projectId: this.id })
-            .then(() => {
-              if (last) {
-                error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
-              }
-            })
+            await File.upload(file, { typeName: this.dirName[type], projectId: this.id })
+              .then(() => {
+                if (last) {
+                  error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
+                }
+              })
               .catch(() => {
                 // 上传失败
                 const failIdx = this[arr].findIndex(f => f.uid === v.uid)
@@ -300,20 +297,20 @@ export default {
         deleteAsync = new Promise((resolove, reject) => {
           this.deleteList.forEach(async (v, i) => {
             const last = i === this.deleteList.length - 1
-            const arr = v.typeName === 'notice-content' ? 'contentList' : 'reportList'
+            const arr = v.type === 0 ? 'contentList' : 'reportList'
             await File.remove(v.uid)
-            .then(() => {
-              const delIndx = this[arr].findIndex(f => f.uid === v.uid)
-              this[arr].splice(delIndx, 1)
-              if (last) {
-                error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-              this[arr].push(v)
-              error = true
-            })
+              .then(() => {
+                const delIndx = this[arr].findIndex(f => f.uid === v.uid)
+                this[arr].splice(delIndx, 1)
+                if (last) {
+                  error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+                this[arr].push(v)
+                error = true
+              })
             this.deleteList.splice(i, 1)
           })
         })

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-11 13:14:32
+ * @LastEditTime: 2020-12-11 16:42:02
  * @Description: 居民申请意见汇总表
 -->
 <template>
@@ -10,7 +10,7 @@
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
       <span>档案调取</span>
       <el-button v-if="!hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
-      <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">保存</el-button>
+      <el-button v-else type="primary" style="float:right" @click="handlePost">保存</el-button>
     </el-row>
     <el-card>
       <div slot="header">
@@ -23,24 +23,24 @@
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="项目" min-width="180" prop="project" align="center">
+        <el-table-column label="项目" min-width="180" prop="drawingPaperType" align="center">
           <template slot-scope="{row}">
-            {{row.project}}
+            {{row.drawingPaperType}}
           </template>
         </el-table-column>
         <el-table-column label="是否完成" min-width="180" align="center">
           <template slot-scope="{row}">
-            <el-checkbox v-if="hasChanged" v-model="row.isComplete" @change="handleChange(row)">是</el-checkbox>
-            <span v-else>{{ row.isComplete ? '是' : '否' }}</span>
+            <el-checkbox v-if="hasChanged" v-model="row.whetherComplete" @change="handleChange(row)">是</el-checkbox>
+            <span v-else>{{ row.whetherComplete ? '是' : '否' }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="完成时间" min-width="250" align="center" v-show="hasChanged">
+        <el-table-column label="保存时间" min-width="250" align="center">
           <template slot-scope="{row}">
-            {{ new Date(row.finishTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}
+            <span v-if="row.completedAt && row.whetherComplete && !hasChanged">{{ new Date(row.completedAt) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
       </el-table>
-      <div v-if="hasChanged" style="text-align:center; margin-top:30px">
+      <div v-if="!hasChanged" style="text-align:center; margin-top:30px">
         <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
       </div>
     </el-card>
@@ -49,10 +49,16 @@
 
 <script>
 import File from '@/api/file'
-// import { deepClone } from '@/utils'
-
+import Designer from '@/api/designer'
+import { notEmptyArray } from '@/utils'
 export default {
   name: 'ProtocalForm',
+  props: {
+    id: {
+      type: [Number, String],
+      required: true
+    }
+  },
   data() {
     return {
       // 修改后重新保存
@@ -93,19 +99,49 @@ export default {
     this.getRecored()
   },
   methods: {
+    // 获取信息
     getRecored() {
-
+      this.tableLoading = true
+      Designer.getArchives(this.id)
+        .then(res => {
+          if (notEmptyArray(res)) {
+            this.tableData = res
+            this.tableLoading = false
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          this.tableLoading = false
+          this.$message.error('数据获取失败')
+        })
     },
     handleChange(row) {
-      if (!this.updateList.includes(v => v.id === row.id)) {
+      if (!this.updateList.includes(row)) {
         // 引用传递
         this.updateList.push(row)
       }
     },
     nextProcess(arrow) {
-      this.$emit('nextProcess', arrow)
+      const idx = this.tableData.findIndex(v => {
+        v.drawingPaperType.includes('必选') && v.whetherComplete === false
+      })
+      if (idx === -1) {
+        this.$emit('nextProcess', arrow)
+      } else {
+        this.$message.error('档案未全部调取')
+      }
     },
-
+    handlePost() {
+      this.tableLoading = true
+      Designer.modifyArchives(this.updateList).then(res => {
+        this.tableLoading = false
+        this.getRecored()
+      }).catch(res => {
+        this.tableLoading = false
+        this.$message.error('保存失败')
+      })
+      this.hasChanged = false
+    }
   }
 }
 </script>
