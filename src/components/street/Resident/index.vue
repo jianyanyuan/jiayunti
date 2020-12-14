@@ -180,33 +180,6 @@ export default {
                   name: i.filename,
                   url: i.path
                 })
-                // if (i.filename.includes('pdf')) {
-                //   // pdf文件
-                //   const obj = {
-                //     uid: i.id,
-                //     name: i.filename,
-                //     url: i.path,
-                //     type: 'pdf'
-                //   }
-                //   const pdfURL = Pdf.createLoadingTask('/teat.pdf')
-                //   pdfURL.promise.then(pdf => {
-                //     obj.pdfPages = pdf.numPages
-                //     obj.pdfURL = pdfURL
-                //     this.pageContent[idx].fileList.push(obj)
-                //   }).catch(() => {
-                //     obj.type = 'pdfError'
-                //     this.pageContent[idx].fileList.push(obj)
-                //   })
-
-                // } else {
-                //   // image文件
-                //   this.pageContent[idx].fileList.push({
-                //     uid: i.id,
-                //     name: i.filename,
-                //     url: i.path,
-                //     type: 'image'
-                //   })
-                // }
               }
             }
           })

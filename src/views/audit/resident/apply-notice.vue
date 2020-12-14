@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-14 09:11:04
+ * @LastEditTime: 2020-12-14 13:48:33
  * @Description: 公示/公告上传
 -->
 <template>
@@ -74,6 +74,7 @@
 
 <script>
 import File from '@/api/file'
+import Project from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 // import { deepClone } from '@/utils'
 import Pdf from 'vue-pdf'
@@ -114,7 +115,7 @@ export default {
   created() {
     const { id, status } = this.$route.params
     //3第二次提交材料
-    if (!isNaN(+id) && status === 3) {
+    if (!isNaN(+id) && status == 3) {
       this.id = id
       this.status = status
       this.detailApply()
@@ -311,10 +312,14 @@ export default {
           })
         })
       }
-      Promise.all([uploadAsync, deleteAsync]).then(() => {
+      Promise.all([uploadAsync, deleteAsync]).then(async() => {
         this.pageLoading = false
-        this.hasChanged = true
-      }).catch(() => {
+        await Project.advance(this.id, 3).catch(() => {
+          this.$message.error('流程错误')
+        })
+        this.$router.push('/resident/list')
+      }).catch((err) => {
+        console.log(err)
         this.$message.error('保存失败')
         this.pageLoading = false
       })
@@ -324,7 +329,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
     //3第二次提交材料
-    const illegal = isNaN(+id) || status !== 3
+    const illegal = isNaN(+id) || status != 3
 
     if (illegal) {
       next('/redirect' + from.fullPath)

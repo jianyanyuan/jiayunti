@@ -113,7 +113,7 @@ const residentRouter = {
       }
     },
     {
-      path: 'assents-detail',
+      path: 'assents-detail/:id/:status',
       component: () => import('@/views/audit/resident/assents-detail.vue'),
       name: 'ResidentAssentsDetail',
       hidden: true,

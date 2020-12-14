@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-10 08:41:20
+ * @LastEditTime: 2020-12-14 14:03:02
  * @Description:申请列表
 -->
 
@@ -29,7 +29,7 @@
         </el-form-item>
       </el-form>
     </div>
-        <el-card>
+    <el-card>
       <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row @row-dblclick="flowView">
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
@@ -55,13 +55,14 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
-        <template slot-scope="scope">
-          <el-row type="flex" justify="space-around">
-            <el-button size="mini" type="warning" plain @click="$router.push({name:'CommunityCheck',params:{id: scope.row.id, status: scope.row.statusId}})">审核</el-button>
-            <el-button v-if="scope.row.statusId === 3" size="mini" type="info" plain @click="$router.push({path:'/community/record',query:{applyId:scope.row.Id}})">异议记录</el-button>
-          </el-row>
-        </template>
-      </el-table-column>
+          <template slot-scope="scope">
+            <el-row type="flex" justify="space-around">
+              <el-button size="mini" type="warning" v-if="scope.row.statusId === 1" plain @click="$router.push({name:'CommunityCheck',params:{id: scope.row.id, status: scope.row.statusId}})">审核</el-button>
+              <el-button size="mini" type="warning" v-if="scope.row.statusId === 4" plain @click="$router.push({name:'CommunityCheckS',params:{id: scope.row.id, status: scope.row.statusId}})">审核</el-button>
+              <el-button v-if="scope.row.statusId === 3" size="mini" type="warning" plain @click="$router.push({name:'CommunityRecord',params:{id:scope.row.id, status: scope.row.statusId}})">异议记录</el-button>
+            </el-row>
+          </template>
+        </el-table-column>
       </el-table>
     </el-card>
     <el-pagination background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
@@ -86,7 +87,7 @@ export default {
   padding: 5px 20px;
   background: #efefef;
   border-bottom: 1px solid #ddd;
-  margin-bottom:20px
+  margin-bottom: 20px;
 }
 .form-card ::v-deep .el-upload-dragger {
   width: 400px;

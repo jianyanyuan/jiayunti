@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-16 16:35:29
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-11 09:33:26
+ * @LastEditTime: 2020-12-14 17:31:46
  * @Description:
 -->
 <template>
@@ -22,9 +22,13 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="审核结果:" prop="reviewResults">
-        <el-select v-model="form.reviewResults">
+        <el-select v-model="form.reviewResults" :disabled="conflict === true">
           <el-option v-for="item in auditOptions" :key="item.val" :value="item.key" :label="item.val" />
         </el-select>
+        <el-tag type="danger" style="margin-left:20px" size="large
+        
+        
+        " v-if="conflict === true" class="audit-conflict">异议冲突</el-tag>
       </el-form-item>
       <el-form-item class="audit-operation">
         <el-button type="success" size="medium" icon="el-icon-upload2" @click="handlePost">提 交</el-button>
@@ -37,6 +41,7 @@
 <script>
 import Project from '@/api/projects'
 import File from '@/api/file'
+import { mapState } from 'vuex'
 export default {
   name: 'Audit',
   props: {
@@ -47,6 +52,9 @@ export default {
     status: {
       type: [Number, String],
       required: true
+    },
+    conflict:{
+      type:Boolean
     }
   },
   data() {
@@ -54,7 +62,7 @@ export default {
       pageLoading: false,
       form: {
         reviewOpinions: '',
-        reviewResults: 1
+        reviewResults: 0
       },
       rule: {
         reviewOpinions: [{ required: true, message: '请给出审核意见', trigger: 'blur' }],
@@ -63,12 +71,20 @@ export default {
       attachment: null,
     }
   },
+  created() {
+    if(this.conflict === true) {
+      this.form.reviewResults = 1 // 不通过
+    }
+  },
   computed: {
     typeName() {
-      if (this.status == 1) {
-        return 'community-review-form' // 社区审核
-      } else {
-        return 'errors' // 错误
+      switch(+this.status) {
+        case 1:
+          return 'community-review-form' // 社区审核
+        case 4:
+          return 'notice-review-form' // 公示审核
+        default:
+          return 'errors'
       }
     },
     ...mapState('common', ['auditOptions'])
@@ -119,23 +135,27 @@ export default {
         if (valid) {
           this.pageLoading = true
           this.form.projectId = this.id
+          this.form.type = this.status
           // const taskAsync = []
           if (this.attachment !== null) {
             const fileRes = await File.upload(this.attachment.file, { projectId: this.id, typeName: this.typeName })
             if (fileRes.fileTypeId) {
               this.attachment = null
-              this.form.fileTypeId = fileRes.fileTypeId
+              this.form.fileId = fileRes.fileTypeId
             } else {
               this.$message.error('附件上传失败')
               this.pageLoading = false
               return
             }
           }
-          Project.communityCheck(this.form)
+          Project.check(this.form)
             .then(async () => {
-              await Project.advance(this.id, 1).catch(() => {
-                this.$message.error('流程错误')
-              })
+              if (this.form.reviewResults === 0) {
+                // 通过
+                await Project.advance(this.id, this.status).catch(() => {
+                  this.$message.error('流程错误')
+                })
+              }
               this.$router.push('/community/list')
               this.pageLoading = false
             })

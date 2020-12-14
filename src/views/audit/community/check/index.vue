@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-14 09:21:42
+ * @LastEditTime: 2020-12-14 09:59:54
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -58,7 +58,7 @@ export default {
     }
   },
   created() {
-    const { id, statusId } = to.params
+    const { id, status } = this.$route.params
     // 1社区受理 3社区第二次受理
     const valid = status == 1 || status == 3
     if (!isNaN(+id) && valid) {
@@ -75,7 +75,7 @@ export default {
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    const { id, statusId } = to.params
+    const { id, status } = to.params
     // 1社区受理 3社区第二次受理
     const valid = status == 1 || status == 3
     if (isNaN(+id) || !valid) {

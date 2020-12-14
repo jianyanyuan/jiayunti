@@ -2,7 +2,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-12-09 17:33:28
+ * @LastEditTime: 2020-12-14 16:12:36
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -38,36 +38,41 @@ const state = {
     { key: 1, val: '已解决' }
   ],
   handleTag: [
-    { key: 0, val: 'danger' },
-    { key: 1, val: 'success' }
+    { key: 0, val: 'success' },
+    { key: 1, val: 'danger' }
   ],
   auditOptions: [
-    { key: -1, val: '暂未审核' },
     { key: 0, val: '通过' },
     { key: 1, val: '不通过' } // 1社区不通过
+  ],
+  checkOptions: [
+    { key: 0, val: '通过' },
+    { key: 1, val: '不通过' }
   ],
   applyStatus: [
     { key: 0, val: '申请中' },
     { key: 1, val: '社区受理' },
     { key: 2, val: '方案设计' },
-    { key: 3, val: '公示阶段' },
-    { key: 4, val: '管道踏勘' },
-    { key: 5, val: '施工图设计' },
-    { key: 6, val: '施工图审核' },
-    { key: 7, val: '施工报价' },
-    { key: 8, val: '街道审核' },
-    { key: 9, val: '联合审查' },
-    { key: 10, val: '审核通过' },
-    { key: 11, val: '施工中' },
-    { key: 12, val: '竣工验收' },
-    { key: 13, val: '驳回' },
-    { key: 14, val: '已撤销' }
+    { key: 3, val: '公示阶段' }, // 社区异议记录 居民异议查看  居民提交材料
+    { key: 4, val: '公示审核' }, 
+    { key: 5, val: '管道踏勘' },
+    { key: 6, val: '施工图设计' },
+    { key: 7, val: '施工图审核' },
+    { key: 8, val: '施工报价' },
+    { key: 9, val: '街道审核' },
+    { key: 10, val: '联合审查' },
+    { key: 11, val: '审核通过' },
+    { key: 12, val: '施工中' },
+    { key: 13, val: '竣工验收' },
+    { key: 14, val: '驳回' },
+    { key: 15, val: '已撤销' }
   ],
   applyTag: [
     { key: 0, val: 'warning' },
     { key: 1, val: 'warning' },
     { key: 2, val: 'primary' },
     { key: 3, val: 'primary' },
+    { key: 4, val: 'primary' },
     { key: 4, val: 'warning' },
     { key: 5, val: 'primary' },
     { key: 6, val: 'warning' },

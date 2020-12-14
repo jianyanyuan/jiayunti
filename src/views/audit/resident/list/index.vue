@@ -43,7 +43,7 @@
 
               <el-button v-if="scope.row.statusId === 3" size="mini" type="primary" plain @click="$router.push({name:'ResidentApplyNotice',params:{id:scope.row.id,status:scope.row.statusId}})">提交材料</el-button>
 
-              <el-button v-if="scope.row.statusId === 3" size="mini" type="warning" plain @click="$router.push({name:'ResidentAssentsDetail',params:{}})">异议反馈</el-button>
+              <el-button v-if="scope.row.statusId === 3" size="mini" type="warning" plain @click="$router.push({name:'ResidentAssentsDetail',params:{id:scope.row.id,status:scope.row.statusId}})">异议反馈</el-button>
 
               <el-tag v-if="scope.row.statusId === 4" size="medium" type="warning" effect="light">管道踏勘中</el-tag>
 

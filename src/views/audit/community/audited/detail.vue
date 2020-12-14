@@ -45,7 +45,7 @@
 
 <script>
 import mixn from '@/components/UploadList/mixin'
-import Project from '@/api/projects'
+import Community from '@/api/community'
 import { mapState } from 'vuex'
 import { notEmptyArray } from '@/utils'
 export default {
@@ -53,21 +53,9 @@ export default {
   mixins: [mixn],
   data() {
     return {
-      audit: {
-        name: '大萨达',
-        org: '社区111',
-        phone: '15988800323',
-        remarks: '大萨达萨达撒多撒大所',
-        attachments: [
-          { name: '附件', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg', uid: '附件' }
-        ],
-        result: '通过'
-      },
       pageLoading: false,
       list: [],
-      applyId: null,
-      status: null
-
+      applyId: null
     }
   },
   computed: {
@@ -82,20 +70,19 @@ export default {
     // }
   },
   created() {
-    const { id, status } = to.params
+    const { id } = this.$route.params
     // 1社区第一次受理 3社区第二次受理
-    const valid = status === 1 || status === 3
+    // const valid = status == 1 || status == 3
 
-    if (!isNaN(+id) && valid) {
+    if (!isNaN(+id) ) {
       this.applyId = id
-      this.status = status
       this.getDetail() // 获取详情
     }
   },
   methods: {
     async getDetail() {
       this.pageLoading = true
-      await Project.checkSingle(this.applyId).then(res => {
+      await Community.checkSingle(this.applyId).then(res => {
         if (notEmptyArray(res)) {
           res.forEach(element => {
             element.files = new Array({ uid: Date.now(), url: element.path })
@@ -110,10 +97,10 @@ export default {
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    const { id, status } = to.params
+    const { id } = to.params
     // 1社区第一次受理 3社区第二次受理
-    const valid = status === 1 || status === 3
-    if (isNaN(+id) || !valid) {
+    // const valid = status == 1 || status == 3
+    if (isNaN(+id)) {
       // 没有id则返回跳转
       next('/redirect' + from.fullPath)
     } else {

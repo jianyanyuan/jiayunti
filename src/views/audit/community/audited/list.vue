@@ -67,7 +67,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import Project from '@/api/projects'
+import Community from '@/api/community'
 import { notEmptyArray } from '@/utils'
 export default {
   name: 'CommunityAudited',
@@ -96,7 +96,7 @@ export default {
     // 获取已审核列表
     async listApplies() {
       this.listLoading = true
-      await Project.auditHistorylist({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+      await Community.auditHistorylist({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
         if (notEmptyArray(res.content)) {
           this.list = res.content
           this.pagination.total = res.totalElements

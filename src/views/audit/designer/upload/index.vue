@@ -51,7 +51,7 @@ export default {
     }
   },
   created() {
-    const { id, status } = to.params
+    const { id, status } = this.$route.params
     // 2方案设计
     if (!isNaN(+id) && status === 2) {
       this.applyId = id

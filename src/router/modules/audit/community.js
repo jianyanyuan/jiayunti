@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:14
- * @LastEditTime: 2020-12-10 08:34:27
+ * @LastEditTime: 2020-12-14 17:08:25
  * @LastEditors: zfd
  * @Description: 审批端社区路由表
  * @FilePath: \jiayunti\src\router\modules\audit\community.js
@@ -40,7 +40,7 @@ const communityRouter = {
       }
     },
     {
-      path: 'audited-detail/:id/:status',
+      path: 'audited-detail/:id',
       component: () => import('@/views/audit/community/audited/detail.vue'),
       name: 'CommunityAuditedDetail',
       hidden: true,
@@ -62,7 +62,7 @@ const communityRouter = {
       }
     },
     {
-      path: 'record',
+      path: 'record/:id/:status',
       name: 'CommunityRecord',
       component: () => import('@/views/audit/community/record/index.vue'),
       hidden: true,
@@ -73,12 +73,23 @@ const communityRouter = {
       }
     },
     {
-      path: 'check/:id/:statusId',
+      path: 'check/:id/:status',
       name: 'CommunityCheck',
       component: () => import('@/views/audit/community/check/index.vue'),
       hidden: true,
       meta: {
         title: '审核',
+        icon: 'check',
+        roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
+      }
+    },
+    {
+      path: 'check-notice/:id/:status',
+      name: 'CommunityCheckS',
+      component: () => import('@/views/audit/community/check/notice.vue'),
+      hidden: true,
+      meta: {
+        title: '公示审核',
         icon: 'check',
         roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
       }
