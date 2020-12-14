@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-11 10:16:39
+ * @LastEditTime: 2020-12-14 09:16:26
  * @LastEditors: zfd
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -19,7 +19,7 @@
 
     <div class="dynamic-component-container">
       <keep-alive>
-        <component  :is="curComponent" v-if="applyId" @nextProcess="handleProcess" :id="applyId" :status="status" />
+        <component :is="curComponent" v-if="applyId" @nextProcess="handleProcess" :id="applyId" :status="status" />
       </keep-alive>
     </div>
 
@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       applyId: null,
-      status:null,
+      status: null,
       stepBtnGroup: ['基本资料', '意见征询表', '意见征询汇总表', '委托授权书', '项目协议书', '账户授权委托书'],
       componentGroup: ['Basic', 'ConsultationForm', 'SummaryForm', 'DelegateForm', 'ProtocalForm', 'SpecialForm'],
       curStep: 0
@@ -69,21 +69,23 @@ export default {
     }
   },
   created() {
+    const { id, status } = to.params
+    // 1第一次提交材料
+    if (!isNaN(+id) && status === 1) {
+      this.applyId = id
+      this.status = status
+    }
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    const { id, statusId } = to.params
-    // 1社区受理 3社区第二次受理
+    const { id, status } = to.params
+    // 1第一次提交材料
     const valid = status == 1 || status == 3
-    if (!isNaN(+id) && valid) {
-      next(vm => {
-        vm.applyId = id
-        vm.status = status
-      })
-    } else {
+    if (isNaN(+id) || status !== 1) {
       // 没有id则返回跳转
-            next('/redirect' + from.fullPath)
-
+      next('/redirect' + from.fullPath)
+    } else {
+      next()
     }
   }
 }

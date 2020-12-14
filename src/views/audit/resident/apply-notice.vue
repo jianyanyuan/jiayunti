@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-11 14:53:27
+ * @LastEditTime: 2020-12-14 09:11:04
  * @Description: 公示/公告上传
 -->
 <template>
@@ -10,21 +10,21 @@
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
       <span>材料上传</span>
       <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修 改</el-button>
-      <el-button v-else type="success" style="float:right" @click="hasChanged = !hasChanged">提 交</el-button>
+      <el-button v-else type="success" style="float:right" @click="postFile">提 交</el-button>
     </el-row>
     <template v-if="hasChanged">
       <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
           <span>公示内容</span>
         </div>
-        <upload-list :files="contentList" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
+        <upload-list :files="contentList" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
 
       </el-card>
       <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
           <span>公示公告</span>
         </div>
-        <upload-list :files="reportList" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
+        <upload-list :files="reportList" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
 
       </el-card>
       <!-- <div style="text-align:center">
@@ -39,7 +39,7 @@
         <div slot="header">
           <span>公示内容</span>
         </div>
-        <el-upload action="#" :file-list="contentList" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,0)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,0)}" list-type="picture" drag :auto-upload="false">
+        <el-upload action="#" :file-list="contentList" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,0)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,0)}" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div>将文件拖到此处，或点击添加</div>
           <p>单个文件大小不超过20MB，可上传图片或PDF</p>
@@ -49,7 +49,7 @@
         <div slot="header">
           <span>公示公告</span>
         </div>
-        <el-upload action="#" :file-list="reportList" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,1)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,1)}" list-type="picture" drag :auto-upload="false">
+        <el-upload action="#" :file-list="reportList" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,1)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,1)}" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div>将文件拖到此处，或点击添加</div>
           <p>单个文件大小不超过20MB，可上传图片或PDF</p>
@@ -82,12 +82,6 @@ import printJS from 'print-js'
 
 export default {
   name: 'ApplyNotice',
-  props: {
-    id: {
-      type: [Number, String],
-      required: true
-    }
-  },
   components: {
     Pdf
   },
@@ -106,7 +100,9 @@ export default {
       reportList: [], // 公示报告
       uploadList: [], // 上传用
       deleteList: [], // 删除用
-      dirName: ['notice-content', 'notice-report']
+      dirName: ['notice-content', 'notice-report'],
+      id: null, // 工程id
+      status: null // 工程阶段标识位
     }
   },
 
@@ -116,7 +112,13 @@ export default {
 
   },
   created() {
-    this.detailApply()
+    const { id, status } = this.$route.params
+    //3第二次提交材料
+    if (!isNaN(+id) && status === 3) {
+      this.id = id
+      this.status = status
+      this.detailApply()
+    }
   },
   methods: {
     // 获取已上传的意见征询表
@@ -128,22 +130,22 @@ export default {
       this.deleteList = []
       this.dirName.forEach(async (v, i) => {
         await File.get({ projectId: this.id, typeName: v })
-        .then(res => {
-          if (notEmptyArray(res.content)) {
-            const arr = i === 0 ? 'contentList' : 'reportList'
-            for (const i of res.content) {
-              this[arr].push({
-                uid: i.id,
-                name: i.filename,
-                url: i.path
-              })
+          .then(res => {
+            if (notEmptyArray(res.content)) {
+              const arr = i === 0 ? 'contentList' : 'reportList'
+              for (const i of res.content) {
+                this[arr].push({
+                  uid: i.id,
+                  name: i.filename,
+                  url: i.path
+                })
+              }
             }
-          }
-        })
-        .catch(err => {
-          console.log(err)
-          this.$message.error('信息获取失败')
-        })
+          })
+          .catch(err => {
+            console.log(err)
+            this.$message.error('信息获取失败')
+          })
       })
       this.pageLoading = false
     },
@@ -201,21 +203,17 @@ export default {
       if (valid && file.status === 'ready') {
         const formData = new FormData()
         formData.append('file', file.raw)
-        const file = {
+        const showFile = {
           uid: file.uid,
           name: file.name,
         }
         const upload = {
-          typeName: this.dirName[type],
+          type,
           uid: file.uid,
           file: formData
         }
-        if (type === 0) {
-          this.contentList.push(file)
-        } else {
-          this.reportList.push(file)
-
-        }
+        const arr = type === 0 ? 'contentList' : 'reportList'
+        this[arr].push(showFile)
         this.uploadList.push(upload)
 
       } else {
@@ -244,23 +242,23 @@ export default {
     handleUploadRemove(file, fileList, type) {
       // const index = this.fileList[room].findIndex(v => v.uid === file.uid)
       // const removed = this.fileList[room].splice(index, 1)
-      const typeName = this.dirName[type]
       const arr = type === 0 ? 'contentList' : 'reportList'
-      if (file.status === 'success') {
+      if (file.url === undefined) {
+        // 未上传 --> 取消上传
+        const cancelIdx = this[arr].findIndex(f => f.uid === file.uid)
+        this[arr].splice(cancelIdx, 1)
+        const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
+        this.uploadList.splice(removeIdx, 1)
+
+      } else {
         // 已上传的 --> 待删除
         this.deleteList.push(
           {
-            typeName,
+            type,
             projectId: this.id,
             uid: file.uid,
           }
         )
-      } else {
-        // 未上传 --> 取消上传
-        const cancelIdx = this.fileList[room].findIndex(f => f.uid === file.uid)
-        this[arr].splice(cancelIdx, 1)
-        const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
-        this.uploadList.splice(removeIdx, 1)
       }
     },
 
@@ -277,17 +275,15 @@ export default {
             const arr = type === 0 ? 'contentList' : 'reportList'
             const last = i === this.uploadList.length - 1
             await File.upload(file, { typeName: this.dirName[type], projectId: this.id })
-              .then(() => {
-                if (last) {
-                  error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
-                }
-              })
               .catch(() => {
                 // 上传失败
                 const failIdx = this[arr].findIndex(f => f.uid === v.uid)
                 this[arr].splice(failIdx, 1)
                 error = true
               })
+            if (last) {
+              error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
+            }
             this.uploadList.splice(i, 1)
           })
         })
@@ -302,15 +298,15 @@ export default {
               .then(() => {
                 const delIndx = this[arr].findIndex(f => f.uid === v.uid)
                 this[arr].splice(delIndx, 1)
-                if (last) {
-                  error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
-                }
               })
               .catch((err) => {
                 console.log(err)
                 this[arr].push(v)
                 error = true
               })
+            if (last) {
+              error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
+            }
             this.deleteList.splice(i, 1)
           })
         })
@@ -323,6 +319,17 @@ export default {
         this.pageLoading = false
       })
     }
+  },
+  // 获得工程Id
+  beforeRouteEnter(to, from, next) {
+    const { id, status } = to.params
+    //3第二次提交材料
+    const illegal = isNaN(+id) || status !== 3
+
+    if (illegal) {
+      next('/redirect' + from.fullPath)
+    }
+    next()
   }
 }
 </script>

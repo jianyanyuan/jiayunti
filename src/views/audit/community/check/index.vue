@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-10 09:23:55
+ * @LastEditTime: 2020-12-14 09:21:42
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -57,6 +57,15 @@ export default {
       return this.componentGroup[this.curStep]
     }
   },
+  created() {
+    const { id, statusId } = to.params
+    // 1社区受理 3社区第二次受理
+    const valid = status == 1 || status == 3
+    if (!isNaN(+id) && valid) {
+      this.applyId = id
+      this.status = status
+    }
+  },
   methods: {
     change(event) {
       if (event.target.className === 'stepBtn') {
@@ -69,15 +78,11 @@ export default {
     const { id, statusId } = to.params
     // 1社区受理 3社区第二次受理
     const valid = status == 1 || status == 3
-    if (!isNaN(+id) && valid) {
-      next(vm => {
-        vm.applyId = id
-        vm.status = status
-      })
-    } else {
+    if (isNaN(+id) || !valid) {
       // 没有id则返回跳转
-            next('/redirect' + from.fullPath)
-
+      next('/redirect' + from.fullPath)
+    } else {
+      next()
     }
   }
 }

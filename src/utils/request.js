@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-08 08:23:11
+ * @LastEditTime: 2020-12-14 08:21:26
  * @Description:
  */
 import axios from 'axios'
@@ -67,7 +67,7 @@ service.interceptors.response.use(
     console.log(error)
 
     // 对响应错误做点什么
-    if(error.response.status) {
+    if(error.response?.status) {
       switch (error.response.status) {
         case 401:
           Message({

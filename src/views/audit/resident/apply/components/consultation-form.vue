@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-11 10:14:09
+ * @LastEditTime: 2020-12-14 09:13:33
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -242,7 +242,14 @@ export default {
     handleUploadRemove(file, fileList, room) {
       // const index = this.fileList[room].findIndex(v => v.uid === file.uid)
       // const removed = this.fileList[room].splice(index, 1)
-      if (file.status === 'success') {
+      if (file.url === undefined) {
+        // 未上传 --> 取消上传
+        const cancelIdx = this.fileList[room].findIndex(f => f.uid === file.uid)
+        this.fileList[room].splice(cancelIdx, 1)
+        const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
+        this.uploadList.splice(removeIdx, 1)
+
+      } else {
         // 已上传的 --> 待删除
         this.deleteList.push(
           {
@@ -252,12 +259,6 @@ export default {
             name: file.name
           }
         )
-      } else {
-        // 未上传 --> 取消上传
-        const cancelIdx = this.fileList[room].findIndex(f => f.uid === file.uid)
-        this.fileList[room].splice(cancelIdx, 1)
-        const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
-        this.uploadList.splice(removeIdx, 1)
       }
     },
 
@@ -274,11 +275,6 @@ export default {
 
             const last = i === this.uploadList.length - 1
             await File.uploadOpinion(file, { room, projectId })
-              .then(() => {
-                if (last) {
-                  error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
-                }
-              })
               .catch(() => {
                 // 上传失败
                 const failIdx = this.fileList[room].findIndex(f => f.uid === v.uid)
@@ -286,6 +282,9 @@ export default {
                 error = true
               })
             this.uploadList.splice(i, 1)
+            if (last) {
+              error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
+            }
           })
         })
       }
@@ -295,18 +294,18 @@ export default {
           this.deleteList.forEach(async (v, i) => {
             const last = i === this.deleteList.length - 1
             await File.removeOpinion(v.uid)
-            .then(() => {
-              const delIndx = this.fileList[v.room].findIndex(f => f.uid === v.uid)
-              this.fileList[v.room].splice(delIndx, 1)
-              if (last) {
-                error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-              this.fileList[v.room].push(v)
-              error = true
-            })
+              .then(() => {
+                const delIndx = this.fileList[v.room].findIndex(f => f.uid === v.uid)
+                this.fileList[v.room].splice(delIndx, 1)
+              })
+              .catch((err) => {
+                console.log(err)
+                this.fileList[v.room].push(v)
+                error = true
+              })
+            if (last) {
+              error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
+            }
             this.deleteList.splice(i, 1)
           })
         })

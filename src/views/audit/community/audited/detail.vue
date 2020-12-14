@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:43:23
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-10 17:19:43
+ * @LastEditTime: 2020-12-14 09:20:12
  * @Description: 审核意见
 -->
 <template>
@@ -81,6 +81,17 @@ export default {
     //   console.log(this)
     // }
   },
+  created() {
+    const { id, status } = to.params
+    // 1社区第一次受理 3社区第二次受理
+    const valid = status === 1 || status === 3
+
+    if (!isNaN(+id) && valid) {
+      this.applyId = id
+      this.status = status
+      this.getDetail() // 获取详情
+    }
+  },
   methods: {
     async getDetail() {
       this.pageLoading = true
@@ -100,18 +111,13 @@ export default {
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
-    const valid = isNaN(+id) && typeof +status === 'number'
-
-    if (valid) {
-      next(vm => {
-        vm.applyId = id
-        vm.status = status
-        vm.getDetail() // 获取详情
-      })
-    } else {
+    // 1社区第一次受理 3社区第二次受理
+    const valid = status === 1 || status === 3
+    if (isNaN(+id) || !valid) {
       // 没有id则返回跳转
-            next('/redirect' + from.fullPath)
-
+      next('/redirect' + from.fullPath)
+    } else {
+      next()
     }
   }
 }
@@ -122,7 +128,7 @@ export default {
   &::v-deep .el-card {
     width: 800px;
   }
-  .audit-tip{
+  .audit-tip {
     font-size: 18px;
     color: #7d8a9c;
   }

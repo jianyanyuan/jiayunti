@@ -153,7 +153,7 @@ const residentRouter = {
       }
     },
     {
-      path: 'apply-notice',
+      path: 'apply-notice/:id/:status',
       component: () => import('@/views/audit/resident/apply-notice.vue'),
       name: 'ResidentApplyNotice',
       hidden: true,

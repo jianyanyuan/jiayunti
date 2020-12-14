@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-08 15:09:04
+ * @LastEditTime: 2020-12-14 08:20:36
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -16,7 +16,10 @@
           <el-form-item label="姓名">
             {{ basic.applicantName }}
           </el-form-item>
-          <el-form-item label="地址">
+          <el-form-item label="申请时间">
+            {{ row.apply.createTime }}
+          </el-form-item>
+          <el-form-item label="用户地址">
             {{ basic.address }}
           </el-form-item>
           <el-form-item label="电话">
@@ -82,7 +85,7 @@ export default {
   data() {
     return {
       pageLoading: false,
-      formDisabled:false,
+      formDisabled: false,
       basic: null,
       ruleForm: {
         name: '',
@@ -143,17 +146,17 @@ export default {
     },
     handleSubmit() {
       let valid = true
-      for(let i = 0; i < this.dissents.length; i++) {
-        if(!valid) break
+      for (let i = 0; i < this.dissents.length; i++) {
+        if (!valid) break
         this.$refs[ruleForm + i].validate(success => {
           valid = success
         })
       }
-      if(valid) {
+      if (valid) {
         // this.dissents.forEach(v => {
-          
+
         // })
-      }else {
+      } else {
         this.$message.error('请补全信息')
       }
     },

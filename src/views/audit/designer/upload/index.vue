@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-11 12:12:41
+ * @LastEditTime: 2020-12-14 09:23:21
  * @LastEditors: zfd
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -50,6 +50,14 @@ export default {
       return this.componentGroup[this.curStep]
     }
   },
+  created() {
+    const { id, status } = to.params
+    // 2方案设计
+    if (!isNaN(+id) && status === 2) {
+      this.applyId = id
+      this.status = status
+    }
+  },
   methods: {
     // change(event) {
     //   if (event.target.className === 'stepBtn') {
@@ -67,21 +75,10 @@ export default {
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
     // 2方案设计
-
-    if (!isNaN(+id) && status == 2) {
-      next(vm => {
-        vm.applyId = id
-        vm.status = status
-      })
-    } else {
-      // 没有id则返回跳转
-      // if (to.fullPath === '/designer/list') {
-      //   next();
-      // }
-      // next(false) 
-      // next 权限路由都会出错
+    if (isNaN(+id) || status !== 2) {
       next('/redirect' + from.fullPath)
-
+    } else {
+      next()
     }
   }
 
