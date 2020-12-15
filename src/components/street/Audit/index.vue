@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-16 16:35:29
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-14 17:31:46
+ * @LastEditTime: 2020-12-15 15:20:44
  * @Description:
 -->
 <template>
@@ -53,8 +53,8 @@ export default {
       type: [Number, String],
       required: true
     },
-    conflict:{
-      type:Boolean
+    conflict: {
+      type: Boolean
     }
   },
   data() {
@@ -72,17 +72,19 @@ export default {
     }
   },
   created() {
-    if(this.conflict === true) {
+    if (this.conflict === true) {
       this.form.reviewResults = 1 // 不通过
     }
   },
   computed: {
     typeName() {
-      switch(+this.status) {
+      switch (+this.status) {
         case 1:
           return 'community-review-form' // 社区审核
         case 4:
           return 'notice-review-form' // 公示审核
+        case 7:
+          return 'construction-review-form' // 施工图审核
         default:
           return 'errors'
       }
@@ -150,14 +152,11 @@ export default {
           }
           Project.check(this.form)
             .then(async () => {
-              if (this.form.reviewResults === 0) {
-                // 通过
-                await Project.advance(this.id, this.status).catch(() => {
-                  this.$message.error('流程错误')
-                })
-              }
-              this.$router.push('/community/list')
+              await Project.advance(this.id, this.status).catch(() => {
+                this.$message.error('流程错误')
+              })
               this.pageLoading = false
+              this.pushPage()
             })
             .catch(() => {
               this.$message.error('审核失败')
@@ -167,6 +166,22 @@ export default {
           this.$message.error('请补全信息')
         }
       })
+    },
+    pushPage() {
+      switch (+this.status) {
+        case 1:
+          this.$router.push('/community/list')
+          break
+        case 4:
+          this.$router.push('/community/list')
+          break
+        case 7:
+          this.$router.push('/drawing-audit/list')
+          break
+        default:
+          this.$router.push('/404')
+          break
+      }
     }
   }
 }

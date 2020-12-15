@@ -8,7 +8,7 @@
 
 <template>
   <div class="app-container">
-    <div class="manage-query">
+    <div class="list-query-public">
       <el-form ref="queryForm" :inline="true" :model="query" size="small">
         <el-form-item label="编号" prop="Name " style="margin-right: 30px">
           <el-input v-model="query.code" />
@@ -125,11 +125,5 @@ export default {
 
 </script>
 <style scoped>
-.manage-query {
-  height: 45px;
-  padding: 5px 20px;
-  background: #efefef;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
-}
+
 </style>

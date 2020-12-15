@@ -2,13 +2,13 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-14 14:03:02
+ * @LastEditTime: 2020-12-15 13:53:02
  * @Description:申请列表
 -->
 
 <template>
   <div class="app-container">
-    <div class="manage-query">
+    <div class="list-query-public">
       <el-form ref="queryForm" :inline="true" :model="query" size="small">
         <el-form-item label="编号" prop="Name " style="margin-right: 30px">
           <el-input v-model="query.code" />
@@ -82,13 +82,7 @@ export default {
 
 </script>
 <style scoped>
-.manage-query {
-  height: 45px;
-  padding: 5px 20px;
-  background: #efefef;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
-}
+
 .form-card ::v-deep .el-upload-dragger {
   width: 400px;
   padding: 40px 5px;

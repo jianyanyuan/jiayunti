@@ -2,16 +2,16 @@
  * @Author: zfd
  * @Date: 2020-12-10 11:06:02
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-11 10:48:16
+ * @LastEditTime: 2020-12-15 11:10:25
  * @Description: 
  */
 import { mapState } from 'vuex'
 import Flow from '@/components/street/Flow'
 import File from '@/api/file'
 import Project from '@/api/projects'
-import { notEmptyArray} from '@/utils'
+import { notEmptyArray } from '@/utils'
 export default {
-  name:'DesignerList',
+  name: 'DesignerList',
   components: {
     Flow
   },
@@ -41,10 +41,11 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      uploadVisible:false,
+      uploadVisible: false,
+      uploadId: null, // 待施工图设计的工程id
       fileList: [],
       uploadList: [],
-      expandLoading:false
+      expandLoading: false
     }
   },
   computed: {
@@ -59,7 +60,7 @@ export default {
       this.listLoading = true
       await Project.list({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
         if (notEmptyArray(res.content)) {
-          res.content.forEach(v=>{
+          res.content.forEach(v => {
             v.apply = {}
             this.list.push(v)
           })
@@ -72,11 +73,11 @@ export default {
       this.listLoading = false
     },
     async handleExpand(row, expandedRows) {
-      if(Object.keys(row.apply).length === 0) {
+      if (Object.keys(row.apply).length === 0) {
         this.expandLoading = true
         const apply = await this.$store.dispatch('getProjectBasic', row.id)
         const idx = this.list.findIndex(v => v.id === row.id)
-        this.$set(this.list[idx], 'apply',apply)
+        this.$set(this.list[idx], 'apply', apply)
         this.expandLoading = false
       }
     },
@@ -85,6 +86,11 @@ export default {
     },
     goSearch() { },
     clearQuery() { },
+    // 上传施工图设计
+    openUpload(id) {
+      this.uploadId = id
+      this.uploadVisible = true
+    },
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
@@ -93,7 +99,7 @@ export default {
         const formData = new FormData()
         formData.append('file', file.raw)
         this.uploadList.push({
-          projectId: this.id,
+          projectId: this.uploadId,
           uid: file.uid,
           name: file.name,
           file: formData
@@ -123,8 +129,6 @@ export default {
     // 删除文件
     handleUploadRemove(file, fileList) {
       // 未上传 --> 取消上传
-      // const cancelIdx = this.fileList.findIndex(f => f.uid === file.uid)
-      // this.fileList.splice(cancelIdx, 1)
       const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
       this.uploadList.splice(removeIdx, 1)
     },
@@ -142,19 +146,27 @@ export default {
         let error = false
         this.uploadList.forEach(async (v, i) => {
           const { projectId, file } = v
+          const last = i === this.uploadList.length - 1
           await File.upload(file, { projectId, typeName: 'construction-design' })
-            .then(() => {
-              this.uploadList.splice(i, 1)
-            })
             .catch(() => {
               // 上传失败
               error = true
             })
-            if(error) {
-              this.$message.error('上传失败')
-            }else {
+          this.uploadList.splice(i, 1)
+          if (last) {
+            this.$refs.constructionUpload.uploadFiles = []
+            if (error) {
+              this.$message.error('文件上传失败，请重新上传')
+            } else {
+              this.$message.success('上传完成')
+              // 施工图设计阶段 --> 施工图审核
+              Project.advance(this.uploadId, 6)
+                .catch(() => (this.$message.error('流程错误')))
               this.uploadVisible = false
+              this.uploadId = null
+
             }
+          }
         })
       }
     }

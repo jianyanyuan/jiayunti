@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-08 16:33:34
+ * @LastEditTime: 2020-12-15 15:47:41
  * @Description: 居民申请意见汇总表
 -->
 <template>
@@ -59,6 +59,12 @@ import mixin from '@/mixin/upload-show'
 
 export default {
   name: 'ApplySummary',
+  props: {
+    id: {
+      type: [Number, String],
+      required: true
+    }
+  },
   data() {
     return {
       typeName: 'consultation-summary'

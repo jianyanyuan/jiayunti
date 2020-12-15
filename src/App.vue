@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 09:15:58
- * @LastEditTime: 2020-11-13 13:20:45
+ * @LastEditTime: 2020-12-15 13:56:19
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\App.vue
@@ -38,12 +38,29 @@ li{
   list-style: none;
 }
 ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 6px;
+  height: 6px;
 }
 //滚动条的滑块
 ::-webkit-scrollbar-thumb {
   background-color: #a1a3a9;
   border-radius: 4px;
+}
+// 列表筛选公共样式
+.list-query-public {
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: scroll hidden;
+  white-space: nowrap;
+  align-items: center;
+  height: 60px;
+  padding: 5px 20px;
+  background: #efefef;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+  .el-form-item--small,
+  .el-form-item {
+    margin-bottom: 0;
+  }
 }
 </style>

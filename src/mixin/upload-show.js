@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-04 10:50:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-14 09:12:20
+ * @LastEditTime: 2020-12-15 16:05:21
  * @Description: 附件上传 + 预览通用模块
  */
 import File from '@/api/file'
@@ -15,12 +15,6 @@ import { notEmptyArray } from '@/utils'
 export default {
   components: {
     Pdf
-  },
-  props: {
-    id: {
-      type: [Number, String],
-      required: true
-    }
   },
   data() {
     return {

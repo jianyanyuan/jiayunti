@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-11-13 13:15:27
+ * @LastEditTime: 2020-12-15 16:11:52
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -48,25 +48,26 @@
         </div> -->
       </el-card>
     </div>
-
-    <el-upload action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :file-list="fileList">
+    <el-upload ref="constructionUpload" class="edit-upload" action="#" list-type="picture-card" :on-remove="handleUploadRemove" :file-list="fileList" :on-change="handleUploadChange" :auto-upload="false">
       <i class="el-icon-plus" />
     </el-upload>
-    <!-- <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt="">
-    </el-dialog> -->
 
     <div style="height:50px;text-align:center">
-      <el-button type="primary" size="medium">提 交</el-button>
+      <el-button type="primary" size="medium" @click="postApply(typeName)">提 交</el-button>
     </div>
   </div>
 </template>
 
 <script>
-
+import File from '@/api/file'
+import { notEmptyArray } from '@/utils'
+import Project from '@/api/projects'
 export default {
+  name: 'DesignerEdit',
   data() {
     return {
+      projectId: null,
+      status: null,
       audit: {
         status: 1,
         insitution: '图审机构',
@@ -86,39 +87,175 @@ export default {
         { key: 1, val: 'danger' },
         { key: 2, val: 'success' }
       ],
-      fileList: [
-        { name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' },
-        { name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }
-      ]
+      typeName: 'construction-review-form',
+      pageLoading: false,
+      fileList: [], // 展示用
+      uploadList: [], // 上传用
+      deleteList: [] // 删除用
 
     }
   },
+  created() {
+    const { id, status } = this.$route.params
+    //3第二次提交材料
+    if (!isNaN(+id) && status == 6) {
+      this.projectId = id
+      this.status = status
+      this.detailApply()
+    }
+  },
   methods: {
-    removeDissent(index) {
-      if (index >= 0) {
-        this.dissents.splice(index, 1)
+    // 获取文件
+    detailApply() {
+      this.pageLoading = true
+      this.fileList = []
+      this.uploadList = []
+      this.deleteList = []
+      File.get({ projectId: this.projectId, typeName: this.typeName }).then(res => {
+        if (notEmptyArray(res.content)) {
+          for (const i of res.content) {
+            this.fileList.push({
+              uid: i.id,
+              name: i.filename,
+              url: i.path
+            })
+          }
+        }
+        this.pageLoading = false
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('信息获取失败')
+        this.pageLoading = false
+      })
+    },
+
+    // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
+    // 限制了添加文件的逻辑，不支持多个文件选择
+    handleUploadChange(file, fileList) {
+      const valid = this.checkUpload(file.raw)
+      if (valid && file.status === 'ready') {
+        this.fileList.push({
+          uid: file.uid,
+          name: file.name,
+        })
+        const formData = new FormData()
+        formData.append('file', file.raw)
+        this.uploadList.push({
+          projectId: this.projectId,
+          uid: file.uid,
+          name: file.name,
+          file: formData
+        })
+      } else {
+        fileList.pop()
       }
     },
-    addDissent() {
-      this.dissents.push(
-        {
-          name: '',
-          time: '',
-          phone: '',
-          address: '',
-          detail: '',
-          feedback: ''
+    // 图片上传之前判断
+    checkUpload(file) {
+      if (!file.size) {
+        this.$message.error('上传为空！')
+        return false
+      }
+      const typeAllowed = /\bpdf|\bimage/i.test(file.type)
+      const isBig = file.size <= 1024 * 1024 * 10 // 单个文件最大10M
+      if (!typeAllowed) {
+        this.$message.error('只能上传图片或pdf！')
+        return false
+      }
+      if (!isBig) {
+        this.$message.error('图片大小不能超过10MB！')
+        return false
+      }
+      return true
+    },
+    // 删除文件
+    handleUploadRemove(file, fileList) {
+      if (file.url === undefined) {
+        // 未上传 --> 取消上传
+        const cancelIdx = this.fileList.findIndex(f => f.uid === file.uid)
+        this.fileList.splice(cancelIdx, 1)
+        const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
+        this.uploadList.splice(removeIdx, 1)
+      } else {
+        // 已上传的 --> 待删除
+        this.deleteList.push(
+          {
+            projectId: this.projectId,
+            uid: file.uid,
+            name: file.name,
+            url: file.url
+          }
+        )
+      }
+    },
+    // 提交材料
+    postApply(typeName) {
+      this.pageLoading = true
+      let uploadAsync = new Promise(resolove => resolove('未修改'))
+      let deleteAsync = new Promise(resolove => resolove('未修改'))
+      if (notEmptyArray(this.uploadList)) {
+        let error = false
+        uploadAsync = new Promise((resolove, reject) => {
+          this.uploadList.forEach(async (v, i) => {
+            const { projectId, file } = v
+            const last = i === this.uploadList.length - 1
+            await File.upload(file, { projectId, typeName })
+              .catch(() => {
+                // 上传失败
+                const failIdx = this.fileList.findIndex(f => f.uid === v.uid)
+                this.fileList.splice(failIdx, 1)
+                error = true
+              })
+            if (last) {
+              error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
+            }
+            this.uploadList.splice(i, 1)
+          })
         })
-    },
-    onSubmit() {
-      this.$message('submit!')
-    },
-    onCancel() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning'
+      }
+      if (notEmptyArray(this.deleteList)) {
+        let error = false
+        deleteAsync = new Promise((resolove, reject) => {
+          this.deleteList.forEach(async (v, i) => {
+            const last = i === this.deleteList.length - 1
+            await File.remove(v.uid)
+              .then(() => {
+                const delIndx = this.fileList.findIndex(f => f.uid === v.uid)
+                this.fileList.splice(delIndx, 1)
+              })
+              .catch((err) => {
+                console.log(err)
+                this.fileList.push(v)
+                error = true
+              })
+            if (last) {
+              error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
+            }
+            this.deleteList.splice(i, 1)
+          })
+        })
+      }
+      Promise.all([uploadAsync, deleteAsync]).then(async () => {
+        await Project.advance(this.projectId, this.status)
+          .catch(() => (this.$message.error('流程错误')))
+        this.pageLoading = false
+        this.$router.push('/designer/list')
+      }).catch((err) => {
+        console.log(err)
+        this.$message.error('保存失败')
+        this.pageLoading = false
       })
+    },
+  },
+  beforeRouteEnter(to, from, next) {
+    const { id, status } = to.params
+    //3第二次提交材料
+    const illegal = isNaN(+id) || status != 6
+
+    if (illegal) {
+      next('/redirect' + from.fullPath)
     }
+    next()
   }
 }
 </script>
@@ -153,22 +290,8 @@ export default {
   margin-bottom: 18px;
 }
 
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both;
-}
-
-.box-card {
-  width: 100%;
-  margin-bottom: 30px;
-}
-.demo-image__lazy {
-  height: 400px;
-  overflow-y: auto;
+.edit-upload /deep/ .el-upload--picture-card {
+  border-style: solid;
 }
 </style>
 

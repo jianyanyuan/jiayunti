@@ -2,13 +2,13 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-15 09:32:08
+ * @LastEditTime: 2020-12-15 15:43:39
  * @Description:设计列表
 -->
 
 <template>
   <div class="app-container">
-    <div class="manage-query">
+    <div class="list-query-public">
       <el-form ref="queryForm" :inline="true" :model="query" size="small">
         <el-form-item label="编号" prop="Name " style="margin-right: 30px">
           <el-input v-model="query.code" />
@@ -37,7 +37,7 @@
           </template>
         </el-table-column>
         <el-table-column type="expand">
-          <template slot-scope="{ row }"  >
+          <template slot-scope="{ row }">
             <el-form label-position="left" v-loading="expandLoading" inline class="demo-table-expand">
               <el-form-item label="申请人">
                 {{ row.apply.applicantName }}
@@ -64,27 +64,21 @@
           </template>
         </el-table-column>
         <el-table-column label="编号" prop="projectName" min-width="200" align="center" />
-        <!-- <el-table-column label="申请人" min-width="200" align="center">
-        <template slot-scope="{row}">
-          {{ row.apply.name }}
-        </template>
-      </el-table-column> -->
+        <el-table-column label="申请人" min-width="200" align="center">
+          <template slot-scope="{row}">
+            {{ row.applicantName }}
+          </template>
+        </el-table-column>
         <el-table-column label="提交时间" align="center" prop="addTime" sortable min-width="145px">
           <template slot-scope="{row}">
             <i class="el-icon-time" />
             <span>{{ new Date(row.addTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="设计时间" align="center" prop="designTime" sortable min-width="145px">
-          <template v-if="row.designTime" slot-scope="{row}">
+        <el-table-column label="最新处理时间" align="center" prop="updateTime" sortable min-width="145px">
+          <template v-if="scope.row.updateTime" slot-scope="scope">
             <i class="el-icon-time" />
-            <span>{{ new Date(row.designTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="审核时间" align="center" prop="auditTime" sortable min-width="145px">
-          <template v-if="row.auditTime" slot-scope="{row}">
-            <i class="el-icon-time" />
-            <span>{{ new Date(row.auditTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+            <span>{{ new Date(scope.row.updateTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
         <el-table-column label="状态" align="center" prop="statusId" sortable>
@@ -93,13 +87,13 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
-          
+
           <template slot-scope="{row}">
             <el-row type="flex" justify="space-around">
               <el-button v-if="row.statusId === 2" type="warning" plain size="mini" @click="$router.push({name:'DesignerUpload',params:{id:row.id,status:row.statusId}})">上 传</el-button>
 
-              <el-button v-if="row.statusId === 6" type="warning" plain size="mini" @click="uploadModal.visible = true">上 传</el-button>
-              <el-button v-if="row.statusId === 7" size="mini" plain type="primary" @click="$router.push({path:'/designer/edit',query:{id:row.Id}})">修 改</el-button>
+              <el-button v-if="row.statusId === 6 && row.whetherThrough !== 7" type="warning" plain size="mini" @click="openUpload(row.id)">上 传</el-button>
+              <el-button v-if="row.statusId === 6 && row.whetherThrough === 7" size="mini" plain type="primary" @click="$router.push({name:'DesignerEdit',params:{id:row.id,status:row.statusId}})">修 改</el-button>
 
             </el-row>
           </template>
@@ -109,7 +103,7 @@
     <el-pagination background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
 
     <el-dialog center title="上传" :visible.sync="uploadVisible" :close-on-click-modal="false" class="uploadModal">
-      <el-upload action="#" class="form-card" :on-remove="handleUploadRemove" :on-change="handleUploadChange" drag :auto-upload="false">
+      <el-upload ref="constructionUpload" action="#" class="form-card" :on-remove="handleUploadRemove" :on-change="handleUploadChange" drag :auto-upload="false">
         <div>将文件拖到此处，或点击添加</div>
         <div>单个文件大小不超过20MB，可上传图片或PDF</div>
       </el-upload>
@@ -136,13 +130,6 @@ export default {
 }
 </script>
 <style scoped>
-.manage-query {
-  height: 45px;
-  padding: 5px 20px;
-  background: #efefef;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
-}
 .demo-table-expand {
   font-size: 0;
 }

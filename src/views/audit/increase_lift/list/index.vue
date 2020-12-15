@@ -2,13 +2,13 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-15 09:34:42
+ * @LastEditTime: 2020-12-15 11:24:56
  * @Description:图审列表
 -->
 
 <template>
   <div class="app-container">
-    <div class="manage-query">
+    <div class="list-query-public">
       <el-form ref="queryForm" :inline="true" :model="query" size="small">
         <el-form-item label="编号" prop="Name " style="margin-right: 30px">
           <el-input v-model="query.code" />
@@ -67,11 +67,11 @@
           </template>
         </el-table-column>
         <el-table-column label="编号" prop="projectName" min-width="200" align="center" />
-        <!-- <el-table-column label="申请人" min-width="200" align="center">
-        <template slot-scope="{row}">
-          {{ row.apply.name }}
-        </template>
-      </el-table-column> -->
+        <el-table-column label="申请人" min-width="200" align="center">
+          <template slot-scope="{row}">
+            {{ row.applicantName }}
+          </template>
+        </el-table-column>
         <el-table-column label="提交时间" align="center" prop="addTime" sortable min-width="145px">
           <template slot-scope="{row}">
             <i class="el-icon-time" />
@@ -149,13 +149,7 @@ export default {
 .uploadModal ::v-deep .el-dialog__body {
   text-align: center;
 }
-.manage-query {
-  height: 45px;
-  padding: 5px 20px;
-  background: #efefef;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
-}
+
 .expand-info ::v-deep .el-card__header {
   background: #409eff;
   color: #fff;

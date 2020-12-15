@@ -32,7 +32,7 @@ const designerRouter = {
       }
     },
     {
-      path: 'edit',
+      path: 'edit/:id/:status',
       component: () => import('@/views/audit/designer/edit/index.vue'),
       name: 'DesignerEdit',
       hidden: true,

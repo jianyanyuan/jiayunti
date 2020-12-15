@@ -59,6 +59,12 @@ import mixin from '@/mixin/upload-show'
 import Project from '@/api/projects'
 export default {
   name: 'ApplySpecial',
+  props: {
+    id: {
+      type: [Number, String],
+      required: true
+    }
+  },
   data() {
     return {
       typeName: 'special-form'
@@ -68,15 +74,15 @@ export default {
   methods: {
     submitApply() {
       if (this.fileList.length > 0) {
-        Project.advance(this.id,0)
-        .then(() => {
-          // 回到我的申请
-          this.$router.push('/resident/list')
-        })
-        .catch(() => {
-          this.$message.error('申请提交失败')
-        })
-      }else {
+        Project.advance(this.id, 0)
+          .then(() => {
+            // 回到我的申请
+            this.$router.push('/resident/list')
+          })
+          .catch(() => {
+            this.$message.error('申请提交失败')
+          })
+      } else {
         this.$message.error('请先补全材料')
       }
     }

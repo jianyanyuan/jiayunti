@@ -47,7 +47,7 @@
         <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
       </div>
       <span slot="footer">
-        <el-button @click="printPDF" type="success" >打印</el-button>
+        <el-button @click="printPDF" type="success">打印</el-button>
         <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
       </span>
     </el-dialog>
@@ -59,6 +59,12 @@ import mixin from '@/mixin/upload-show'
 
 export default {
   name: 'ApplyDelegate',
+  props: {
+    id: {
+      type: [Number, String],
+      required: true
+    }
+  },
   data() {
     return {
       typeName: 'delegate-form'

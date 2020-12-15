@@ -32,7 +32,7 @@ const drawingAuditRouter = {
       }
     },
     {
-      path: 'check',
+      path: 'check/:id/:status',
       component: () => import('@/views/audit/drawing_audit/check/index.vue'),
       name: 'DrawingAuditCheck',
       hidden: true,
