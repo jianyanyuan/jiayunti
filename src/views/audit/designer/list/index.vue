@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-11 13:09:30
+ * @LastEditTime: 2020-12-15 09:32:08
  * @Description:设计列表
 -->
 
@@ -25,7 +25,7 @@
           <el-button type="primary" icon="el-icon-search" @click="goSearch">搜索</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="info" icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
+          <el-button icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -98,8 +98,8 @@
             <el-row type="flex" justify="space-around">
               <el-button v-if="row.statusId === 2" type="warning" plain size="mini" @click="$router.push({name:'DesignerUpload',params:{id:row.id,status:row.statusId}})">上 传</el-button>
 
-              <el-button v-if="row.statusId === 5" type="warning" plain size="mini" @click="uploadModal.visible = true">上 传</el-button>
-              <el-button v-if="row.statusId === 6" size="mini" plain type="primary" @click="$router.push({path:'/designer/edit',query:{id:row.Id}})">修 改</el-button>
+              <el-button v-if="row.statusId === 6" type="warning" plain size="mini" @click="uploadModal.visible = true">上 传</el-button>
+              <el-button v-if="row.statusId === 7" size="mini" plain type="primary" @click="$router.push({path:'/designer/edit',query:{id:row.Id}})">修 改</el-button>
 
             </el-row>
           </template>

@@ -1,38 +1,39 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-11-02 11:01:59
+ * @LastEditTime: 2020-12-15 09:57:35
  * @LastEditors: zfd
  * @Description: 增梯办管道踏勘
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
 -->
 <template>
-  <div class="app-container">
+  <div class="app-container" v-loading="pageLoading">
     <div class="basic-container">
       <el-card style="margin-bottom:30px">
         <div slot="header">
           <span>基本信息</span>
         </div>
         <el-form label-width="120px" class="show-form">
-          <el-form-item label="姓名">
-            {{ basic.name }}
+          <el-form-item label="申请人">
+            {{ basic.applicantName }}
           </el-form-item>
-          <el-form-item label="详细地址">
-            <el-cascader v-model="basic.address" :options="addressOptions" />
-            <label for="address-detail" class="label-detail"> — </label>
-            <el-cascader v-model="plot" :options="plotOptions" />
+          <el-form-item label="申请时间">
+            {{ basic.createTime }}
+          </el-form-item>
+          <el-form-item label="用户地址">
+            {{ basic.address }}
           </el-form-item>
           <el-form-item label="电话">
-            {{ basic.phone }}
+            {{ basic.phoneNumber }}
           </el-form-item>
           <el-form-item label="加装电梯地址">
-            {{ basic.liftAddress }}
+            {{ basic.location }}
           </el-form-item>
           <el-form-item label="设计单位">
-            {{ basic.company }}
+            {{ basic.designName }}
           </el-form-item>
           <el-form-item label="设备">
-            {{ basic.spec }}
+            {{ basic.device }}
           </el-form-item>
         </el-form>
 
@@ -44,79 +45,77 @@
         <el-row type="flex" justify="space-between" align="middle">
           <span>管道踏勘</span>
           <!-- <el-button v-if="editable" type="primary" style="float:right" @click="editable = !editable">提 交</el-button> -->
-          <el-button v-if="editable" type="primary" style="float:right" @click="editable = !editable">保 存</el-button>
+          <el-button v-if="editable" type="primary" style="float:right" @click="handlePost">保 存</el-button>
           <el-button v-else type="primary" style="float:right" @click="editable = !editable">修 改</el-button>
         </el-row>
       </div>
       <!-- 修改保存 -->
       <div v-if="editable">
-        <el-table :data="model.tableData" border highlight-current-row style="width: 100%">
+        <el-table :data="tableData" border highlight-current-row style="width: 100%">
           <el-table-column label="序号" min-width="60" align="center">
             <template slot-scope="scope">
               {{ scope.$index + 1 }}
             </template>
           </el-table-column>
-          <el-table-column label="项目" min-width="180" prop="project" align="center">
+          <el-table-column label="项目" min-width="180" align="center">
             <template slot-scope="{row}">
-              <el-input v-model="row.company" size="small" />
+              {{ row.type }}
             </template>
           </el-table-column>
           <el-table-column label="单位" min-width="240" align="center">
             <template slot-scope="{row}">
-              <el-input v-model="row.company" size="small" />
+              <el-input v-model="row.unit" size="small" />
             </template>
           </el-table-column>
-          <el-table-column label="是否完成" min-width="180" align="center">
+          <el-table-column label="是否完成" min-width="180" prop="whetherComplete" align="center">
             <template slot-scope="{row}">
-              <el-checkbox v-model="row.isComplete">是</el-checkbox>
+              <el-checkbox v-model="row.whetherComplete" @change="handleChange(row)">是</el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="时间" min-width="250" align="center">
             <template slot-scope="{row}">
-              <el-date-picker v-model="row.time" type="datetime" size="small" :disabled="!row.isComplete" />
+              <el-date-picker v-model="row.completeTime" type="datetime" size="small" :disabled="!row.whetherComplete" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" />
             </template>
           </el-table-column>
           <el-table-column label="结果" min-width="240" align="center">
             <template slot-scope="{row}">
-              <el-input v-model="row.result" size="small" :disabled="!row.isComplete" />
+              <el-input v-model="row.note" size="small" :disabled="!row.whetherComplete" />
             </template>
           </el-table-column>
         </el-table>
       </div>
       <!-- 查看 -->
-      <el-table v-else :data="model.tableData" border highlight-current-row style="width: 100%">
+      <el-table v-else :data="tableData" border highlight-current-row style="width: 100%">
         <el-table-column label="序号" min-width="60" align="center">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="项目" min-width="180" prop="project" align="center">
+        <el-table-column label="项目" min-width="180" align="center">
           <template slot-scope="{row}">
-            {{ row.project }}
+            {{ row.type }}
           </template>
         </el-table-column>
         <el-table-column label="单位" min-width="240" align="center">
           <template slot-scope="{row}">
-            {{ row.company }}
+            {{ row.unit }}
             <!-- <el-input v-model="row.company" size="small" /> -->
           </template>
         </el-table-column>
         <el-table-column label="是否完成" min-width="180" align="center">
           <template slot-scope="{row}">
-            {{ row.isComplete }}
+            {{ row.whetherComplete ? '是' : '否'}}
             <!-- <el-checkbox v-model="row.isComplete">是</el-checkbox> -->
           </template>
         </el-table-column>
         <el-table-column label="时间" min-width="250" align="center">
           <template slot-scope="{row}">
-            {{ row.time }}
-            <!-- <el-date-picker v-model="row.time" type="datetime" size="small" :disabled="!row.isComplete" /> -->
+            <span v-if="row.completeTime && row.whetherComplete && !editable">{{ new Date(row.completeTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
         <el-table-column label="结果" min-width="240" align="center">
           <template slot-scope="{row}">
-            {{ row.result }}
-            <!-- <el-input v-model="row.result" size="small" :disabled="!row.isComplete" /> -->
+            {{ row.note }}
           </template>
         </el-table-column>
       </el-table>
@@ -126,74 +125,111 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import IncreaseLift from '@/api/increase_lift'
+import Project from '@/api/projects'
+import { notEmptyArray } from '@/utils'
+
 export default {
-  name: 'Resident',
+  name: 'Pipe',
   data() {
     return {
-      plot: '',
       editable: false,
-      basic: {
-        name: '李先生',
-        address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ'],
-        phone: '15988800323',
-        liftAddress: '小区1楼',
-        company: '苏州建研院',
-        spec: '高端电梯'
-      },
-      isFinished: false,
-      model: {
-        title: '踏勘记录',
-        visible: false,
-        tableData: [
-          {
-            project: '线路',
-            company: '',
-            isComplete: false,
-            time: '',
-            result: ''
-          },
-          {
-            project: '建筑',
-            company: '',
-            isComplete: false,
-            time: '',
-            result: ''
-          },
-          {
-            project: '水管',
-            company: '',
-            isComplete: false,
-            time: '',
-            result: ''
-          }
-        ]
-      }
+      basic: {},
+      pageLoading: false,
+      tableData: [],
+      projectId: null,
+      status: null,
+      updateList: []
     }
   },
   computed: {
-    ...mapGetters('common', ['addressOptions', 'plotOptions'])
-
   },
   created() {
-    this.plot = this.basic.address.slice(3)
-
-    this.basic.address = this.basic.address.slice(0, 3)
+    const { id, status } = this.$route.params
+    // 2方案设计
+    if (!isNaN(+id) && status == 5) {
+      this.projectId = id
+      this.status = status
+      this.detailApply()
+    }
   },
   methods: {
-    saveRecord() {
-      const isFinished = this.model.tableData.filter(v => {
-        return !v.isComplete
+    detailApply() {
+      this.pageLoading = true
+      const basicAsync = new Promise((resolve, reject) => {
+        this.$store.dispatch('getProjectBasic', this.projectId)
+          .then(res => {
+            this.basic = res
+            resolve('获取成功')
+          })
+          .catch(() => {
+            reject('基础信息获取失败')
+          })
       })
-      if (isFinished.length === 0) {
-        this.isFinished = true
-      } else {
-        this.isFinished = false
-        this.model.visible = false
+      const detailAsync = new Promise((resolve, reject) => {
+        IncreaseLift.listPipe(this.projectId)
+          .then(res => {
+            if (notEmptyArray(res.content)) {
+              this.tableData = res.content
+            }
+            resolve('ok')
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+      Promise.all([basicAsync, detailAsync]).then(() => {
+        this.pageLoading = false
+      }).catch((err) => {
+        console.log(err)
+        this.pageLoading = false
+        this.$message.error('信息获取失败')
+      })
+
+    },
+    handleChange(row) {
+      if (!this.updateList.includes(row)) {
+        // 引用传递
+        this.updateList.push(row)
       }
     },
-    completed() {
-      this.model.visible = false
+    handlePost() {
+      this.pageLoading = true
+      IncreaseLift.modifyPipe(this.updateList).then(async res => {
+        const next = this.isFinished()
+        if (next) {
+          await Project.advance(this.projectId, this.status)
+            .then(() => (this.$router.push('/increase-lift/list')))
+            .catch(() => (this.$message.error('流程错误')))
+          this.pageLoading = false
+        } else {
+          this.pageLoading = false
+          this.detailApply()
+        }
+
+      }).catch(res => {
+        this.pageLoading = false
+        this.$message.error('保存失败')
+      })
+      this.editable = false
+    },
+    isFinished() {
+      const idx = this.tableData.findIndex(v => !v.whetherComplete)
+      if (idx !== -1) {
+        return false 
+      } else {
+        return true // 全部完成
+      }
+    }
+  },
+  // 获得工程Id
+  beforeRouteEnter(to, from, next) {
+    const { id, status } = to.params
+    // 2方案设计
+    if (isNaN(+id) || status != 5) {
+      next('/redirect' + from.fullPath)
+    } else {
+      next()
     }
   }
 }

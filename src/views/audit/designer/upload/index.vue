@@ -19,7 +19,7 @@
 
     <div class="dynamic-component-container">
       <keep-alive>
-        <component :is="curComponent" v-if="applyId && status" @nextProcess="handleProcess" :id="applyId" :status="status" />
+        <component :is="curComponent" v-if="projectId && status" @nextProcess="handleProcess" :id="projectId" :status="status" />
       </keep-alive>
     </div>
 
@@ -41,7 +41,7 @@ export default {
       stepBtnGroup: ['档案调取', '上传设计'],
       componentGroup: ['Archive', 'Upload'],
       curStep: 0,
-      applyId: null,
+      projectId: null,
       status: null
     }
   },
@@ -53,8 +53,8 @@ export default {
   created() {
     const { id, status } = this.$route.params
     // 2方案设计
-    if (!isNaN(+id) && status === 2) {
-      this.applyId = id
+    if (!isNaN(+id) && status == 2) {
+      this.projectId = id
       this.status = status
     }
   },
@@ -75,7 +75,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
     // 2方案设计
-    if (isNaN(+id) || status !== 2) {
+    if (isNaN(+id) || status != 2) {
       next('/redirect' + from.fullPath)
     } else {
       next()
