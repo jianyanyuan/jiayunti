@@ -2,11 +2,11 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-02 11:16:27
+ * @LastEditTime: 2020-12-15 17:27:29
  * @Description: 施工端资料查看
 -->
 <template>
-  <div>
+  <div v-loading="pageLoading">
     <!-- 申请人资料 -->
     <el-card style="margin-bottom:30px">
       <div slot="header">
@@ -17,140 +17,136 @@
       <!-- 展示 -->
       <el-form label-width="120px" class="show-form">
         <el-form-item label="申请人">
-          {{ form.name }}
+          {{ basic.applicantName }}
         </el-form-item>
-        <el-form-item label="地址">
-          <el-cascader v-model="form.address" :options="addressOptions" />
-          <label for="address-detail" class="label-detail"> — </label>
-          <el-cascader v-model="plot" :options="plotOptions" />
+        <el-form-item label="申请时间">
+          {{ basic.createTime }}
+        </el-form-item>
+        <el-form-item label="用户地址">
+          {{ basic.address }}
         </el-form-item>
         <el-form-item label="电话">
-          {{ form.phone }}
+          {{ basic.phoneNumber }}
         </el-form-item>
         <el-form-item label="加装电梯地址">
-          {{ form.elevatorAddress }}
+          {{ basic.location }}
         </el-form-item>
         <el-form-item label="设计单位">
-          {{ form.designer }}
+          {{ basic.designName }}
         </el-form-item>
         <el-form-item label="设备">
-          {{ form.device }}
+          {{ basic.device }}
         </el-form-item>
-        <!-- <el-form-item v-for="(room, index) in form.rooms" :key="room.key" :label="'房间编号' + (index+1)">
-          {{ room.val }}
-        </el-form-item> -->
       </el-form>
 
     </el-card>
 
     <!-- 施工图查看 -->
-    <el-card style="margin-bottom:30px">
+    <el-card class="basic-container" style="margin-bottom:30px">
       <div slot="header">
-        <el-row type="flex" justify="space-between" align="middle">
-          <span>施工图设计</span>
-        </el-row>
+        <span>施工图设计稿</span>
       </div>
-      <!-- 展示 -->
-      <ul>
-        <li v-for="url in urls" :key="url" style="text-align:center">
-          <a href="#" class="download-icon">
-            <i class="el-icon-download ">下载</i>
-          </a>
-          <img :src="url">
-        </li>
-      </ul>
-
+      <upload-list :files="files" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
     </el-card>
     <div style="text-align:center">
       <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
     </div>
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+      <img :src="detailImgUrl" alt="意见咨询表">
+    </el-dialog>
+
+    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
+      <div ref="printContent">
+        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
+      </div>
+      <span slot="footer">
+        <el-button @click="printPDF('printContent')" type="success">打印</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import { deepClone } from '@/utils'
-const defaultForm = {
-  name: '张飞达',
-  address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ'],
-  phone: '15988800323',
-  elevatorAddress: 'xxx小区xxx幢xxx单元',
-  rooms: ['401', '402', '403'],
-  designer: '',
-  device: ''
-}
+import File from '@/api/file'
+import mixn from '@/components/UploadList/mixin'
+import { notEmptyArray } from '@/utils'
 export default {
-  name: 'Basic',
+  name: 'ConstructionBasic',
+  mixins: [mixn],
+  props: {
+    id: {
+      type: [Number, String],
+      required: true
+    },
+    status: {
+      type: [Number, String],
+      required: true
+    }
+  },
   data() {
     return {
       // 修改后重新保存
-      hasChanged: false,
+      pageLoading: false,
       formLoading: false,
-      form: deepClone(defaultForm),
-      designerOptions: [
-        { key: 1, val: '建研院' },
-        { key: 2, val: '设计' }
-      ],
-      deviceOptions: [
-        {
-          label: '设备1',
-          value: '1',
-          children: [
-            {
-              label: '600',
-              value: '11'
-            },
-            {
-              label: '500',
-              value: '12'
-            }
-          ]
-        },
-        {
-          label: '设备2',
-          value: '2',
-          children: [
-            {
-              label: '600',
-              value: '22'
-            }
-          ]
-        }
-      ],
-      urls: [
-        'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-        'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
-      ],
-      plot: []
+      basic: {},
+      files: [],
+      projectId: null,
+      staus: null
     }
   },
+  activated() {
+    this.detailApply()
 
-  computed: {
-    ...mapGetters('common', ['addressOptions', 'plotOptions'])
-  },
-  watch: {
-
-  },
-  created() {
-    this.plot = this.form.address.slice(3)
-
-    this.form.address = this.form.address.slice(0, 3)
-    // this.form.rooms = this.form.rooms.map(v => {
-    //   return {
-
-    //     key: v + '1',
-    //     val: v
-
-    //   }
-    // }
-    // )
   },
   methods: {
+    detailApply() {
+      this.pageLoading = true
+      const basicAsync = new Promise((resolve, reject) => {
+        this.$store.dispatch('getProjectBasic', this.id)
+          .then(res => {
+            this.basic = res
+            resolve('获取成功')
+          })
+          .catch(() => {
+            reject('基础信息获取失败')
+          })
+      })
+      const detailAsync = new Promise((resolve, reject) => {
+        File.get({ projectId: this.id, typeName: 'construction-design' })
+          .then(res => {
+            if (notEmptyArray(res.content)) {
+              for (const i of res.content) {
+                this.files.push({
+                  uid: i.id,
+                  name: i.filename,
+                  url: i.path
+                })
+              }
+              resolve('获取成功')
+            }
+          })
+          .catch(err => {
+            console.log(err)
+            reject('基础信息获取失败')
 
-    nextProcess(arrow) {
-      this.$emit('nextProcess', arrow)
+          })
+      })
+      Promise.all([basicAsync, detailAsync]).then(() => {
+        this.pageLoading = false
+      }).catch((err) => {
+        console.log(err)
+        this.pageLoading = false
+        this.$message.error('信息获取失败')
+      })
+    },
+    nextProcess(length) {
+      this.$emit('nextProcess', length)
     }
-  }
+  },
+
 }
 </script>
 
@@ -164,12 +160,12 @@ export default {
 // }
 li {
   position: relative;
-  .download-icon{
+  .download-icon {
     position: absolute;
     right: 20px;
     top: 10px;
-    &:hover{
-      color: #409EFF;
+    &:hover {
+      color: #409eff;
     }
   }
   img {

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-14 09:23:21
+ * @LastEditTime: 2020-12-15 17:25:42
  * @LastEditors: zfd
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -17,9 +17,9 @@
     </div>
     <div class="line-divider" />
 
-    <div class="dynamic-component-container">
+    <div class="dynamic-component-container" v-if="projectId && status">
       <keep-alive>
-        <component :is="curComponent" v-if="projectId && status" @nextProcess="handleProcess" :id="projectId" :status="status" />
+        <component :is="curComponent"  @nextProcess="handleProcess" :id="projectId" :status="status" />
       </keep-alive>
     </div>
 

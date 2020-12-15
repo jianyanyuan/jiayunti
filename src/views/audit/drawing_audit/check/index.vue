@@ -90,7 +90,8 @@ export default {
   methods: {
     detailApply() {
       this.pageLoading = true
-      File.get({ projectId: this.projectId, typeName: 'construction-design' }).then(res => {
+      File.get({ projectId: this.projectId, typeName: 'construction-design' })
+      .then(res => {
         if (notEmptyArray(res.content)) {
           for (const i of res.content) {
             this.files.push({
@@ -101,7 +102,8 @@ export default {
           }
         }
         this.pageLoading = false
-      }).catch(err => {
+      })
+      .catch(err => {
         console.log(err)
         this.$message.error('信息获取失败')
         this.pageLoading = false

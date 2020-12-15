@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-14 14:16:07
+ * @LastEditTime: 2020-12-15 17:26:50
  * @LastEditors: zfd
  * @Description: construction process
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -17,9 +17,9 @@
     </div>
     <div class="line-divider" />
 
-    <div class="dynamic-component-container">
+    <div class="dynamic-component-container" v-if="projectId && status">
       <keep-alive>
-        <component :is="curComponent" @nextProcess="handleProcess" />
+        <component :is="curComponent" @nextProcess="handleProcess" :id="projectId" :status="status"  />
       </keep-alive>
     </div>
 
@@ -43,12 +43,22 @@ export default {
     return {
       stepBtnGroup: ['施工资料', '查看现场', '报价'],
       componentGroup: ['Basic', 'Locale', 'Offer'],
-      curStep: 0
+      curStep: 0,
+      projectId:null,
+      status:null
     }
   },
   computed: {
     curComponent() {
       return this.componentGroup[this.curStep]
+    }
+  },
+  created() {
+    const { id, status } = this.$route.params
+    //3第二次提交材料
+    if (!isNaN(+id) && status == 8) {
+      this.projectId = id
+      this.status = status
     }
   },
   methods: {
@@ -64,16 +74,16 @@ export default {
 
     }
   },
-  // 获得申请Id
+    // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      // if (to.query.type === "today") {
-      //   let today = new Date();
-      //   vm.query.StartTime = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()} 00:00:00`;
-      //   vm.query.EndTime = new Date();
-      //   vm.getTickets();
-      // }
-    })
+    const { id, status } = to.params
+    //3第二次提交材料
+    const illegal = isNaN(+id) || status != 8
+
+    if (illegal) {
+      next('/redirect' + from.fullPath)
+    }
+    next()
   }
 
 }
