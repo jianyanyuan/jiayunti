@@ -17,15 +17,16 @@ const addOffer = (projectId,data ) => {
 }
 
 // 获取项目报价
-const listOffers = (projectId ) => {
+const listOffers = (projectId,params) => {
   return request({
     url:`/constructionPrice/getAll/${projectId}`,
-    method: 'get'
+    method: 'get',
+    params
     })
 }
 
 // 获取单个报价表
-const getOffer = (id) => {
+const detailOffer = (id) => {
   return request({
     url:`/constructionPrice/getOne/${id}`,
     method: 'get'
@@ -35,5 +36,5 @@ const getOffer = (id) => {
 export default {
   addOffer,
   listOffers,
-  getOffer
+  detailOffer
 }

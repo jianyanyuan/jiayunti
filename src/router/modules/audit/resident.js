@@ -123,7 +123,7 @@ const residentRouter = {
       }
     },
     {
-      path: 'offer',
+      path: 'offer/:id/:status',
       component: () => import('@/views/audit/resident/offer/index.vue'),
       name: 'ResidentOffer',
       hidden: true,
@@ -133,7 +133,7 @@ const residentRouter = {
       }
     },
     {
-      path: 'offer-detail',
+      path: 'offer-detail/:id/:offerId/:status',
       component: () => import('@/views/audit/resident/offer/detail/index.vue'),
       name: 'ResidentOfferDetail',
       hidden: true,
@@ -143,7 +143,7 @@ const residentRouter = {
       }
     },
     {
-      path: 'fault-view',
+      path: 'fault-view/:id/:status',
       component: () => import('@/views/audit/resident/fault-view.vue'),
       name: 'ResidentFaultView',
       hidden: true,

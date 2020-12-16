@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-11-02 08:50:22
+ * @LastEditTime: 2020-12-16 18:06:57
  * @LastEditors: zfd
  * @Description: 居民查看报价单详情
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
 -->
 <template>
-  <div class="app-container">
+  <div class="app-container" v-loading="pageLoading">
     <el-page-header content="施工报价" style="margin-bottom:50px" @back="$router.go(-1)" />
 
     <table class="input-form">
@@ -19,52 +19,63 @@
       <tbody>
         <tr>
           <td>施工单位</td>
-          <td><router-link to="/resident/construction-list">{{ construction.name }}</router-link></td>
+          <td>
+            <router-link :to="{ name: 'user', params: { userId: 123 }}">{{ construction.constructionUnit }}</router-link>
+          </td>
           <td>联系人</td>
-          <td>{{ construction.contracts }}</td>
+          <td>{{ construction.contact }}</td>
         </tr>
         <tr>
           <td>联系电话</td>
-          <td>{{ construction.phone }}</td>
+          <td>{{ construction.phoneNumber }}</td>
           <td>地址</td>
           <td>{{ construction.address }}</td>
 
         </tr>
         <tr>
           <td>报价时间</td>
-          <td>{{ construction.time }}</td>
+          <td>{{ construction.offerTime }}</td>
           <td>施工周期（天）</td>
-          <td>{{ construction.dayCount }}</td>
+          <td>{{ construction.constructionPeriod }}</td>
         </tr>
         <tr>
-          <td :rowspan="construction.projects.length">项目（元）</td>
-          <td>{{ construction.projects[0].name }}</td>
-          <td colspan="2">{{ construction.projects[0].price }}</td>
-
+          <td rowspan="2">项目（元）</td>
+          <td>人工费</td>
+          <td colspan="2">
+            {{construction.artificialCost}}
+          </td>
         </tr>
-        <tr v-for="(item,index) in construction.projects.slice(1)" :key="index">
-          <td>{{ item.name }}</td>
-          <td colspan="2">{{ item.price }}</td>
+        <tr>
+          <td>材料费</td>
+          <td colspan="2">
+            {{construction.materialCost}}
+          </td>
         </tr>
         <tr>
           <td>材料</td>
           <td colspan="3" style="text-align:left">
-            <upload-list :files="fileList" list-type="" :disabled="true" :handle-preview="downloadFile" />
+            <a v-for="file in construction.priceFiles" :key="file.name" class="file-display">
+              <i class="el-icon-document" />
+              {{ file.name }}
+              <i class="el-icon-download" style="float:right" />
+            </a>
           </td>
         </tr>
       </tbody>
     </table>
     <div class="confirm-container">
-      <el-button type="success" @click="superviseVisible = true">选 定</el-button>
+      <el-button type="success" @click="openModal">选 定</el-button>
     </div>
     <el-dialog center title="选择监理单位" :visible.sync="superviseVisible" :close-on-click-modal="false">
-      <el-form>
-        <el-form-item label="监理单位">
-          <el-select v-model="supervisor">
-            <el-option v-for="item in supervisors" :key="item.val" :label="item.val" :value="item.key" />
-          </el-select>
-        </el-form-item>
-      </el-form>
+      <div v-for="(s, index) in supervisors" :key="index" class="list-item">
+        <div class="list-head">
+          <div class="l-h-l">
+            <span>{{ s.supervisionName }}</span>
+          </div>
+        </div>
+        <p><span>联系方式：{{ s.phone }}</span></p>
+        <p> 地址：{{ s.address }}</p>
+      </div>
       <div class="confirm-container">
         <el-button @click="superviseVisible = false">取 消</el-button>
         <el-button type="success" @click="superviseVisible = false">确 定</el-button>
@@ -74,54 +85,78 @@
 </template>
 
 <script>
+import Construction from '@/api/construction'
+import Supervision from '@/api/supervision'
 export default {
   name: 'Offer',
   data() {
     return {
       supervisor: '',
       superviseVisible: false,
-      fileList: [{ name: '123213', url: '', uid: 'dsdsd' }, { name: '456465', url: '', uid: 'dsadsd' }, { name: '789798', url: '', uid: 'sdasdasdasd' }],
       construction: {
-        name: '中一建',
-        address: '中一建中一建',
-        phone: '15988800323',
-        contracts: '中一建',
-        time: '2020-10-12 15-：48',
-        dayCount: '3',
-        projects: [
-          {
-            name: '人工费',
-            price: '10000'
-          },
-          {
-            name: '材料费',
-            price: '100000'
-          }
-        ]
-
+        priceFiles: []
       },
-      supervisors: [
-        { key: 1, val: '监理人' },
-        { key: 2, val: '监理人2' }
-      ]
+      offerId: null,
+      projectId: null,
+      status: null,
+      supervisors: [],
+      pageLoading: false
     }
   },
   computed: {
 
   },
   created() {
-
+    const { id, offerId, status } = this.$route.params
+    // 8选择报价
+    if (!isNaN(+id) && status == 8 && !isNaN(+offerId)) {
+      this.projectId = id
+      this.status = status
+      this.offerId = offerId
+      this.getDetail()
+    }
   },
   methods: {
-    downloadFile(file) {
-
+    getDetail() {
+      this.pageLoading = true
+      Construction.detailOffer(this.offerId)
+        .then(res => {
+          this.construction = res
+          this.pageLoading = false
+        })
+        .catch(err => {
+          this.pageLoading = false
+          console.log(err)
+          this.$message.error('报价获取失败')
+        })
+    },
+    openModal() {
+      Supervision.list()
+        .then(res => {
+          this.supervisors = res
+          this.superviseVisible = true
+        })
+        .catch(err => {
+          console.log(err)
+          this.$message.error('监理单位获取失败')
+        })
+    }
+  },
+  // 获得工程Id
+  beforeRouteEnter(to, from, next) {
+    const { id, offerId, status } = to.params
+    // 8选择报价
+    if (isNaN(+id) || status != 8 || isNaN(+offerId)) {
+      // 没有id则返回跳转
+      next('/redirect' + from.fullPath)
+    } else {
+      next()
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-
 .input-form {
   position: relative;
   width: 90%;
@@ -160,11 +195,49 @@ export default {
   }
 }
 
-.confirm-container{
+.confirm-container {
   margin-top: 30px;
   text-align: center;
 }
-a:hover{
+a:hover {
   color: cornflowerblue;
+}
+.file-display {
+  display: block;
+  text-align: left;
+  padding: 5px;
+  margin: 10px;
+  border-radius: 5px;
+  // background-color: chartreuse;
+}
+.file-display:hover {
+  color: #409eff;
+  background-color: #ebebeb;
+}
+.list-item {
+  // height: 200px;
+  border: 1px solid #e5e5ee;
+  padding: 10px 8px;
+  margin-bottom: 20px;
+  .list-head {
+    .l-h-l {
+      span:nth-of-type(1) {
+        color: #625261;
+        font-weight: bold;
+        margin-right: 40px;
+      }
+      span:last-of-type {
+        color: #a6a6a4;
+        font-size: 12px;
+      }
+    }
+  }
+  p {
+    font-size: 14px;
+    color: #000;
+    span {
+      margin-right: 40px;
+    }
+  }
 }
 </style>

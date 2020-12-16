@@ -2,11 +2,11 @@
  * @Author: zfd
  * @Date: 2020-10-29 16:05:50
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-02 08:31:46
+ * @LastEditTime: 2020-12-16 16:01:40
  * @Description: 报价列表
 -->
 <template>
-  <div class="app-container">
+  <div class="app-container" v-loading="listLoading">
     <div class="list-container">
       <div class="query-container">
         筛选项：
@@ -14,27 +14,29 @@
         <el-input v-model="query.phone" placeholder="联系方式" size="small" />
         <el-input v-model="query.address" placeholder="地址" size="small" />
         <div>
-          <el-button size="small" @click="filterEntity">搜索</el-button>
-          <el-button size="small" type="primary" @click="clearQuery">重置</el-button>
+          <el-button size="small" type="primary" @click="filterEntity">搜索</el-button>
+          <el-button size="small" @click="clearQuery">重置</el-button>
         </div>
 
       </div>
-      <div v-for="(s, index) in source" :key="index" class="list-item" @click="$router.push({name:'ResidentOfferDetail',params:{detail}})">
+      <div v-for="(s, index) in list" :key="index" class="list-item" @click="$router.push({name:'ResidentOfferDetail',params:{id:projectId,offerId:s.id,status}})">
         <div class="list-head">
           <div class="l-h-l">
-            <span>{{ s.name }}</span><span>{{ s.time }}</span>
+            <span>{{ s.constructionUnit }}</span><span>{{ s.offerTime }}</span>
           </div>
         </div>
-        <p><span>联系方式：{{ s.phone }}</span><span>报价（元）:{{ s.amount }}</span><span>施工周期（天）：{{ s.dayCount }}</span></p>
+        <p><span>联系方式：{{ s.phoneNumber }}</span><span>报价（元）:{{ s.cost }}</span><span>施工周期（天）：{{ s.constructionPeriod }}</span></p>
         <p> 地址：{{ s.address }}</p>
       </div>
-      <el-pagination background layout="prev, pager, next" :total="total" hide-on-single-page :page-size="10" :pager-count="7" :current-page.sync="query.pi" @current-change="handleCurrentChange" />
+      <el-pagination background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
     </div>
 
   </div>
 </template>
 
 <script>
+import Construction from '@/api/construction'
+import { notEmptyArray } from '@/utils'
 export default {
   name: 'OfferList',
   components: {},
@@ -46,33 +48,39 @@ export default {
         address: '',
         pi: 1
       },
-      total: 100,
-      source: [
-        {
-          name: '施工单位',
-          time: '2020-10-29 10:20:04',
-          phone: '15988800323',
-          amount: '1000',
-          dayCount: '10',
-          address: '中国江苏省南京市玄武区珠江路687号2幢'
-        },
-        {
-          name: '施工单位111',
-          time: '2020-10-29 10:20:04',
-          phone: '15988800323',
-          amount: '1000',
-          dayCount: '10',
-          address: '中国江苏省南京市玄武区珠江路687号2幢'
-        }
-      ]
+      pagination: {
+        total: 0,
+        pageIndex: 1,
+        pageSize: 10
+      },
+      list: [],
+      listLoading: false,
+      projectId:null,
+      status:null
     }
   },
   created() {
-
+    const { id, status } = this.$route.params
+    // 8选择报价
+    if (!isNaN(+id) && status == 8) {
+      this.projectId = id
+      this.status = status
+      this.listOffers()
+    }
   },
   methods: {
-    getEntites() {
-
+    async listOffers() {
+      this.listLoading = true
+      await Construction.listOffers(this.projectId,{ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+        if (notEmptyArray(res.content)) {
+          this.list = res.content
+          this.pagination.total = res.totalElements
+        }
+      }).catch(err => {
+        this.$message.error('数据获取失败')
+        console.log(err)
+      })
+      this.listLoading = false
     },
     filterEntity() {
       this.getEntites()
@@ -86,9 +94,24 @@ export default {
       }
       this.getEntites()
     },
-    handleCurrentChange(value) {
-      this.query.pi = value
-      this.getEntites()
+    handleSizeChange(val) {
+      this.pagination.pageSize = val
+      this.listOffers()
+    },
+    handleCurrentPageChange(val) {
+      this.pagination.pageIndex = val
+      this.listOffers()
+    },
+  },
+  // 获得工程Id
+  beforeRouteEnter(to, from, next) {
+    const { id, status } = to.params
+    // 8选择报价
+    if (isNaN(+id) || status != 8) {
+      // 没有id则返回跳转
+      next('/redirect' + from.fullPath)
+    } else {
+      next()
     }
   }
 }
