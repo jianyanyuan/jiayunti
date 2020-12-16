@@ -27,7 +27,7 @@
         <div slot="header">
           <span>上传</span>
         </div>
-        <el-upload action="#" :file-list="fileList" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList)}" drag :auto-upload="false">
+        <el-upload action="#" :file-list="fileList" :on-remove="handleUploadRemove" :on-change="handleUploadChange" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div>将文件拖到此处，或点击添加</div>
           <p>单个文件大小不超过20MB，可上传图片或PDF</p>
@@ -58,7 +58,7 @@
 import mixin from '@/mixin/upload-show'
 
 export default {
-  name: 'ApplyDelegate',
+  name: 'ConstructionLocale',
   props: {
     id: {
       type: [Number, String],

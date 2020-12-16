@@ -76,7 +76,7 @@ import html2canvas from 'html2canvas'
 import printJS from 'print-js'
 import { notEmptyArray } from '@/utils'
 export default {
-  name: 'Material',
+  name: 'AuditMaterial',
   props: {
     id: {
       type: [Number, String],
@@ -156,9 +156,9 @@ export default {
         })
       asyncReq.push(consultationAsync)
 
-      // 名字与居民提交时一致，暂未统一存储
       const typeMap = ['consultation-summary', 'delegate-form', 'protocal-form', 'special-form']
-      if (this.status == 3) {
+      // 9街道审核
+      if (this.status == 9) {
         typeMap.push('noticeContent', 'noticeReport')
         this.pageContent.push({
           label: '公示内容',

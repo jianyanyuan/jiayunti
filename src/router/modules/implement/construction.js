@@ -30,7 +30,7 @@ const constructionRouter = {
       }
     },
     {
-      path: 'process',
+      path: 'process/:id/:status',
       component: () => import('@/views/implement/construction/process/index.vue'),
       name: 'ConstructionProcess',
       hidden: true,

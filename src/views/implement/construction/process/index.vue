@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-15 17:26:50
+ * @LastEditTime: 2020-12-16 09:05:18
  * @LastEditors: zfd
  * @Description: construction process
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -34,6 +34,7 @@ import Offer from './components/offer.vue'
 // import ProtocalForm from '@/components/resident/protocal-form'
 
 export default {
+  name:'Process',
   components: {
     Basic,
     Locale,
@@ -74,7 +75,7 @@ export default {
 
     }
   },
-    // 获得工程Id
+  // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
     //3第二次提交材料

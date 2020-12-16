@@ -63,11 +63,20 @@ const get =  (params) => {
   })
 }
 
+// 报价材料上传
+const uploadOffer = (ConstructionPriceId, data ) => {
+  return request({
+    url: api_prefix_dev + 'uploadPriceFile?ConstructionPriceId='+ ConstructionPriceId ,
+    method: 'post',
+    data
+  })
+}
 export default {
   upload,
   remove,
   uploadOpinion,
   removeOpinion,
   getConsultation,
-  get
+  get,
+  uploadOffer
 }

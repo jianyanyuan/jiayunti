@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 09:15:58
- * @LastEditTime: 2020-12-15 13:56:19
+ * @LastEditTime: 2020-12-16 08:36:51
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\App.vue
@@ -50,13 +50,12 @@ li{
 .list-query-public {
   display: flex;
   flex-flow: row nowrap;
-  overflow: scroll hidden;
+  overflow: auto hidden;
   white-space: nowrap;
   align-items: center;
-  height: 60px;
-  padding: 5px 20px;
+  height: 50px;
+  padding: 0 20px;
   background: #efefef;
-  border-bottom: 1px solid #ddd;
   margin-bottom: 20px;
   .el-form-item--small,
   .el-form-item {

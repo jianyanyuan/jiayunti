@@ -61,11 +61,11 @@ const state = {
     { key: 8, val: '施工报价' },
     { key: 9, val: '街道审核' },
     { key: 10, val: '联合审查' },
-    { key: 11, val: '审核通过' },
-    { key: 12, val: '施工中' },
-    { key: 13, val: '竣工验收' },
-    { key: 14, val: '驳回' },
-    { key: 15, val: '已撤销' }
+    // { key: 11, val: '审核通过' },
+    { key: 11, val: '施工中' },
+    { key: 12, val: '竣工验收' },
+    { key: 13, val: '驳回' },
+    { key: 14, val: '已撤销' }
   ],
   applyTag: [
     { key: 0, val: 'warning' },
@@ -79,7 +79,7 @@ const state = {
     { key: 7, val: 'warning' },
     { key: 8, val: 'warning' },
     { key: 9, val: 'warning' },
-    { key: 10, val: 'success' },
+    { key: 10, val: 'warning' },
     { key: 11, val: 'info' },
     { key: 12, val: 'info' },
     { key: 13, val: 'warning' },

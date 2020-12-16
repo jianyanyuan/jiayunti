@@ -62,9 +62,7 @@
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="scope.row.statusId === 9" size="mini" plain type="warning" @click="$router.push({name:'StreetCheck',params:{id:scope.row.id,status:scope.row.statusId}})">审 核</el-button>
-              <el-button v-if="scope.row.statusId === 11" size="mini" plain type="info" @click="$router.push({name:'StreetRecordFault',params:{id:scope.row.id,status:scope.row.statusId}})">违规记录</el-button>
-              <el-button v-if="scope.row.statusId === 11" size="mini" plain type="warning" @click="$router.push({name:'StreetHandleFault',params:{id:scope.row.id,status:scope.row.statusId}})">查看回复</el-button>
+              <el-button v-if="scope.row.statusId === 10" size="mini" plain type="warning" @click="$router.push({name:'StreetCheck',params:{id:scope.row.id,status:scope.row.statusId}})">审 核</el-button>
             </el-row>
           </template>
         </el-table-column>

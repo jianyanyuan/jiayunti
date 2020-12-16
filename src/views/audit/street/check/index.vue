@@ -19,14 +19,16 @@
     <div class="line-divider" />
 
     <div class="dynamic-component-container">
-      <component :is="curComponent" />
+      <keep-alive>
+        <component v-if="applyId && status" :is="curComponent" :id="applyId" :status="status" />
+      </keep-alive>
     </div>
 
   </div>
 </template>
 
 <script>
-import Flow from '@/components/street/Flow'
+// import Flow from '@/components/street/Flow'
 import Resident from '@/components/street/Resident'
 import Design from '@/components/street/Design'
 import Pipe from '@/components/street/Pipe'
@@ -46,14 +48,26 @@ export default {
         applyId: '',
         status: ''
       },
-      stepBtnGroup: ['申请流程图', '居民申请材料', '设计院设计', '管道踏勘记录', '审核'],
-      componentGroup: ['Flow', 'Resident', 'Design', 'Pipe', 'Audit'],
-      curStep: 0
+      stepBtnGroup: [/*'申请流程图',*/ '居民申请材料', '设计院设计', '管道踏勘记录', '审核'],
+      componentGroup: [/*'Flow',*/ 'Resident', 'Design', 'Pipe', 'Audit'],
+      curStep: 0,
+      projectId: null,
+      status: null
     }
   },
   computed: {
     curComponent() {
       return this.componentGroup[this.curStep]
+    }
+  },
+  created() {
+    const { id, status } = this.$route.params
+    //9街道审核  10 联合审查轮转
+    const valid = status == 9 || status == 10
+
+    if (!isNaN(+id) && valid) {
+      this.projectId = id
+      this.status = status
     }
   },
   methods: {
@@ -63,14 +77,17 @@ export default {
       }
     }
   },
+  // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (!to.params.status) {
-        vm.$router.push(from.fullPath)
-        return false
-      }
-      vm.params.status = to.params.status
-    })
+    const { id, status } = to.params
+    //9街道审核  10 联合审查轮转
+    const valid = status == 9 || status == 10
+    const illegal = isNaN(+id) || !valid
+
+    if (illegal) {
+      next('/redirect' + from.fullPath)
+    }
+    next()
   }
 }
 </script>
@@ -99,7 +116,7 @@ export default {
 .step-btn-group .step-actived {
   background: #82a7cb;
 }
-.dynamic-component-container{
+.dynamic-component-container {
   margin-top: 30px;
 }
 </style>

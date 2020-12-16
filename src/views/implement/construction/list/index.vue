@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-15 16:37:57
+ * @LastEditTime: 2020-12-16 09:25:58
  * @Description:图审列表
 -->
 
@@ -64,10 +64,10 @@
           <template slot-scope="{row}">
             <el-row type="flex" justify="space-around">
               <el-button v-if="row.statusId === 8" size="mini"  type="warning" plain @click="$router.push({name:'ConstructionProcess',params:{id:row.id,status:row.statusId}})">报价</el-button>
-              <el-button v-if="row.statusId === 11" size="mini" type="success" plain >开始施工</el-button>
+              <!-- <el-button v-if="row.statusId === 11" size="mini" type="success" plain >开始施工</el-button> -->
 
-              <el-button v-if="row.statusId === 12" size="mini" type="warning" plain @click="$router.push({name:'ConstructionFault',params:{id:row.id,status:row.statusId}})">违规查看</el-button>
-              <el-button v-if="row.statusId === 13" size="mini" type="warning" plain @click="$router.push({name:'ConstructionComplete',params:{id:row.id,status:row.statusId}})">竣工验收</el-button>
+              <el-button v-if="row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'ConstructionFault',params:{id:row.id,status:row.statusId}})">违规查看</el-button>
+              <el-button v-if="row.statusId === 12" size="mini" type="warning" plain @click="$router.push({name:'ConstructionComplete',params:{id:row.id,status:row.statusId}})">竣工验收</el-button>
 
             </el-row>
           </template>

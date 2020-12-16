@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-26 13:33:24
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-28 14:25:46
+ * @LastEditTime: 2020-12-16 09:37:35
  * @Description:
 -->
 <template>
@@ -91,8 +91,29 @@ export default {
       resultOptions: [
         { key: 0, val: '通过' },
         { key: -1, val: '不通过' }
-      ]
+      ],
+      projectId: null,
+      status: null
     }
+  },
+  created() {
+    const { id, status } = this.$route.params
+    //3第二次提交材料
+    if (!isNaN(+id) && status == 11) {
+      this.projectId = id
+      this.status = status
+    }
+  },
+  // 获得工程Id
+  beforeRouteEnter(to, from, next) {
+    const { id, status } = to.params
+    //3第二次提交材料
+    const illegal = isNaN(+id) || status != 11
+
+    if (illegal) {
+      next('/redirect' + from.fullPath)
+    }
+    next()
   }
 }
 </script>
@@ -108,7 +129,7 @@ export default {
   // padding: 2px;
   border: 1px solid #c0ccda;
   border-radius: 2px;
-    position: relative;
+  position: relative;
 
   .image-inner {
     display: inline-block;
@@ -130,10 +151,9 @@ export default {
       color: #fff;
       font-size: 20px;
       cursor: pointer;
-      .icon-center{
+      .icon-center {
         visibility: hidden;
-         line-height: 150px;
-
+        line-height: 150px;
       }
       // top: 50%;
       // left: 50%;
@@ -141,7 +161,7 @@ export default {
       &:hover {
         background-color: rgba(0, 0, 0, 0.5);
         transition: opacity 0.3s;
-        .icon-center{
+        .icon-center {
           visibility: visible;
         }
         // opacity: 0;
@@ -150,9 +170,9 @@ export default {
     }
   }
 }
-.dialog-image{
+.dialog-image {
   text-align: center;
-  img{
+  img {
     width: 100%;
   }
 }

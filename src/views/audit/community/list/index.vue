@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-15 13:53:02
+ * @LastEditTime: 2020-12-16 08:37:59
  * @Description:申请列表
 -->
 
@@ -37,6 +37,11 @@
           </template>
         </el-table-column>
         <el-table-column label="编号" prop="projectName" />
+        <el-table-column label="申请人" min-width="200" align="center">
+          <template slot-scope="{row}">
+            {{ row.applicantName }}
+          </template>
+        </el-table-column>
         <el-table-column label="提交时间" align="center" prop="addTime" sortable min-width="145px">
           <template slot-scope="{row}">
             <i class="el-icon-time" />
@@ -82,7 +87,6 @@ export default {
 
 </script>
 <style scoped>
-
 .form-card ::v-deep .el-upload-dragger {
   width: 400px;
   padding: 40px 5px;

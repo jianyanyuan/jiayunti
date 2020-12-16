@@ -32,7 +32,7 @@ const streetRouter = {
       }
     },
     {
-      path: 'check',
+      path: 'check/:id/:status',
       component: () => import('@/views/audit/street/check/index.vue'),
       name: 'StreetCheck',
       hidden: true,
@@ -43,18 +43,18 @@ const streetRouter = {
       }
     },
     {
-      path: 'handle_fault',
+      path: 'handle_fault/:id/:status',
       component: () => import('@/views/audit/street/handle_fault.vue'),
       name: 'StreetHandleFault',
       hidden: true,
       meta: {
-        title: '违规处理',
+        title: '违规回复',
         icon: 'check',
         roles: ['ROLE_ADMIN', 'ROLE_STREET']
       }
     },
     {
-      path: 'record_fault',
+      path: 'record_fault/:id/:status',
       component: () => import('@/views/audit/street/record_fault.vue'),
       name: 'StreetRecordFault',
       hidden: true,

@@ -133,6 +133,7 @@
 <script>
 
 export default {
+  name:'RecordFault',
   components: {
   },
   data() {
@@ -243,12 +244,20 @@ export default {
       },
       uploadModal: {
         visible: false
-      }
+      },
+      projectId: null,
+      status: null
     }
   },
   computed: {
   },
-  created() {
+ created() {
+    const { id, status } = this.$route.params
+    //3第二次提交材料
+    if (!isNaN(+id) && status == 11) {
+      this.projectId = id
+      this.status = status
+    }
   },
   methods: {
     goSearch() {
@@ -264,6 +273,17 @@ export default {
       this.pagination.pageIndex = val
     }
 
+  },
+    // 获得工程Id
+  beforeRouteEnter(to, from, next) {
+    const { id, status } = to.params
+    //3第二次提交材料
+    const illegal = isNaN(+id) || status != 11
+
+    if (illegal) {
+      next('/redirect' + from.fullPath)
+    }
+    next()
   }
 }
 </script>

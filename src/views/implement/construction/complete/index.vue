@@ -2,116 +2,108 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-03 11:27:25
+ * @LastEditTime: 2020-12-16 09:11:45
  * @Description: 施工档案归档、竣工验收
 -->
 <template>
-  <div class="app-container">
-    <el-row class="clearfix" style="padding:18px 20px">
-      <el-button type="primary" style="float:right" @click="hasChanged = !hasChanged">{{ hasChanged ? '修改': '保存' }}</el-button>
+  <div class="app-container" v-loading="pageLoading">
+    <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
+      <span>材料上传</span>
+      <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修 改</el-button>
+      <el-button v-else type="success" style="float:right" @click="postFile">提 交</el-button>
     </el-row>
     <template v-if="hasChanged">
-      <el-card class="upload-card">
+      <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
           <span>档案归档</span>
         </div>
-        <div v-for="url in urls[index]" :key="url" class="image-container">
-          <img :src="url" alt="档案归档" srcset="">
-        </div>
-      </el-card>
+        <upload-list :files="recordList" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
 
-      <el-card class="upload-card">
+      </el-card>
+      <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
           <span>竣工验收</span>
         </div>
-        <div v-for="url in urls[index]" :key="url" class="image-container">
-          <img :src="url" alt="竣工验收" srcset="">
-        </div>
-      </el-card>
-      <div style="text-align:center">
-        <el-button type="success" icon="el-icon-upload2" @click.native.prevent="post">提 交</el-button>
+        <upload-list :files="completeList" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
 
-      </div>
+      </el-card>
+      <!-- <div style="text-align:center">
+
+        <el-button type="success" icon="el-icon-upload2" @click="postApply">提交</el-button>
+
+      </div> -->
     </template>
 
     <template v-else>
-      <el-card class="upload-card" title="档案归档">
+      <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
           <span>档案归档</span>
         </div>
-        <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
+        <el-upload action="#" :file-list="recordList" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,0)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,0)}" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
-          <!-- <div class="enclosure-tips">
-            所需附件：
-            <ul>
-              <li>
-                业主身份证
-              </li>
-              <li>
-                业主房产证
-              </li>
-              <li>
-                意见征询表 / 征询表+委托书+受委托人身份证
-              </li>
-            </ul>
-          </div> -->
           <div>将文件拖到此处，或点击添加</div>
           <p>单个文件大小不超过20MB，可上传图片或PDF</p>
         </el-upload>
       </el-card>
-
-      <el-card class="upload-card" title="竣工验收">
+      <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
           <span>竣工验收</span>
         </div>
-        <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
+        <el-upload action="#" :file-list="completeList" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,1)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,1)}" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
-          <!-- <div class="enclosure-tips">
-            所需附件：
-            <ul>
-              <li>
-                业主身份证
-              </li>
-              <li>
-                业主房产证
-              </li>
-              <li>
-                意见征询表 / 征询表+委托书+受委托人身份证
-              </li>
-            </ul>
-          </div> -->
           <div>将文件拖到此处，或点击添加</div>
           <p>单个文件大小不超过20MB，可上传图片或PDF</p>
         </el-upload>
       </el-card>
     </template>
-
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+      <img :src="detailImgUrl" alt="验收附件">
+    </el-dialog>
+    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
+      <div ref="printContent">
+        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
+      </div>
+      <span slot="footer">
+        <el-button @click="printPDF" type="success">打印</el-button>
+        <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import File from '@/api/file'
+import Project from '@/api/projects'
+import { notEmptyArray } from '@/utils'
 // import { deepClone } from '@/utils'
+import Pdf from 'vue-pdf'
+import html2canvas from 'html2canvas'
+import printJS from 'print-js'
 
 export default {
-  name: 'Complete',
+  name: 'ApplyNotice',
+  components: {
+    Pdf
+  },
   data() {
     return {
       // 修改后重新保存
+      imgVisible: false,
+      pdfVisible: false,
+      detailImgUrl: '',
+      pdfURL: '', // Pdf路径
+      pdfPages: undefined,// pdf内容
       hasChanged: false,
-      formLoading: false,
-      rooms: ['401', '402', '403'],
-      model: [],
-      urls: [
-        ['https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg', 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'],
-        ['https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'],
-        ['https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg']
-      ],
-      test: [
-        [{ name: '身份证', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg' }],
-        [{ name: '身份证', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg' }],
-        [{ name: '身份证', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg' }]],
-      uploadFile: null
+      // formLoading: false,
+      pageLoading: false,
+      recordList: [], // 公示内容
+      completeList: [], // 公示报告
+      uploadList: [], // 上传用
+      deleteList: [], // 删除用
+      dirName: ['construction-record', 'construction-complete'],
+      id: null, // 工程id
+      status: null // 工程阶段标识位
     }
   },
 
@@ -121,41 +113,124 @@ export default {
 
   },
   created() {
-    this.rooms = ['401', '402', '403']
-    this.rooms.forEach(v => {
-      this.model.push([])
-    })
+    const { id, status } = this.$route.params
+    //3第二次提交材料
+    if (!isNaN(+id) && status == 12) {
+      this.id = id
+      this.status = status
+      this.detailApply()
+    }
   },
   methods: {
-    post() {
+    // 获取已上传的意见征询表
+    detailApply() {
+      this.pageLoading = true
+      this.recordList = []
+      this.completeList = []
+      this.uploadList = []
+      this.deleteList = []
+      this.dirName.forEach(async (v, i) => {
+        await File.get({ projectId: this.id, typeName: v })
+          .then(res => {
+            if (notEmptyArray(res.content)) {
+              const arr = i === 0 ? 'recordList' : 'completeList'
+              for (const i of res.content) {
+                this[arr].push({
+                  uid: i.id,
+                  name: i.filename,
+                  url: i.path
+                })
+              }
+            }
+          })
+          .catch(err => {
+            console.log(err)
+            this.$message.error('信息获取失败')
+          })
+      })
+      this.pageLoading = false
+    },
+    // 展示文件
+    detailFile(file) {
+      if (/\bpdf/i.test(file.name)) {
+        // 展示pdf
+        this.pdfURL = Pdf.createLoadingTask('/teat.pdf')
+        this.pdfURL.promise.then(pdf => {
+          this.pdfPages = pdf.numPages
+          this.pdfVisible = true
+        }).catch(() => {
+          this.$message.error('pdf预览失败')
+        })
+      } else {
+        this.detailImgUrl = file.url
+        this.imgVisible = true
+      }
 
     },
-    handleUploadRemove(file, fileList) {
+    // 打印pdf
+    printPDF() {
+      html2canvas(this.$refs.printContent, {
+        backgroundColor: null,
+        useCORS: true,
+        windowHeight: document.body.scrollHeight
+      }).then((canvas) => {
+        const url = canvas.toDataURL()
+        printJS({
+          printable: url,
+          type: 'image',
+          documentTitle: this.printName
+        })
+        // console.log(url)
+      })
     },
-    // handleUploadChange(file, fileList) {
-    //   console.log(file)
-    //   console.log(fileList)
-    //   debugger
-    // },
     nextProcess(arrow) {
-      this.$emit('nextProcess', arrow)
+      if (arrow > 0) {
+        const count = this.rooms.reduce((c, v) => (this.fileList[v].length + c), 0)
+        if (count >= this.rooms.length * 3) {
+          this.$emit('nextProcess', arrow)
+        }
+        else {
+          this.$message.error('请补全附件，附件分开上传')
+        }
+      } else {
+        this.$emit('nextProcess', arrow)
+      }
     },
-    // 上传文件发生改变时
-    handleUploadChange(file, fileList, index) {
-      if (fileList.length > 0) {
-        this.model[index] = fileList.map(f => f.raw)
+
+    // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
+    // 限制了添加文件的逻辑，不支持多个文件选择
+    handleUploadChange(file, fileList, type) {
+      const valid = this.checkUpload(file.raw)
+      if (valid && file.status === 'ready') {
+        const formData = new FormData()
+        formData.append('file', file.raw)
+        const showFile = {
+          uid: file.uid,
+          name: file.name,
+        }
+        const upload = {
+          type,
+          uid: file.uid,
+          file: formData
+        }
+        const arr = type === 0 ? 'recordList' : 'completeList'
+        this[arr].push(showFile)
+        this.uploadList.push(upload)
+
+      } else {
+        fileList.pop()
       }
     },
     // 图片上传之前判断
-    uploadBefore(file) {
-      const isImage = file.type.indexOf('image') !== -1
-      const isBig = file.size <= 1024 * 1024 * 10
-      if (!file) {
+    checkUpload(file) {
+      if (!file.size) {
         this.$message.error('上传为空！')
         return false
       }
-      if (!isImage) {
-        this.$message.error('只能上传图片！')
+      const typeAllowed = /\bpdf|\bimage/i.test(file.type)
+      const isBig = file.size <= 1024 * 1024 * 10 // 单个文件最大10M
+      if (!typeAllowed) {
+        this.$message.error('只能上传图片或pdf！')
         return false
       }
       if (!isBig) {
@@ -164,66 +239,107 @@ export default {
       }
       return true
     },
+    // 删除文件
+    handleUploadRemove(file, fileList, type) {
+      // const index = this.fileList[room].findIndex(v => v.uid === file.uid)
+      // const removed = this.fileList[room].splice(index, 1)
+      const arr = type === 0 ? 'recordList' : 'completeList'
+      if (file.url === undefined) {
+        // 未上传 --> 取消上传
+        const cancelIdx = this[arr].findIndex(f => f.uid === file.uid)
+        this[arr].splice(cancelIdx, 1)
+        const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
+        this.uploadList.splice(removeIdx, 1)
 
-    // 添加投注单
-    addBet() {
-      if (!this.uploadFile) {
-        this.$message.error('请上传附件')
-        this.formLoading = false
-        return false
+      } else {
+        // 已上传的 --> 待删除
+        this.deleteList.push(
+          {
+            type,
+            projectId: this.id,
+            uid: file.uid,
+          }
+        )
       }
-      if (!this.uploadBefore(this.uploadFile)) {
-        this.formLoading = false
-        return false
-      }
-      const formData = new FormData()
-      formData.append('file', this.uploadFile)
-      // 上传附件
-      File.upload(formData, { desciption: 'sssss' }).then(res => {
-        debugger
-      }).catch(err => {
-        this.$message.error(err)
-      })
-
-      // }
     },
 
-    // 更新投注单
-    postApply() {
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          if (this.plot.length === 0) {
-            this.$message.error('请选择地址')
-            return false
-          }
-          this.formLoading = true
-          this.form.address = this.form.address.concat(this.plot)
-          this.form.rooms = this.form.rooms.map(v => v.val)
-          this.formLoading = false
-          console.log(this.form)
-        } else {
-          this.$message.error('请补全信息')
-        }
+    // 保存修改
+    postFile() {
+      this.pageLoading = true
+      let uploadAsync = new Promise(resolove => resolove('未修改'))
+      let deleteAsync = new Promise(resolove => resolove('未修改'))
+      if (notEmptyArray(this.uploadList)) {
+        let error = false
+        uploadAsync = new Promise((resolove, reject) => {
+          this.uploadList.forEach(async (v, i) => {
+            const { type, file } = v
+            const arr = type === 0 ? 'recordList' : 'completeList'
+            const last = i === this.uploadList.length - 1
+            await File.upload(file, { typeName: this.dirName[type], projectId: this.id })
+              .catch(() => {
+                // 上传失败
+                const failIdx = this[arr].findIndex(f => f.uid === v.uid)
+                this[arr].splice(failIdx, 1)
+                error = true
+              })
+            if (last) {
+              error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
+            }
+            this.uploadList.splice(i, 1)
+          })
+        })
+      }
+      if (notEmptyArray(this.deleteList)) {
+        let error = false
+        deleteAsync = new Promise((resolove, reject) => {
+          this.deleteList.forEach(async (v, i) => {
+            const last = i === this.deleteList.length - 1
+            const arr = v.type === 0 ? 'recordList' : 'completeList'
+            await File.remove(v.uid)
+              .then(() => {
+                const delIndx = this[arr].findIndex(f => f.uid === v.uid)
+                this[arr].splice(delIndx, 1)
+              })
+              .catch((err) => {
+                console.log(err)
+                this[arr].push(v)
+                error = true
+              })
+            if (last) {
+              error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
+            }
+            this.deleteList.splice(i, 1)
+          })
+        })
+      }
+      Promise.all([uploadAsync, deleteAsync]).then(async() => {
+        this.pageLoading = false
+        await Project.advance(this.id, 3).catch(() => {
+          this.$message.error('流程错误')
+        })
+        this.$router.push('/resident/list')
+      }).catch((err) => {
+        console.log(err)
+        this.$message.error('保存失败')
+        this.pageLoading = false
       })
     }
+  },
+  // 获得工程Id
+  beforeRouteEnter(to, from, next) {
+    const { id, status } = to.params
+    //3第二次提交材料
+    const illegal = isNaN(+id) || status != 12
+
+    if (illegal) {
+      next('/redirect' + from.fullPath)
+    }
+    next()
   }
 }
 </script>
 
 <style scoped lang="scss">
-.clearfix {
-  &:after {
-    visibility: hidden;
-    display: block;
-    font-size: 0;
-    content: " ";
-    clear: both;
-    height: 0;
-  }
-}
-.upload-card {
-  margin-bottom: 30px;
-}
 .upload-card ::v-deep .el-card__body {
   text-align: center;
   margin-bottom: 30px;
@@ -237,7 +353,7 @@ export default {
 }
 .upload-card ::v-deep .el-upload-dragger {
   width: 400px;
-  padding: 10px 5px;
+  padding: 40px 5px;
   border: 2px solid #e5e5e5;
   color: #777;
   -webkit-transition: background-color 0.2s linear;
