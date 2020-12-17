@@ -2,186 +2,111 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-27 09:38:53
+ * @LastEditTime: 2020-12-17 15:46:49
  * @Description: 增梯办联合审查报告
 -->
 <template>
   <div class="app-container">
-    <div class="basic-container">
-      <el-card style="margin-bottom:30px">
-        <div slot="header">
-          <span>基本信息</span>
-        </div>
-        <el-form label-width="120px" class="show-form">
-          <el-form-item label="姓名">
-            {{ basic.name }}
-          </el-form-item>
-          <el-form-item label="详细地址">
-            <el-cascader v-model="basic.address" :options="addressOptions" />
-            <label for="address-detail" class="label-detail"> — </label>
-            <el-cascader v-model="plot" :options="plotOptions" />
-          </el-form-item>
-          <el-form-item label="电话">
-            {{ basic.phone }}
-          </el-form-item>
-          <el-form-item label="加装电梯地址">
-            {{ basic.liftAddress }}
-          </el-form-item>
-          <el-form-item label="设计单位">
-            {{ basic.company }}
-          </el-form-item>
-          <el-form-item label="设备">
-            {{ basic.spec }}
-          </el-form-item>
-        </el-form>
+    <el-page-header style="margin-bottom:20px" content="上传联合审批报告" @back="$router.go(-1)" />
 
-      </el-card>
-    </div>
-    <el-card style="margin-bottom:30px">
+    <el-card>
       <div slot="header">
         <el-row type="flex" justify="space-between" align="middle">
           <span>联合审批报告</span>
-          <el-button v-if="!hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">保 存</el-button>
-          <el-button v-else type="primary" style="float:right" @click="hasChanged = !hasChanged">修 改</el-button>
         </el-row>
       </div>
-      <template v-if="hasChanged" class="upload-card">
-
-        <el-form label-width="120px">
-          <el-form-item label="审核意见:">
-            {{ form.audit }}
-          </el-form-item>
-          <el-form-item label="报告:">
-            <image-card url="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg" @show="showPic" />
-          </el-form-item>
-          <el-form-item label="审核结果:">
-            {{ form.result }}
-          </el-form-item>
-        </el-form>
-      </template>
-
-      <template v-else>
-        <el-form label-width="120px" :model="form" :rules="rule">
-          <el-form-item label="审核意见:" prop="audit">
-            <el-input v-model="form.audit" type="textarea" :rows="4" />
-          </el-form-item>
-          <el-form-item label="报告:" prop="attachment">
-            <el-upload action="#" class="form-card" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
-              <!-- <i class="el-icon-upload" /> -->
-              <div class="enclosure-tips">
-                联合审查报告
-              </div>
-              <div>将文件拖到此处，或点击添加</div>
-              <div>单个文件大小不超过20MB，可上传图片或PDF</div>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="审核结果:" prop="result">
-            <el-select v-model="form.result">
-              <el-option v-for="item in resultOptions" :key="item.val" :value="item.key" :label="item.val" />
-            </el-select>
-          </el-form-item>
-        </el-form>
-
-      </template>
+      <el-form label-width="120px" ref="form" :model="form" :rules="rule">
+        <el-form-item label="审核意见:" prop="reviewOpinions">
+          <el-input v-model="form.reviewOpinions" type="textarea" :rows="4" />
+        </el-form-item>
+        <el-form-item label="报告:" prop="attachment">
+          <el-upload action="#" class="form-card" :limit="1" :on-remove="handleUploadRemove" :on-change="handleUploadChange" drag :auto-upload="false">
+            <!-- <i class="el-icon-upload" /> -->
+            <div class="enclosure-tips">
+              联合审查报告
+            </div>
+            <div>将文件拖到此处，或点击添加</div>
+            <div>单个文件大小不超过20MB，可上传图片或PDF</div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="审核结果:" prop="reviewResults">
+          <el-select v-model="form.reviewResults">
+            <el-option v-for="item in auditOptions" :key="item.val" :value="item.key" :label="item.val" />
+          </el-select>
+        </el-form-item>
+        <el-form-item class="audit-operation">
+          <el-button type="success" size="medium" icon="el-icon-upload2" @click="handlePost">提 交</el-button>
+        </el-form-item>
+      </el-form>
     </el-card>
-    <el-dialog :visible.sync="picShow" class="dialog-image">
-      <img src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg" alt="">
-    </el-dialog>
   </div>
 </template>
 
 <script>
+import Project from '@/api/projects'
 import File from '@/api/file'
-// import { deepClone } from '@/utils'
-import { mapGetters } from 'vuex'
-import ImageCard from '@/components/Imagecard'
+import { mapState } from 'vuex'
+
 export default {
-  name: 'ConsultationForm',
-  components: {
-    ImageCard
-  },
+  name: 'UnionReport',
   data() {
     return {
-      picShow: false,
-      // 修改后重新保存
-      hasChanged: false,
-      formLoading: false,
-      rooms: ['401', '402', '403'],
+      projectId: null,
+      status: null,
+      typeName: 'union-report',
+      pageLoading: false,
       form: {
-        audit: '的撒打算',
-        attachment: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-        result: 0
+        reviewOpinions: '',
+        reviewResults: 0,
+        attachment: null
       },
       rule: {
-        audit: [{ required: true, message: '请给出审核意见', trigger: 'blur' }],
-        attachment: [{ required: true, message: '请上传报告', trigger: 'blur' }],
-        result: [{ required: true, message: '请给出审核结果', trigger: 'blur' }]
-      },
-      basic: {
-        name: '李先生',
-        address: ['jiangsu', 'suzhou', 'gusu', 'canglang', 'shequ', 'xiaoqu'],
-        phone: '15988800323',
-        liftAddress: '小区1楼',
-        company: '苏州建研院',
-        spec: '高端电梯'
-      },
-      urls: [
-        'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-        'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
-      ],
-      test: [
-        [{ name: '身份证', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg' }],
-        [{ name: '身份证', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg' }],
-        [{ name: '身份证', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg' }]],
-      uploadFile: null,
-      resultOptions: [
-        { key: 0, val: '通过' },
-        { key: -1, val: '不通过' }
-      ]
+        reviewOpinions: [{ required: true, message: '请给出审核意见', trigger: 'blur' }],
+        reviewResults: [{ required: true, message: '请给出审核结果', trigger: 'blur' }],
+        attachment: [{ required: true, message: '请上传报告', trigger: 'blur' }]
+      }
     }
   },
-
   computed: {
-    ...mapGetters('common', ['addressOptions', 'plotOptions'])
-  },
-  watch: {
+    ...mapState('common', ['auditOptions'])
 
   },
   created() {
-    this.plot = this.basic.address.slice(3)
-
-    this.basic.address = this.basic.address.slice(0, 3)
+    const { id, status } = this.$route.params
+    // 10 联合审查
+    const valid = status == 1 || status == 10
+    if (!isNaN(+id) && valid) {
+      this.projectId = id
+      this.status = status
+    }
   },
   methods: {
-    showPic() {
-      this.picShow = true
-    },
-    handleUploadRemove(file, fileList) {
-    },
-    // handleUploadChange(file, fileList) {
-    //   console.log(file)
-    //   console.log(fileList)
-    //   debugger
-    // },
-    nextProcess(arrow) {
-      this.$emit('nextProcess', arrow)
-    },
-    // 上传文件发生改变时
-    handleUploadChange(file, fileList, index) {
-      if (fileList.length > 0) {
-        this.model[index] = fileList.map(f => f.raw)
+    // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
+    // 限制了添加文件的逻辑，不支持多个文件选择
+    handleUploadChange(file, fileList) {
+      const valid = this.checkUpload(file.raw)
+      if (valid && file.status === 'ready') {
+        const formData = new FormData()
+        formData.append('file', file.raw)
+        this.form.attachment = {
+          uid: file.uid,
+          name: file.name,
+          file: formData,
+        }
+      } else {
+        fileList.pop()
       }
     },
     // 图片上传之前判断
-    uploadBefore(file) {
-      const isImage = file.type.indexOf('image') !== -1
-      const isBig = file.size <= 1024 * 1024 * 10
-      if (!file) {
+    checkUpload(file) {
+      if (!file.size) {
         this.$message.error('上传为空！')
         return false
       }
-      if (!isImage) {
-        this.$message.error('只能上传图片！')
+      const typeAllowed = /\bpdf|\bimage/i.test(file.type)
+      const isBig = file.size <= 1024 * 1024 * 10 // 单个文件最大10M
+      if (!typeAllowed) {
+        this.$message.error('只能上传图片或pdf！')
         return false
       }
       if (!isBig) {
@@ -190,47 +115,59 @@ export default {
       }
       return true
     },
-
-    // 添加投注单
-    addBet() {
-      if (!this.uploadFile) {
-        this.$message.error('请上传附件')
-        this.formLoading = false
-        return false
-      }
-      if (!this.uploadBefore(this.uploadFile)) {
-        this.formLoading = false
-        return false
-      }
-      const formData = new FormData()
-      formData.append('file', this.uploadFile)
-      // 上传附件
-      File.upload(formData, { desciption: 'sssss' }).then(res => {
-        debugger
-      }).catch(err => {
-        this.$message.error(err)
-      })
-
-      // }
+    // 删除文件
+    handleUploadRemove(file, fileList) {
+      this.form.attachment = null
+      fileList = []
     },
-
-    // 提交申请
-    postApply() {
-      this.$refs.form.validate(valid => {
+    handlePost() {
+      if (this.form.attachment === null) {
+        this.$message.error('请上传报告')
+        return
+      }
+      this.$refs.form.validate(async valid => {
         if (valid) {
-          if (this.plot.length === 0) {
-            this.$message.error('请选择地址')
-            return false
+          this.pageLoading = true
+          this.form.projectId = this.projectId
+          this.form.type = this.status
+          const fileRes = await File.upload(this.form.attachment.file, { projectId: this.projectId, typeName: this.typeName })
+          if (fileRes.fileTypeId) {
+            this.form.attachment = null
+            this.form.fileId = fileRes.fileTypeId
+          } else {
+            this.$message.error('报告上传失败')
+            this.pageLoading = false
+            return
           }
-          this.formLoading = true
-          this.form.address = this.form.address.concat(this.plot)
-          this.form.rooms = this.form.rooms.map(v => v.val)
-          this.formLoading = false
-          console.log(this.form)
+          Project.check(this.form)
+            .then(async () => {
+              await Project.advance(this.projectId, this.status).catch((err) => {
+                this.$message.error(err.message || '流程错误')
+              })
+              this.$router.push('/increase-lift/list')
+            })
+            .catch(() => {
+              this.$message.error('审核失败')
+            })
+            .finally(() => {
+              this.pageLoading = false
+            })
         } else {
           this.$message.error('请补全信息')
         }
       })
+    },
+  },
+  // 获得工程Id
+  beforeRouteEnter(to, from, next) {
+    const { id, status } = to.params
+    // 10 联合审查报告
+    const valid = status == 1 || status == 10
+    if (isNaN(+id) || !valid) {
+      // 没有id则返回跳转
+      next('/redirect' + from.fullPath)
+    } else {
+      next()
     }
   }
 }

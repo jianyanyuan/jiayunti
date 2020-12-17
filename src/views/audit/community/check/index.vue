@@ -20,7 +20,7 @@
 
     <div class="dynamic-component-container">
       <keep-alive>
-        <component v-if="applyId && status" :is="curComponent" :id="applyId" :status="status" />
+        <component v-if="projectId && status" :is="curComponent" :id="projectId" :status="status" />
       </keep-alive>
     </div>
 
@@ -45,7 +45,7 @@ export default {
   },
   data() {
     return {
-      applyId: null,
+      projectId: null,
       status: null,
       stepBtnGroup: [/*'申请流程图',*/  '居民申请材料', '审核'],
       componentGroup: [/**'Flow', */ 'Resident', 'Audit'],
@@ -62,7 +62,7 @@ export default {
     // 1社区受理 3社区第二次受理
     const valid = status == 1 || status == 3
     if (!isNaN(+id) && valid) {
-      this.applyId = id
+      this.projectId = id
       this.status = status
     }
   },

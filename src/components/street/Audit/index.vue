@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-16 16:35:29
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-17 10:27:15
+ * @LastEditTime: 2020-12-17 15:18:58
  * @Description:
 -->
 <template>
@@ -11,7 +11,7 @@
       <el-form-item label="审核意见:" prop="reviewOpinions">
         <el-input v-model="form.reviewOpinions" type="textarea" :rows="4" />
       </el-form-item>
-      <el-form-item label="审核表:" prop="attachment">
+      <el-form-item label="审核表:">
         <el-upload action="#" class="form-card" :limit="1" :on-remove="handleUploadRemove" :on-change="handleUploadChange" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div class="enclosure-tips">
@@ -25,10 +25,7 @@
         <el-select v-model="form.reviewResults" :disabled="conflict === true">
           <el-option v-for="item in auditOptions" :key="item.val" :value="item.key" :label="item.val" />
         </el-select>
-        <el-tag type="danger" style="margin-left:20px" size="large
-        
-        
-        " v-if="conflict === true" class="audit-conflict">异议冲突</el-tag>
+        <el-tag type="danger" style="margin-left:20px" size="large" v-if="conflict === true" class="audit-conflict">异议冲突</el-tag>
       </el-form-item>
       <el-form-item class="audit-operation">
         <el-button type="success" size="medium" icon="el-icon-upload2" @click="handlePost">提 交</el-button>
@@ -88,7 +85,7 @@ export default {
         case 9:
           return 'street-review-form' // 街道审核
         case 10:
-          return 'street-review-form' // 联合审查
+          return 'union-review-form' // 联合审查
         default:
           return 'errors'
       }
@@ -141,7 +138,13 @@ export default {
         if (valid) {
           this.pageLoading = true
           this.form.projectId = this.id
-          this.form.type = this.status
+          if (this.status == 10) {
+            // 10 联合审查，4个部门，type要区分
+            const roleMapType = new Map([['ROLE_CAPITAL_RULE', 11], ['ROLE_HOUSE_CONSTRUCTION', 12], ['ROLE_URBAN_MANAGEMENT', 13], ['ROLE_MARKET_SUPERVISOR', 14]])
+            this.form.type = roleMapType.get(this.$store.getters.roles[0])
+          } else {
+            this.form.type = this.status
+          }
           // const taskAsync = []
           if (this.attachment !== null) {
             const fileRes = await File.upload(this.attachment.file, { projectId: this.id, typeName: this.typeName })
@@ -156,14 +159,18 @@ export default {
           }
           Project.check(this.form)
             .then(async () => {
-              await Project.advance(this.id, this.status).catch(() => {
-                this.$message.error('流程错误')
-              })
-              this.pageLoading = false
+              if (this.status != 10) {
+                // 10 联合审查 审核过,流程不前进
+                await Project.advance(this.id, this.status).catch(() => {
+                  this.$message.error('流程错误')
+                })
+              }
               this.pushPage()
             })
             .catch(() => {
               this.$message.error('审核失败')
+            })
+            .finally(() => {
               this.pageLoading = false
             })
         } else {

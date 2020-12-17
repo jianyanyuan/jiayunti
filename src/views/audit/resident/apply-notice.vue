@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-14 13:48:33
+ * @LastEditTime: 2020-12-17 16:12:33
  * @Description: 公示/公告上传
 -->
 <template>
@@ -266,11 +266,10 @@ export default {
     // 保存修改
     postFile() {
       this.pageLoading = true
-      let uploadAsync = new Promise(resolove => resolove('未修改'))
-      let deleteAsync = new Promise(resolove => resolove('未修改'))
+      let asyncList = []
       if (notEmptyArray(this.uploadList)) {
         let error = false
-        uploadAsync = new Promise((resolove, reject) => {
+        const uploadAsync = new Promise((resolove, reject) => {
           this.uploadList.forEach(async (v, i) => {
             const { type, file } = v
             const arr = type === 0 ? 'contentList' : 'reportList'
@@ -288,10 +287,11 @@ export default {
             this.uploadList.splice(i, 1)
           })
         })
+        asyncList.push(uploadAsync)
       }
       if (notEmptyArray(this.deleteList)) {
         let error = false
-        deleteAsync = new Promise((resolove, reject) => {
+        const deleteAsync = new Promise((resolove, reject) => {
           this.deleteList.forEach(async (v, i) => {
             const last = i === this.deleteList.length - 1
             const arr = v.type === 0 ? 'contentList' : 'reportList'
@@ -311,9 +311,9 @@ export default {
             this.deleteList.splice(i, 1)
           })
         })
+        asyncList.push(deleteAsync)
       }
-      Promise.all([uploadAsync, deleteAsync]).then(async() => {
-        this.pageLoading = false
+      Promise.all(asyncList).then(async () => {
         await Project.advance(this.id, 3).catch(() => {
           this.$message.error('流程错误')
         })
@@ -321,8 +321,10 @@ export default {
       }).catch((err) => {
         console.log(err)
         this.$message.error('保存失败')
-        this.pageLoading = false
       })
+        .finally(() => {
+          this.pageLoading = false
+        })
     }
   },
   // 获得工程Id

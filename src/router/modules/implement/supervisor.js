@@ -5,6 +5,8 @@
  * @LastEditTime: 2020-12-17 14:07:49
  * @Description: 监理单位路由表
  */
+import Layout from '@/layout'
+
 const supervisorRouter = {
   path: '/supervisor',
   component: Layout,
