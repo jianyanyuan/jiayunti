@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-16 16:35:29
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-15 15:20:44
+ * @LastEditTime: 2020-12-17 10:27:15
  * @Description:
 -->
 <template>
@@ -85,6 +85,10 @@ export default {
           return 'notice-review-form' // 公示审核
         case 7:
           return 'construction-review-form' // 施工图审核
+        case 9:
+          return 'street-review-form' // 街道审核
+        case 10:
+          return 'street-review-form' // 联合审查
         default:
           return 'errors'
       }
@@ -177,6 +181,12 @@ export default {
           break
         case 7:
           this.$router.push('/drawing-audit/list')
+          break
+        case 9:
+          this.$router.push('/street/list')
+          break
+        case 10:
+          this.$router.push('/union/list')
           break
         default:
           this.$router.push('/404')

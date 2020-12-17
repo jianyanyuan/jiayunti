@@ -72,7 +72,7 @@ const data = {
     { key: 2, val: 'success' }
   ],
   pagination: {
-    total: 20,
+    total: 0,
     pageIndex: 1,
     pageSize: 10
   },
@@ -98,9 +98,10 @@ export default {
     // 获取申请列表
     async listApplies() {
       this.listLoading = true
-      await Project.list({ page: this.pagination.pageIndex, size: this.pagination.pageSize }).then(res => {
+      await Project.list({ page: this.pagination.pageIndex-1, size: this.pagination.pageSize }).then(res => {
         if (notEmptyArray(res.content)) {
           this.list = res.content
+          this.pagination.total = res.totalElements
         }
       }).catch(err => {
         this.$message.error('数据获取失败')
@@ -108,6 +109,8 @@ export default {
       })
       this.listLoading = false
     },
+    goSearch(){},
+    clearQuery(){},
     flowView() {
       this.flowVisible = true
     },

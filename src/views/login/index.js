@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-10 17:27:26
+ * @LastEditTime: 2020-12-17 10:57:23
  * @Description:
  */
 import { notEmptyArray } from '@/utils'
@@ -60,7 +60,11 @@ export default {
             // dynamically add accessible routes
             // repair the problem of '/' not found, must place 404 at the end
             // ROLE_STREET ---> string
-            const roleHome = roles[0].split('_').slice(1).join('-').toLocaleLowerCase()
+            let roleHome = roles[0].split('_').slice(1).join('-').toLocaleLowerCase()
+            const unions = ['capital-rule','house-construction','urban-management','market-supervisor']
+            if(unions.includes(roleHome)) {
+              roleHome = 'union'
+            }
             accessRoutes.splice(accessRoutes.length - 1, 0, { path: '/', redirect: '/' + roleHome, hidden: true })
             this.$router.addRoutes(accessRoutes)
             this.$router.push({ path: this.redirect || '/' })

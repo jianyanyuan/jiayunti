@@ -159,7 +159,7 @@ export default {
       const typeMap = ['consultation-summary', 'delegate-form', 'protocal-form', 'special-form']
       // 9街道审核
       if (this.status == 9) {
-        typeMap.push('noticeContent', 'noticeReport')
+        typeMap.push('notice-content', 'notice-report')
         this.pageContent.push({
           label: '公示内容',
           fileList: []

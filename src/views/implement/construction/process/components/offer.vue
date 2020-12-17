@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-16 15:26:06
+ * @LastEditTime: 2020-12-17 08:32:13
  * @LastEditors: zfd
  * @Description: 施工报价
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -76,6 +76,7 @@
       </tbody>
 
     </table>
+
     <div style="text-align:center;margin-top:30px">
       <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
       <el-button type="success" icon="el-icon-upload2" @click.native.prevent="postApply">提 交</el-button>
@@ -138,7 +139,6 @@ export default {
         const formData = new FormData()
         formData.append('file', file.raw)
         this.uploadList.push({
-          projectId: this.id,
           uid: file.uid,
           name: file.name,
           file: formData
@@ -181,13 +181,13 @@ export default {
       }
       this.pageLoading = true
       const offerRes = await Api.addOffer(this.id, this.construction)
-      const { id } = offerRes
+      const { id } = offerRes // 报价id
       if (id) {
         let error = false
         if (notEmptyArray(this.uploadList)) {
           this.uploadList.forEach(async (v, i) => {
-            const { projectId, file } = v
-            await File.upload(file, { projectId, typeName: this.typeName })
+            const { file } = v
+            await File.uploadOffer(id, file)
               .catch(() => {
                 // 上传失败
                 error = true

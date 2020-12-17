@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 09:06:05
- * @LastEditTime: 2020-12-16 10:36:00
+ * @LastEditTime: 2020-12-17 10:17:13
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\components\street\design\index.vue
@@ -13,10 +13,10 @@
         <el-card class="expand-info">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-form-item label="设计单位">
-              <span>{{ design.org }}</span>
+              <span>{{ design.designName }}</span>
             </el-form-item>
             <el-form-item label="时间">
-              <span>{{ design.time }}</span>
+              <span>{{ new Date(design.designtime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
             </el-form-item>
             <el-form-item label="电话">
               <span>{{ design.phone }}</span>
@@ -58,6 +58,7 @@
 import mixn from '@/components/UploadList/mixin'
 import File from '@/api/file'
 import { notEmptyArray } from '@/utils'
+import Project from '@/api/projects'
 export default {
   name: 'AuditDesign',
   mixins: [mixn],
@@ -73,15 +74,10 @@ export default {
   },
   data() {
     return {
-      design: {
-        org: '建研院',
-        time: '2020-10-12 10:56',
-        address: '苏州高新区',
-        phone: '15988800323'
-      },
+      design: {},
       pageLoading: false,
-      schemaList:[],
-      constructionList:[]
+      schemaList: [],
+      constructionList: []
     }
   },
   created() {
@@ -90,8 +86,20 @@ export default {
   methods: {
     detailApply() {
       this.pageLoading = true
+      
+      const designerAsync = new Promise((resolve, reject) => {
+        Project.getDesigner(this.id)
+          .then(res => {
+            this.design = res
+            resolve('ok')
+          })
+          .catch(err => {
+            console.log(err)
+            reject('设计单位信息获取失败')
+          })
+      })
       const schemaAsync = new Promise((resolve, reject) => {
-        File.get({ projectId: this.projectId, typeName: 'designer-scheme' })
+        File.get({ projectId: this.id, typeName: 'designer-scheme' })
           .then(res => {
             if (notEmptyArray(res.content)) {
               for (const i of res.content) {
@@ -110,7 +118,7 @@ export default {
           })
       })
       const constructionAsync = new Promise((resolve, reject) => {
-        File.get({ projectId: this.projectId, typeName: 'construction-design' })
+        File.get({ projectId: this.id, typeName: 'construction-design' })
           .then(res => {
             if (notEmptyArray(res.content)) {
               for (const i of res.content) {
@@ -128,12 +136,12 @@ export default {
             reject('施工图调取失败')
           })
       })
-      Promise.all([schemaAsync,constructionAsync])
-      .then(()=>(this.pageLoading = false))
-      .catch(err => {
-        this.pageLoading = false
-        this.$message.error('信息获取失败')
-      })
+      Promise.all([designerAsync,schemaAsync, constructionAsync])
+        .then(() => (this.pageLoading = false))
+        .catch(err => {
+          this.pageLoading = false
+          this.$message.error('信息获取失败')
+        })
     }
   }
 }

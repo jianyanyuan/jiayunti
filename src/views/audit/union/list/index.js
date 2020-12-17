@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-01 16:27:21
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-01 16:36:50
+ * @LastEditTime: 2020-12-17 11:20:26
  * @Description:
  */
 import { mapState } from 'vuex'
@@ -16,50 +16,7 @@ const data = {
     applyName: '',
     statusId: ''
   },
-  list: [
-    // #region
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   designTime: '2020-10-14 10:56',
-    //   auditTime: '2020-10-14 10:56',
-    //   apply: {
-    //     name: '李先生',
-    //     address: '苏州高新区',
-    //     phone: '15988800323',
-    //     liftAddress: '小区1楼',
-    //     spec: '高端电梯',
-    //     time: '2020-10-13 11:46'
-    //   },
-    //   design: {
-    //     org: '建研院',
-    //     time: '2020-10-12 10:56',
-    //     address: '苏州高新区',
-    //     phone: '15988800323'
-    //   },
-    //   statusId: 13 // 施工中
-    // },
-    // {
-    //   code: 'xxx小区xxxx幢xxx单元',
-    //   designTime: '2020-10-14 10:56',
-    //   auditTime: '2020-10-14 10:56',
-    //   apply: {
-    //     name: '李先生',
-    //     address: '苏州高新区',
-    //     phone: '15988800323',
-    //     liftAddress: '小区1楼',
-    //     spec: '高端电梯',
-    //     time: '2020-10-14 08:00'
-    //   },
-    //   design: {
-    //     org: '建研院',
-    //     time: '2020-10-12 10:56',
-    //     address: '苏州高新区',
-    //     phone: '15988800323'
-    //   },
-    //   statusId: 8 // 街道审核
-    // }
-    // #endregion
-  ],
+  list: [],
   listLoading: false,
   designStatus: [
     { key: 0, val: '未审核' },
@@ -72,7 +29,7 @@ const data = {
     { key: 2, val: 'success' }
   ],
   pagination: {
-    total: 20,
+    total: 0,
     pageIndex: 1,
     pageSize: 10
   },
@@ -98,9 +55,10 @@ export default {
     // 获取申请列表
     async listApplies() {
       this.listLoading = true
-      await Project.list({ page: this.pagination.pageIndex, size: this.pagination.pageSize }).then(res => {
+      await Project.list({ page: this.pagination.pageIndex -1 , size: this.pagination.pageSize }).then(res => {
         if (notEmptyArray(res.content)) {
           this.list = res.content
+          this.pagination.total = res.totalElements
         }
       }).catch(err => {
         this.$message.error('数据获取失败')
@@ -119,6 +77,10 @@ export default {
       this.pagination.pageIndex = val
       this.listApplies()
     },
+    clearQuery() {
+
+    },
+    goSearch(){},
     // 图片上传之前判断
     uploadBefore(file) {
       const fileType = file.type

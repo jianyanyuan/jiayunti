@@ -30,6 +30,7 @@ const getDesign = () => {
     method: 'get'
   })
 }
+
 export default {
   getAddress,
   getDevice,

@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-01 16:29:37
+ * @LastEditTime: 2020-12-17 11:15:03
  * @Description:街道审核列表
 -->
 
@@ -25,7 +25,7 @@
           <el-button type="primary" icon="el-icon-search" @click="goSearch">搜索</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="info" icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
+          <el-button icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -69,7 +69,7 @@
       </el-table>
     </el-card>
 
-    <el-pagination background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
+    <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
     <!-- 查看流程 -->
     <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
       <flow />

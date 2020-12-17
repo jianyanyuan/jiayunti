@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-29 15:36:07
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-30 16:10:06
+ * @LastEditTime: 2020-12-17 11:16:57
  * @Description:
 -->
 <template>
@@ -27,7 +27,7 @@
       <p><span>联系方式：{{ s.phone }}</span>官网：<a :href="s.url" target="_blank" @click.stop="">{{ s.url }}</a></p>
       <p> 地址：{{ s.address }}</p>
     </div>
-    <el-pagination background layout="prev, pager, next" :total="total" hide-on-single-page :page-size="10" :pager-count="7" :current-page.sync="query.pi" @current-change="handleCurrentChange" />
+    <el-pagination style="margin-top:20px" background layout="prev, pager, next" :total="total" hide-on-single-page :page-size="10" :pager-count="7" :current-page.sync="query.pi" @current-change="handleCurrentChange" />
     <!-- <article>
       <article-show :info="source[current].detail || {}" class="article-container" />
     </article>

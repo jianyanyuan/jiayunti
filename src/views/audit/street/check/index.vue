@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-11-03 09:44:32
+ * @LastEditTime: 2020-12-17 09:57:58
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -20,7 +20,7 @@
 
     <div class="dynamic-component-container">
       <keep-alive>
-        <component v-if="applyId && status" :is="curComponent" :id="applyId" :status="status" />
+        <component v-if="projectId && status" :is="curComponent" :id="projectId" :status="status" />
       </keep-alive>
     </div>
 
@@ -39,15 +39,11 @@ export default {
     Audit,
     Design,
     Resident,
-    Flow,
+    // Flow,
     Pipe
   },
   data() {
     return {
-      params: {
-        applyId: '',
-        status: ''
-      },
       stepBtnGroup: [/*'申请流程图',*/ '居民申请材料', '设计院设计', '管道踏勘记录', '审核'],
       componentGroup: [/*'Flow',*/ 'Resident', 'Design', 'Pipe', 'Audit'],
       curStep: 0,

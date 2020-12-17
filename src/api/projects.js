@@ -46,14 +46,16 @@ const update = (id,newprojectRequest) => {
 }
 
 // 流程步骤更新
-const advance = (projectId,status) => {
+const advance = (projectId,status,constructionId,supervisionId) => {
   return request({
     url:'/flowchartlogic',
     // headers: { 'Content-Type': 'application/json' } ,
     method: 'post',
     data: {
       projectId,
-      status
+      status,
+      constructionId,
+      supervisionId
     }
   })
 }
@@ -67,11 +69,20 @@ const check = (communityReviewRequest ) => {
   })
 }
 
+// 查看工程选择的设计院信息
+
+const getDesigner = (projectId ) => {
+  return request({
+    url:`/design/${projectId}`,
+    method: 'get'
+  })
+}
 export default {
   list,
   add,
   detail,
   update,
   advance,
-  check
+  check,
+  getDesigner
 }

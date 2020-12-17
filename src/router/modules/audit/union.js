@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-16 11:12:18
+ * @LastEditTime: 2020-12-17 11:05:01
  * @LastEditors: zfd
  * @Description: 审批端联合审查路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -18,7 +18,7 @@ const unionRouter = {
   meta: {
     title: '联合审查',
     icon: 'institution',
-    roles: ['ROLE_ADMIN', 'ROLE_Capital_Rule','ROLE_House_Construction','ROLE_Urban_Management','ROLE_Market_Supervisor']
+    roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE','ROLE_HOUSE_CONSTRUCTION','ROLE_URBAN_MANAGEMENT','ROLE_MARKET_SUPERVISOR']
   },
   children: [
     {
@@ -28,7 +28,7 @@ const unionRouter = {
       meta: {
         title: '申请列表',
         icon: 'street',
-        roles: ['ROLE_ADMIN', 'ROLE_Capital_Rule','ROLE_House_Construction','ROLE_Urban_Management','ROLE_Market_Supervisor']
+        roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE','ROLE_HOUSE_CONSTRUCTION','ROLE_URBAN_MANAGEMENT','ROLE_MARKET_SUPERVISOR']
       }
     },
     {
@@ -39,7 +39,7 @@ const unionRouter = {
       meta: {
         title: '审核',
         icon: 'check',
-        roles: ['ROLE_ADMIN', 'ROLE_Capital_Rule','ROLE_House_Construction','ROLE_Urban_Management','ROLE_Market_Supervisor']
+        roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE','ROLE_HOUSE_CONSTRUCTION','ROLE_URBAN_MANAGEMENT','ROLE_MARKET_SUPERVISOR']
       }
     }
     // {

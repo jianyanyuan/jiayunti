@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-16 09:50:04
+ * @LastEditTime: 2020-12-17 10:30:19
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
 -->
 <template>
-  <div>
+  <div v-loading="pageLoading">
     <el-tabs tab-position="left">
       <el-tab-pane label="基本信息">
         <el-card class="expand-info">
@@ -83,11 +83,7 @@ export default {
   },
   data() {
     return {
-      increaseLift: {
-        name: '增梯办',
-        phone: '15988800323',
-        address: '枫桥街道'
-      },
+      increaseLift: {},
       pageLoading:false,
       tableData: []
     }
@@ -99,7 +95,7 @@ export default {
     detailApply() {
       this.pageLoading = true
       const basicAsync = new Promise((resolve, reject) => {
-        this.$store.dispatch('getProjectBasic', this.projectId)
+        this.$store.dispatch('getProjectBasic', this.id)
           .then(res => {
             this.increaseLift = res
             resolve('获取成功')
@@ -109,7 +105,7 @@ export default {
           })
       })
       const detailAsync = new Promise((resolve, reject) => {
-        IncreaseLift.listPipe(this.projectId)
+        IncreaseLift.listPipe(this.id)
           .then(res => {
             if (notEmptyArray(res.content)) {
               this.tableData = res.content

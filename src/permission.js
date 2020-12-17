@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-11 12:10:42
+ * @LastEditTime: 2020-12-17 11:03:20
  * @Description:
  */
 import router from './router'
@@ -17,13 +17,12 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login', '/auth-redirect', '/regist'] // no redirect whitelist
 
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // start progress bar
   NProgress.start()
 
   // set page title
   document.title = getPageTitle(to.meta.title)
-
   // determine whether the user has logged in
   const hasToken = getToken()
 
@@ -44,8 +43,11 @@ router.beforeEach(async(to, from, next) => {
           const { roles } = await store.dispatch('user/getInfo')
           // generate accessible routes map based on roles
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-
-          const roleHome = roles[0].split('_').slice(1).join('-').toLocaleLowerCase()
+          let roleHome = roles[0].split('_').slice(1).join('-').toLocaleLowerCase()
+          const unions = ['capital-rule', 'house-construction', 'urban-management', 'market-supervisor']
+          if (unions.includes(roleHome)) {
+            roleHome = 'union'
+          }
           accessRoutes.splice(accessRoutes.length - 1, 0, { path: '/', redirect: '/' + roleHome, hidden: true })
 
           // dynamically add accessible routes
