@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-17 11:05:01
+ * @LastEditTime: 2020-12-17 13:22:48
  * @LastEditors: zfd
  * @Description: 审批端联合审查路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -41,18 +41,29 @@ const unionRouter = {
         icon: 'check',
         roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE','ROLE_HOUSE_CONSTRUCTION','ROLE_URBAN_MANAGEMENT','ROLE_MARKET_SUPERVISOR']
       }
-    }
-    // {
-    //   path: 'handle_fault/:id/:status',
-    //   component: () => import('@/views/audit/street/handle_fault.vue'),
-    //   name: 'StreetHandleFault',
-    //   hidden: true,
-    //   meta: {
-    //     title: '违规回复',
-    //     icon: 'check',
-    //     roles: ['ROLE_ADMIN', 'ROLE_STREET']
-    //   }
-    // }
+    },
+    {
+      path: 'audited-list',
+      component: () => import('@/views/common/audited/list.vue'),
+      name: 'AuditedList',
+      meta: {
+        title: '已审核列表',
+        icon: 'list',
+        roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE','ROLE_HOUSE_CONSTRUCTION','ROLE_URBAN_MANAGEMENT','ROLE_MARKET_SUPERVISOR']
+      }
+    },
+    {
+      path: 'audited-detail/:id',
+      component: () => import('@/views/common/audited/detail.vue'),
+      name: 'AuditedDetail',
+      hidden: true,
+      meta: {
+        title: '审核详情',
+        icon: 'community',
+        roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE','ROLE_HOUSE_CONSTRUCTION','ROLE_URBAN_MANAGEMENT','ROLE_MARKET_SUPERVISOR']
+      }
+    },
+    
     
   ]
 }

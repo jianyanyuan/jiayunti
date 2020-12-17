@@ -55,9 +55,9 @@ const drawingAuditRouter = {
 
     },
     {
-      path: 'fault-view/:id/:status',
-      component: () => import('@/views/audit/increase_lift/fault-view.vue'),
-      name: 'IncreaseLiftFaultView',
+      path: 'fault-detail/:id/:status',
+      component: () => import('@/views/common/fault/detail.vue'),
+      name: 'FaultDetail',
       hidden: true,
       meta: {
         title: '违规查看',

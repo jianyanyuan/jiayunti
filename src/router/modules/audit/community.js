@@ -31,8 +31,8 @@ const communityRouter = {
     },
     {
       path: 'audited-list',
-      component: () => import('@/views/audit/community/audited/list.vue'),
-      name: 'CommunityAuditedList',
+      component: () => import('@/views/common/audited/list.vue'),
+      name: 'AuditedList',
       meta: {
         title: '已审核列表',
         icon: 'list',
@@ -41,8 +41,8 @@ const communityRouter = {
     },
     {
       path: 'audited-detail/:id',
-      component: () => import('@/views/audit/community/audited/detail.vue'),
-      name: 'CommunityAuditedDetail',
+      component: () => import('@/views/common/audited/detail.vue'),
+      name: 'AuditedDetail',
       hidden: true,
       meta: {
         title: '审核详情',

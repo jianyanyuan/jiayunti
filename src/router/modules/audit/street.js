@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-11-06 14:52:11
+ * @LastEditTime: 2020-12-17 13:21:31
  * @LastEditors: zfd
  * @Description: 审批端街道路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -43,27 +43,57 @@ const streetRouter = {
       }
     },
     {
-      path: 'handle_fault/:id/:status',
-      component: () => import('@/views/audit/street/handle_fault.vue'),
-      name: 'StreetHandleFault',
+      path: 'fault-list',
+      component: () => import('@/views/common/fault/list.vue'),
+      name: 'FaultReview',
       hidden: true,
       meta: {
-        title: '违规回复',
-        icon: 'check',
+        title: '违规列表',
+        icon: 'list',
         roles: ['ROLE_ADMIN', 'ROLE_STREET']
       }
     },
     {
-      path: 'record_fault/:id/:status',
-      component: () => import('@/views/audit/street/record_fault.vue'),
-      name: 'StreetRecordFault',
+      path: 'fault-detail/:id/:status',
+      component: () => import('@/views/common/fault/detail.vue'),
+      name: 'FaultReview',
+      hidden: true,
+      meta: {
+        title: '违规回复',
+        roles: ['ROLE_ADMIN', 'ROLE_STREET']
+      }
+    },
+    {
+      path: 'fault-record/:id/:status',
+      component: () => import('@/views/common/fault/record.vue'),
+      name: 'FaultRecord',
       hidden: true,
       meta: {
         title: '违规记录',
-        icon: 'check',
         roles: ['ROLE_ADMIN', 'ROLE_STREET']
       }
-    }
+    },
+    {
+      path: 'audited-list',
+      component: () => import('@/views/common/audited/list.vue'),
+      name: 'AuditedList',
+      meta: {
+        title: '已审核列表',
+        icon: 'list',
+        roles: ['ROLE_ADMIN', 'ROLE_STREET']
+      }
+    },
+    {
+      path: 'audited-detail/:id',
+      component: () => import('@/views/common/audited/detail.vue'),
+      name: 'AuditedDetail',
+      hidden: true,
+      meta: {
+        title: '审核详情',
+        icon: 'community',
+        roles: ['ROLE_ADMIN', 'ROLE_STREET']
+      }
+    },
   ]
 }
 
