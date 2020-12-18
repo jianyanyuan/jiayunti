@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-17 14:11:40
+ * @LastEditTime: 2020-12-18 09:34:25
  * @LastEditors: zfd
  * @Description: 审批端街道路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -45,7 +45,7 @@ const streetRouter = {
     {
       path: 'fault-list',
       component: () => import('@/views/common/fault/list.vue'),
-      name: 'FaultReview',
+      name: 'FaultList',
       hidden: true,
       meta: {
         title: '违规列表',
@@ -54,8 +54,8 @@ const streetRouter = {
       }
     },
     {
-      path: 'fault-detail/:id/:status',
-      component: () => import('@/views/common/fault/detail.vue'),
+      path: 'fault-review/:id/:status',
+      component: () => import('@/views/common/fault/review.vue'),
       name: 'FaultReview',
       hidden: true,
       meta: {

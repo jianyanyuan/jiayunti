@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-10 08:42:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-01 15:48:32
+ * @LastEditTime: 2020-12-18 14:02:22
  * @Description:
  */
 import * as Validator from '@/utils/element-validator'
@@ -24,18 +24,17 @@ function validateAddress(address) {
 
 const data = {
   form: {
-    username: 'regist',
-    password: '123456',
-    // name: '张飞达',
-    idcard: '321323199802254916',
-    address: { county: [], community: [] },
-    phonenumber: '13776050390',
+    username: '',
+    password: '',
+    idcard: '',
+    address: 'xxx',
+    phonenumber: '',
     verificationcode: ''
   },
+  address:{ county: [], community: [] },
   rule: {
     username: [{ required: true, trigger: 'blur', validator: Validator.validateUsername }],
     password: [{ required: true, trigger: 'blur', validator: Validator.validatePassword }],
-    // name: [{ required: true, trigger: 'blur', validator: Validator.validateTrueName }],
     idcard: [{ required: true, trigger: 'blur', validator: Validator.validateIdCard }],
     phonenumber: [{ required: true, trigger: 'blur', validator: Validator.validatePhone }],
     address: [{ required: true }],
@@ -45,6 +44,7 @@ const data = {
   countDown: 60,
   timer: null,
   loading: false,
+  communityShow:false,
   countyProps: {
     value: 'id',
     label: 'name',
@@ -63,12 +63,6 @@ export default {
     return data
   },
   computed: {
-    communityShow() {
-      if (this.form.address.county.length) {
-        this.communityOptions = this.$store.getters['common/communityOptions'](this.form.address.county)
-      }
-      return this.form.address.county.length
-    },
     ...mapGetters('common', ['countyOptions'])
   },
   created() {
@@ -79,12 +73,12 @@ export default {
     submit(formName) {
       this.$refs[formName].validate((success, err) => {
         if (success) {
-          const validAddress = validateAddress(this.form.address)
+          const validAddress = validateAddress(this.address)
           if (validAddress !== true) {
             this.$message.error(validAddress)
             return
           }
-          this.form.address = this.form.address.county.concat(this.form.address.community)
+          this.form.address = this.address.county.concat(this.address.community)
           this.loading = true
           this.$store.dispatch('user/regist', this.form).then(() => {
             this.$message.success('注册成功')
@@ -97,13 +91,13 @@ export default {
             this.loading = false
           })
         } else {
-          this.$message.error(Object.entries(err)[0][1][0].message)
+          this.$message.error('请补全注册信息')
         }
       })
     },
     // 验证码focus事件
     checkPhone() {
-      if (!this.vertifyDisable) {
+      if (!this.vertifyDisabled) {
         this.$message.error('请先获取验证码')
       }
     },
@@ -115,7 +109,7 @@ export default {
         this.$store.dispatch('user/getCode', { role: this.form.phonenumber })
           .catch((err) => {
             console.log(err)
-            this.$message.error('验证码获取失败')
+            this.$message.error('验证码获取失败,请稍后重试')
           })
 
         this.timer = setInterval(() => {
@@ -130,6 +124,14 @@ export default {
       } else {
         this.$message.error('请先输入手机号')
       }
+    },
+    changeAddress(newValue) {
+      this.communityOptions = this.$store.getters['common/communityOptions'](newValue)
+      this.communityShow = true
+    },
+    focusAddress() {
+      this.communityShow = false
     }
+
   }
 }

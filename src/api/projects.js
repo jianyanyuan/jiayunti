@@ -27,6 +27,14 @@ const add = (data) => {
   })
 }
 
+// 撤销申请
+const cancel = (id) => {
+  return request({
+    url: `/flowchartlogic/${id}`,
+    method: 'get'
+  })
+}
+
 // 获取单个
 const detail = id => {
   return request({
@@ -84,5 +92,6 @@ export default {
   update,
   advance,
   check,
-  getDesigner
+  getDesigner,
+  cancel
 }

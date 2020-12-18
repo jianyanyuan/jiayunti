@@ -24,8 +24,9 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登 录</el-button>
 
-      <div class="tips">
+      <div class="login-bottom">
         <router-link :to="{path:'/regist'}">注 册</router-link>
+        <router-link :to="{path:'/reset-password'}">忘 记 密 码</router-link>
       </div>
 
     </el-form>
@@ -121,13 +122,15 @@ $light_gray: #eee;
     overflow: hidden;
   }
 
-  .tips {
-    font-size: 16px;
-    padding-right: 10px;
-    color: #fff;
-    margin-bottom: 10px;
-    text-align: right;
-    &:hover {
+  .login-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    a {
+      padding-right: 10px;
+      color: #fff;
+    }
+    a:hover {
       color: #409eff;
     }
   }

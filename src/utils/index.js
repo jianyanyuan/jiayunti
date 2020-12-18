@@ -72,7 +72,7 @@ export function deepClone(obj) {
  */
 export function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result
-  const later = function() {
+  const later = function () {
     // 距上一次触发时间间隔
     const last = +new Date() - timestamp
     // 上次被包装函数被调用时间间隔 last 小于设定时间间隔 wait
@@ -87,7 +87,7 @@ export function debounce(func, wait, immediate) {
       }
     }
   }
-  return function(...args) {
+  return function (...args) {
     context = this
     timestamp = +new Date()
     const callNow = immediate && !timeout
@@ -100,3 +100,28 @@ export function debounce(func, wait, immediate) {
     return result
   }
 }
+
+/**
+ * 图片上传之前判断
+ * 文件格式为图片,pdf
+ * 大小不大于 20M
+ * @param {*} file 源文件file.raw
+ */
+export function checkUpload(file) {
+  if (!file.size) {
+    this.$message.error('上传为空！')
+    return false
+  }
+  const typeAllowed = /\bpdf|\bimage/i.test(file.type)
+  const isBig = file.size <= 1024 * 1024 * 20 // 单个文件最大20M
+  if (!typeAllowed) {
+    this.$message.error('只能上传图片或pdf！')
+    return false
+  }
+  if (!isBig) {
+    this.$message.error('图片大小不能超过10MB！')
+    return false
+  }
+  return true
+}
+

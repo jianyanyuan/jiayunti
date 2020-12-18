@@ -73,7 +73,7 @@ const data = {
 }
 
 export default {
-  name: 'List',
+  name: 'ResidentList',
   components: {
     Flow
   },
@@ -97,7 +97,7 @@ export default {
   },
   methods: {
     // 打开申请Modal
-    openAddModal() {
+    openAdd() {
       // 重置表格
       this.openLoading = true
       const { address } = this.model.form
@@ -108,7 +108,6 @@ export default {
       const designAsync = this.$store.dispatch('common/getDesign')
 
       Promise.all([addressAsync, deviceAsync, designAsync]).then(() => {
-        this.openLoading = false
         this.model.form.address.county = this.$store.getters['address']?.slice(0, 2)
         this.model.form.address.community = this.$store.getters['address']?.slice(2)
         this.model.form.phoneNumber = this.$store.getters['phone'] ?? ''
@@ -116,7 +115,16 @@ export default {
       }).catch((err) => {
         console.log(err)
         this.$message.error('信息获取失败')
-        this.openLoading = false
+      }).finally(() => (this.openLoading = false))
+    },
+    // 撤销申请
+    cancelApply(row) {
+      const { id } = row
+      Project.cancel(id).then(() => {
+        this.listApplies()
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('撤销失败')
       })
     },
     // 提交申请
@@ -138,24 +146,16 @@ export default {
           }
           this.model.form.address = address.community.concat(address.county)
           this.formLoading = true
-          console.log(this.model.form)
           Project.add(this.model.form).then(res => {
-            console.log(res)
-            this.formLoading = false
             this.model.visible = false
+            this.listApplies()
           }).catch(err => {
             console.log(err)
-            this.formLoading = false
           })
-          // this.listLoading = true
-          // this.list.push({
-          //   code: `${this.model.form.elevatorAddress[0]}小区${this.model.form.elevatorAddress[0]}幢${this.model.form.elevatorAddress[0]}单元`,
-          //   applyTime: new Date().getTime(),
-          //   auditTime: '',
-          //   status: 0
-          // })
+            .finally(() => {
+              this.formLoading = false
+            })
 
-          // this.listLoading = false
         } else {
           this.$message.error('请补全信息')
         }
@@ -173,9 +173,6 @@ export default {
         console.log(err)
       })
       this.listLoading = false
-    },
-    dissentView() {
-      this.dissentVisible = true
     },
     flowView(row, column, event) {
       if (row.status !== 0) {

@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-17 16:38:53
+ * @LastEditTime: 2020-12-18 09:05:31
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -31,16 +31,15 @@
         <span>{{ "违规记录" + (index + 1) }}</span>
         <el-button style="float: right; padding: 3px 0" type="text" @click="removeFault(index)">删除</el-button>
       </div>
-      <el-form :ref="'ruleForm' + index" :model="item" :rules="rules" label-width="100px">
+      <el-form :ref="'ruleForm' + index" :model="item" :rules="rules" label-width="100px" class="form-card">
         <el-form-item label="时间" prop="time">
-          <el-date-picker v-model="item.time" type="datetime" placeholder="选择日期" />
+          <el-date-picker v-model="item.time" type="datetime" placeholder="选择日期" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" />
         </el-form-item>
-        <el-form-item label="违规描述:">
-          <el-input v-model="item.desc" />
+        <el-form-item label="违规描述:" prop="detail">
+          <el-input v-model="item.detail" />
         </el-form-item>
-        <el-form-item label="违规照片:">
-          <el-upload action="#" :file-list="contentList" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,index)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,0)}" drag :auto-upload="false">
-
+        <el-form-item label="违规照片:" prop="attachments">
+          <el-upload action="#" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,index)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" drag :auto-upload="false">
             <div>将文件拖到此处，或点击添加</div>
             <div>单个文件大小不超过20MB，可上传图片或PDF</div>
           </el-upload>
@@ -50,7 +49,7 @@
     </el-card>
     <div style="height:50px;text-align:center">
       <el-button type="primary" size="medium" @click="addFault">新 增</el-button>
-      <el-button v-show="faults.length !== 0" type="success" size="medium" @click="addFault">提 交</el-button>
+      <el-button v-show="faults.length !== 0" type="success" size="medium" @click="handlePost">提 交</el-button>
       <el-button v-show="faults.length === 0" type="success" size="medium" @click="$router.go(-1)">返回</el-button>
     </div>
   </div>
@@ -58,8 +57,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
+import { checkUpload} from '@/utils'
 export default {
+  name: 'FaultRecord',
   data() {
     return {
       basic: {
@@ -67,26 +67,17 @@ export default {
         address: 'dsadasdsad',
         phone: '15988800323'
       },
-      ruleForm: {
-        name: '',
-        time: '',
-        phone: '',
-        address: '',
-        detail: ''
-      },
       rules: {
-        name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
         time: [{ required: true, message: '请选择时间', trigger: 'blur' }],
-        phone: [{ required: true, message: '请输入联系方式', trigger: 'blur' }],
-        address: [{ required: true, message: '请输入详细地址', trigger: 'blur' }],
-        detail: [{ required: true, message: '请输入异议详情', trigger: 'blur' }],
-        feedback: [{ required: true, message: '请输入异议反馈', trigger: 'blur' }]
+        detail: [{ required: true, message: '请输入违规详情', trigger: 'blur' }],
+        attachments: [{ required: true, message: '请上传违规附件', trigger: 'blur' }]
       },
       faults: [],
       typeName: 'fault-material',
       projectId: null,
       status: null,
-      postFailed: null
+      postFailed: null,
+      fromPath: null
 
     }
   },
@@ -94,13 +85,18 @@ export default {
 
   },
   created() {
-
+    const { id, status } = this.$route.params
+    //11 施工中
+    if (!isNaN(+id) && status == 11) {
+      this.projectId = id
+      this.status = status
+    }
   },
   methods: {
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList, index) {
-      const valid = this.checkUpload(file.raw)
+      const valid = checkUpload(file.raw)
       if (valid && file.status === 'ready') {
         const formData = new FormData()
         formData.append('file', file.raw)
@@ -114,28 +110,14 @@ export default {
         fileList.pop()
       }
     },
-    // 图片上传之前判断
-    checkUpload(file) {
-      if (!file.size) {
-        this.$message.error('上传为空！')
-        return false
-      }
-      const typeAllowed = /\bpdf|\bimage/i.test(file.type)
-      const isBig = file.size <= 1024 * 1024 * 10 // 单个文件最大10M
-      if (!typeAllowed) {
-        this.$message.error('只能上传图片或pdf！')
-        return false
-      }
-      if (!isBig) {
-        this.$message.error('图片大小不能超过10MB！')
-        return false
-      }
-      return true
-    },
+
     // 删除文件
     handleUploadRemove(file, fileList, index) {
       const cancelIdx = this.faults[index].attachments.findIndex(f => f.uid === file.uid)
-      this.faults[index].attachmentssplice(cancelIdx, 1)
+      this.faults[index].attachments.splice(cancelIdx, 1)
+    },
+    removeFault(index) {
+        this.faults.splice(index, 1)
     },
     addFault() {
       this.faults.push(
@@ -145,7 +127,8 @@ export default {
         })
     },
     // 保存修改
-    postFile() {
+    postFile(faults) {
+      debugger
       this.pageLoading = true
       const failedArr = []
       this.faults.forEach(async (fault, fIdx) => {
@@ -154,7 +137,7 @@ export default {
         fault.attachments.forEach(async (a, aIdx, arr) => {
           await File.upload(a.file, { typeName: this.typeName, projectId: this.projectId })
             .then((res) => {
-              // fileIds.push = res.fileId
+              fileIds.push = res.fileId
               // arr.splice(aIdx,1)
             })
             .catch(() => {
@@ -176,11 +159,50 @@ export default {
       this.pageLoading = false
 
       if (failedArr.length > 0) {
-        this.$message.error('保存失败')
+        this.$message.error('保存失败，请重新保存')
       } else {
-        this.$router.go(-1)
+        this.$router.push(this.fromPath)
       }
-      
+    },
+    handlePost() {
+      if (this.postFailed) {
+        // 上传失败的重新上传
+        this.postFile(this.postFailed)
+      } else {
+        // 校验用户数据填写合法性
+        let valid = true
+        for (let i = 0; i < this.faults.length; i++) {
+          const refName = `ruleForm${i}`
+          if (!valid) {
+            break
+          }
+          if (this.faults[i].attachments.length === 0) {
+            valid = false
+            break
+          }
+          this.$refs[refName][0].validate(success => {
+            valid = success
+          })
+        }
+        if (valid) {
+          this.postFile(this.faults)
+        } else {
+          this.$message.error('请补全信息')
+        }
+      }
+    }
+  },
+  // 获得工程Id
+  beforeRouteEnter(to, from, next) {
+    const { id, status } = to.params
+    // 11 施工中
+    if (isNaN(+id) || status != 11) {
+      // 没有id则返回跳转
+      next('/redirect' + from.fullPath)
+    } else {
+      next(vm => {
+        vm.fromPath = from.fullPath
+      })
     }
   }
 }

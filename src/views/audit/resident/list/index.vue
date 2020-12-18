@@ -8,7 +8,7 @@
 
 <template>
   <div class="app-container">
-    <el-button type="primary" size="medium" style="margin-bottom:20px" :loading="openLoading" @click="openAddModal">新增申请</el-button>
+    <el-button type="primary" size="medium" style="margin-bottom:20px" :loading="openLoading" @click="openAdd">新增申请</el-button>
 
     <el-card>
       <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row @row-dblclick="flowView">
@@ -68,7 +68,7 @@
         <el-table-column label="撤销申请" align="center">
           <template slot-scope="scope">
             <el-popconfirm v-if="scope.row.statusId !== 13 && scope.row.statusId !== 14" title="确认撤销申请吗？" @onConfirm="cancelApply(scope.row)">
-              <el-button slot="reference" size="mini" type="text" style="letter-spacing:1em">撤销</el-button>
+              <el-button slot="reference" size="mini" type="text">撤 销</el-button>
             </el-popconfirm>
           </template>
         </el-table-column>
@@ -167,14 +167,6 @@ input {
   padding: 0 15px;
 }
 
-// .contract-tip {
-//   padding: 0 10px;
-//   color: #686d76;
-//   line-height: 30px;
-//   span {
-//     margin-right: 20px;
-//   }
-// }
 .file-display {
   display: block;
   text-align: left;

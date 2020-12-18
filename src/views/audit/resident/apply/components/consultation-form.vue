@@ -27,7 +27,7 @@
         <div slot="header">
           <span>{{ room }}</span>
         </div>
-        <el-upload action="#" :file-list="fileList[room]" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,room)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,room)}" drag :auto-upload="false">
+         action="#" :file-list="fileList[room]" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,room)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,room)}" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div class="enclosure-tips">
             所需附件：

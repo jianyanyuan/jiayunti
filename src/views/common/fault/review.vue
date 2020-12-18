@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-02 14:20:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-02 14:28:49
+ * @LastEditTime: 2020-12-18 09:33:19
  * @Description:
 -->
 <!--
@@ -63,18 +63,18 @@
 
           </el-form-item>
           <el-form-item label="违规回复:">
-            <el-input v-model="item.feedback" />
+            <el-input v-model="item.feedback" disabled />
           </el-form-item>
           <el-form-item label="整改照片:">
             <upload-list :files="attachments" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
 
           </el-form-item>
-          <el-form-item label="处理回复:" prop="descResult">
-            <el-input v-model="item.descResult" type="textarea" autosize />
+          <el-form-item label="处理回复:" prop="reply">
+            <el-input v-model="item.reply" type="textarea" autosize />
           </el-form-item>
-          <el-form-item label="审核结果:" prop="result">
+          <el-form-item label="处理结果:" prop="result">
             <el-select v-model="item.result">
-              <el-option v-for="result in resultOptions" :key="result.val" :value="result.key" :label="result.val" />
+              <el-option v-for="result in auditOptions" :key="result.val" :value="result.key" :label="result.val" />
             </el-select>
           </el-form-item>
           <el-row type="flex" justify="center" style="margin:50px 0">
@@ -84,16 +84,28 @@
         </el-form>
       </el-collapse-item>
     </el-collapse>
-    <el-dialog :visible.sync="picShow" class="dialog-image">
-      <img src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg" alt="">
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+      <img :src="detailImgUrl" alt="授权委托书">
+    </el-dialog>
+    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
+      <div ref="printContent">
+        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
+      </div>
+      <span slot="footer">
+        <el-button @click="printPDF" type="success">打印</el-button>
+        <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
+      </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import mixin from '@/components/UploadList/mixin'
 export default {
-  name: 'Fault',
+  name: 'FaultReview',
+  mixins:[mixin],
   data() {
     return {
       picShow: false,
@@ -104,13 +116,6 @@ export default {
       },
       attachments: [
         { name: '附件', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg', uid: '附件' }
-      ],
-      rule: {
-
-      },
-      resultOptions: [
-        { key: 0, val: '通过' },
-        { key: -1, val: '不通过' }
       ],
       construction: [
         {
@@ -134,63 +139,10 @@ export default {
     }
   },
   computed: {
-    ...mapState('common', ['handleStatus', 'handleTag'])
+    ...mapState('common', ['handleStatus', 'handleTag',"auditOptions"])
   },
   methods: {
-    detailImg(file) {
-      // this.detailImgUrl = file.url
-      this.picShow = true
-    },
-    submitFeedback() { },
-    removeDissent(index) {
-      if (index > 0) {
-        this.model.dissents.splice(index, 1)
-      }
-    },
-    addDissent() {
-      this.model.dissents.push(
-        {
-          name: '',
-          time: '',
-          phone: '',
-          address: '',
-          detail: ''
-        })
-    },
-    handleUploadRemove(file, fileList) {
-    },
-    // handleUploadChange(file, fileList) {
-    //   console.log(file)
-    //   console.log(fileList)
-    //   debugger
-    // },
-    nextProcess(arrow) {
-      this.$emit('nextProcess', arrow)
-    },
-    // 上传文件发生改变时
-    handleUploadChange(file, fileList, index) {
-      if (fileList.length > 0) {
-        this.model[index] = fileList.map(f => f.raw)
-      }
-    },
-    // 图片上传之前判断
-    uploadBefore(file) {
-      const isImage = file.type.indexOf('image') !== -1
-      const isBig = file.size <= 1024 * 1024 * 10
-      if (!file) {
-        this.$message.error('上传为空！')
-        return false
-      }
-      if (!isImage) {
-        this.$message.error('只能上传图片！')
-        return false
-      }
-      if (!isBig) {
-        this.$message.error('图片大小不能超过10MB！')
-        return false
-      }
-      return true
-    }
+   
   }
 }
 </script>

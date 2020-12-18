@@ -1,28 +1,10 @@
 <template>
   <div>
-    <div class="regist-head">居民注册</div>
+    <div class="regist-head">重置密码</div>
     <el-card class="regist-main">
       <el-row type="flex" class="row-bg">
-        <el-col :span="16">
+        <el-col :span="17">
           <el-form ref="form" :model="form" :rules="rule" class="regist-form" label-position="top">
-            <el-form-item prop="username" label="用户名">
-              <el-input v-model="form.username" placeholder="请输入用户名" autocomplete="off" />
-            </el-form-item>
-            <el-form-item prop="password" label="登录密码">
-              <el-input v-model="form.password" type="password" autocomplete="off" placeholder="请输入6-12位密码" />
-            </el-form-item>
-            <!-- <el-form-item prop="name" label="姓名">
-              <el-input v-model="form.name" placeholder="请输入真实姓名" autocomplete="off" />
-            </el-form-item> -->
-            <el-form-item prop="idcard" label="身份证">
-              <el-input v-model="form.idcard" placeholder="请输入身份证" autocomplete="off" />
-            </el-form-item>
-            <el-form-item prop="address" label="地址">
-              <el-cascader v-model="address.county" :options="countyOptions" :props="countyProps" @change="changeAddress" @focus="focusAddress" />
-              <label v-if="communityShow" for="address-detail" class="regist-address-d"> — </label>
-              <el-cascader v-if="communityShow" v-model="address.community" :options="communityOptions" :props="communityProps" />
-              <!-- <el-input v-model="form.address" placeholder="请选择地址" autocomplete="off" /> -->
-            </el-form-item>
             <el-form-item prop="phonenumber" label="手机号">
               <el-input v-model="form.phonenumber" placeholder="请输入手机号" />
             </el-form-item>
@@ -32,14 +14,16 @@
                 <el-button v-if="!vertifyDisabled" type="primary" @click="getVertification">获取验证码</el-button>
                 <span v-else>{{ countDown }} s后重试</span>
               </div>
-
+            </el-form-item>
+            <el-form-item prop="password" label="新密码">
+              <el-input v-model="form.password" type="password" autocomplete="off" placeholder="请输入6-12位密码" />
             </el-form-item>
             <el-form-item style="text-align:center;margin-top:40px">
-              <el-button type="success" :loading="loading" class="regist-submit" @click="submit('form')">注 册</el-button>
+              <el-button type="success" :loading="loading" class="regist-submit" @click="postReset('form')">重 置</el-button>
             </el-form-item>
           </el-form>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="7">
           <div class="regist-aside">
             <p>已有账户</p>
             <router-link to="/login" class="regist-login">直接登录<i class="el-icon-right" /></router-link>
@@ -68,7 +52,7 @@ export default {
   text-shadow: 1px 1px 6px #8c8585;
 }
 .regist-main {
-  width: 1100px;
+  width: 900px;
   position: absolute;
   left: 28%;
   top: 120px;
@@ -76,14 +60,14 @@ export default {
 .regist-form {
   position: relative;
   left: 5%;
-  width:500px;
+  width: 500px;
 }
-.regist-address-d{
-  margin:0 5px;
-  color:#394867
+.regist-address-d {
+  margin: 0 5px;
+  color: #394867;
 }
-.regist-code-container ::v-deep .el-form-item__content{
-  height:50px
+.regist-code-container ::v-deep .el-form-item__content {
+  height: 50px;
 }
 .regist-vertify {
   width: 310px;
@@ -115,11 +99,10 @@ export default {
   color: black;
 }
 
-.regist-login{
+.regist-login {
   color: #49a71b;
-  &:hover{
+  &:hover {
     color: black;
   }
 }
-
 </style>

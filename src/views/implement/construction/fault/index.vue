@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-11-02 14:30:34
+ * @LastEditTime: 2020-12-18 10:10:47
  * @Description: 施工端违规处理
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -70,14 +70,18 @@
             <el-input v-model="item.feedback" />
           </el-form-item>
           <el-form-item label="整改照片:">
-            <el-upload action="#" class="form-card" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
-
+            <el-upload action="#" class="form-card" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,index)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" drag :auto-upload="false">
               <div>将文件拖到此处，或点击添加</div>
               <div>单个文件大小不超过20MB，可上传图片或PDF</div>
             </el-upload>
           </el-form-item>
-          <el-form-item label="处理回复:" prop="descResult">
-            <el-input v-model="item.descResult" type="textarea" autosize />
+          <el-form-item label="处理回复:" prop="reply">
+            <el-input v-model="item.reply" type="textarea" autosize />
+          </el-form-item>
+          <el-form-item label="处理结果:" prop="result">
+            <el-select v-model="item.result">
+              <el-option v-for="result in auditOptions" :key="result.val" :value="result.key" :label="result.val" />
+            </el-select>
           </el-form-item>
           <el-row type="flex" justify="center" style="margin:50px 0">
             <el-button type="primary">保 存</el-button>
@@ -86,18 +90,30 @@
         </el-form>
       </el-collapse-item>
     </el-collapse>
-    <el-dialog :visible.sync="picShow" class="dialog-image">
-      <img src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg" alt="">
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+      <img :src="detailImgUrl" alt="授权委托书">
+    </el-dialog>
+    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
+      <div ref="printContent">
+        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
+      </div>
+      <span slot="footer">
+        <el-button @click="printPDF" type="success">打印</el-button>
+        <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
+      </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import mixin from '@/components/UploadList/mixin'
+import { checkUpload } from '@/utils'
+
 export default {
-  name: 'Fault',
-  components: {
-  },
+  name: 'ConstructionFault',
+  mixins: [mixin],
   data() {
     return {
       picShow: false,
@@ -115,25 +131,26 @@ export default {
       attachments: [
         { name: '附件', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg', uid: '附件' }
       ],
-      resultOptions: [
-        { key: 0, val: '通过' },
-        { key: -1, val: '不通过' }
-      ],
-      construction: [
-        {
-          org: '中一建',
-          code: '马家浜1号楼',
-          phone: '110',
-          time: '2020-01-01 10:00',
-          desc: '违规操作',
-          descPic: [{ name: '违规图片1', url: '' }],
-          feedback: '接受批评',
-          feedbackPic: [{ name: '回复照片1', url: '' }],
-          descResult: '',
-          result: 0,
-          status: 0
-        }
-      ],
+      construction:
+        [
+          {
+            org: '中一建',
+            code: '马家浜1号楼',
+            phone: '110',
+            time: '2020-01-01 10:00',
+            desc: '违规操作',
+            descPic: [{ name: '违规图片1', url: '' }],
+            feedback: '接受批评',
+            feedbackPic: [{ name: '回复照片1', url: '' }],
+            descResult: '',
+            result: 0,
+            status: 0
+          }
+        ],
+      replies: [],// 整改回复
+      deleteList: [], // 待删除附件
+      projectId:null,
+      status:null,
       urls: [
         'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
         'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
@@ -141,61 +158,67 @@ export default {
     }
   },
   computed: {
-    ...mapState('common', ['handleStatus', 'handleTag'])
+    ...mapState('common', ['handleStatus', 'handleTag', 'auditOptions'])
+  },
+  created() {
+    const { id, status } = this.$route.params
+    //11 施工中
+    if (!isNaN(+id) && status == 11) {
+      this.projectId = id
+      this.status = status
+    }
   },
   methods: {
-    detailImg(file) {
-      this.picShow = true
-    },
+
     submitFeedback() { },
-    removeDissent(index) {
-      if (index > 0) {
-        this.model.dissents.splice(index, 1)
-      }
-    },
-    addDissent() {
-      this.model.dissents.push(
-        {
-          name: '',
-          time: '',
-          phone: '',
-          address: '',
-          detail: ''
-        })
-    },
-    handleUploadRemove(file, fileList) {
-    },
-    // handleUploadChange(file, fileList) {
-    //   console.log(file)
-    //   console.log(fileList)
-    //   debugger
-    // },
-    nextProcess(arrow) {
-      this.$emit('nextProcess', arrow)
-    },
-    // 上传文件发生改变时
+    // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
+    // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList, index) {
-      if (fileList.length > 0) {
-        this.model[index] = fileList.map(f => f.raw)
+      const valid = checkUpload(file.raw)
+      if (valid && file.status === 'ready') {
+        const formData = new FormData()
+        formData.append('file', file.raw)
+        this.replies[index].attachments.push(
+          {
+            uid: file.uid,
+            file: formData
+          }
+        )
+      } else {
+        fileList.pop()
       }
     },
-    // 图片上传之前判断
-    uploadBefore(file) {
-      const isImage = file.type.indexOf('image') !== -1
-      const isBig = file.size <= 1024 * 1024 * 10
-      if (!file) {
-        this.$message.error('上传为空！')
-        return false
+    // 删除文件
+    handleUploadRemove(file, fileList, index) {
+      if (file.url === undefined) {
+        // 未上传 --> 取消上传
+        const cancelIdx = this.replies[index].attachments.findIndex(f => f.uid === file.uid)
+        this.replies[index].attachments.splice(cancelIdx, 1)
+      } else {
+        // 已上传的 --> 待删除
+        this.deleteList.push(
+          {
+            projectId: this.id,
+            uid: file.uid,
+            name: file.name,
+            url: file.url
+          }
+        )
       }
-      if (!isImage) {
-        this.$message.error('只能上传图片！')
-        return false
-      }
-      if (!isBig) {
-        this.$message.error('图片大小不能超过10MB！')
-        return false
-      }
-      return true
+    },
+
+  },
+  // 获得工程Id
+  beforeRouteEnter(to, from, next) {
+    const { id, status } = to.params
+    // 11 施工中
+    if (isNaN(+id) || status != 11) {
+      // 没有id则返回跳转
+      next('/redirect' + from.fullPath)
+    } else {
+      next(vm => {
+        vm.fromPath = from.fullPath
+      })
     }
   }
 }

@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-17 09:42:35
+ * @LastEditTime: 2020-12-18 08:43:20
  * @Description:街道审核列表
 -->
 
@@ -59,12 +59,12 @@
             <el-tag :type="scope.row.statusId | keyToVal(applyTag)">{{ scope.row.statusId | keyToVal(applyStatus) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作">
+        <el-table-column align="center" label="操作" min-width="200">
           <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
               <el-button v-if="scope.row.statusId === 9" size="mini" plain type="warning" @click="$router.push({name:'StreetCheck',params:{id:scope.row.id,status:scope.row.statusId}})">审 核</el-button>
-              <el-button v-if="scope.row.statusId === 11" size="mini" plain type="info" @click="$router.push({name:'StreetRecordFault',params:{id:scope.row.id,status:scope.row.statusId}})">违规记录</el-button>
-              <el-button v-if="scope.row.statusId === 11" size="mini" plain type="warning" @click="$router.push({name:'StreetHandleFault',params:{id:scope.row.id,status:scope.row.statusId}})">查看回复</el-button>
+              <el-button v-if="scope.row.statusId === 11" size="mini" plain type="info" @click="$router.push({name:'FaultRecord',params:{id:scope.row.id,status:scope.row.statusId}})">违规记录</el-button>
+              <el-button v-if="scope.row.statusId === 11" size="mini" plain type="warning" @click="$router.push({name:'FaultReview',params:{id:scope.row.id,status:scope.row.statusId}})">查看回复</el-button>
             </el-row>
           </template>
         </el-table-column>
