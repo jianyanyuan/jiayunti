@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-10 08:42:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-18 14:34:44
+ * @LastEditTime: 2020-12-18 15:36:12
  * @Description:
  */
 import {validatePassword,validatePhone,validateNumberCode} from '@/utils/element-validator'
@@ -14,9 +14,9 @@ const data = {
     otp: ''
   },
   rule: {
-    password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-    phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
-    otp: [{ required: true, trigger: 'blur', validator: validateNumberCode, length: 6 }]
+    password: [{ required: true, trigger: 'blur',message:'密码需为6-17位数字和英文符号组合', validator: validatePassword }],
+    phone: [{ required: true, trigger: 'blur',message:'请输入手机号',  validator: validatePhone }],
+    otp: [{ required: true, trigger: 'blur',message:'验证码为6位纯数字', validator: validateNumberCode, length: 6 }]
   },
   vertifyDisabled: false,
   countDown: 60,

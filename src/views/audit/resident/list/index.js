@@ -4,9 +4,9 @@ import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import Flow from '@/components/street/Flow'
 import Project from '@/api/projects'
 const defaultForm = {
-  applicantName: '许王鹏',
+  applicantName: '',
   location: [],
-  phoneNumber: '15988800323',
+  phoneNumber: '',
   address: { county: [], community: [] }, //
   designId: '',
   typeAndDevice: [], // []
@@ -69,7 +69,8 @@ const data = {
     value: 'id',
     label: 'name',
     children: 'communities'
-  }
+  },
+  communityOptions:[]
 }
 
 export default {
@@ -82,13 +83,7 @@ export default {
   },
   computed: {
     ...mapState('common', ['applyStatus', 'applyTag', 'handleStatus', 'handleTag']),
-    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'designOptions']),
-    communityOptions() {
-      if (this.model.form.address.county.length) {
-        return this.$store.getters['common/communityOptions'](this.model.form.address.county)
-      }
-      return []
-    }
+    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'designOptions'])
   },
   watch: {
   },
@@ -103,13 +98,17 @@ export default {
       const { address } = this.model.form
       this.model.form = deepClone(defaultForm)
       this.model.form.address = address // 修复el-cascader bug
+      this.model.form.applicantName = this.$store.getters.username
       const addressAsync = this.$store.dispatch('common/getAddress')
       const deviceAsync = this.$store.dispatch('common/getDevice')
       const designAsync = this.$store.dispatch('common/getDesign')
 
       Promise.all([addressAsync, deviceAsync, designAsync]).then(() => {
         this.model.form.address.county = this.$store.getters['address']?.slice(0, 2)
+        this.communityOptions = this.$store.getters['common/communityOptions'](this.model.form.address.county)
+
         this.model.form.address.community = this.$store.getters['address']?.slice(2)
+        // this.model.form.address = this.$store.getters.addressPlain
         this.model.form.phoneNumber = this.$store.getters['phone'] ?? ''
         this.model.visible = true
       }).catch((err) => {

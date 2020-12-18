@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-18 09:05:31
+ * @LastEditTime: 2020-12-18 17:27:55
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -35,8 +35,8 @@
         <el-form-item label="时间" prop="time">
           <el-date-picker v-model="item.time" type="datetime" placeholder="选择日期" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" />
         </el-form-item>
-        <el-form-item label="违规描述:" prop="detail">
-          <el-input v-model="item.detail" />
+        <el-form-item label="违规描述:" prop="description">
+          <el-input v-model="item.description" />
         </el-form-item>
         <el-form-item label="违规照片:" prop="attachments">
           <el-upload action="#" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,index)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" drag :auto-upload="false">
@@ -57,7 +57,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { checkUpload} from '@/utils'
+import { checkUpload } from '@/utils'
+import File from '@/api/file'
+import Supervision from '@/api/supervision'
 export default {
   name: 'FaultRecord',
   data() {
@@ -69,11 +71,11 @@ export default {
       },
       rules: {
         time: [{ required: true, message: '请选择时间', trigger: 'blur' }],
-        detail: [{ required: true, message: '请输入违规详情', trigger: 'blur' }],
+        description: [{ required: true, message: '请输入违规详情', trigger: 'blur' }],
         attachments: [{ required: true, message: '请上传违规附件', trigger: 'blur' }]
       },
       faults: [],
-      typeName: 'fault-material',
+      typeName: 'illegal',
       projectId: null,
       status: null,
       postFailed: null,
@@ -117,7 +119,7 @@ export default {
       this.faults[index].attachments.splice(cancelIdx, 1)
     },
     removeFault(index) {
-        this.faults.splice(index, 1)
+      this.faults.splice(index, 1)
     },
     addFault() {
       this.faults.push(
@@ -128,33 +130,30 @@ export default {
     },
     // 保存修改
     postFile(faults) {
-      debugger
       this.pageLoading = true
       const failedArr = []
-      this.faults.forEach(async (fault, fIdx) => {
-        let fileIds = []
+      debugger
+      faults.forEach(async (fault, fIdx) => {
+        let faultId
         let error = false
-        fault.attachments.forEach(async (a, aIdx, arr) => {
-          await File.upload(a.file, { typeName: this.typeName, projectId: this.projectId })
-            .then((res) => {
-              fileIds.push = res.fileId
-              // arr.splice(aIdx,1)
-            })
-            .catch(() => {
-              error = true
-            })
-
-        })
-        if (error) {
-          failedArr.push(fault)
-          return // 附件保存失败，返回
-        }
-        fault.files = fileIds
-        await Community.listObjection(fault)
+        await Supervision.addFault(fault)
+          .then((res) => {
+            faultId = res[0].id
+          })
           .catch((err) => {
             // 违规保存失败，重新上传该违规记录
+            error = true
             failedArr.push(fault)
+            return false // 记录上传失败
           })
+
+        fault.attachments.forEach(async (a, aIdx, arr) => {
+          await File.uploadFault(a.file, faultId, this.typeName)
+            .catch(() => {
+              failedArr.push(fault)
+              return false
+            })
+        })
       })
       this.pageLoading = false
 
@@ -185,6 +184,7 @@ export default {
           })
         }
         if (valid) {
+          debugger
           this.postFile(this.faults)
         } else {
           this.$message.error('请补全信息')

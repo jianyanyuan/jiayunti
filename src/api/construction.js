@@ -8,33 +8,42 @@
 import request from '@/utils/request'
 
 // 报价
-const addOffer = (projectId,data ) => {
+const addOffer = (projectId, data) => {
   return request({
-    url:`/constructionPrice/${projectId}`,
+    url: `/constructionPrice/${projectId}`,
     method: 'post',
     data
   })
 }
 
 // 获取项目报价
-const listOffers = (projectId,params) => {
+const listOffers = (projectId, params) => {
   return request({
-    url:`/constructionPrice/getAll/${projectId}`,
+    url: `/constructionPrice/getAll/${projectId}`,
     method: 'get',
     params
-    })
+  })
 }
 
 // 获取单个报价表
 const detailOffer = (id) => {
   return request({
-    url:`/constructionPrice/getOne/${id}`,
+    url: `/constructionPrice/getOne/${id}`,
     method: 'get'
-    })
+  })
 }
 
+// 违规整改
+const reform = (responseRequest) => {
+  return request({
+    url: `/IllegalBehavior`,
+    method: 'put',
+    data:responseRequest
+  })
+}
 export default {
   addOffer,
   listOffers,
-  detailOffer
+  detailOffer,
+  reform
 }

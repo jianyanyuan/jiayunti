@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-16 15:38:42
+ * @LastEditTime: 2020-12-18 15:45:10
  * @Description:申请列表
 -->
 
@@ -83,6 +83,7 @@
           <el-input v-model="model.form.applicantName" auto-complete="off" />
         </el-form-item>
         <el-form-item label="地址" prop="address">
+          <!-- {{model.form.address}} -->
           <el-row>
             <el-col :span="12">
               <el-cascader v-model="model.form.address.county" :options="countyOptions" :props="countyProps" style="display:block" disabled />

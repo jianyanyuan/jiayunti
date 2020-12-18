@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-14 14:10:29
+ * @LastEditTime: 2020-12-18 15:54:37
  * @LastEditors: zfd
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -70,8 +70,8 @@ export default {
   },
   created() {
     const { id, status } = this.$route.params
-    // 1第一次提交材料
-    if (!isNaN(+id) && status == 1) {
+    // 0第一次提交材料
+    if (!isNaN(+id) && status == 0) {
       this.applyId = id
       this.status = status
     }
@@ -79,8 +79,8 @@ export default {
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
-    // 1第一次提交材料
-    if (isNaN(+id) || status != 1) {
+    // 0第一次提交材料
+    if (isNaN(+id) || status != 0) {
       // 没有id则返回跳转
       next('/redirect' + from.fullPath)
     } else {

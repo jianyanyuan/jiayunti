@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-10 08:42:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-18 14:02:22
+ * @LastEditTime: 2020-12-18 15:35:35
  * @Description:
  */
 import * as Validator from '@/utils/element-validator'
@@ -33,12 +33,12 @@ const data = {
   },
   address:{ county: [], community: [] },
   rule: {
-    username: [{ required: true, trigger: 'blur', validator: Validator.validateUsername }],
-    password: [{ required: true, trigger: 'blur', validator: Validator.validatePassword }],
-    idcard: [{ required: true, trigger: 'blur', validator: Validator.validateIdCard }],
-    phonenumber: [{ required: true, trigger: 'blur', validator: Validator.validatePhone }],
+    username: [{ required: true, trigger: 'blur',message:'用户名非数字开头，2-30位中英文和数字组合', validator: Validator.validateUsername }],
+    password: [{ required: true, trigger: 'blur',message:'密码需为6-17位数字和英文符号组合', validator: Validator.validatePassword }],
+    idcard: [{ required: true, trigger: 'blur',message:'请输入身份证号', validator: Validator.validateIdCard }],
+    phonenumber: [{ required: true, trigger: 'blur',message:'请输入手机号', validator: Validator.validatePhone }],
     address: [{ required: true }],
-    verificationcode: [{ required: true, trigger: 'blur', validator: Validator.validateNumberCode, length: 6 }]
+    verificationcode: [{ required: true, trigger: 'blur', message:'验证码为6位纯数字',validator: Validator.validateNumberCode, length: 6 }]
   },
   vertifyDisabled: false,
   countDown: 60,

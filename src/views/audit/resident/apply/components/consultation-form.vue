@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-14 09:13:33
+ * @LastEditTime: 2020-12-18 15:56:12
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -27,7 +27,7 @@
         <div slot="header">
           <span>{{ room }}</span>
         </div>
-         action="#" :file-list="fileList[room]" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,room)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,room)}" drag :auto-upload="false">
+         <el-upload action="#" :file-list="fileList[room]" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,room)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,room)}" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div class="enclosure-tips">
             所需附件：
@@ -325,6 +325,7 @@ export default {
 <style scoped lang="scss">
 .upload-card ::v-deep .el-card__body {
   margin-bottom: 30px;
+  text-align: center;
 }
 .enclosure-tips {
   color: #14274e;

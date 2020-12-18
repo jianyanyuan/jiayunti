@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-21 14:32:21
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-07 16:10:07
+ * @LastEditTime: 2020-12-18 16:52:11
  * @Description:
  */
 import request from '@/utils/request'
@@ -66,11 +66,34 @@ const get =  (params) => {
 // 报价材料上传
 const uploadOffer = (ConstructionPriceId, data ) => {
   return request({
-    url: api_prefix_dev + 'uploadPriceFile?ConstructionPriceId='+ ConstructionPriceId ,
+    url: api_prefix_dev + 'uploadIllegalFile/'+ ConstructionPriceId ,
     method: 'post',
     data
   })
 }
+
+// 违规文件上传
+/**
+ * 
+ * @param {*} data 
+ * @param {*} IllegalBehaviorId 
+ * @param {*} type 
+ * illegal 违规附件
+ * rectification 整改附件
+ */
+const uploadFault = (data, IllegalBehaviorId, type) => {
+  return request({
+    url: `/${api_prefix_dev}/uploadIllegalFile`,
+    method: 'post',
+    data,
+    params:
+    {
+      IllegalBehaviorId,
+      type
+    }
+  })
+}
+
 export default {
   upload,
   remove,
@@ -78,5 +101,6 @@ export default {
   removeOpinion,
   getConsultation,
   get,
-  uploadOffer
+  uploadOffer,
+  uploadFault
 }

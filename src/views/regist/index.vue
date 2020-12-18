@@ -3,7 +3,7 @@
     <div class="regist-head">居民注册</div>
     <el-card class="regist-main">
       <el-row type="flex" class="row-bg">
-        <el-col :span="16">
+        <el-col :span="18">
           <el-form ref="form" :model="form" :rules="rule" class="regist-form" label-position="top">
             <el-form-item prop="username" label="用户名">
               <el-input v-model="form.username" placeholder="请输入用户名" autocomplete="off" />
@@ -39,7 +39,7 @@
             </el-form-item>
           </el-form>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <div class="regist-aside">
             <p>已有账户</p>
             <router-link to="/login" class="regist-login">直接登录<i class="el-icon-right" /></router-link>
@@ -62,15 +62,17 @@ export default {
   line-height: 150px;
   height: 150px;
   background-color: #394867;
-  font-size: 41px;
+  font-size: 40px;
   letter-spacing: 4px;
   color: #fff;
   text-shadow: 1px 1px 6px #8c8585;
 }
 .regist-main {
-  width: 1100px;
+  width: 900px;
   position: absolute;
-  left: 28%;
+  left: 0;
+  right: 0;
+  margin: auto;
   top: 120px;
 }
 .regist-form {
