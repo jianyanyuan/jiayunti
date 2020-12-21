@@ -58,7 +58,7 @@
 import mixn from '@/components/UploadList/mixin'
 import File from '@/api/file'
 import { notEmptyArray } from '@/utils'
-import Project from '@/api/projects'
+import { getDesignerApi } from '@/api/projects'
 export default {
   name: 'AuditDesign',
   mixins: [mixn],
@@ -88,7 +88,7 @@ export default {
       this.pageLoading = true
       
       const designerAsync = new Promise((resolve, reject) => {
-        Project.getDesigner(this.id)
+        getDesignerApi(this.id)
           .then(res => {
             this.design = res
             resolve('ok')

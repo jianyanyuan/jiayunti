@@ -69,7 +69,6 @@
 </template>
 
 <script>
-import Project from '@/api/projects'
 import File from '@/api/file'
 import Pdf from 'vue-pdf'
 import html2canvas from 'html2canvas'

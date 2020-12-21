@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-18 08:43:20
+ * @LastEditTime: 2020-12-21 13:38:26
  * @Description:街道审核列表
 -->
 
@@ -63,8 +63,8 @@
           <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
               <el-button v-if="scope.row.statusId === 9" size="mini" plain type="warning" @click="$router.push({name:'StreetCheck',params:{id:scope.row.id,status:scope.row.statusId}})">审 核</el-button>
-              <el-button v-if="scope.row.statusId === 11" size="mini" plain type="info" @click="$router.push({name:'FaultRecord',params:{id:scope.row.id,status:scope.row.statusId}})">违规记录</el-button>
-              <el-button v-if="scope.row.statusId === 11" size="mini" plain type="warning" @click="$router.push({name:'FaultReview',params:{id:scope.row.id,status:scope.row.statusId}})">查看回复</el-button>
+              <el-button v-if="scope.row.statusId === 11" size="mini" plain type="info" @click="$router.push({name:'SFaultRecord',params:{id:scope.row.id,status:scope.row.statusId}})">违规记录</el-button>
+              <el-button v-if="scope.row.statusId === 11" size="mini" plain type="warning" @click="$router.push({name:'SFaultReview',params:{id:scope.row.id,status:scope.row.statusId}})">违规处理</el-button>
             </el-row>
           </template>
         </el-table-column>

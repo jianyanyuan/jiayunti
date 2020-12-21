@@ -116,7 +116,7 @@ export default {
       this.listApplies()
     },
     showAudit(row){
-      this.$router.push({name:'CommunityAuditedDetail',params:{id:row.id,status:row.statusId}})
+      this.$router.push({name:'AuditedDetail',params:{id:row.id,status:row.statusId}})
     },
     goSearch() { },
     clearQuery() { },

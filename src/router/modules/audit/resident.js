@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-17 14:07:23
+ * @LastEditTime: 2020-12-21 17:11:26
  * @LastEditors: zfd
  * @Description: 审批端居民路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -145,7 +145,7 @@ const residentRouter = {
     {
       path: 'fault-detail/:id/:status',
       component: () => import('@/views/common/fault/detail.vue'),
-      name: 'FaultDetail',
+      name: 'RFaultDetail',
       hidden: true,
       meta: {
         title: '违规查看',

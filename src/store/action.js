@@ -2,11 +2,11 @@
  * @Author: zfd
  * @Date: 2020-12-08 14:36:19
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-09 17:30:34
+ * @LastEditTime: 2020-12-21 17:30:00
  * @Description: 
  */
 
-import Project from '@/api/projects'
+import { detailApi } from '@/api/projects'
 import { parseTime } from '@/filters'
 // 公众方法
 const actions = {
@@ -14,7 +14,7 @@ const actions = {
   getProjectBasic(context,projectId) {
     return new Promise(async(resolve, reject) => {
       await context.dispatch('common/getAddress')
-      Project.detail(projectId).then(res => {
+      detailApi(projectId).then(res => {
         const basic = {}
         const { applicantName, phoneNumber, designName, deviceName, deviceType, rooms, residentialQuarters, building, unit,address,createTime } = res
         basic.applicantName = applicantName

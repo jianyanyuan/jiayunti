@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-21 11:05:23
+ * @LastEditTime: 2020-12-21 17:07:38
  * @Description: 施工端违规处理
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -31,7 +31,7 @@
       <el-collapse-item v-for="(item, index) in list" :key="index">
         <template slot="title">
           监管单位：{{ item.submitter }}
-          <el-tag :type="item.result === 0 ? 0:1  | keyToVal(handleTag)" style="margin-left:20px">{{ item.result === 0 ? 0:1 | keyToVal(handleFault) }}</el-tag>
+          <el-tag :type="item.status  | keyToVal(handleTag)" style="margin-left:20px">{{ item.status | keyToVal(handleFault) }}</el-tag>
         </template>
         <!-- <div>
           建议人：{{ item.name }}
@@ -58,16 +58,16 @@
 
           </el-form-item>
           <el-form-item label="违规回复:">
-            <el-input v-model="item.response" disabled v-if="item.response" />
+            <el-input v-model="item.response" disabled v-if="item.status !== -1" />
           </el-form-item>
           <el-form-item label="整改照片:">
-            <upload-list :files="item.rectificationFile.map(f => ({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+            <upload-list v-if="item.status !== -1" :files="item.rectificationFile.map(f => ({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
 
           </el-form-item>
-          <el-form-item label="处理回复:">
+          <el-form-item label="处理回复:" v-if="item.status === 0 || item.status === 1">
             <el-input v-model="item.toResponse" type="textarea" autosize v-if="item.toResponse" />
           </el-form-item>
-          <el-form-item label="处理结果:">
+          <el-form-item label="处理结果:" v-if="item.status === 0 || item.status === 1">
             <el-select v-model="item.result" disabled v-if="item.toResponse">
               <el-option v-for="result in auditOptions" :key="result.val" :value="result.key" :label="result.val" />
             </el-select>
@@ -111,10 +111,22 @@ export default {
       pageLoading: false,
       projectId: null,
       status: null,
+      handleFault: [
+        { key: -1, val: '未整改' },
+        { key: 0, val: '整改通过' },
+        { key: 1, val: '整改未通过' },
+        { key: 2, val: '未回复' }
+      ],
+      handleTag: [
+        { key: -1, val: 'info' },
+        { key: 0, val: 'success' },
+        { key: 1, val: 'danger' },
+        { key: 2, val: 'warning' }
+      ]
     }
   },
   computed: {
-    ...mapState('common', ['handleFault', 'handleTag', 'auditOptions'])
+    ...mapState('common', ['auditOptions'])
   },
   created() {
     const { id, status } = this.$route.params
@@ -129,6 +141,18 @@ export default {
     listFaults() {
       this.pageLoading = true
       Supervision.getFault(this.projectId).then(res => {
+        res.forEach(v => {
+          if (!v.response) {
+            v.status = -1 // 未整改
+          } else {
+            // 已整改
+            if (v.toResponse === undefined) {
+              v.status = 2 // 整改未回复
+            } else {
+              v.status = v.result // 整改结果
+            }
+          }
+        })
         this.list = res
       }).catch(() => {
         this.$message.error('信息获取失败')

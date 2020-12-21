@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-21 11:07:01
+ * @LastEditTime: 2020-12-21 17:03:41
  * @Description:申请列表
 -->
 
@@ -52,9 +52,9 @@
               <el-tag v-if="scope.row.statusId === 10" size="medium" type="success" effect="light">申请已通过</el-tag>
               <el-tag v-if="scope.row.statusId === 13" size="medium" type="danger" effect="light">已驳回</el-tag>
               <el-tag v-if="scope.row.statusId === 14" size="medium" type="info" effect="light">已撤销</el-tag>
-              <el-button v-if="scope.row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'FaultDetail',params:{id:scope.row.id,status:scope.row.statusId}})">违规查看</el-button>
+              <el-button v-if="scope.row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'RFaultDetail',params:{id:scope.row.id,status:scope.row.statusId}})">违规查看</el-button>
               <!-- <el-button v-if="scope.row.statusId === 12" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button> -->
-              <el-button v-if="scope.row.statusId === 12" size="mini" type="warning" @click="subsidyVisible = true">补贴查看</el-button>
+              <el-button v-if="scope.row.statusId === 12" size="mini" type="warning" @click="$router.push({name:'ResidentBonus',params:{id:scope.row.id,status:scope.row.statusId}})">补贴查看</el-button>
               <!-- <el-tag v-if="[1,6,8,9].includes(scope.row.statusId) && scope.row.auditTime" size="medium" type="success">审核已通过</el-tag> -->
 
               <!-- <el-button v-if="[0,5].includes(scope.row.statusId) && scope.row.auditTime" size="mini" plain type="warning" @click="$router.push({name:'ResidentAuditDetail',params:{}})">审核结果</el-button> -->
@@ -128,21 +128,6 @@
         <el-button @click="model.visible = false">取 消</el-button>
         <el-button type="primary" @click="postApply">确 定</el-button>
       </div>
-    </el-dialog>
-    <!-- 补贴查看 -->
-    <el-dialog v-el-drag-dialog title="补贴查看" center :visible.sync="subsidyVisible" :close-on-click-modal="false" class="uploadModal">
-      <el-form :model="subsidy" label-position="top">
-        <el-form-item label="补助金额（元）:">
-          {{ subsidy.money | numberFormat }}
-        </el-form-item>
-        <el-form-item label="证明材料:" prop="attachment">
-          <a v-for="file in fileList" :key="file.name" class="file-display">
-            <i class="el-icon-document" />
-            {{ file.name }}
-            <i class="el-icon-download" style="float:right" />
-          </a>
-        </el-form-item>
-      </el-form>
     </el-dialog>
     <!-- 查看流程 -->
     <el-dialog v-el-drag-dialog title="申请流程" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">

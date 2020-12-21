@@ -96,7 +96,7 @@
               <el-button v-if="row.statusId=== 10" size="mini" plain type="warning" @click="$router.push({name:'IncreaseLiftReport',params:{id:row.id,status:row.statusId}})">上传报告</el-button>
               <el-button v-if="row.statusId=== 5" size="mini" plain type="warning" @click="$router.push({name:'IncreaseLiftPipe',params:{id:row.id,status:row.statusId}})">管道踏勘</el-button>
               <el-button v-if="row.statusId === 11" size="mini" plain type="warning" @click="$router.push({name:'FaultDetail',params:{id:row.id,status:row.statusId}})">违规查看</el-button>
-              <el-button v-if="row.statusId === 12" size="mini" plain type="warning" @click="subsidyVisible = true">补贴派发</el-button>
+              <el-button v-if="row.statusId === 12" size="mini" plain type="warning" @click="$router.push({name:'InLBonus',params:{id:row.id,status:row.statusId}})">补贴派发</el-button>
 
             </el-row>
           </template>
@@ -104,24 +104,6 @@
       </el-table>
     </el-card>
     <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
-    <!-- 补贴派发 -->
-    <el-dialog v-el-drag-dialog title="补贴派发" center :visible.sync="subsidyVisible" :close-on-click-modal="false" class="uploadModal">
-      <el-form :model="model" :rules="model.rule">
-        <el-form-item label="补助金额（元）:" prop="money">
-          <el-input v-model="model.money" />
-        </el-form-item>
-        <el-form-item label="证明材料:" prop="attachment">
-          <el-upload action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" list-type="picture" drag multiple :auto-upload="false">
-            <!-- <i class="el-icon-upload" /> -->
-            <div>将文件拖到此处，或点击添加</div>
-            <p>单个文件大小不超过20MB</p>
-          </el-upload>
-        </el-form-item>
-      </el-form>
-      <span slot="footer">
-        <el-button size="small" type="primary" @click="submitUpload">上 传</el-button>
-      </span>
-    </el-dialog>
     <!-- 查看流程 -->
     <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
       <flow />

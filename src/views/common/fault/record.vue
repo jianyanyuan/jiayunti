@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-21 12:23:04
+ * @LastEditTime: 2020-12-21 14:35:51
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -71,8 +71,8 @@ export default {
       },
       rules: {
         time: [{ required: true, message: '请选择时间', trigger: 'blur' }],
-        description: [{ required: true, trigger: 'blur' }],
-        attachments: [{ required: true, trigger: 'blur' }]
+        description: [{ required: true, message: '请给出描述', trigger: 'blur' }],
+        attachments: [{ required: true, message: '请选择附件', trigger: 'blur' }]
       },
       faults: [],
       typeName: 'illegal',

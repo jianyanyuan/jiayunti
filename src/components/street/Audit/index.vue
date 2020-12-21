@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-16 16:35:29
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-17 15:18:58
+ * @LastEditTime: 2020-12-21 17:16:43
  * @Description:
 -->
 <template>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import Project from '@/api/projects'
+import {checkApi,advanceApi} from '@/api/projects'
 import File from '@/api/file'
 import { mapState } from 'vuex'
 export default {
@@ -157,11 +157,11 @@ export default {
               return
             }
           }
-          Project.check(this.form)
+          checkApi(this.form)
             .then(async () => {
               if (this.status != 10) {
                 // 10 联合审查 审核过,流程不前进
-                await Project.advance(this.id, this.status).catch(() => {
+                await advanceApi(this.id, this.status).catch(() => {
                   this.$message.error('流程错误')
                 })
               }

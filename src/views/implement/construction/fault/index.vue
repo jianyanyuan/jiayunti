@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-21 13:30:09
+ * @LastEditTime: 2020-12-21 15:15:20
  * @Description: 施工端违规处理
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -68,21 +68,21 @@
           <el-form-item label="整改照片:" prop="attachments">
             <upload-list v-if="item.status=== 0 || item.status === 2" :files="item.rectificationFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
 
-            <el-upload v-else action="#" :file-list="item.rectificationFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" class="form-card" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,index)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" drag :auto-upload="false">
+            <el-upload v-else :file-list="item.rectificationFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture" action="#" class="form-card" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,index)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" drag :auto-upload="false">
               <div>将文件拖到此处，或点击添加</div>
               <div>单个文件大小不超过20MB，可上传图片或PDF</div>
             </el-upload>
           </el-form-item>
-          <el-form-item label="处理回复:" prop="toResponse" v-if="item.result !== undefined">
-            <el-input v-model="item.toResponse" type="textarea" autosize />
+          <el-form-item label="处理回复:" prop="toResponse" v-if="item.status === 0 || item.status === 1">
+            <el-input v-model="item.toResponse" type="textarea" autosize disabled />
           </el-form-item>
-          <el-form-item label="处理结果:" prop="result" v-if="item.result !== undefined">
+          <el-form-item label="处理结果:" prop="result" v-if="item.status === 0 || item.status === 1">
             <el-select v-model="item.result" disabled>
               <el-option v-for="result in auditOptions" :key="result.val" :value="result.key" :label="result.val" />
             </el-select>
           </el-form-item>
           <el-row type="flex" justify="center" style="margin:50px 0">
-            <el-button type="primary" @click="handlePost">保 存</el-button>
+            <el-button type="primary" @click="handlePost" v-if="item.status === -1 || item.status === 1">保 存</el-button>
             <!-- <el-button @click="$router.go(-1)">返 回</el-button> -->
           </el-row>
         </el-form>
@@ -122,7 +122,7 @@ export default {
         response: [{ required: true, message: '请填写违规回复', trigger: 'blur' }],
         attachments: [{ required: true, message: '请上传整改照片', trigger: 'blur' }]
       },
-      deleteList: [], // 待删除附件
+      // deleteList: [], // 待删除附件
       projectId: null,
       status: null,
       list: [],
@@ -178,7 +178,7 @@ export default {
                 v.status = -1 // 未整改
               } else {
                 // 已整改
-                if (v.result === undefined) {
+                if (v.toResponse === undefined) {
                   v.status = 2 // 整改未回复
                 } else {
                   v.status = v.result // 整改结果
@@ -230,10 +230,11 @@ export default {
         // 未上传 --> 取消上传
         const cancelIdx = this.list[index].attachments.findIndex(f => f.uid === file.uid)
         this.list[index].attachments.splice(cancelIdx, 1)
-      } else {
-        // 已上传的 --> 待删除
-        this.deleteList.push(file.uid)
       }
+      //  else {
+      //   // 已上传的 --> 待删除
+      //   this.deleteList.push(file.uid)
+      // }
     },
     // 保存修改
     async postFile(reforms) {

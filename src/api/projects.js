@@ -10,7 +10,7 @@ import request from '@/utils/request'
 const api_prefix_dev = '/project'
 
 // 根据token获取工程列表
-const list = (params) => {
+export const listApi = (params) => {
   return request({
     url: api_prefix_dev + '/getroleproject',
     method: 'get',
@@ -19,7 +19,7 @@ const list = (params) => {
 }
 
 // 新增申请
-const add = (data) => {
+export const add = (data) => {
   return request({
     url: api_prefix_dev,
     method: 'post',
@@ -28,7 +28,7 @@ const add = (data) => {
 }
 
 // 撤销申请
-const cancel = (id) => {
+export const cancel = (id) => {
   return request({
     url: `/flowchartlogic/${id}`,
     method: 'get'
@@ -36,7 +36,7 @@ const cancel = (id) => {
 }
 
 // 获取单个
-const detail = id => {
+export const detailApi = id => {
   return request({
     url:api_prefix_dev + '/' + id,
     method: 'get'
@@ -44,7 +44,7 @@ const detail = id => {
 }
 
 // 修改申请基本资料
-const update = (id,newprojectRequest) => {
+export const update = (id,newprojectRequest) => {
   return request({
     url:api_prefix_dev + '/' + id,
     // headers: { 'Content-Type': 'application/json' } ,
@@ -54,7 +54,7 @@ const update = (id,newprojectRequest) => {
 }
 
 // 流程步骤更新
-const advance = (projectId,status,constructionId,supervisionId) => {
+export const advanceApi = (projectId,status,constructionId,supervisionId) => {
   return request({
     url:'/flowchartlogic',
     // headers: { 'Content-Type': 'application/json' } ,
@@ -69,7 +69,7 @@ const advance = (projectId,status,constructionId,supervisionId) => {
 }
 
 // 审核
-const check = (communityReviewRequest ) => {
+export const checkApi = (communityReviewRequest ) => {
   return request({
     url:'/CommunityReview',
     method: 'post',
@@ -78,20 +78,39 @@ const check = (communityReviewRequest ) => {
 }
 
 // 查看工程选择的设计院信息
-
-const getDesigner = (projectId ) => {
+export const getDesignerApi = (projectId ) => {
   return request({
     url:`/design/${projectId}`,
     method: 'get'
   })
 }
-export default {
-  list,
-  add,
-  detail,
-  update,
-  advance,
-  check,
-  getDesigner,
-  cancel
+
+// 新增补贴
+export const addBonus = (projectId,data ) => {
+  return request({
+    url:`/Bonus/${projectId}`,
+    method: 'post',
+    data
+  })
 }
+
+// 补贴查看
+export const getBonus = (projectId ) => {
+  return request({
+    url:`/Bonus/${projectId}`,
+    method: 'get'
+  })
+}
+
+// export default {
+//   list,
+//   add,
+//   detail,
+//   update,
+//   advance,
+//   check,
+//   getDesigner,
+//   cancel,
+//   addBonus,
+//   getBonus
+// }

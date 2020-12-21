@@ -15,10 +15,6 @@ const defaultForm = {
 const data = {
 
   fileList: [{ name: '123213' }, { name: '456465' }, { name: '789798' }],
-  subsidy: {
-    money: '79746464'
-  },
-  subsidyVisible: false,
   formLoading: false,
   listLoading: false,
   openLoading: false,

@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-15 09:22:36
+ * @LastEditTime: 2020-12-21 16:45:24
  * @LastEditors: zfd
  * @Description: 增梯办路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -64,7 +64,18 @@ const drawingAuditRouter = {
         icon: 'list',
         roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
       }
-    }
+    },
+    {
+      path: 'bonus/:id/:status',
+      component: () => import('@/views/common/bonus.vue'),
+      name: 'InLBonus',
+      hidden: true,
+      meta: {
+        title: '补贴派发',
+        roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
+      }
+    },
+    
   ]
 }
 

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-02 14:20:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-21 09:50:55
+ * @LastEditTime: 2020-12-21 15:16:54
  * @Description:
 -->
 <!--
@@ -36,7 +36,7 @@
       <el-collapse-item v-for="(item, index) in list" :key="index">
         <template slot="title">
           监管单位：{{ item.submitter }}
-          <el-tag :type="item.response ? 0:1  | keyToVal(handleTag)" style="margin-left:20px">{{ item.response ? 0:1 | keyToVal(handleFault) }}</el-tag>
+          <el-tag :type="item.status  | keyToVal(handleTag)" style="margin-left:20px">{{ item.status | keyToVal(handleFault) }}</el-tag>
         </template>
         <!-- <div>
           建议人：{{ item.name }}
@@ -61,24 +61,24 @@
           <el-form-item label="违规照片:">
             <upload-list :files="item.illegalFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
           </el-form-item>
-          <el-form-item label="违规回复:">
-            <el-input v-model="item.response" disabled v-if="item.response" />
+          <el-form-item label="违规回复:" v-if="item.status !== -1">
+            <el-input v-model="item.response" disabled />
           </el-form-item>
-          <el-form-item label="整改照片:">
+          <el-form-item label="整改照片:" v-if="item.status !== -1">
             <upload-list :files="item.rectificationFile.map(f => ({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
 
           </el-form-item>
-          <el-form-item label="处理回复:" prop="toResponse">
-            <el-input v-model="item.toResponse" type="textarea" autosize v-if="item.response" />
+          <el-form-item label="处理回复:" prop="toResponse" v-if="item.status !== -1">
+            <el-input v-model="item.toResponse" type="textarea" autosize :disabled="item.status=== 0" />
           </el-form-item>
-          <el-form-item label="处理结果:" prop="result">
-            <el-select v-model="item.result" v-if="item.response">
+          <el-form-item label="处理结果:" prop="result" v-if="item.status !== -1">
+            <el-select v-model="item.result" :disabled="item.status=== 0">
               <el-option v-for="result in auditOptions" :key="result.val" :value="result.key" :label="result.val" />
             </el-select>
           </el-form-item>
           <el-row type="flex" justify="center" style="margin:50px 0">
-            <el-button type="primary" @click="handlePost">保 存</el-button>
-            <el-button @click="$router.go(-1)">返 回</el-button>
+            <el-button type="primary" @click="handlePost" v-if="item.status === 2 || item.status === 1">保 存</el-button>
+            <!-- <el-button @click="$router.go(-1)">返 回</el-button> -->
           </el-row>
         </el-form>
       </el-collapse-item>
@@ -138,11 +138,23 @@ export default {
       list: [],
       projectId: null,
       status: null,
-      fromPath: null
+      fromPath: null,
+      handleFault: [
+        { key: -1, val: '未整改' },
+        { key: 0, val: '整改通过' },
+        { key: 1, val: '整改未通过' },
+        { key: 2, val: '未回复' }
+      ],
+      handleTag: [
+        { key: -1, val: 'info' },
+        { key: 0, val: 'success' },
+        { key: 1, val: 'danger' },
+        { key: 2, val: 'warning' }
+      ]
     }
   },
   computed: {
-    ...mapState('common', ['handleFault', 'handleTag', "auditOptions"])
+    ...mapState('common', ["auditOptions"])
   },
   created() {
     const { id, status } = this.$route.params
@@ -157,7 +169,22 @@ export default {
     listFaults() {
       this.pageLoading = true
       Supervision.getFault(this.projectId).then(res => {
-        this.list = res.filter(v => v.createdBy == this.$store.getters.userid)
+        if (notEmptyArray(res)) {
+          res = res.filter(v => v.createdBy == this.$store.getters.userid)
+          res.forEach(v => {
+            if (!v.response) {
+              v.status = -1 // 未整改
+            } else {
+              // 已整改
+              if (v.toResponse === undefined) {
+                v.status = 2 // 整改未回复
+              } else {
+                v.status = v.result // 整改结果
+              }
+            }
+          })
+        }
+        this.list = res
       }).catch(() => {
         this.$message.error('信息获取失败')
       })
@@ -170,7 +197,7 @@ export default {
       this.pageLoading = true
       Supervision.faultReply(data)
         .then(() => {
-          this.$router.push(this.fromPath)
+          this.listFaults()
         })
         .catch(() => {
           this.$message.error('提交失败')

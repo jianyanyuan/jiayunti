@@ -2,11 +2,10 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-25 08:47:40
+ * @LastEditTime: 2020-12-21 17:31:07
  * @Description: 申请项目仓库
  */
-import Project from '@/api/projects'
-import { notEmptyArray } from '@/utils'
+import {listApi} from '@/api/projects'
 
 const getDefaultState = () => {
   return {
@@ -31,7 +30,7 @@ const actions = {
   // get projects
   list() {
     return new Promise((resolve, reject) => {
-      Project.list().then(res => resolve(res)).catch(err => reject(err))
+      listApi().then(res => resolve(res)).catch(err => reject(err))
     })
   }
 

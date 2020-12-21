@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-16 09:25:58
+ * @LastEditTime: 2020-12-21 15:20:02
  * @Description:图审列表
 -->
 
@@ -59,7 +59,7 @@
             <el-tag :type="row.statusId | keyToVal(applyTag)">{{ row.statusId | keyToVal(applyStatus) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作">
+        <el-table-column align="center" label="操作" min-width="145px">
 
           <template slot-scope="{row}">
             <el-row type="flex" justify="space-around">
@@ -67,7 +67,7 @@
               <!-- <el-button v-if="row.statusId === 11" size="mini" type="success" plain >开始施工</el-button> -->
 
               <el-button v-if="row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'ConstructionFault',params:{id:row.id,status:row.statusId}})">违规查看</el-button>
-              <el-button v-if="row.statusId === 12" size="mini" type="warning" plain @click="$router.push({name:'ConstructionComplete',params:{id:row.id,status:row.statusId}})">竣工验收</el-button>
+              <el-button v-if="row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'ConstructionComplete',params:{id:row.id,status:row.statusId}})">竣工验收</el-button>
 
             </el-row>
           </template>

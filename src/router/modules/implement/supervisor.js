@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-17 13:48:31
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-21 11:19:36
+ * @LastEditTime: 2020-12-21 14:31:12
  * @Description: 监理单位路由表
  */
 import Layout from '@/layout'
@@ -41,8 +41,8 @@ const supervisorRouter = {
       }
     },
     {
-      path: 'fault-detail/:id/:status',
-      component: () => import('@/views/common/fault/detail.vue'),
+      path: 'fault-review/:id/:status',
+      component: () => import('@/views/common/fault/review.vue'),
       name: 'FaultReview',
       hidden: true,
       meta: {
