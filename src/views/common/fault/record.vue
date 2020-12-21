@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-18 17:27:55
+ * @LastEditTime: 2020-12-21 12:23:04
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -71,8 +71,8 @@ export default {
       },
       rules: {
         time: [{ required: true, message: '请选择时间', trigger: 'blur' }],
-        description: [{ required: true, message: '请输入违规详情', trigger: 'blur' }],
-        attachments: [{ required: true, message: '请上传违规附件', trigger: 'blur' }]
+        description: [{ required: true, trigger: 'blur' }],
+        attachments: [{ required: true, trigger: 'blur' }]
       },
       faults: [],
       typeName: 'illegal',
@@ -80,7 +80,6 @@ export default {
       status: null,
       postFailed: null,
       fromPath: null
-
     }
   },
   computed: {
@@ -125,70 +124,73 @@ export default {
       this.faults.push(
         {
           time: '',
-          attachments: []
+          attachments: [],
+          projectId: this.projectId,
+          description: ''
         })
     },
     // 保存修改
-    postFile(faults) {
+    async postFile(faults) {
       this.pageLoading = true
-      const failedArr = []
-      debugger
-      faults.forEach(async (fault, fIdx) => {
+      for (let idx in faults) {
         let faultId
         let error = false
-        await Supervision.addFault(fault)
+        const {projectId,description,time} = faults[idx]
+        await Supervision.addFault([{projectId,description,time}])
           .then((res) => {
             faultId = res[0].id
           })
           .catch((err) => {
-            // 违规保存失败，重新上传该违规记录
             error = true
-            failedArr.push(fault)
-            return false // 记录上传失败
+            // 违规保存失败，重新上传该违规记录
+            this.postFailed = faults.slice(idx)
           })
-
-        fault.attachments.forEach(async (a, aIdx, arr) => {
+        if (error) {
+          this.$message.error('保存失败，请重新保存')
+          return false // 记录上传失败
+        }
+        for (let a of faults[idx].attachments) {
           await File.uploadFault(a.file, faultId, this.typeName)
             .catch(() => {
-              failedArr.push(fault)
-              return false
+              error = true
+              this.postFailed = faults.slice(idx)
             })
-        })
-      })
-      this.pageLoading = false
-
-      if (failedArr.length > 0) {
-        this.$message.error('保存失败，请重新保存')
-      } else {
-        this.$router.push(this.fromPath)
+          if (error) {
+            this.$message.error('保存失败，请重新保存')
+            return false // 记录上传失败
+          }
+        }
       }
+      this.pageLoading = false
+      this.$router.push(this.fromPath)
     },
     handlePost() {
       if (this.postFailed) {
         // 上传失败的重新上传
         this.postFile(this.postFailed)
       } else {
+        // 不校验
+        this.postFile(this.faults)
         // 校验用户数据填写合法性
-        let valid = true
-        for (let i = 0; i < this.faults.length; i++) {
-          const refName = `ruleForm${i}`
-          if (!valid) {
-            break
-          }
-          if (this.faults[i].attachments.length === 0) {
-            valid = false
-            break
-          }
-          this.$refs[refName][0].validate(success => {
-            valid = success
-          })
-        }
-        if (valid) {
-          debugger
-          this.postFile(this.faults)
-        } else {
-          this.$message.error('请补全信息')
-        }
+        // let valid = true
+        // for (let i = 0; i < this.faults.length; i++) {
+        //   const refName = `ruleForm${i}`
+        //   if (!valid) {
+        //     break
+        //   }
+        //   if (this.faults[i].attachments.length === 0) {
+        //     valid = false
+        //     break
+        //   }
+        //   this.$refs[refName][0].validate(success => {
+        //     valid = success
+        //   })
+        // }
+        // if (valid) {
+        //   this.postFile(this.faults)
+        // } else {
+        //   this.$message.error('请补全信息')
+        // }
       }
     }
   },

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-21 14:32:21
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-18 16:52:11
+ * @LastEditTime: 2020-12-21 08:52:17
  * @Description:
  */
 import request from '@/utils/request'
@@ -83,7 +83,7 @@ const uploadOffer = (ConstructionPriceId, data ) => {
  */
 const uploadFault = (data, IllegalBehaviorId, type) => {
   return request({
-    url: `/${api_prefix_dev}/uploadIllegalFile`,
+    url: `${api_prefix_dev}/uploadIllegalFile`,
     method: 'post',
     data,
     params:

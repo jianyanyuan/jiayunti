@@ -2,21 +2,22 @@
  * @Author: zfd
  * @Date: 2020-12-17 13:48:31
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-17 14:07:49
+ * @LastEditTime: 2020-12-21 11:19:36
  * @Description: 监理单位路由表
  */
 import Layout from '@/layout'
 
 const supervisorRouter = {
-  path: '/supervisor',
+  path: '/supervision',
   component: Layout,
-  redirect: '/supervisor/list',
+  redirect: '/supervision/list',
   name: 'Supervisor',
   meta: {
     title: '监理单位',
     icon: 'supervisor',
-    roles: ['ROLE_ADMIN', 'ROLE_SUPERVISOR']
+    roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
   },
+  
   children: [
     {
       path: 'list',
@@ -25,18 +26,18 @@ const supervisorRouter = {
       meta: {
         title: '申请列表',
         icon: 'supervisor',
-        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISOR']
+        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
       }
     },
     {
       path: 'fault-list',
       component: () => import('@/views/common/fault/list.vue'),
-      name: 'FaultReview',
+      name: 'FaultList',
       hidden: true,
       meta: {
         title: '违规列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISOR']
+        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
       }
     },
     {
@@ -46,7 +47,7 @@ const supervisorRouter = {
       hidden: true,
       meta: {
         title: '违规回复',
-        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISOR']
+        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
       }
     },
     {
@@ -56,7 +57,7 @@ const supervisorRouter = {
       hidden: true,
       meta: {
         title: '违规记录',
-        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISOR']
+        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
       }
     }
   ]

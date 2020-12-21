@@ -1,91 +1,89 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-18 10:10:47
+ * @LastEditTime: 2020-12-21 13:30:09
  * @Description: 施工端违规处理
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
 <template>
-  <div class="app-container">
+  <div class="app-container" v-loading="pageLoading">
     <div class="basic-container">
       <el-card style="margin-bottom:30px">
         <div slot="header">
           <span>基本信息</span>
         </div>
         <el-form label-width="120px" class="show-form">
-          <el-form-item label="姓名:">
-            {{ basic.name }}
+          <el-form-item label="申请人:">
+            {{ basic.applicantName }}
           </el-form-item>
-          <el-form-item label="详细地址:">
-            <el-cascader v-model="basic.address" :options="addressOptions" />
-            <label for="address-detail" class="label-detail"> — </label>
-            <el-cascader v-model="plot" :options="plotOptions" />
+          <el-form-item label="申请时间">
+            {{ basic.createTime }}
+          </el-form-item>
+          <el-form-item label="地址:">
+            {{ basic.address }}
           </el-form-item>
           <el-form-item label="电话:">
-            {{ basic.phone }}
+            {{ basic.phoneNumber }}
           </el-form-item>
           <el-form-item label="加装电梯地址:">
-            {{ basic.liftAddress }}
+            {{ basic.location }}
           </el-form-item>
           <el-form-item label="设计单位:">
-            {{ basic.company }}
+            {{ basic.designName }}
           </el-form-item>
           <el-form-item label="设备:">
-            {{ basic.spec }}
+            {{ basic.device }}
           </el-form-item>
         </el-form>
       </el-card>
     </div>
     <el-collapse>
-      <el-collapse-item v-for="(item, index) in construction" :key="index">
+      <el-collapse-item v-for="(item, index) in list" :key="index">
         <template slot="title">
-          监管单位：{{ item.org }}
-          <el-tag :type="item.status | keyToVal(handleTag)" style="margin-left:20px">{{ item.status | keyToVal(handleStatus) }}</el-tag>
+          监管单位：{{ item.submitter }}
+          <el-tag :type="item.status | keyToVal(handleTag)" effect="dark" style="margin-left:20px">{{ item.status | keyToVal(handleFault) }}</el-tag>
         </template>
-        <!-- <div>
-          建议人：{{ item.name }}
-          <el-tag :type="item.status | keyToVal(handleTag)">{{ item.status | keyToVal(handleStatus) }}</el-tag>
-        </div> -->
-        <el-form :model="construction[index]" :rules="rule" label-width="120px" class="handle-form">
+        <el-form :model="list[index]" :rules="rule" label-width="120px" class="handle-form">
           <el-form-item label="申请编号:">
-            <el-input v-model="item.code" disabled />
+            <el-input v-model="item.projectName" disabled />
           </el-form-item>
           <el-form-item label="监管单位:">
-            <el-input v-model="item.org" disabled />
+            <el-input v-model="item.submitter" disabled />
           </el-form-item>
           <el-form-item label="联系电话:">
             <el-input v-model="item.phone" disabled />
           </el-form-item>
           <el-form-item label="违规时间:">
-            <el-input v-model="item.time" disabled />
+            <el-date-picker v-model="item.time" disabled format="yyyy-MM-dd HH:mm:ss" />
           </el-form-item>
           <el-form-item label="违规描述:">
-            <el-input v-model="item.desc" disabled />
+            <el-input v-model="item.description" disabled />
           </el-form-item>
           <el-form-item label="违规照片:">
-            <upload-list :files="attachments" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
+            <upload-list :files="item.illegalFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+          </el-form-item>
+          <el-form-item label="违规回复:" prop="response">
+            <el-input v-model="item.response" :disabled="item.status=== 0 || item.status === 2" />
+          </el-form-item>
+          <el-form-item label="整改照片:" prop="attachments">
+            <upload-list v-if="item.status=== 0 || item.status === 2" :files="item.rectificationFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
 
-          </el-form-item>
-          <el-form-item label="违规回复:">
-            <el-input v-model="item.feedback" />
-          </el-form-item>
-          <el-form-item label="整改照片:">
-            <el-upload action="#" class="form-card" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,index)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" drag :auto-upload="false">
+            <el-upload v-else action="#" :file-list="item.rectificationFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" class="form-card" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,index)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" drag :auto-upload="false">
               <div>将文件拖到此处，或点击添加</div>
               <div>单个文件大小不超过20MB，可上传图片或PDF</div>
             </el-upload>
           </el-form-item>
-          <el-form-item label="处理回复:" prop="reply">
-            <el-input v-model="item.reply" type="textarea" autosize />
+          <el-form-item label="处理回复:" prop="toResponse" v-if="item.result !== undefined">
+            <el-input v-model="item.toResponse" type="textarea" autosize />
           </el-form-item>
-          <el-form-item label="处理结果:" prop="result">
-            <el-select v-model="item.result">
+          <el-form-item label="处理结果:" prop="result" v-if="item.result !== undefined">
+            <el-select v-model="item.result" disabled>
               <el-option v-for="result in auditOptions" :key="result.val" :value="result.key" :label="result.val" />
             </el-select>
           </el-form-item>
           <el-row type="flex" justify="center" style="margin:50px 0">
-            <el-button type="primary">保 存</el-button>
-            <el-button>返 回</el-button>
+            <el-button type="primary" @click="handlePost">保 存</el-button>
+            <!-- <el-button @click="$router.go(-1)">返 回</el-button> -->
           </el-row>
         </el-form>
       </el-collapse-item>
@@ -109,56 +107,44 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '@/components/UploadList/mixin'
-import { checkUpload } from '@/utils'
+import { checkUpload, notEmptyArray } from '@/utils'
+import Construction from '@/api/construction'
+import File from '@/api/file'
+import Supervision from '@/api/supervision'
 
 export default {
   name: 'ConstructionFault',
   mixins: [mixin],
   data() {
     return {
-      picShow: false,
-      basic: {
-        name: '李先生',
-        address: '苏州高新区',
-        phone: '15988800323',
-        liftAddress: '小区1楼',
-        company: '苏州建研院',
-        spec: '高端电梯'
-      },
+      basic: {},
       rule: {
-
+        response: [{ required: true, message: '请填写违规回复', trigger: 'blur' }],
+        attachments: [{ required: true, message: '请上传整改照片', trigger: 'blur' }]
       },
-      attachments: [
-        { name: '附件', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg', uid: '附件' }
-      ],
-      construction:
-        [
-          {
-            org: '中一建',
-            code: '马家浜1号楼',
-            phone: '110',
-            time: '2020-01-01 10:00',
-            desc: '违规操作',
-            descPic: [{ name: '违规图片1', url: '' }],
-            feedback: '接受批评',
-            feedbackPic: [{ name: '回复照片1', url: '' }],
-            descResult: '',
-            result: 0,
-            status: 0
-          }
-        ],
-      replies: [],// 整改回复
       deleteList: [], // 待删除附件
-      projectId:null,
-      status:null,
-      urls: [
-        'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-        'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
+      projectId: null,
+      status: null,
+      list: [],
+      typeName: 'rectification',
+      postFailed: null, // 上传失败，二次上传
+      pageLoading: false,
+      handleFault: [
+        { key: -1, val: '未整改' },
+        { key: 0, val: '整改通过' },
+        { key: 1, val: '整改未通过' },
+        { key: 2, val: '未回复' }
+      ],
+      handleTag:[
+        { key: -1, val: 'info' },
+        { key: 0, val: 'success' },
+        { key: 1, val: 'danger' },
+        { key: 2, val: 'warning' }
       ]
     }
   },
   computed: {
-    ...mapState('common', ['handleStatus', 'handleTag', 'auditOptions'])
+    ...mapState('common', ['auditOptions'])
   },
   created() {
     const { id, status } = this.$route.params
@@ -166,11 +152,58 @@ export default {
     if (!isNaN(+id) && status == 11) {
       this.projectId = id
       this.status = status
+      this.listFaults()
     }
   },
   methods: {
 
-    submitFeedback() { },
+    listFaults() {
+      this.pageLoading = true
+
+      const basicAsync = new Promise((resolve, reject) => {
+        this.$store.dispatch('getProjectBasic', this.projectId)
+          .then(res => {
+            this.basic = res
+            resolve('获取成功')
+          })
+          .catch(() => {
+            reject('基础信息获取失败')
+          })
+      })
+      const detailAsync = new Promise((resolve, reject) => {
+        Supervision.getFault(this.projectId).then(res => {
+          if (notEmptyArray(res)) {
+            res.forEach(v => {
+              if (!v.response) {
+                v.status = -1 // 未整改
+              } else {
+                // 已整改
+                if (v.result === undefined) {
+                  v.status = 2 // 整改未回复
+                } else {
+                  v.status = v.result // 整改结果
+                }
+              }
+            })
+          }
+          this.list = res
+          resolve('获取成功')
+        }).catch(() => {
+          reject('信息获取失败')
+        })
+      })
+      Promise.all([basicAsync, detailAsync])
+        .catch((err) => {
+          console.log(err)
+          this.pageLoading = false
+          this.$message.error('信息获取失败')
+        })
+        .finally(() => {
+          this.pageLoading = false
+        })
+
+
+    },
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList, index) {
@@ -178,7 +211,10 @@ export default {
       if (valid && file.status === 'ready') {
         const formData = new FormData()
         formData.append('file', file.raw)
-        this.replies[index].attachments.push(
+        if (this.list[index].attachments === undefined) {
+          this.list[index].attachments = []
+        }
+        this.list[index].attachments.push(
           {
             uid: file.uid,
             file: formData
@@ -192,21 +228,76 @@ export default {
     handleUploadRemove(file, fileList, index) {
       if (file.url === undefined) {
         // 未上传 --> 取消上传
-        const cancelIdx = this.replies[index].attachments.findIndex(f => f.uid === file.uid)
-        this.replies[index].attachments.splice(cancelIdx, 1)
+        const cancelIdx = this.list[index].attachments.findIndex(f => f.uid === file.uid)
+        this.list[index].attachments.splice(cancelIdx, 1)
       } else {
         // 已上传的 --> 待删除
-        this.deleteList.push(
-          {
-            projectId: this.id,
-            uid: file.uid,
-            name: file.name,
-            url: file.url
-          }
-        )
+        this.deleteList.push(file.uid)
       }
     },
+    // 保存修改
+    async postFile(reforms) {
+      this.pageLoading = true
+      for (let idx in reforms) {
+        let error = false
+        const { id, response } = reforms[idx]
+        await Construction.reform([{ id, response }])
+          .catch((err) => {
+            error = true
+            // 违规保存失败，重新
+            this.postFailed = reforms.slice(idx)
+          })
+        if (error) {
+          this.$message.error('保存失败，请重新保存')
+          return false // 记录上传失败
+        }
+        for (let a of reforms[idx].attachments) {
+          await File.uploadFault(a.file, id, this.typeName)
+            .catch(() => {
+              error = true
+              this.postFailed = reforms.slice(idx)
+            })
+          if (error) {
+            this.$message.error('保存失败，请重新保存')
+            return false // 记录上传失败
+          }
+        }
+      }
+      this.pageLoading = false
+      this.$message.success('回复成功')
+      this.listFaults()
+    },
+    handlePost() {
+      if (this.postFailed) {
+        // 上传失败的重新上传
+        this.postFile(this.postFailed)
+      } else {
+        // 不校验,过滤出不通过的
+        const data = this.list.filter(v => v.result !== 0).map(v => ({ id: v.id, attachments: v.attachments || [], response: v.response || '' }))
+        this.postFile(data)
 
+        // 校验用户数据填写合法性
+        // let valid = true
+        // for (let i = 0; i < this.faults.length; i++) {
+        //   const refName = `ruleForm${i}`
+        //   if (!valid) {
+        //     break
+        //   }
+        //   if (this.faults[i].attachments.length === 0) {
+        //     valid = false
+        //     break
+        //   }
+        //   this.$refs[refName][0].validate(success => {
+        //     valid = success
+        //   })
+        // }
+        // if (valid) {
+        //   this.postFile(this.faults)
+        // } else {
+        //   this.$message.error('请补全信息')
+        // }
+      }
+    }
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
@@ -216,9 +307,7 @@ export default {
       // 没有id则返回跳转
       next('/redirect' + from.fullPath)
     } else {
-      next(vm => {
-        vm.fromPath = from.fullPath
-      })
+      next()
     }
   }
 }

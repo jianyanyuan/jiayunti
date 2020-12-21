@@ -16,7 +16,7 @@ const list = () => {
 }
 
 // 违规记录
-const addFault = (illegalBehaviorRequest) => {
+const addFault = (data) => {
   return request({
     url: '/IllegalBehavior',
     method: 'post',

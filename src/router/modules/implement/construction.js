@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:14
- * @LastEditTime: 2020-11-06 14:53:23
+ * @LastEditTime: 2020-12-21 11:23:06
  * @LastEditors: zfd
  * @Description: 实施段施工路由表
  * @FilePath: \jiayunti\src\router\modules\implement\construction.js
@@ -41,7 +41,7 @@ const constructionRouter = {
       }
     },
     {
-      path: 'fault',
+      path: 'fault/:id/:status',
       name: 'ConstructionFault',
       component: () => import('@/views/implement/construction/fault/index.vue'),
       hidden: true,

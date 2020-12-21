@@ -37,6 +37,10 @@ const state = {
     { key: 0, val: '未处理' },
     { key: 1, val: '已解决' }
   ],
+  handleFault: [
+    { key: 0, val: '已整改' },
+    { key: 1, val: '未整改' }
+  ],
   handleTag: [
     { key: 0, val: 'success' },
     { key: 1, val: 'danger' }

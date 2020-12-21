@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-18 15:45:10
+ * @LastEditTime: 2020-12-21 11:07:01
  * @Description:申请列表
 -->
 
@@ -52,7 +52,7 @@
               <el-tag v-if="scope.row.statusId === 10" size="medium" type="success" effect="light">申请已通过</el-tag>
               <el-tag v-if="scope.row.statusId === 13" size="medium" type="danger" effect="light">已驳回</el-tag>
               <el-tag v-if="scope.row.statusId === 14" size="medium" type="info" effect="light">已撤销</el-tag>
-              <el-button v-if="scope.row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'ResidentFaultView',params:{id:scope.row.id,status:scope.row.statusId}})">违规查看</el-button>
+              <el-button v-if="scope.row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'FaultDetail',params:{id:scope.row.id,status:scope.row.statusId}})">违规查看</el-button>
               <!-- <el-button v-if="scope.row.statusId === 12" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button> -->
               <el-button v-if="scope.row.statusId === 12" size="mini" type="warning" @click="subsidyVisible = true">补贴查看</el-button>
               <!-- <el-tag v-if="[1,6,8,9].includes(scope.row.statusId) && scope.row.auditTime" size="medium" type="success">审核已通过</el-tag> -->

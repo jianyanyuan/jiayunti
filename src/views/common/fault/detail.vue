@@ -1,12 +1,12 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-11-03 10:26:39
+ * @LastEditTime: 2020-12-21 11:05:23
  * @Description: 施工端违规处理
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
 <template>
-  <div class="app-container">
+  <div class="app-container" v-loading="pageLoading">
     <el-page-header content="违规查看" style="margin-bottom:20px" @back="$router.go(-1)" />
 
     <div class="basic-container">
@@ -28,21 +28,21 @@
       </el-card>
     </div>
     <el-collapse>
-      <el-collapse-item v-for="(item, index) in construction" :key="index">
+      <el-collapse-item v-for="(item, index) in list" :key="index">
         <template slot="title">
-          监管单位：{{ item.org }}
-          <el-tag :type="item.status | keyToVal(handleTag)" style="margin-left:20px">{{ item.status | keyToVal(handleStatus) }}</el-tag>
+          监管单位：{{ item.submitter }}
+          <el-tag :type="item.result === 0 ? 0:1  | keyToVal(handleTag)" style="margin-left:20px">{{ item.result === 0 ? 0:1 | keyToVal(handleFault) }}</el-tag>
         </template>
         <!-- <div>
           建议人：{{ item.name }}
           <el-tag :type="item.status | keyToVal(handleTag)">{{ item.status | keyToVal(handleStatus) }}</el-tag>
         </div> -->
-        <el-form :model="construction[index]" :rules="rule" label-width="120px" class="handle-form">
+        <el-form :model="list[index]" label-width="120px" class="handle-form">
           <el-form-item label="申请编号:">
-            <el-input v-model="item.code" disabled />
+            <el-input v-model="item.projectName" disabled />
           </el-form-item>
           <el-form-item label="监管单位:">
-            <el-input v-model="item.org" disabled />
+            <el-input v-model="item.submitter" disabled />
           </el-form-item>
           <el-form-item label="联系电话:">
             <el-input v-model="item.phone" disabled />
@@ -51,132 +51,102 @@
             <el-input v-model="item.time" disabled />
           </el-form-item>
           <el-form-item label="违规描述:">
-            <el-input v-model="item.desc" disabled />
+            <el-input v-model="item.description" disabled />
           </el-form-item>
           <el-form-item label="违规照片:">
-            <upload-list :files="attachments" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
+            <upload-list :files="item.illegalFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
 
           </el-form-item>
           <el-form-item label="违规回复:">
-            <el-input v-model="item.feedback" disabled />
+            <el-input v-model="item.response" disabled v-if="item.response" />
           </el-form-item>
           <el-form-item label="整改照片:">
-            <upload-list :files="attachments" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
+            <upload-list :files="item.rectificationFile.map(f => ({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
 
           </el-form-item>
-          <el-form-item label="处理回复:" prop="descResult">
-            <el-input v-model="item.descResult" type="textarea" autosize disabled />
+          <el-form-item label="处理回复:">
+            <el-input v-model="item.toResponse" type="textarea" autosize v-if="item.toResponse" />
+          </el-form-item>
+          <el-form-item label="处理结果:">
+            <el-select v-model="item.result" disabled v-if="item.toResponse">
+              <el-option v-for="result in auditOptions" :key="result.val" :value="result.key" :label="result.val" />
+            </el-select>
           </el-form-item>
         </el-form>
       </el-collapse-item>
     </el-collapse>
-    <el-dialog :visible.sync="picShow" class="dialog-image">
-      <img src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg" alt="">
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+      <img :src="detailImgUrl" alt="授权委托书">
+    </el-dialog>
+    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
+      <div ref="printContent">
+        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
+      </div>
+      <span slot="footer">
+        <el-button @click="printPDF" type="success">打印</el-button>
+        <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
+      </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import mixin from '@/components/UploadList/mixin'
+import Supervision from '@/api/supervision'
+
 export default {
   name: 'FaultView',
-  components: {
-  },
+  mixins: [mixin],
+
   data() {
     return {
-      picShow: false,
       basic: {
         name: '李先生',
         address: 'dsadasdsad',
         phone: '15988800323'
       },
-      rule: {
-
-      },
-      attachments: [
-        { name: '附件', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg', uid: '附件' }
-      ],
-      resultOptions: [
-        { key: 0, val: '通过' },
-        { key: -1, val: '不通过' }
-      ],
-      construction: [
-        {
-          org: '中一建',
-          code: '马家浜1号楼',
-          phone: '110',
-          time: '2020-01-01 10:00',
-          desc: '违规操作',
-          descPic: [{ name: '违规图片1', url: '' }],
-          feedback: '接受批评',
-          feedbackPic: [{ name: '回复照片1', url: '' }],
-          descResult: '',
-          result: 0,
-          status: 0
-        }
-      ],
-      urls: [
-        'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-        'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg'
-      ]
+      list: [],
+      pageLoading: false,
+      projectId: null,
+      status: null,
     }
   },
   computed: {
-    ...mapState('common', ['handleStatus', 'handleTag'])
+    ...mapState('common', ['handleFault', 'handleTag', 'auditOptions'])
+  },
+  created() {
+    const { id, status } = this.$route.params
+    //11 施工中
+    if (!isNaN(+id) && status == 11) {
+      this.projectId = id
+      this.status = status
+      this.listFaults()
+    }
   },
   methods: {
-    detailImg(file) {
-      this.picShow = true
-    },
-    submitFeedback() { },
-    removeDissent(index) {
-      if (index > 0) {
-        this.model.dissents.splice(index, 1)
-      }
-    },
-    addDissent() {
-      this.model.dissents.push(
-        {
-          name: '',
-          time: '',
-          phone: '',
-          address: '',
-          detail: ''
+    listFaults() {
+      this.pageLoading = true
+      Supervision.getFault(this.projectId).then(res => {
+        this.list = res
+      }).catch(() => {
+        this.$message.error('信息获取失败')
+      })
+        .finally(() => {
+          this.pageLoading = false
         })
     },
-    handleUploadRemove(file, fileList) {
-    },
-    // handleUploadChange(file, fileList) {
-    //   console.log(file)
-    //   console.log(fileList)
-    //   debugger
-    // },
-    nextProcess(arrow) {
-      this.$emit('nextProcess', arrow)
-    },
-    // 上传文件发生改变时
-    handleUploadChange(file, fileList, index) {
-      if (fileList.length > 0) {
-        this.model[index] = fileList.map(f => f.raw)
-      }
-    },
-    // 图片上传之前判断
-    uploadBefore(file) {
-      const isImage = file.type.indexOf('image') !== -1
-      const isBig = file.size <= 1024 * 1024 * 10
-      if (!file) {
-        this.$message.error('上传为空！')
-        return false
-      }
-      if (!isImage) {
-        this.$message.error('只能上传图片！')
-        return false
-      }
-      if (!isBig) {
-        this.$message.error('图片大小不能超过10MB！')
-        return false
-      }
-      return true
+  },
+  // 获得工程Id
+  beforeRouteEnter(to, from, next) {
+    const { id, status } = to.params
+    // 11 施工中
+    if (isNaN(+id) || status != 11) {
+      // 没有id则返回跳转
+      next('/redirect' + from.fullPath)
+    } else {
+      next()
     }
   }
 }
