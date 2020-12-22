@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-22 10:16:45
+ * @LastEditTime: 2020-12-22 10:49:14
  * @LastEditors: zfd
  * @Description: 审批端居民路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -47,7 +47,7 @@ const residentRouter = {
       name: 'ResidentDevice',
       meta: {
         title: '设备列表',
-        icon: 'list',
+        icon: 'device',
         roles: ['ROLE_ADMIN', 'ROLE_RESIDENT']
       }
     },
@@ -57,7 +57,7 @@ const residentRouter = {
       name: 'ResidentDesigner',
       meta: {
         title: '设计单位',
-        icon: 'list',
+        icon: 'design',
         roles: ['ROLE_ADMIN', 'ROLE_RESIDENT']
       }
     },
@@ -67,7 +67,7 @@ const residentRouter = {
       name: 'ResidentConstruction',
       meta: {
         title: '施工单位',
-        icon: 'list',
+        icon: 'construction',
         roles: ['ROLE_ADMIN', 'ROLE_RESIDENT']
       }
     },
@@ -77,7 +77,7 @@ const residentRouter = {
       name: 'ResidentSupervisor',
       meta: {
         title: '监理单位',
-        icon: 'list',
+        icon: 'supervisor',
         roles: ['ROLE_ADMIN', 'ROLE_RESIDENT']
       }
     },

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-17 13:48:31
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-21 14:31:12
+ * @LastEditTime: 2020-12-22 11:02:37
  * @Description: 监理单位路由表
  */
 import Layout from '@/layout'
@@ -25,7 +25,7 @@ const supervisorRouter = {
       name: 'SupervisorList',
       meta: {
         title: '申请列表',
-        icon: 'supervisor',
+        icon: 'list',
         roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
       }
     },
@@ -57,6 +57,28 @@ const supervisorRouter = {
       hidden: true,
       meta: {
         title: '违规记录',
+        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
+      }
+    },
+    {
+      path: 'intro_edit',
+      component: () => import('@/views/common/introduction/edit.vue'), // Parent router-view
+      name: 'SuperIntroEdit',
+      // hidden: true,
+      meta: {
+        title: '公司介绍-编辑',
+        icon: 'edit',
+        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
+      }
+    },
+    {
+      path: 'introduction',
+      component: () => import('@/views/common/introduction/view.vue'), // Parent router-view
+      name: 'SuperIntro',
+      // hidden: true,
+      meta: {
+        title: '公司介绍',
+        icon: 'eye',
         roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
       }
     }

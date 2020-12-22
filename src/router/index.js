@@ -77,11 +77,6 @@ export const constantRoutes = [
     component: () => import('@/views/rest-password/index.vue'),
     hidden: true
   },
-  // {
-  //   path: '/auth-redirect',
-  //   component: () => import('@/views/login/auth-redirect.vue'),
-  //   hidden: true
-  // },
   {
     path: '/404',
     component: () => import('@/views/error-page/404.vue'),

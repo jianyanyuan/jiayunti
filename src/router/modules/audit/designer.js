@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-22 10:12:11
+ * @LastEditTime: 2020-12-22 10:50:42
  * @LastEditors: zfd
  * @Description: 审批端设计路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -27,7 +27,7 @@ const designerRouter = {
       name: 'DesignerList',
       meta: {
         title: '申请列表',
-        icon: 'design',
+        icon: 'list',
         roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
       }
     },
@@ -63,18 +63,18 @@ const designerRouter = {
     },
     {
       path: 'intro_edit',
-      component: () => import('@/views/audit/designer/intro-edit/index.vue'), // Parent router-view
+      component: () => import('@/views/common/introduction/edit.vue'), // Parent router-view
       name: 'DesignerIntroEdit',
       // hidden: true,
       meta: {
         title: '公司介绍-编辑',
-        icon: 'eye',
+        icon: 'edit',
         roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
       }
     },
     {
       path: 'introduction',
-      component: () => import('@/views/audit/designer/introduction/index.vue'), // Parent router-view
+      component: () => import('@/views/common/introduction/view.vue'), // Parent router-view
       name: 'DesignerIntro',
       // hidden: true,
       meta: {

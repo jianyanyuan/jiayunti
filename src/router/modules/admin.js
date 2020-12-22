@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-11-03 09:50:18
+ * @LastEditTime: 2020-12-22 10:41:29
  * @LastEditors: zfd
  * @Description: 审批端设计路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -13,7 +13,8 @@ import Layout from '@/layout'
 const adminRouter = {
   path: '/admin',
   component: Layout,
-  redirect: '/resident/apply',
+  redirect: '/resident/list',
+  hidden:true,
   meta: {
     roles: ['ROLE_ADMIN']
   }

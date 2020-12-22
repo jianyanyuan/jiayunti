@@ -15,7 +15,7 @@ const constructionRouter = {
   name: 'Construction',
   meta: {
     title: '施工单位',
-    icon: 'community',
+    icon: 'construction',
     roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
   },
   children: [
@@ -25,7 +25,7 @@ const constructionRouter = {
       name: 'ConstructionList',
       meta: {
         title: '申请列表',
-        icon: 'community',
+        icon: 'list',
         roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
       }
     },
