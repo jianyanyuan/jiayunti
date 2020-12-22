@@ -130,9 +130,7 @@ export default {
 }
 </script>
 <style scoped>
-.demo-table-expand {
-  font-size: 0;
-}
+
 .design-table {
   width: 100%;
   margin-bottom: 30px;

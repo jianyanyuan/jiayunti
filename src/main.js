@@ -25,18 +25,7 @@ import * as filters from '@/filters' // global filters
 import UploadList from '@/components/UploadList'
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui modal-drag
 
-/**
- * If you don't want to use mock-server
- * you want to use MockJs for mock api
- * you can execute: mockXHR()
- *
- * Currently MockJs will be used in the production environment,
- * please remove it before going online ! ! !
- */
-if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
-  mockXHR()
-}
+
 
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
@@ -48,9 +37,9 @@ Vue.use(elDragDialog) // 注册插件
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
-// Vue.directive('elDragDialog', elDragDialog)
+
 Vue.component('UploadList', UploadList)
-// Vue.config.productionTip = false
+
 const isDebug_mode = process.env.NODE_ENV !== 'production'
 Vue.config.debug = isDebug_mode
 Vue.config.devtools = isDebug_mode

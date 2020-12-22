@@ -51,16 +51,16 @@ const designerRouter = {
         roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
       }
     },
-    {
-      path: 'view',
-      component: () => import('@/views/audit/designer/view/index.vue'), // Parent router-view
-      name: 'DesignerView',
-      hidden: true,
-      meta: {
-        title: '查看',
-        roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
-      }
-    },
+    // {
+    //   path: 'view',
+    //   component: () => import('@/views/audit/designer/view/index.vue'), // Parent router-view
+    //   name: 'DesignerView',
+    //   hidden: true,
+    //   meta: {
+    //     title: '查看',
+    //     roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
+    //   }
+    // },
     {
       path: 'intro_edit',
       component: () => import('@/views/common/introduction/edit.vue'), // Parent router-view

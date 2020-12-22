@@ -18,17 +18,7 @@ export default {
 }
 </script>
 <style lang="scss">
-// .el-upload-dragger {
-//   padding: 40px 5px;
-//   border: 2px solid #e5e5e5;
-//   color: #777;
-//   -webkit-transition: background-color 0.2s linear;
-//   transition: background-color 0.2s linear;
-// }
-// .el-upload-dragger:hover{
-//   background: #f6f6f6;
-//   border:2px solid #efefef;
-// }
+
 // 单页面表格居中显示
 .center-form {
   width: 820px;

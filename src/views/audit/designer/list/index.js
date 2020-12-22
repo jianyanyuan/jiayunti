@@ -9,7 +9,7 @@ import { mapState } from 'vuex'
 import Flow from '@/components/street/Flow'
 import File from '@/api/file'
 import {listApi,advanceApi} from '@/api/projects'
-import { notEmptyArray } from '@/utils'
+import { notEmptyArray,checkUpload } from '@/utils'
 export default {
   name: 'DesignerList',
   components: {
@@ -94,7 +94,7 @@ export default {
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
-      const valid = this.checkUpload(file.raw)
+      const valid = checkUpload(file.raw)
       if (valid && file.status === 'ready') {
         const formData = new FormData()
         formData.append('file', file.raw)
@@ -107,24 +107,6 @@ export default {
       } else {
         fileList.pop()
       }
-    },
-    // 图片上传之前判断
-    checkUpload(file) {
-      if (!file.size) {
-        this.$message.error('上传为空！')
-        return false
-      }
-      const typeAllowed = /\bpdf|\bimage/i.test(file.type)
-      const isBig = file.size <= 1024 * 1024 * 10 // 单个文件最大10M
-      if (!typeAllowed) {
-        this.$message.error('只能上传图片或pdf！')
-        return false
-      }
-      if (!isBig) {
-        this.$message.error('图片大小不能超过10MB！')
-        return false
-      }
-      return true
     },
     // 删除文件
     handleUploadRemove(file, fileList) {
