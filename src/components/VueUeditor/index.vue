@@ -135,35 +135,6 @@ export default {
     }
   },
   methods: {
-    // 添加自定义按钮（自定义按钮，自定义弹窗等操作从 2.2.0 版本开始不再考虑直接集成，这会使得组件和 UEditor 过度耦合，但为了兼容一些老版用户的写法，这个方法依然保留）
-    registerButton({ name, icon, tip, handler, index, UE = window.UE }) {
-      UE.registerUI(name, (editor, name) => {
-        editor.registerCommand(name, {
-          execCommand: () => {
-            handler(editor, name)
-          }
-        })
-        const btn = new UE.ui.Button({
-          name,
-          title: tip,
-          cssRules: `background-image: url(${icon}) !important;background-size: cover;`,
-          onclick() {
-            editor.execCommand(name)
-          }
-        })
-        editor.addListener('selectionchange', () => {
-          const state = editor.queryCommandState(name)
-          if (state === -1) {
-            btn.setDisabled(true)
-            btn.setChecked(false)
-          } else {
-            btn.setDisabled(false)
-            btn.setChecked(state)
-          }
-        })
-        return btn
-      }, index, this.id)
-    },
     // 实例化编辑器
     _initEditor() {
       this.$refs.script.id = this.id = this.editorId || 'editor_' + Math.random().toString(16).slice(-6) // 这么做是为了支持 Vue SSR，因为如果把 id 属性放在 data 里会导致服务端和客户端分别计算该属性的值，而造成 id 不匹配无法初始化的 BUG

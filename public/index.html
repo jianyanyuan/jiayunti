@@ -1,3 +1,10 @@
+<!--
+ * @Author: zfd
+ * @Date: 2020-10-13 09:15:58
+ * @LastEditors: zfd
+ * @LastEditTime: 2020-12-22 15:44:57
+ * @Description: 
+-->
 <!DOCTYPE html>
 <html>
   <head>
@@ -11,7 +18,11 @@
     <noscript>
       <strong>We're sorry but <%= webpackConfig.name %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
-    <div id="app"></div>
+    <div id="app">
+      <% if (htmlWebpackPlugin.options.cdnVersion) { %>
+        <script src="https://cdn.jsdelivr.net/npm/vue-ueditor-wrap@<%= htmlWebpackPlugin.options.cdnVersion %>/lib/vue-ueditor-wrap.min.js"></script>
+        <% } %>
+    </div>
     <!-- built files will be auto injected -->
   </body>
 </html>
