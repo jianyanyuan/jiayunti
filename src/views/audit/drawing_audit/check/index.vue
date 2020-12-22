@@ -30,13 +30,13 @@
     </div>
 
     <el-card class="basic-container" style="margin-bottom:30px">
-       <div slot="header">
-          <span>施工图设计稿</span>
-        </div>
+      <div slot="header">
+        <span>施工图设计稿</span>
+      </div>
       <upload-list :files="files" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
     </el-card>
 
-    <Audit  :id="projectId" :status="status" />
+    <Audit :id="projectId" :status="status" />
     <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
       <img :src="detailImgUrl" alt="意见咨询表">
     </el-dialog>
@@ -61,7 +61,7 @@ import { notEmptyArray } from '@/utils'
 export default {
   name: 'DrawingCheck',
   mixins: [mixn],
-  components:{
+  components: {
     Audit
   },
   data() {
@@ -69,7 +69,7 @@ export default {
       projectId: null,
       status: null,
       files: [],
-      pageLoading:false,
+      pageLoading: false,
       design: {
         org: '建研院',
         time: '2020-10-12 10:56',
@@ -91,23 +91,24 @@ export default {
     detailApply() {
       this.pageLoading = true
       File.get({ projectId: this.projectId, typeName: 'construction-design' })
-      .then(res => {
-        if (notEmptyArray(res.content)) {
-          for (const i of res.content) {
-            this.files.push({
-              uid: i.id,
-              name: i.filename,
-              url: i.path
-            })
+        .then(res => {
+          if (notEmptyArray(res.content)) {
+            for (const i of res.content) {
+              this.files.push({
+                uid: i.id,
+                name: i.filename,
+                url: i.path
+              })
+            }
           }
-        }
-        this.pageLoading = false
-      })
-      .catch(err => {
-        console.log(err)
-        this.$message.error('信息获取失败')
-        this.pageLoading = false
-      })
+        })
+        .catch(err => {
+          console.log(err)
+          this.$message.error('信息获取失败')
+        })
+        .finally(() => {
+          this.pageLoading = false
+        })
     }
   },
   // 获得工程Id
@@ -125,9 +126,7 @@ export default {
 </script>
 
 <style scoped>
-.demo-table-expand {
-  font-size: 0;
-}
+
 
 .demo-table-expand /deep/ label {
   width: 100px;
@@ -143,30 +142,8 @@ export default {
   background: #409eff;
   color: #fff;
 }
-.head {
-  height: 30px;
-}
-.text {
-  font-size: 14px;
-}
 
-.item {
-  margin-bottom: 18px;
-}
 
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both;
-}
-
-.box-card {
-  width: 100%;
-  margin-bottom: 30px;
-}
 .audit-operation {
   width: 200px;
   margin: 0 auto;

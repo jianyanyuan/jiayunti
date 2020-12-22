@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:27:43
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-10 16:44:37
+ * @LastEditTime: 2020-12-22 10:37:11
  * @Description: 已审核列表
 -->
 
@@ -91,7 +91,7 @@ export default {
     ...mapState('common', ['auditOptions'])
 
   },
-  created() { this.listApplies()},
+  created() { this.listApplies() },
   methods: {
     // 获取已审核列表
     async listApplies() {
@@ -115,8 +115,11 @@ export default {
       this.pagination.pageIndex = val
       this.listApplies()
     },
-    showAudit(row){
-      this.$router.push({name:'AuditedDetail',params:{id:row.id,status:row.statusId}})
+    showAudit(row) {
+      // audited-detail
+      const prefix = this.$route.fullPath.splice('/')[1]
+      const path = `/${prefix}/audited-detail`
+      this.$router.push({path, query: { id: row.id, status: row.statusId } })
     },
     goSearch() { },
     clearQuery() { },
@@ -125,5 +128,4 @@ export default {
 
 </script>
 <style scoped>
-
 </style>

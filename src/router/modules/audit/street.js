@@ -45,7 +45,7 @@ const streetRouter = {
     {
       path: 'fault-list',
       component: () => import('@/views/common/fault/list.vue'),
-      name: 'SFaultList',
+      name: 'StreetFaultList',
       hidden: true,
       meta: {
         title: '违规列表',
@@ -54,9 +54,9 @@ const streetRouter = {
       }
     },
     {
-      path: 'fault-review/:id/:status',
+      path: 'fault-review',
       component: () => import('@/views/common/fault/review.vue'),
-      name: 'SFaultReview',
+      name: 'StreetFaultReview',
       hidden: true,
       meta: {
         title: '违规回复',
@@ -64,9 +64,9 @@ const streetRouter = {
       }
     },
     {
-      path: 'fault-record/:id/:status',
+      path: 'fault-record',
       component: () => import('@/views/common/fault/record.vue'),
-      name: 'SFaultRecord',
+      name: 'StreetFaultRecord',
       hidden: true,
       meta: {
         title: '违规记录',
@@ -76,7 +76,7 @@ const streetRouter = {
     {
       path: 'audited-list',
       component: () => import('@/views/common/audited/list.vue'),
-      name: 'AuditedList',
+      name: 'StreetAuditedList',
       meta: {
         title: '已审核列表',
         icon: 'list',
@@ -84,7 +84,7 @@ const streetRouter = {
       }
     },
     {
-      path: 'audited-detail/:id',
+      path: 'audited-detail',
       component: () => import('@/views/common/audited/detail.vue'),
       name: 'AuditedDetail',
       hidden: true,

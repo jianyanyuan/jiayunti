@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-15 16:11:52
+ * @LastEditTime: 2020-12-22 09:07:01
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -61,7 +61,7 @@
 <script>
 import File from '@/api/file'
 import { notEmptyArray } from '@/utils'
-import Project from '@/api/projects'
+import {advanceApi} from '@/api/projects'
 export default {
   name: 'DesignerEdit',
   data() {
@@ -236,7 +236,7 @@ export default {
         })
       }
       Promise.all([uploadAsync, deleteAsync]).then(async () => {
-        await Project.advance(this.projectId, this.status)
+        await advanceApi(this.projectId, this.status)
           .catch(() => (this.$message.error('流程错误')))
         this.pageLoading = false
         this.$router.push('/designer/list')

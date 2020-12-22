@@ -32,7 +32,7 @@ const supervisorRouter = {
     {
       path: 'fault-list',
       component: () => import('@/views/common/fault/list.vue'),
-      name: 'FaultList',
+      name: 'SuperFaultList',
       hidden: true,
       meta: {
         title: '违规列表',
@@ -41,9 +41,9 @@ const supervisorRouter = {
       }
     },
     {
-      path: 'fault-review/:id/:status',
+      path: 'fault-review',
       component: () => import('@/views/common/fault/review.vue'),
-      name: 'FaultReview',
+      name: 'SuperFaultReview',
       hidden: true,
       meta: {
         title: '违规回复',
@@ -51,9 +51,9 @@ const supervisorRouter = {
       }
     },
     {
-      path: 'fault-record/:id/:status',
+      path: 'fault-record',
       component: () => import('@/views/common/fault/record.vue'),
-      name: 'FaultRecord',
+      name: 'SuperFaultRecord',
       hidden: true,
       meta: {
         title: '违规记录',

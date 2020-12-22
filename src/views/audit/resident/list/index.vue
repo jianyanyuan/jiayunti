@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-21 17:03:41
+ * @LastEditTime: 2020-12-22 10:17:52
  * @Description:申请列表
 -->
 
@@ -39,29 +39,23 @@
           <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
               <el-button v-if="scope.row.statusId === 0" size="mini" type="warning" plain @click="$router.push({name:'ResidentApply',params:{id:scope.row.id,status:scope.row.statusId}})">提交材料</el-button>
-              <el-tag v-if="scope.row.statusId === 1 && !scope.row.auditTime" size="medium" type="warning" effect="light">社区受理中</el-tag>
+              <!-- <el-tag v-if="scope.row.statusId === 1 && !scope.row.auditTime" size="medium" type="warning" effect="light">社区受理中</el-tag> -->
 
               <el-button v-if="scope.row.statusId === 3" size="mini" type="primary" plain @click="$router.push({name:'ResidentApplyNotice',params:{id:scope.row.id,status:scope.row.statusId}})">提交材料</el-button>
 
               <el-button v-if="scope.row.statusId === 3" size="mini" type="warning" plain @click="$router.push({name:'ResidentAssentsDetail',params:{id:scope.row.id,status:scope.row.statusId}})">异议反馈</el-button>
 
-              <el-tag v-if="scope.row.statusId === 4" size="medium" type="warning" effect="light">管道踏勘中</el-tag>
+              <!-- <el-tag v-if="scope.row.statusId === 4" size="medium" type="warning" effect="light">管道踏勘中</el-tag> -->
 
-              <el-button v-if="scope.row.statusId === 2 || scope.row.statusId === 5" size="mini" type="success" plain @click="$router.push({name:'ResidentDesignDetail',params:{id:scope.row.id,status:scope.row.statusId}})">查看设计</el-button>
+              <el-button v-if="scope.row.statusId === 7" size="mini" type="success" plain @click="$router.push({name:'ResidentDesignDetail',params:{id:scope.row.id,status:scope.row.statusId}})">查看设计</el-button>
               <el-button v-if="scope.row.statusId === 8" size="mini" type="warning" plain @click="$router.push({name:'ResidentOffer',params:{id:scope.row.id,status:scope.row.statusId}})">选择报价</el-button>
-              <el-tag v-if="scope.row.statusId === 10" size="medium" type="success" effect="light">申请已通过</el-tag>
+              <!-- <el-tag v-if="scope.row.statusId === 10" size="medium" type="success" effect="light">申请已通过</el-tag> -->
               <el-tag v-if="scope.row.statusId === 13" size="medium" type="danger" effect="light">已驳回</el-tag>
+              <el-button v-if="[0,13].includes(scope.row.statusId)" size="mini" plain type="danger" @click="$router.push({name:'ResidentAuditDetail',params:{id:scope.row.id,status:scope.row.statusId}})">审核意见</el-button>
+
               <el-tag v-if="scope.row.statusId === 14" size="medium" type="info" effect="light">已撤销</el-tag>
-              <el-button v-if="scope.row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'RFaultDetail',params:{id:scope.row.id,status:scope.row.statusId}})">违规查看</el-button>
-              <!-- <el-button v-if="scope.row.statusId === 12" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button> -->
-              <el-button v-if="scope.row.statusId === 12" size="mini" type="warning" @click="$router.push({name:'ResidentBonus',params:{id:scope.row.id,status:scope.row.statusId}})">补贴查看</el-button>
-              <!-- <el-tag v-if="[1,6,8,9].includes(scope.row.statusId) && scope.row.auditTime" size="medium" type="success">审核已通过</el-tag> -->
-
-              <!-- <el-button v-if="[0,5].includes(scope.row.statusId) && scope.row.auditTime" size="mini" plain type="warning" @click="$router.push({name:'ResidentAuditDetail',params:{}})">审核结果</el-button> -->
-
-              <!-- <el-button v-if="scope.row.statusId === 1 && scope.row.dissent" size="mini" type="success" @click="dissentView"> 查看反馈</el-button> -->
-              <!-- <el-button v-if="scope.row.statusId === 10" size="mini" type="danger" @click="viewAudit(scope.row)">审核意见</el-button> -->
-              <!-- <el-button v-if="scope.row.statusId !== 0" size="mini" type="primary" @click="flowView">查看流程</el-button> -->
+              <el-button v-if="scope.row.statusId === 11" size="mini" type="warning" plain @click="$router.push({path:'/resident/fault-detail',query:{id:scope.row.id,status:scope.row.statusId}})">违规查看</el-button>
+              <el-button v-if="scope.row.statusId === 12" size="mini" plain type="warning" @click="$router.push({path:'/resident/bonus',query:{id:scope.row.id,status:scope.row.statusId}})">补贴查看</el-button>
             </el-row>
           </template>
         </el-table-column>
@@ -103,7 +97,7 @@
           <div> <input v-model="model.form.location[2]" type="text" name="unit" autocomplete="off"> 单元</div>
         </el-form-item>
         <el-form-item label="设计单位" prop="designId">
-          <el-select v-model="model.form.designId" filterable >
+          <el-select v-model="model.form.designId" filterable>
             <el-option v-for="item in designOptions" :key="item.value" :value="item.value" :label="item.label" />
           </el-select>
         </el-form-item>

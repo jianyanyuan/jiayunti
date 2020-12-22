@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-16 08:37:59
+ * @LastEditTime: 2020-12-22 10:08:57
  * @Description:申请列表
 -->
 
@@ -63,7 +63,7 @@
           <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
               <el-button size="mini" type="warning" v-if="scope.row.statusId === 1" plain @click="$router.push({name:'CommunityCheck',params:{id: scope.row.id, status: scope.row.statusId}})">审核</el-button>
-              <el-button size="mini" type="warning" v-if="scope.row.statusId === 4" plain @click="$router.push({name:'CommunityCheckS',params:{id: scope.row.id, status: scope.row.statusId}})">审核</el-button>
+              <el-button size="mini" type="warning" v-if="scope.row.statusId === 4" plain @click="$router.push({name:'CommunityCheckNotice',params:{id: scope.row.id, status: scope.row.statusId}})">审核</el-button>
               <el-button v-if="scope.row.statusId === 3" size="mini" type="warning" plain @click="$router.push({name:'CommunityRecord',params:{id:scope.row.id, status: scope.row.statusId}})">异议记录</el-button>
             </el-row>
           </template>

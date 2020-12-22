@@ -2,7 +2,7 @@ import { mapState, mapGetters } from 'vuex'
 import { deepClone, notEmptyArray } from '@/utils'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import Flow from '@/components/street/Flow'
-import Project from '@/api/projects'
+import {cancelApi,listApi,addApi} from '@/api/projects'
 const defaultForm = {
   applicantName: '',
   location: [],
@@ -115,7 +115,7 @@ export default {
     // 撤销申请
     cancelApply(row) {
       const { id } = row
-      Project.cancel(id).then(() => {
+      cancelApi(id).then(() => {
         this.listApplies()
       }).catch(err => {
         console.log(err)
@@ -141,7 +141,7 @@ export default {
           }
           this.model.form.address = address.community.concat(address.county)
           this.formLoading = true
-          Project.add(this.model.form).then(res => {
+          addApi(this.model.form).then(res => {
             this.model.visible = false
             this.listApplies()
           }).catch(err => {
@@ -159,7 +159,7 @@ export default {
     // 获取申请列表
     async listApplies() {
       this.listLoading = true
-      await Project.list().then(res => {
+      await listApi().then(res => {
         if (notEmptyArray(res.content)) {
           this.list = res.content
         }

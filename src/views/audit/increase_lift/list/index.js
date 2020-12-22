@@ -2,12 +2,12 @@
  * @Author: zfd
  * @Date: 2020-12-15 09:12:06
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-21 15:47:22
+ * @LastEditTime: 2020-12-22 08:20:49
  * @Description: 增梯办列表
  */
 import Flow from '@/components/street/Flow'
 import { mapState } from 'vuex'
-import Project from '@/api/projects'
+import {listApi} from '@/api/projects'
 import { notEmptyArray, checkUpload } from '@/utils'
 export default {
   name: 'IncreaseLift',
@@ -50,7 +50,7 @@ export default {
     // 获取申请列表
     async listApplies() {
       this.listLoading = true
-      await Project.list({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
         if (notEmptyArray(res.content)) {
           res.content.forEach(v => {
             v.apply = {}

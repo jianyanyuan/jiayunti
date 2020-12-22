@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:14
- * @LastEditTime: 2020-12-14 17:08:25
+ * @LastEditTime: 2020-12-22 10:11:46
  * @LastEditors: zfd
  * @Description: 审批端社区路由表
  * @FilePath: \jiayunti\src\router\modules\audit\community.js
@@ -46,18 +46,6 @@ const communityRouter = {
       hidden: true,
       meta: {
         title: '审核详情',
-        icon: 'community',
-        roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
-      }
-    },
-    {
-      path: 'view',
-      component: () => import('@/views/audit/community/view/index.vue'),
-      name: 'CommunityView',
-      hidden: true,
-      meta: {
-        title: '异议查看',
-        icon: 'collapse',
         roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
       }
     },
@@ -68,7 +56,6 @@ const communityRouter = {
       hidden: true,
       meta: {
         title: '异议记录',
-        icon: 'card',
         roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
       }
     },
@@ -79,18 +66,16 @@ const communityRouter = {
       hidden: true,
       meta: {
         title: '审核',
-        icon: 'check',
         roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
       }
     },
     {
       path: 'check-notice/:id/:status',
-      name: 'CommunityCheckS',
+      name: 'CommunityCheckNotice',
       component: () => import('@/views/audit/community/check/notice.vue'),
       hidden: true,
       meta: {
         title: '公示审核',
-        icon: 'check',
         roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
       }
     }

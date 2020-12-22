@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-10 13:58:25
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-04 08:36:28
+ * @LastEditTime: 2020-12-22 09:09:56
  * @Description:
  */
 import request from '@/utils/request'
@@ -19,7 +19,7 @@ export const listApi = (params) => {
 }
 
 // 新增申请
-export const add = (data) => {
+export const addApi = (data) => {
   return request({
     url: api_prefix_dev,
     method: 'post',
@@ -28,7 +28,7 @@ export const add = (data) => {
 }
 
 // 撤销申请
-export const cancel = (id) => {
+export const cancelApi = (id) => {
   return request({
     url: `/flowchartlogic/${id}`,
     method: 'get'
@@ -44,7 +44,7 @@ export const detailApi = id => {
 }
 
 // 修改申请基本资料
-export const update = (id,newprojectRequest) => {
+export const updateApi = (id,newprojectRequest) => {
   return request({
     url:api_prefix_dev + '/' + id,
     // headers: { 'Content-Type': 'application/json' } ,
@@ -86,7 +86,7 @@ export const getDesignerApi = (projectId ) => {
 }
 
 // 新增补贴
-export const addBonus = (projectId,data ) => {
+export const addBonusApi = (projectId,data ) => {
   return request({
     url:`/Bonus/${projectId}`,
     method: 'post',
@@ -95,7 +95,7 @@ export const addBonus = (projectId,data ) => {
 }
 
 // 补贴查看
-export const getBonus = (projectId ) => {
+export const getBonusApi = (projectId ) => {
   return request({
     url:`/Bonus/${projectId}`,
     method: 'get'

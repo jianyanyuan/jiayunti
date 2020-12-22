@@ -2,56 +2,139 @@
  * @Author: zfd
  * @Date: 2020-10-30 14:33:26
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-30 15:13:34
+ * @LastEditTime: 2020-12-22 09:56:40
  * @Description: 居民查看设计图
 -->
 <template>
-  <div class="app-container">
+  <div class="app-container" v-loading="pageLoading">
     <el-page-header content="设计图" @back="$router.go(-1)" />
 
-    <el-form label-width="120px" class="center-form">
-      <el-form-item label="单位：">
-        {{ design.org }}
-      </el-form-item>
-      <el-form-item label="电话：">
-        {{ design.phone }}
-      </el-form-item>
-      <el-form-item label="地址：">
-        {{ design.address }}
-      </el-form-item>
-      <el-form-item label="附件：">
-        <upload-list :files="design.attachments" list-type="picture-card" :disabled="true" :handle-preview="detailImg" />
-      </el-form-item>
-    </el-form>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false">
-      <img :src="detailImgUrl" alt="审核图片">
+    <div class="basic-container">
+      <el-card style="margin-bottom:30px">
+        <div slot="header">
+          <span>设计信息</span>
+        </div>
+        <el-form label-position="left" inline class="demo-table-expand">
+          <el-form-item label="设计单位">
+            <span>{{ design.org }}</span>
+          </el-form-item>
+          <el-form-item label="时间">
+            <span>{{ design.time }}</span>
+          </el-form-item>
+          <el-form-item label="详细地址">
+            <span>{{ design.address }}</span>
+          </el-form-item>
+          <el-form-item label="电话">
+            <span>{{ design.phone }}</span>
+          </el-form-item>
+        </el-form>
+      </el-card>
+    </div>
+
+    <el-card class="basic-container" style="margin-bottom:30px">
+      <div slot="header">
+        <span>方案设计稿</span>
+      </div>
+      <upload-list :files="files" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+    </el-card>
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+      <img :src="detailImgUrl" alt="意见咨询表">
+    </el-dialog>
+
+    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
+      <div ref="printContent">
+        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
+      </div>
+      <span slot="footer">
+        <el-button @click="printPDF('printContent')" type="success">打印</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import mixn from '@/components/UploadList/mixin'
 
 export default {
   name: 'AuditDetail',
+  mixins: [mixn],
+
   data() {
     return {
-      imgVisible: false,
+      projectId: null,
+      status: null,
+      files: [],
+      pageLoading: false,
       design: {
         org: '建研院',
-        phone: '15988800323',
-        address: '滨河路',
-        attachments: [
-          { name: '附件', url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg', uid: '附件' }
-        ]
+        time: '2020-10-12 10:56',
+        address: '苏州高新区',
+        phone: '15988800323'
       }
 
     }
   },
-  methods: {
-    detailImg(file) {
-      this.detailImgUrl = file.url
-      this.imgVisible = true
+  created() {
+    const { id, status } = this.$route.params
+    //7 施工图审核
+    if (!isNaN(+id) && status == 7) {
+      this.projectId = id
+      this.status = status
+      this.detailApply()
     }
+  },
+  methods: {
+    detailApply() {
+      this.pageLoading = true
+      File.get({ projectId: this.projectId, typeName: 'construction-design' })
+        .then(res => {
+          if (notEmptyArray(res.content)) {
+            for (const i of res.content) {
+              this.files.push({
+                uid: i.id,
+                name: i.filename,
+                url: i.path
+              })
+            }
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          this.$message.error('信息获取失败')
+        })
+        .finally(() => {
+          this.pageLoading = false
+        })
+    }
+  },
+  // 获得工程Id
+  beforeRouteEnter(to, from, next) {
+    const { id, status } = to.params
+    //7 施工图审核
+    const illegal = isNaN(+id) || status != 7
+
+    if (illegal) {
+      next('/redirect' + from.fullPath)
+    }
+    next()
   }
+
 }
 </script>
+<style scoped>
+.basic-container /deep/ .el-card__header:nth-child(1) {
+  background: #409eff;
+  color: #fff;
+}
+.demo-table-expand /deep/ label {
+  width: 100px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-left: 20px;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+</style>

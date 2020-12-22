@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-21 16:45:24
+ * @LastEditTime: 2020-12-22 10:13:35
  * @LastEditors: zfd
  * @Description: 增梯办路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -10,7 +10,7 @@
 
 import Layout from '@/layout'
 
-const drawingAuditRouter = {
+const inlRouter = {
   path: '/increase-lift',
   component: Layout,
   redirect: '/increase-lift/list',
@@ -38,7 +38,6 @@ const drawingAuditRouter = {
       hidden: true,
       meta: {
         title: '上传报告',
-        icon: 'list',
         roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
       }
     },
@@ -49,24 +48,22 @@ const drawingAuditRouter = {
       hidden: true,
       meta: {
         title: '管道踏勘',
-        icon: 'list',
         roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
       }
 
     },
     {
-      path: 'fault-detail/:id/:status',
+      path: 'fault-detail',
       component: () => import('@/views/common/fault/detail.vue'),
-      name: 'FaultDetail',
+      name: 'INLFaultDetail',
       hidden: true,
       meta: {
         title: '违规查看',
-        icon: 'list',
         roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
       }
     },
     {
-      path: 'bonus/:id/:status',
+      path: 'bonus',
       component: () => import('@/views/common/bonus.vue'),
       name: 'InLBonus',
       hidden: true,
@@ -79,4 +76,4 @@ const drawingAuditRouter = {
   ]
 }
 
-export default drawingAuditRouter
+export default inlRouter

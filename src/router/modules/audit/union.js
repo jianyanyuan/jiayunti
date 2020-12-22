@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-17 13:22:48
+ * @LastEditTime: 2020-12-22 10:18:56
  * @LastEditors: zfd
  * @Description: 审批端联合审查路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -38,7 +38,6 @@ const unionRouter = {
       hidden: true,
       meta: {
         title: '审核',
-        icon: 'check',
         roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE','ROLE_HOUSE_CONSTRUCTION','ROLE_URBAN_MANAGEMENT','ROLE_MARKET_SUPERVISOR']
       }
     },
@@ -53,13 +52,12 @@ const unionRouter = {
       }
     },
     {
-      path: 'audited-detail/:id',
+      path: 'audited-detail',
       component: () => import('@/views/common/audited/detail.vue'),
-      name: 'AuditedDetail',
+      name: 'UAuditedDetail',
       hidden: true,
       meta: {
         title: '审核详情',
-        icon: 'community',
         roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE','ROLE_HOUSE_CONSTRUCTION','ROLE_URBAN_MANAGEMENT','ROLE_MARKET_SUPERVISOR']
       }
     },

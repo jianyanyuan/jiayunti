@@ -2,12 +2,12 @@
  * @Author: zfd
  * @Date: 2020-10-30 14:33:26
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-30 15:05:09
+ * @LastEditTime: 2020-12-22 09:29:14
  * @Description: 审核意见
 -->
 <template>
   <div class="app-container">
-    <el-page-header content="审核结果" @back="$router.go(-1)" />
+    <el-page-header content="审核意见" @back="$router.go(-1)" />
 
     <el-form label-width="120px" class="center-form">
       <el-form-item label="审核人：">
@@ -29,19 +29,29 @@
         {{ audit.result }}
       </el-form-item>
     </el-form>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false">
-      <img :src="detailImgUrl" alt="审核图片">
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+      <img :src="detailImgUrl" alt="授权委托书">
+    </el-dialog>
+    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
+      <div ref="printContent">
+        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
+      </div>
+      <span slot="footer">
+        <el-button @click="printPDF" type="success">打印</el-button>
+        <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
+      </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-
+import mixin from '@/components/UploadList/mixin'
 export default {
   name: 'AuditDetail',
+  mixins:[mixin],
   data() {
     return {
-      imgVisible: false,
       audit: {
         name: '大萨达',
         org: '社区111',

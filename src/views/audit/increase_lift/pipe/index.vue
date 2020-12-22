@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-15 09:57:35
+ * @LastEditTime: 2020-12-22 09:08:44
  * @LastEditors: zfd
  * @Description: 增梯办管道踏勘
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -126,7 +126,7 @@
 
 <script>
 import IncreaseLift from '@/api/increase_lift'
-import Project from '@/api/projects'
+import { advanceApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 
 export default {
@@ -198,7 +198,7 @@ export default {
       IncreaseLift.modifyPipe(this.updateList).then(async res => {
         const next = this.isFinished()
         if (next) {
-          await Project.advance(this.projectId, this.status)
+          await advanceApi(this.projectId, this.status)
             .then(() => (this.$router.push('/increase-lift/list')))
             .catch(() => (this.$message.error('流程错误')))
           this.pageLoading = false

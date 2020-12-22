@@ -7,8 +7,7 @@
  */
 import { mapState } from 'vuex'
 import Flow from '@/components/street/Flow'
-import File from '@/api/file'
-import Project from '@/api/projects'
+import  { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 export default {
   name: 'DesignerList',
@@ -44,7 +43,7 @@ export default {
     // 获取申请列表
     async listApplies() {
       this.listLoading = true
-      await Project.list({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
         if (notEmptyArray(res.content)) {
           res.content.forEach(v => {
             v.apply = {}

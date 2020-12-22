@@ -2,12 +2,12 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:08
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-14 15:45:42
+ * @LastEditTime: 2020-12-22 09:06:45
  * @Description: 社区端列表
  */
 import { mapState } from 'vuex'
 import Flow from '@/components/street/Flow'
-import Project from '@/api/projects'
+import {listApi} from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 
 const data = {
@@ -44,7 +44,7 @@ export default {
     // 获取申请列表
     async listApplies() {
       this.listLoading = true
-      await Project.list({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
         if (notEmptyArray(res.content)) {
           this.list = res.content
           this.pagination.total = res.totalElements

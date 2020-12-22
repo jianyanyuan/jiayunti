@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-11 16:46:54
+ * @LastEditTime: 2020-12-22 09:07:59
  * @Description: 设计院方案设计稿
 -->
 <template>
@@ -56,7 +56,7 @@
 
 <script>
 import mixin from '@/mixin/upload-show'
-import Project from '@/api/projects'
+import {advanceApi} from '@/api/projects'
 export default {
   name: 'DesignerScheme',
   props: {
@@ -73,7 +73,7 @@ export default {
   mixins: [mixin],
   methods: {
     handlePost() {
-      Project.advance(this.id, 2).then(()=>{
+      advanceApi(this.id, 2).then(()=>{
         this.$router.push('/designer/list')
       }).catch(() => {
         this.$message.error('流程错误')

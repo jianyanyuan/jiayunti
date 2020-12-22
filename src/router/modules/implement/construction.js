@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:14
- * @LastEditTime: 2020-12-21 11:23:06
+ * @LastEditTime: 2020-12-22 10:19:57
  * @LastEditors: zfd
  * @Description: 实施段施工路由表
  * @FilePath: \jiayunti\src\router\modules\implement\construction.js
@@ -36,7 +36,6 @@ const constructionRouter = {
       hidden: true,
       meta: {
         title: '报价',
-        icon: 'collapse',
         roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
       }
     },
@@ -47,7 +46,6 @@ const constructionRouter = {
       hidden: true,
       meta: {
         title: '违规',
-        icon: 'card',
         roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
       }
     },
@@ -58,7 +56,6 @@ const constructionRouter = {
       hidden: true,
       meta: {
         title: '竣工验收',
-        icon: 'card',
         roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
       }
     }

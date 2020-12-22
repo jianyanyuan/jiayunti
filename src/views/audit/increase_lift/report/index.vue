@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-17 15:46:49
+ * @LastEditTime: 2020-12-22 09:09:08
  * @Description: 增梯办联合审查报告
 -->
 <template>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import Project from '@/api/projects'
+import { advanceApi, checkApi } from '@/api/projects'
 import File from '@/api/file'
 import { mapState } from 'vuex'
 
@@ -139,9 +139,9 @@ export default {
             this.pageLoading = false
             return
           }
-          Project.check(this.form)
+          checkApi(this.form)
             .then(async () => {
-              await Project.advance(this.projectId, this.status).catch((err) => {
+              await advanceApi(this.projectId, this.status).catch((err) => {
                 this.$message.error(err.message || '流程错误')
               })
               this.$router.push('/increase-lift/list')

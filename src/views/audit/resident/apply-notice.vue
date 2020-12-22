@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-17 16:12:33
+ * @LastEditTime: 2020-12-22 09:09:26
  * @Description: 公示/公告上传
 -->
 <template>
@@ -74,7 +74,7 @@
 
 <script>
 import File from '@/api/file'
-import Project from '@/api/projects'
+import  { advanceApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 // import { deepClone } from '@/utils'
 import Pdf from 'vue-pdf'
@@ -314,7 +314,7 @@ export default {
         asyncList.push(deleteAsync)
       }
       Promise.all(asyncList).then(async () => {
-        await Project.advance(this.id, 3).catch(() => {
+        await advanceApi(this.id, 3).catch(() => {
           this.$message.error('流程错误')
         })
         this.$router.push('/resident/list')

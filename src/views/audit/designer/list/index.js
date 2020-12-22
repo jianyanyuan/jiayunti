@@ -2,13 +2,13 @@
  * @Author: zfd
  * @Date: 2020-12-10 11:06:02
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-15 11:10:25
+ * @LastEditTime: 2020-12-22 09:07:40
  * @Description: 
  */
 import { mapState } from 'vuex'
 import Flow from '@/components/street/Flow'
 import File from '@/api/file'
-import Project from '@/api/projects'
+import {listApi,advanceApi} from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 export default {
   name: 'DesignerList',
@@ -58,7 +58,7 @@ export default {
     // 获取申请列表
     async listApplies() {
       this.listLoading = true
-      await Project.list({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
         if (notEmptyArray(res.content)) {
           res.content.forEach(v => {
             v.apply = {}
@@ -160,7 +160,7 @@ export default {
             } else {
               this.$message.success('上传完成')
               // 施工图设计阶段 --> 施工图审核
-              Project.advance(this.uploadId, 6)
+              advanceApi(this.uploadId, 6)
                 .catch(() => (this.$message.error('流程错误')))
               this.uploadVisible = false
               this.uploadId = null

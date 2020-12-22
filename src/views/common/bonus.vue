@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-21 17:02:20
+ * @LastEditTime: 2020-12-22 10:07:42
  * @Description: 补贴派发
 -->
 <template>
@@ -45,23 +45,24 @@
 
 <script>
 import File from '@/api/file'
-import Project from '@/api/projects'
+import { addBonusApi, getBonusApi } from '@/api/projects'
 import { notEmptyArray, checkUpload } from '@/utils'
 import mixin from '@/components/UploadList/mixin'
-const formatterDecimal = (rule, value, callback) => {
-  const number = +value
-  if (isNaN(number)) {
-    callback('请输入补助金额,数字格式')
-  } else {
-    const reg = /(?=(\B\d{3})+$)/g
-    this.model.money = value.toString().replace(reg, ',')
-    callback()
-  }
-}
+
 export default {
   name: 'Bonus',
   mixins: [mixin],
   data() {
+    const formatterDecimal = (rule, value, callback) => {
+      const number = +value
+      if (isNaN(number)) {
+        callback('请输入补助金额,数字格式')
+      } else {
+        const reg = /(?=(\B\d{3})+$)/g
+        this.model.money = value.toString().replace(reg, ',')
+        callback()
+      }
+    }
     return {
       // 修改后重新保存
       pageLoading: false,
@@ -90,7 +91,7 @@ export default {
 
   },
   created() {
-    const { id, status } = this.$route.params
+    const { id, status } = this.$route.query
     //12 补贴派发
     if (!isNaN(+id) && status == 12) {
       this.projectId = id
@@ -101,16 +102,18 @@ export default {
   methods: {
     async detailApply() {
       this.pageLoading = true
-      await Project.getBonus(this.projectId)
+      await getBonusApi(this.projectId)
         .then((res) => {
-          if (res) {
+          // 没有返回{}
+          if (Object.keys(res).length > 0) {
             this.uploaded = true
             const reg = /(?=(\B\d{3})+$)/g
             this.model.money = res.money.toString().replace(reg, ',')
             this.model.attachments = res.fileTypes.map(v => ({ uid: v.id, name: v.filename, url: v.path }))
           }
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err)
           this.$message.error('信息获取失败')
         })
         .finally(() => {
@@ -137,15 +140,19 @@ export default {
           })
       })
       if (error) {
+        this.pageLoading = false
         this.$message.error('保存失败，请重新保存')
         return
       }
-      await Project.addBonus({ id: this.projectId, money: this.model.money })
+      await addBonusApi(this.projectId, { id: this.projectId, money: this.model.money.replace(',','') })
         .then(() => {
-          this.subsidyVisible = false
+          this.$router.go(-1)
         })
         .catch(() => {
           this.$message.error('保存失败')
+        })
+        .finally(() => {
+          this.pageLoading = false
         })
     },
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
@@ -174,7 +181,7 @@ export default {
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    const { id, status } = to.params
+    const { id, status } = to.query
     //12 补贴派发
     const illegal = isNaN(+id) || status != 12
 

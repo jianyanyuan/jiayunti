@@ -1,13 +1,42 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-14 17:10:27
+ * @LastEditTime: 2020-12-22 09:55:46
  * @Description: 居民异议反馈查看
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
 <template>
   <div class="app-container" v-loading="pageLoading">
     <el-page-header content="异议反馈" style="margin-bottom:50px" @back="$router.go(-1)" />
+    <div class="basic-container">
+      <el-card style="margin-bottom:30px">
+        <div slot="header">
+          <span>设计信息</span>
+        </div>
+        <el-form label-position="left" inline class="demo-table-expand">
+          <el-form-item label="设计单位">
+            <span>{{ design.org }}</span>
+          </el-form-item>
+          <el-form-item label="时间">
+            <span>{{ design.time }}</span>
+          </el-form-item>
+          <el-form-item label="详细地址">
+            <span>{{ design.address }}</span>
+          </el-form-item>
+          <el-form-item label="电话">
+            <span>{{ design.phone }}</span>
+          </el-form-item>
+        </el-form>
+      </el-card>
+    </div>
+
+    <el-card class="basic-container" style="margin-bottom:30px">
+      <div slot="header">
+        <span>方案设计稿</span>
+      </div>
+      <upload-list :files="files" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+    </el-card>
+
     <el-collapse>
       <el-collapse-item v-for="(item, index) in objection" :key="index">
         <template slot="title">
@@ -37,21 +66,46 @@
 
       </el-collapse-item>
     </el-collapse>
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+      <img :src="detailImgUrl" alt="意见咨询表">
+    </el-dialog>
 
+    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
+      <div ref="printContent">
+        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
+      </div>
+      <span slot="footer">
+        <el-button @click="printPDF('printContent')" type="success">打印</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import Community from '@/api/community'
+import File from '@/api/file'
+import mixn from '@/components/UploadList/mixin'
+
 import { notEmptyArray } from '@/utils'
 export default {
+  name: 'Assents',
+  mixins: [mixn],
   data() {
     return {
       pageLoading: false,
       objection: [],
-      applyId: null,
-      status:null
+      projectId: null,
+      status: null,
+      files: [],
+      design: {
+        org: '建研院',
+        time: '2020-10-12 10:56',
+        address: '苏州高新区',
+        phone: '15988800323'
+      }
+
     }
   },
   computed: {
@@ -61,7 +115,7 @@ export default {
     const { id, status } = this.$route.params
     // 3异议查看
     if (!isNaN(+id) && status == 3) {
-      this.applyId = id
+      this.projectId = id
       this.status = status
       this.detailApply()
     }
@@ -69,19 +123,46 @@ export default {
   methods: {
     detailApply() {
       this.pageLoading = true
-      Community.listObjection(this.applyId)
-        .then(res => {
-          if (notEmptyArray(res)) {
-            this.pageLoading = false
-            this.objection = res
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-          this.pageLoading = false
+      const fileAsync = new Promise((resolve, reject) => {
+        // 方案设计稿
+        File.get({ projectId: this.projectId, typeName: 'designer-scheme' })
+          .then(res => {
+            if (notEmptyArray(res.content)) {
+              for (const i of res.content) {
+                this.files.push({
+                  uid: i.id,
+                  name: i.filename,
+                  url: i.path
+                })
+              }
+            }
+            resolve('ok')
+          })
+          .catch(err => {
+            reject('方案获取失败')
+          })
+      })
+      const objectionAsync = new Promise((resolve, reject) => {
+        Community.listObjection(this.projectId)
+          .then(res => {
+            if (notEmptyArray(res)) {
+              this.objection = res
+            }
+            resolve('ok')
+          })
+          .catch((err) => {
+            console.log(err)
+            reject('异议获取失败')
+          })
+      })
+      Promise.all([fileAsync, objectionAsync])
+        .catch(() => {
           this.$message.error('信息获取失败')
         })
-    
+        .finally(() => {
+          this.pageLoading = false
+        })
+
     },
   },
   // 获得工程Id
@@ -103,29 +184,14 @@ export default {
   background: #409eff;
   color: #fff;
 }
-.head {
-  height: 30px;
+.demo-table-expand /deep/ label {
+  width: 100px;
+  color: #99a9bf;
 }
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both;
-}
-
-.box-card {
+.demo-table-expand .el-form-item {
+  margin-left: 20px;
+  margin-bottom: 0;
   width: 100%;
-  margin-bottom: 30px;
 }
 </style>
 

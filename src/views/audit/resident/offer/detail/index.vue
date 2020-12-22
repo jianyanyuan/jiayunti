@@ -93,7 +93,7 @@
 import Construction from '@/api/construction'
 import Supervision from '@/api/supervision'
 import { notEmptyArray } from '@/utils'
-import Project from '@/api/projects'
+import { advanceApi } from '@/api/projects'
 export default {
   name: 'Offer',
   data() {
@@ -151,7 +151,7 @@ export default {
         })
     },
     async handlePost() {
-      await Project.advance(this.projectId, this.status,this.construction.constructionId,this.supervisorId)
+      await advanceApi(this.projectId, this.status,this.construction.constructionId,this.supervisorId)
       .then(()=>{
         this.$router.push('/resident/list')
       })

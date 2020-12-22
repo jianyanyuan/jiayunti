@@ -56,7 +56,7 @@
 
 <script>
 import mixin from '@/mixin/upload-show'
-import Project from '@/api/projects'
+import { advanceApi } from '@/api/projects'
 export default {
   name: 'ApplySpecial',
   props: {
@@ -74,7 +74,7 @@ export default {
   methods: {
     submitApply() {
       if (this.fileList.length > 0) {
-        Project.advance(this.id, 0)
+        advanceApi(this.id, 0)
           .then(() => {
             // 回到我的申请
             this.$router.push('/resident/list')

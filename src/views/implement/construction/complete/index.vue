@@ -37,7 +37,7 @@
 
 <script>
 import File from '@/api/file'
-import Project from '@/api/projects'
+import { advanceApi } from '@/api/projects'
 import { notEmptyArray, checkUpload } from '@/utils'
 // import { deepClone } from '@/utils
 
@@ -122,7 +122,7 @@ export default {
         this.$message.error('保存失败，请重新保存')
         return
       }
-      await Project.advance(this.projectId, this.status)
+      await advanceApi(this.projectId, this.status)
         .then(() => {
           this.$router.push('/construction/list')
         })

@@ -61,14 +61,6 @@ export default {
   computed: {
     ...mapState('common', ['handleTag', 'auditOptions'])
   },
-  watch: {
-    // $route(to,from,next) {
-    //   console.log(to)
-    //   console.log(from)
-    //   console.log(next)
-    //   console.log(this)
-    // }
-  },
   created() {
     const { id } = this.$route.params
     // 1社区第一次受理 3社区第二次受理

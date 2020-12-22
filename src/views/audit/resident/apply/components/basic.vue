@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-09 08:25:54
+ * @LastEditTime: 2020-12-22 09:10:14
  * @Description: 居民申请基本资料
 -->
 <template>
@@ -72,7 +72,7 @@
 import { mapGetters } from 'vuex'
 import { deepClone, notEmptyArray } from '@/utils'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
-import Project from '@/api/projects'
+import { detailApi, updateApi } from '@/api/projects'
 
 const defaultForm = {
   applicantName: '',
@@ -176,7 +176,7 @@ export default {
           }
           // this.form.address = address.community.concat(address.county)
           this.formLoading = true
-          Project.update(this.id, this.form).then(res => {
+          updateApi(this.id, this.form).then(res => {
             if (res.id == this.id) {
               this.detailApply()
               // this.$message.success('修改成功')
@@ -197,7 +197,7 @@ export default {
     // 获取申请基本资料
     detailApply() {
       this.formLoading = true
-      Project.detail(this.id).then(res => {
+      detailApi(this.id).then(res => {
         // Object.assign(this.form, res)
         const { applicantName, phoneNumber, designId, deviceId, deviceTypeId, rooms, residentialQuarters, building, unit } = res
         this.form.applicantName = applicantName

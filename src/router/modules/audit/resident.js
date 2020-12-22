@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-21 17:11:26
+ * @LastEditTime: 2020-12-22 10:16:45
  * @LastEditors: zfd
  * @Description: 审批端居民路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -28,7 +28,6 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '申请',
-        icon: 'apply',
         roles: ['ROLE_ADMIN', 'ROLE_RESIDENT']
       }
     },
@@ -98,7 +97,7 @@ const residentRouter = {
       name: 'ResidentAuditDetail',
       hidden: true,
       meta: {
-        title: '审核结果',
+        title: '审核意见',
         roles: ['ROLE_ADMIN', 'ROLE_RESIDENT']
       }
     },
@@ -143,9 +142,9 @@ const residentRouter = {
       }
     },
     {
-      path: 'fault-detail/:id/:status',
+      path: 'fault-detail',
       component: () => import('@/views/common/fault/detail.vue'),
-      name: 'RFaultDetail',
+      name: 'ResFaultDetail',
       hidden: true,
       meta: {
         title: '违规查看',
@@ -162,17 +161,17 @@ const residentRouter = {
         title: '提交材料',
         roles: ['ROLE_ADMIN', 'ROLE_RESIDENT']
       }
+    },
+    {
+      path: 'bonus',
+      component: () => import('@/views/common/bonus.vue'),
+      name: 'ResidentBonus',
+      hidden: true,
+      meta: {
+        title: '补贴查看',
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT']
+      }
     }
-    // {
-    //   path: 'assents-detail',
-    //   component: () => import('@/views/audit/resident/assents-detail'),
-    //   name: 'ResidentAssentsDetail',
-    //   hidden: true,
-    //   meta: {
-    //     title: '异议反馈',
-    //     roles: ['admin', 'resident']
-    //   }
-    // }
   ]
 }
 

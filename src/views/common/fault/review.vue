@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-02 14:20:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-21 15:16:54
+ * @LastEditTime: 2020-12-22 09:53:16
  * @Description:
 -->
 <!--
@@ -157,7 +157,7 @@ export default {
     ...mapState('common', ["auditOptions"])
   },
   created() {
-    const { id, status } = this.$route.params
+    const { id, status } = this.$route.query
     //11 施工中
     if (!isNaN(+id) && status == 11) {
       this.projectId = id
@@ -209,7 +209,7 @@ export default {
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    const { id, status } = to.params
+    const { id, status } = to.query
     // 11 施工中
     if (isNaN(+id) || status != 11) {
       // 没有id则返回跳转

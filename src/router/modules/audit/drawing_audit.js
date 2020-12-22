@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-17 13:22:06
+ * @LastEditTime: 2020-12-22 10:12:47
  * @LastEditors: zfd
  * @Description: 审批端图审路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -38,14 +38,13 @@ const drawingAuditRouter = {
       hidden: true,
       meta: {
         title: '审核',
-        icon: 'check',
         roles: ['ROLE_ADMIN', 'ROLE_DRAWING_AUDIT']
       }
     },
     {
       path: 'audited-list',
       component: () => import('@/views/common/audited/list.vue'),
-      name: 'AuditedList',
+      name: 'DWAuditedList',
       meta: {
         title: '已审核列表',
         icon: 'list',
@@ -53,9 +52,9 @@ const drawingAuditRouter = {
       }
     },
     {
-      path: 'audited-detail/:id',
+      path: 'audited-detail',
       component: () => import('@/views/common/audited/detail.vue'),
-      name: 'AuditedDetail',
+      name: 'DWAuditedDetail',
       hidden: true,
       meta: {
         title: '审核详情',

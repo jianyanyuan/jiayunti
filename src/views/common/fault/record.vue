@@ -86,7 +86,7 @@ export default {
 
   },
   created() {
-    const { id, status } = this.$route.params
+    const { id, status } = this.$route.query
     //11 施工中
     if (!isNaN(+id) && status == 11) {
       this.projectId = id
@@ -196,7 +196,7 @@ export default {
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    const { id, status } = to.params
+    const { id, status } = to.query
     // 11 施工中
     if (isNaN(+id) || status != 11) {
       // 没有id则返回跳转
