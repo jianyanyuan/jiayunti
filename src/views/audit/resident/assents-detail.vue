@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-22 09:55:46
+ * @LastEditTime: 2020-12-23 08:57:00
  * @Description: 居民异议反馈查看
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -15,10 +15,10 @@
         </div>
         <el-form label-position="left" inline class="demo-table-expand">
           <el-form-item label="设计单位">
-            <span>{{ design.org }}</span>
+            <span>{{ design.designName }}</span>
           </el-form-item>
           <el-form-item label="时间">
-            <span>{{ design.time }}</span>
+            <span>{{ design.designtime |parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </el-form-item>
           <el-form-item label="详细地址">
             <span>{{ design.address }}</span>
@@ -87,7 +87,7 @@ import { mapState } from 'vuex'
 import Community from '@/api/community'
 import File from '@/api/file'
 import mixn from '@/components/UploadList/mixin'
-
+import Design from '@/api/designer'
 import { notEmptyArray } from '@/utils'
 export default {
   name: 'Assents',
@@ -99,12 +99,7 @@ export default {
       projectId: null,
       status: null,
       files: [],
-      design: {
-        org: '建研院',
-        time: '2020-10-12 10:56',
-        address: '苏州高新区',
-        phone: '15988800323'
-      }
+      design: {}
 
     }
   },
@@ -155,8 +150,21 @@ export default {
             reject('异议获取失败')
           })
       })
-      Promise.all([fileAsync, objectionAsync])
-        .catch(() => {
+      const infoAsync = new Promise((resolve, reject) => {
+        Design.getInfo(this.projectId).then(res => {
+          if (!res) {
+            this.design = res
+            resolve('ok')
+          }
+          reject('设计单位信息获取失败')
+        })
+          .catch((err) => {
+            reject('设计单位信息获取失败')
+          })
+      })
+      Promise.all([fileAsync, objectionAsync, infoAsync])
+        .catch((err) => {
+          console.log(err)
           this.$message.error('信息获取失败')
         })
         .finally(() => {

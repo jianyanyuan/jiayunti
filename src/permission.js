@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-18 15:01:35
+ * @LastEditTime: 2020-12-23 08:23:21
  * @Description:
  */
 import router from './router'
@@ -42,6 +42,9 @@ router.beforeEach(async (to, from, next) => {
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
           const { roles } = await store.dispatch('user/getInfo')
           // generate accessible routes map based on roles
+          if(!roles) {
+            throw new Error('用户无权限')
+          }
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
           let roleHome = roles[0].split('_').slice(1).join('-').toLocaleLowerCase()
           const unions = ['capital-rule', 'house-construction', 'urban-management', 'market-supervisor']

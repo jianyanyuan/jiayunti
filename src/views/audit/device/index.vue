@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-22 10:55:27
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-22 15:20:17
+ * @LastEditTime: 2020-12-23 08:31:38
  * @Description: 
 -->
 <template>
@@ -236,7 +236,7 @@ export default {
     clearQuery() { },
     removeDevice() { },
     appendDevice(data) {
-      console.log(data)
+      // console.log(data)
       // const newChild = { id: Date.now(), label: 'testtest', children: [] };
       // if (!data.children) {
       //   this.$set(data, 'children', []);
@@ -267,7 +267,7 @@ export default {
       this.$refs.tree.filter(this.treeKey)
     },
     filterApply(node, state) {
-      console.log(state.checkedKeys)
+      // console.log(state.checkedKeys)
     }
   }
 }

@@ -25,8 +25,16 @@ const modifyArchives = (designInstituteArchivesRequest ) => {
   })
 }
 
+// 获取设计信息
+const getInfo = (projectId) => {
+  return request({
+    url:`/design/${projectId}`,
+    method:'get'
+  })
+}
 
 export default {
   getArchives,
-  modifyArchives
+  modifyArchives,
+  getInfo
 }

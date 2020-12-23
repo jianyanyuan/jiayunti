@@ -14,10 +14,10 @@
         </div>
         <el-form label-position="left" inline class="demo-table-expand">
           <el-form-item label="设计单位">
-            <span>{{ design.org }}</span>
+            <span>{{ design.designName }}</span>
           </el-form-item>
           <el-form-item label="时间">
-            <span>{{ design.time }}</span>
+            <span>{{ design.designtime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
           </el-form-item>
           <el-form-item label="详细地址">
             <span>{{ design.address }}</span>
@@ -57,6 +57,8 @@
 import Audit from '@/components/street/Audit'
 import mixn from '@/components/UploadList/mixin'
 import File from '@/api/file'
+import Design from '@/api/designer'
+
 import { notEmptyArray } from '@/utils'
 export default {
   name: 'DrawingCheck',
@@ -70,12 +72,7 @@ export default {
       status: null,
       files: [],
       pageLoading: false,
-      design: {
-        org: '建研院',
-        time: '2020-10-12 10:56',
-        address: '苏州高新区',
-        phone: '15988800323'
-      }
+      design: {}
     }
   },
   created() {
@@ -90,19 +87,38 @@ export default {
   methods: {
     detailApply() {
       this.pageLoading = true
-      File.get({ projectId: this.projectId, typeName: 'construction-design' })
-        .then(res => {
-          if (notEmptyArray(res.content)) {
-            for (const i of res.content) {
-              this.files.push({
-                uid: i.id,
-                name: i.filename,
-                url: i.path
-              })
+      const fileAsync = new Promise((resolve, reject) => {
+        File.get({ projectId: this.projectId, typeName: 'construction-design' })
+          .then(res => {
+            if (notEmptyArray(res.content)) {
+              for (const i of res.content) {
+                this.files.push({
+                  uid: i.id,
+                  name: i.filename,
+                  url: i.path
+                })
+              }
             }
+            resolve('ok')
+          })
+          .catch(err => {
+            reject('附件获取失败')
+          })
+      })
+      const infoAsync = new Promise((resolve, reject) => {
+        Design.getInfo(this.projectId).then(res => {
+          if (!res) {
+            this.design = res
+            resolve('ok')
           }
+          reject('设计单位信息获取失败')
         })
-        .catch(err => {
+          .catch((err) => {
+            reject('设计单位信息获取失败')
+          })
+      })
+      Promise.all([fileAsync, infoAsync])
+        .catch((err) => {
           console.log(err)
           this.$message.error('信息获取失败')
         })
@@ -126,8 +142,6 @@ export default {
 </script>
 
 <style scoped>
-
-
 .demo-table-expand /deep/ label {
   width: 100px;
   color: #99a9bf;
@@ -142,7 +156,6 @@ export default {
   background: #409eff;
   color: #fff;
 }
-
 
 .audit-operation {
   width: 200px;

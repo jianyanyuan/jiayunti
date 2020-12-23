@@ -102,7 +102,7 @@ const residentRouter = {
       }
     },
     {
-      path: 'design-detail',
+      path: 'design-detail/:id/:status',
       component: () => import('@/views/audit/resident/design-detail.vue'),
       name: 'ResidentDesignDetail',
       hidden: true,

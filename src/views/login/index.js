@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-17 10:57:23
+ * @LastEditTime: 2020-12-23 08:25:17
  * @Description:
  */
 import { notEmptyArray } from '@/utils'
@@ -29,7 +29,7 @@ export default {
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
@@ -50,19 +50,21 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(async() => {
+          this.$store.dispatch('user/login', this.loginForm).then(async () => {
             const { roles } = await this.$store.dispatch('user/getInfo').catch(err => {
+              console.log(err)
               this.$message.error(err)
-              this.$router.push('/login') // 无权限返回登录界面
-              return
             })
+            if(!roles) {
+              this.$router.push('/login') // 无权限返回登录界面
+            }
             const accessRoutes = await this.$store.dispatch('permission/generateRoutes', roles)
             // dynamically add accessible routes
             // repair the problem of '/' not found, must place 404 at the end
             // ROLE_STREET ---> string
             let roleHome = roles[0].split('_').slice(1).join('-').toLocaleLowerCase()
-            const unions = ['capital-rule','house-construction','urban-management','market-supervisor']
-            if(unions.includes(roleHome)) {
+            const unions = ['capital-rule', 'house-construction', 'urban-management', 'market-supervisor']
+            if (unions.includes(roleHome)) {
               roleHome = 'union'
             }
             accessRoutes.splice(accessRoutes.length - 1, 0, { path: '/', redirect: '/' + roleHome, hidden: true })
@@ -70,10 +72,12 @@ export default {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           })
-          .catch((err) => {
-            this.$message.error(err)
-            this.loading = false
-          })
+            .catch(async (err) => {
+              await this.$store.dispatch('user/resetToken')
+              console.log(err)
+              this.$message.error(err)
+              this.loading = false
+            })
         } else {
           this.$message.error('请输入正确的用户名密码')
           return false

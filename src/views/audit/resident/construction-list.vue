@@ -2,12 +2,12 @@
  * @Author: zfd
  * @Date: 2020-10-29 16:05:50
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-02 09:05:31
+ * @LastEditTime: 2020-12-23 08:35:12
  * @Description: 施工单位列表
 -->
 <template>
   <div class="app-container">
-    <article-list :source="source" />
+    <article-list :source="source" :total="0" />
   </div>
 </template>
 

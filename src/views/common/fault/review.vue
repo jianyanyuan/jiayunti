@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-02 14:20:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-22 09:53:16
+ * @LastEditTime: 2020-12-23 09:13:46
  * @Description:
 -->
 <!--
@@ -21,13 +21,13 @@
         </div>
         <el-form label-width="120px" class="show-form">
           <el-form-item label="施工单位：">
-            {{ basic.name }}
+            {{ construction.constructionName }}
           </el-form-item>
           <el-form-item label="地址：">
-            {{ basic.address }}
+            {{ construction.address }}
           </el-form-item>
           <el-form-item label="电话：">
-            {{ basic.phone }}
+            {{ construction.phone }}
           </el-form-item>
         </el-form>
       </el-card>
@@ -103,6 +103,8 @@
 import { mapState } from 'vuex'
 import mixin from '@/components/UploadList/mixin'
 import Supervision from '@/api/supervision'
+import Construction from '@/api/construction'
+
 import { notEmptyArray } from '@/utils'
 export default {
   name: 'FaultReview',
@@ -110,27 +112,8 @@ export default {
   data() {
     return {
       picShow: false,
-      basic: {
-        name: '李先生',
-        address: 'dsadasdsad',
-        phone: '15988800323'
-      },
       pageLoading: false,
-      construction: [
-        {
-          org: '中一建',
-          code: '马家浜1号楼',
-          phone: '110',
-          time: '2020-01-01 10:00',
-          desc: '违规操作',
-          descPic: [{ name: '违规图片1', url: '' }],
-          feedback: '接受批评',
-          feedbackPic: [{ name: '回复照片1', url: '' }],
-          descResult: '',
-          result: 0,
-          status: 0
-        }
-      ],
+      construction: {},
       rule: {
         result: [{ required: true, message: '请选择处理结果' }],
         toResponse: [{ required: true, message: '请输入处理回复' }]
@@ -168,29 +151,52 @@ export default {
   methods: {
     listFaults() {
       this.pageLoading = true
-      Supervision.getFault(this.projectId).then(res => {
-        if (notEmptyArray(res)) {
-          res = res.filter(v => v.createdBy == this.$store.getters.userid)
-          res.forEach(v => {
-            if (!v.response) {
-              v.status = -1 // 未整改
-            } else {
-              // 已整改
-              if (v.toResponse === undefined) {
-                v.status = 2 // 整改未回复
+      const faultAsync = new Promise((resolve, reject) => {
+        Supervision.getFault(this.projectId).then(res => {
+          if (notEmptyArray(res)) {
+            res = res.filter(v => v.createdBy == this.$store.getters.userid)
+            res.forEach(v => {
+              if (!v.response) {
+                v.status = -1 // 未整改
               } else {
-                v.status = v.result // 整改结果
+                // 已整改
+                if (v.toResponse === undefined) {
+                  v.status = 2 // 整改未回复
+                } else {
+                  v.status = v.result // 整改结果
+                }
               }
-            }
-          })
-        }
-        this.list = res
-      }).catch(() => {
-        this.$message.error('信息获取失败')
+            })
+          }
+          this.list = res
+          resolve('ok')
+
+        }).catch(() => {
+          reject('异议获取失败')
+
+        })
       })
+      const infoAsync = new Promise((resolve, reject) => {
+        Construction.getInfo(this.projectId).then(res => {
+          if (!res) {
+            this.construction = res
+            resolve('ok')
+          }
+          reject('施工单位单位信息获取失败')
+        })
+          .catch((err) => {
+            reject('施工单位单位信息获取失败')
+          })
+      })
+      Promise.all([faultAsync, infoAsync])
+        .catch((err) => {
+          console.log(err)
+          this.$message.error('信息获取失败')
+        })
         .finally(() => {
           this.pageLoading = false
         })
+
     },
     handlePost() {
       const data = this.list.filter(v => v.response).map(v => ({ id: v.id, result: v.result, toResponse: v.toResponse }))

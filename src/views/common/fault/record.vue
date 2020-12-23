@@ -1,12 +1,12 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-21 14:35:51
+ * @LastEditTime: 2020-12-23 09:10:24
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
 <template>
-  <div class="app-container">
+  <div class="app-container" v-loading="pageLoading">
     <div class="basic-container">
       <el-card style="margin-bottom:30px">
         <div slot="header">
@@ -14,13 +14,13 @@
         </div>
         <el-form label-width="120px" class="show-form">
           <el-form-item label="施工单位：">
-            {{ basic.name }}
+            {{ construction.constructionName }}
           </el-form-item>
           <el-form-item label="地址：">
-            {{ basic.address }}
+            {{ construction.address }}
           </el-form-item>
           <el-form-item label="电话：">
-            {{ basic.phone }}
+            {{ construction.phone }}
           </el-form-item>
         </el-form>
       </el-card>
@@ -60,15 +60,14 @@ import { mapGetters } from 'vuex'
 import { checkUpload } from '@/utils'
 import File from '@/api/file'
 import Supervision from '@/api/supervision'
+import Construction from '@/api/construction'
+
 export default {
   name: 'FaultRecord',
   data() {
     return {
-      basic: {
-        name: '李先生',
-        address: 'dsadasdsad',
-        phone: '15988800323'
-      },
+      pageLoading: false,
+      construction: {},
       rules: {
         time: [{ required: true, message: '请选择时间', trigger: 'blur' }],
         description: [{ required: true, message: '请给出描述', trigger: 'blur' }],
@@ -91,9 +90,25 @@ export default {
     if (!isNaN(+id) && status == 11) {
       this.projectId = id
       this.status = status
+      this.getInfo()
     }
   },
   methods: {
+    getInfo() {
+      this.pageLoading = true
+      Construction.getInfo(this.projectId).then(res => {
+        if (!res) {
+          this.construction = res
+        }
+        this.$message.error('信息获取失败')
+      })
+        .catch((err) => {
+          this.$message.error('信息获取失败')
+        })
+        .finally(() => {
+          this.pageLoading = false
+        })
+    },
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList, index) {
@@ -135,8 +150,8 @@ export default {
       for (let idx in faults) {
         let faultId
         let error = false
-        const {projectId,description,time} = faults[idx]
-        await Supervision.addFault([{projectId,description,time}])
+        const { projectId, description, time } = faults[idx]
+        await Supervision.addFault([{ projectId, description, time }])
           .then((res) => {
             faultId = res[0].id
           })

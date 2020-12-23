@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 09:06:05
- * @LastEditTime: 2020-12-17 10:17:13
+ * @LastEditTime: 2020-12-23 09:17:27
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\components\street\design\index.vue
@@ -59,6 +59,7 @@ import mixn from '@/components/UploadList/mixin'
 import File from '@/api/file'
 import { notEmptyArray } from '@/utils'
 import { getDesignerApi } from '@/api/projects'
+import Design from '@/api/designer'
 export default {
   name: 'AuditDesign',
   mixins: [mixn],
@@ -86,7 +87,18 @@ export default {
   methods: {
     detailApply() {
       this.pageLoading = true
-      
+      const infoAsync = new Promise((resolve, reject) => {
+        Design.getInfo(this.id).then(res => {
+          if (!res) {
+            this.design = res
+            resolve('ok')
+          }
+          reject('设计单位信息获取失败')
+        })
+          .catch((err) => {
+            reject('设计单位信息获取失败')
+          })
+      })
       const designerAsync = new Promise((resolve, reject) => {
         getDesignerApi(this.id)
           .then(res => {
@@ -136,7 +148,7 @@ export default {
             reject('施工图调取失败')
           })
       })
-      Promise.all([designerAsync,schemaAsync, constructionAsync])
+      Promise.all([designerAsync, schemaAsync, constructionAsync,infoAsync])
         .then(() => (this.pageLoading = false))
         .catch(err => {
           this.pageLoading = false

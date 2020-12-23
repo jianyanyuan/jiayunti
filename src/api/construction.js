@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-14 10:11:19
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-16 15:22:48
+ * @LastEditTime: 2020-12-23 09:01:10
  * @Description: 施工单位
  */
 import request from '@/utils/request'
@@ -41,9 +41,18 @@ const reform = (responseRequest) => {
     data:responseRequest
   })
 }
+
+// 获取施工单位信息
+const getInfo = (projectId) => {
+  return request({
+    url:`/construction/${projectId}`,
+    method:'get'
+  })
+}
 export default {
   addOffer,
   listOffers,
   detailOffer,
-  reform
+  reform,
+  getInfo
 }

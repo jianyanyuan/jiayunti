@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-29 15:36:07
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-17 11:16:57
+ * @LastEditTime: 2020-12-23 08:34:23
  * @Description:
 -->
 <template>
@@ -60,7 +60,7 @@ export default {
       type: [Number, String],
       required: true,
       validator: function(value) {
-        return isFinite(+value) && +value > 0
+        return isFinite(+value) && +value >= 0
       }
     }
   },

@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-21 17:07:38
+ * @LastEditTime: 2020-12-23 09:07:30
  * @Description: 施工端违规处理
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -16,13 +16,13 @@
         </div>
         <el-form label-width="120px" class="show-form">
           <el-form-item label="施工单位：">
-            {{ basic.name }}
+            {{ construction.constructionName }}
           </el-form-item>
           <el-form-item label="地址：">
-            {{ basic.address }}
+            {{ construction.address }}
           </el-form-item>
           <el-form-item label="电话：">
-            {{ basic.phone }}
+            {{ construction.phone }}
           </el-form-item>
         </el-form>
       </el-card>
@@ -95,6 +95,7 @@
 import { mapState } from 'vuex'
 import mixin from '@/components/UploadList/mixin'
 import Supervision from '@/api/supervision'
+import Construction from '@/api/construction'
 
 export default {
   name: 'FaultView',
@@ -102,11 +103,7 @@ export default {
 
   data() {
     return {
-      basic: {
-        name: '李先生',
-        address: 'dsadasdsad',
-        phone: '15988800323'
-      },
+      construction: {},
       list: [],
       pageLoading: false,
       projectId: null,
@@ -140,23 +137,43 @@ export default {
   methods: {
     listFaults() {
       this.pageLoading = true
-      Supervision.getFault(this.projectId).then(res => {
-        res.forEach(v => {
-          if (!v.response) {
-            v.status = -1 // 未整改
-          } else {
-            // 已整改
-            if (v.toResponse === undefined) {
-              v.status = 2 // 整改未回复
-            } else {
-              v.status = v.result // 整改结果
-            }
+      const infoAsync = new Promise((resolve, reject) => {
+        Construction.getInfo(this.projectId).then(res => {
+          if (!res) {
+            this.construction = res
+            resolve('ok')
           }
+          reject('施工单位单位信息获取失败')
         })
-        this.list = res
-      }).catch(() => {
-        this.$message.error('信息获取失败')
+          .catch((err) => {
+            reject('施工单位单位信息获取失败')
+          })
       })
+      const faultAsync = new Promise((resolve, reject) => {
+        Supervision.getFault(this.projectId).then(res => {
+          res.forEach(v => {
+            if (!v.response) {
+              v.status = -1 // 未整改
+            } else {
+              // 已整改
+              if (v.toResponse === undefined) {
+                v.status = 2 // 整改未回复
+              } else {
+                v.status = v.result // 整改结果
+              }
+            }
+          })
+          resolve('ok')
+          this.list = res
+        }).catch(() => {
+          reject('异议获取失败')
+        })
+      })
+      Promise.all([faultAsync, infoAsync])
+        .catch((err) => {
+          console.log(err)
+          this.$message.error('信息获取失败')
+        })
         .finally(() => {
           this.pageLoading = false
         })
