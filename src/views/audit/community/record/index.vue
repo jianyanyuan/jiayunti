@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-14 15:51:26
+ * @LastEditTime: 2020-12-24 15:04:15
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -80,7 +80,7 @@
 import { mapGetters, mapState } from 'vuex'
 import Community from '@/api/community'
 import { notEmptyArray } from '@/utils'
-
+import {validatePhone,validateTrueName} from '@/utils/element-validator'
 export default {
   name: 'CommunityRecord',
   data() {
@@ -101,9 +101,9 @@ export default {
       deleteList: [],
       postList: [],
       rules: {
-        adviceName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+        adviceName: [{ required: true, message: '请输入姓名',validator:validateTrueName, trigger: 'blur' }],
         time: [{ required: true, message: '请选择时间', trigger: 'blur' }],
-        phoneNumber: [{ required: true, message: '请输入联系方式', trigger: 'blur' }],
+        phoneNumber: [{ required: true, message: '请输入联系方式',validator:validatePhone, trigger: 'blur' }],
         address: [{ required: true, message: '请输入详细地址', trigger: 'blur' }],
         objection: [{ required: true, message: '请输入异议详情', trigger: 'blur' }],
         toObjection: [{ required: true, message: '请输入异议反馈', trigger: 'blur' }],
@@ -200,7 +200,6 @@ export default {
       if (valid) {
         this.pageLoading = true
         this.updateList = this.objection.filter(v => v.id !== undefined)
-        console.log(this.updateList)
         const asyncList = []
         if (notEmptyArray(this.postList)) {
           const postAsync = Community.addObjection(this.applyId, this.postList)

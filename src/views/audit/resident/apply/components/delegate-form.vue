@@ -42,8 +42,10 @@
 </template>
 
 <script>
+import mixin from '@/mixin/upload-show'
 export default {
   name: 'ApplyDelegate',
+  mixins:[mixin],
   props: {
     id: {
       type: [Number, String],

@@ -84,7 +84,7 @@ const streetRouter = {
       }
     },
     {
-      path: 'audited-detail/:id/:status',
+      path: 'audited-detail',
       component: () => import('@/views/common/audited/detail.vue'),
       name: 'StreetAuditedDetail',
       hidden: true,

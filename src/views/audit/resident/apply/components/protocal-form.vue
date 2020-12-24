@@ -42,9 +42,11 @@
 </template>
 
 <script>
+import mixin from '@/mixin/upload-show'
 
 export default {
   name: 'ApplyProtocal',
+  mixins:[mixin],
   props: {
     id: {
       type: [Number, String],

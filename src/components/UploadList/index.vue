@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-07 10:57:23
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 14:23:44
+ * @LastEditTime: 2020-12-24 15:13:54
  * @Description: 
 -->
 <template>
@@ -100,11 +100,11 @@ export default {
       this.detailFile(file);
     },
     handleURL(file) {
-      return /\bpdf/i.test(file.name) ? this.pdfImgURL : file.url
+      return /\bpdf$/i.test(file.url) ? this.pdfImgURL : file.url
     },
         // 展示文件
     detailFile(file) {
-      if (/\bpdf/i.test(file.name)) {
+      if (/\bpdf$/i.test(file.url)) {
         // 展示pdf
         this.pdfURL = Pdf.createLoadingTask(file.url)
         this.pdfURL.promise.then(pdf => {

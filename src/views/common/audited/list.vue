@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:27:43
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-22 10:37:11
+ * @LastEditTime: 2020-12-24 15:08:38
  * @Description: 已审核列表
 -->
 
@@ -117,7 +117,8 @@ export default {
     },
     showAudit(row) {
       // audited-detail
-      const prefix = this.$route.fullPath.splice('/')[1]
+      const reg = /\/(.*)\//
+      const prefix = this.$route.fullPath.match(reg)[1]
       const path = `/${prefix}/audited-detail`
       this.$router.push({path, query: { id: row.id, status: row.statusId } })
     },

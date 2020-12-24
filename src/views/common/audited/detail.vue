@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:43:23
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-14 09:20:12
+ * @LastEditTime: 2020-12-24 15:10:27
  * @Description: 审核意见
 -->
 <template>
@@ -47,7 +47,7 @@ export default {
     ...mapState('common', ['handleTag', 'auditOptions'])
   },
   created() {
-    const { id } = this.$route.params
+    const { id } = this.$route.query
     // 1社区第一次受理 3社区第二次受理
     // const valid = status == 1 || status == 3
 
@@ -74,7 +74,7 @@ export default {
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    const { id } = to.params
+    const { id } = to.query
     // 1社区第一次受理 3社区第二次受理
     // const valid = status == 1 || status == 3
     if (isNaN(+id)) {

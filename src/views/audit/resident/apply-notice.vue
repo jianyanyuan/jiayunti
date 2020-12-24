@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 14:43:19
+ * @LastEditTime: 2020-12-24 15:19:59
  * @Description: 公示/公告上传
 -->
 <template>
@@ -125,19 +125,6 @@ export default {
       })
       this.pageLoading = false
     },
-    nextProcess(arrow) {
-      if (arrow > 0) {
-        const count = this.rooms.reduce((c, v) => (this.fileList[v].length + c), 0)
-        if (count >= this.rooms.length * 3) {
-          this.$emit('nextProcess', arrow)
-        }
-        else {
-          this.$message.error('请补全附件，附件分开上传')
-        }
-      } else {
-        this.$emit('nextProcess', arrow)
-      }
-    },
 
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
@@ -190,6 +177,10 @@ export default {
 
     // 保存修改
     postFile() {
+      if(this.contentList.length === 0 || this.reportList.length === 0) {
+        this.$message.error('请补全附件')
+        return
+      }
       this.pageLoading = true
       let asyncList = []
       if (notEmptyArray(this.uploadList)) {

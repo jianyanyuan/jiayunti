@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-23 08:57:00
+ * @LastEditTime: 2020-12-24 15:16:23
  * @Description: 居民异议反馈查看
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -45,7 +45,7 @@
         </template>
         <el-form label-width="120px" class="center-form">
           <el-form-item label="时间：">
-            {{ item.time }}
+            {{ item.time | parseTime('{y}-{m}-{d} {h}-{i}')}}
           </el-form-item>
           <el-form-item label="联系方式：">
             {{ item.phoneNumber }}
