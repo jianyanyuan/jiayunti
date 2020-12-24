@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 14:50:23
+ * @LastEditTime: 2020-12-24 14:52:26
  * @Description: 设计院方案设计稿
 -->
 <template>
@@ -42,9 +42,12 @@
 </template>
 
 <script>
-import {advanceApi} from '@/api/projects'
+import { advanceApi } from '@/api/projects'
+import mixin from '@/mixin/upload-show'
+
 export default {
   name: 'DesignerScheme',
+  mixins:[mixin],
   props: {
     id: {
       type: [Number, String],
@@ -53,22 +56,20 @@ export default {
   },
   data() {
     return {
-      pageLoading:false,
-      hasChanged:false,
       typeName: 'designer-scheme'
     }
   },
   methods: {
     handlePost() {
       this.pageLoading = true
-      advanceApi(this.id, 2).then(()=>{
+      advanceApi(this.id, 2).then(() => {
         this.$router.push('/designer/list')
       }).catch(() => {
         this.$message.error('流程错误')
       })
-      .finally(()=>{
-              this.pageLoading = false
-      })
+        .finally(() => {
+          this.pageLoading = false
+        })
     }
   }
 }
