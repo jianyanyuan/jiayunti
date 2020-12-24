@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-07 10:57:23
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 11:04:33
+ * @LastEditTime: 2020-12-24 14:23:44
  * @Description: 
 -->
 <template>
@@ -40,17 +40,18 @@
         </slot>
       </li>
     </transition-group>
-    <el-dialog center title="图片详情" append-to-body :visible.sync="imgVisible" class="dialog-center-public">
+    <el-dialog center title="图片详情"  :visible.sync="imgVisible" class="dialog-center-public">
       <img :src="detailImgUrl" alt="意见咨询表">
     </el-dialog>
 
-    <el-dialog title="pdf预览" center  append-to-body :visible.sync="pdfVisible" class="dialog-center-public">
+    <el-dialog  center   :visible.sync="pdfVisible" class="dialog-center-public">
       <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
       <div ref="printContent">
         <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
       </div>
-      <span slot="footer">
-        <el-button @click="printPDF('printContent')" type="success">打印</el-button>
+      <span slot="title">
+        <el-button @click="printPDF('printContent')" type="success" style="float:left">打印</el-button>
+        <span>pdf预览</span>
       </span>
     </el-dialog>
   </div>
@@ -66,12 +67,12 @@ export default {
   data() {
     return {
       focusing: false,
-      pdfURL: require('@/assets/images/pdf.jpg'),
+      pdfImgURL: require('@/assets/images/pdf.jpg'),
       errorURL: require('@/assets/images/error.jpg'),
       loadingURL: require('@/assets/images/loading.gif'),
        // 修改后重新保存
+       pdfURL:'',
       pdfVisible: false,
-      pdfURL: '', // Pdf路径
       pdfPages: undefined, // pdf内容
       imgVisible: false,
       detailImgUrl: '',
@@ -99,7 +100,7 @@ export default {
       this.detailFile(file);
     },
     handleURL(file) {
-      return /\bpdf/i.test(file.name) ? this.pdfURL : file.url
+      return /\bpdf/i.test(file.name) ? this.pdfImgURL : file.url
     },
         // 展示文件
     detailFile(file) {

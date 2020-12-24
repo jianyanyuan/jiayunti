@@ -23,23 +23,10 @@
             <div>将文件拖到此处，或点击添加</div>
             <p>单个文件大小不超过20MB</p>
           </el-upload>
-          <upload-list v-else :files="model.attachments" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+          <upload-list v-else :files="model.attachments" list-type="picture-card" :disabled="true" />
         </el-form-item>
       </el-form>
     </el-card>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" class="dialog-center">
-      <img :src="detailImgUrl" alt="授权委托书">
-    </el-dialog>
-    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
-      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
-      <div ref="printContent">
-        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
-      </div>
-      <span slot="footer">
-        <el-button @click="printPDF" type="success">打印</el-button>
-        <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -47,11 +34,9 @@
 import File from '@/api/file'
 import { addBonusApi, getBonusApi } from '@/api/projects'
 import { notEmptyArray, checkUpload } from '@/utils'
-import mixin from '@/components/UploadList/mixin'
 
 export default {
   name: 'Bonus',
-  mixins: [mixin],
   data() {
     const formatterDecimal = (rule, value, callback) => {
       const number = +value

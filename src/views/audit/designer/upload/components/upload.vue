@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-22 09:07:59
+ * @LastEditTime: 2020-12-24 14:50:23
  * @Description: 设计院方案设计稿
 -->
 <template>
@@ -17,7 +17,7 @@
         <div slot="header">
           <span>查看</span>
         </div>
-        <upload-list :files="fileList" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+        <upload-list :files="fileList" list-type="picture-card" :disabled="true" />
 
       </el-card>
     </template>
@@ -38,24 +38,10 @@
       <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
       <el-button v-if="hasChanged" type="success" icon="el-icon-arrow-right" @click.native.prevent="handlePost">提交</el-button>
     </div>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible"  class="dialog-center">
-      <img :src="detailImgUrl" alt="方案设计稿">
-    </el-dialog>
-    <el-dialog title="pdf预览" center :visible.sync="pdfVisible"  class="dialog-center">
-      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
-      <div ref="printContent">
-        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
-      </div>
-      <span slot="footer">
-        <el-button @click="printPDF" type="success">打印</el-button>
-        <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import mixin from '@/mixin/upload-show'
 import {advanceApi} from '@/api/projects'
 export default {
   name: 'DesignerScheme',
@@ -67,16 +53,21 @@ export default {
   },
   data() {
     return {
+      pageLoading:false,
+      hasChanged:false,
       typeName: 'designer-scheme'
     }
   },
-  mixins: [mixin],
   methods: {
     handlePost() {
+      this.pageLoading = true
       advanceApi(this.id, 2).then(()=>{
         this.$router.push('/designer/list')
       }).catch(() => {
         this.$message.error('流程错误')
+      })
+      .finally(()=>{
+              this.pageLoading = false
       })
     }
   }

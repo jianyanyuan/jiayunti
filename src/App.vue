@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 09:15:58
- * @LastEditTime: 2020-12-24 10:28:56
+ * @LastEditTime: 2020-12-24 14:27:05
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\App.vue
@@ -54,5 +54,9 @@ li{
 }
 .dialog-center-public .el-dialog__body {
   text-align: center;
+}
+.dialog-center-public img {
+  width: 100%;
+  // object-fit: scale-down;
 }
 </style>

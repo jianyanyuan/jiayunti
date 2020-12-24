@@ -54,14 +54,14 @@
             <el-input v-model="item.description" disabled />
           </el-form-item>
           <el-form-item label="违规照片:">
-            <upload-list :files="item.illegalFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+            <upload-list :files="item.illegalFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" />
 
           </el-form-item>
           <el-form-item label="违规回复:">
             <el-input v-model="item.response" disabled v-if="item.status !== -1" />
           </el-form-item>
           <el-form-item label="整改照片:">
-            <upload-list v-if="item.status !== -1" :files="item.rectificationFile.map(f => ({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+            <upload-list v-if="item.status !== -1" :files="item.rectificationFile.map(f => ({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" />
 
           </el-form-item>
           <el-form-item label="处理回复:" v-if="item.status === 0 || item.status === 1">
@@ -75,32 +75,16 @@
         </el-form>
       </el-collapse-item>
     </el-collapse>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" class="dialog-center">
-      <img :src="detailImgUrl" alt="授权委托书">
-    </el-dialog>
-    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
-      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
-      <div ref="printContent">
-        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
-      </div>
-      <span slot="footer">
-        <el-button @click="printPDF" type="success">打印</el-button>
-        <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import mixin from '@/components/UploadList/mixin'
 import Supervision from '@/api/supervision'
 import Construction from '@/api/construction'
 
 export default {
   name: 'FaultView',
-  mixins: [mixin],
-
   data() {
     return {
       construction: {},

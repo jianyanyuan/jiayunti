@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-15 17:27:29
+ * @LastEditTime: 2020-12-24 13:26:07
  * @Description: 施工端资料查看
 -->
 <template>
@@ -46,24 +46,11 @@
       <div slot="header">
         <span>施工图设计稿</span>
       </div>
-      <upload-list :files="files" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+      <upload-list :files="files" list-type="picture-card" :disabled="true" />
     </el-card>
     <div style="text-align:center">
       <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
     </div>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" class="dialog-center">
-      <img :src="detailImgUrl" alt="意见咨询表">
-    </el-dialog>
-
-    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
-      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
-      <div ref="printContent">
-        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
-      </div>
-      <span slot="footer">
-        <el-button @click="printPDF('printContent')" type="success">打印</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -71,11 +58,9 @@
 import { mapGetters } from 'vuex'
 import { deepClone } from '@/utils'
 import File from '@/api/file'
-import mixn from '@/components/UploadList/mixin'
 import { notEmptyArray } from '@/utils'
 export default {
   name: 'ConstructionBasic',
-  mixins: [mixn],
   props: {
     id: {
       type: [Number, String],

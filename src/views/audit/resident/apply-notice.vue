@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 10:37:40
+ * @LastEditTime: 2020-12-24 14:43:19
  * @Description: 公示/公告上传
 -->
 <template>
@@ -17,14 +17,14 @@
         <div slot="header">
           <span>公示内容</span>
         </div>
-        <upload-list :files="contentList" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+        <upload-list :files="contentList" list-type="picture-card" :disabled="true" />
 
       </el-card>
       <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
           <span>公示公告</span>
         </div>
-        <upload-list :files="reportList" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+        <upload-list :files="reportList" list-type="picture-card" :disabled="true" />
 
       </el-card>
       <!-- <div style="text-align:center">
@@ -56,43 +56,19 @@
         </el-upload>
       </el-card>
     </template>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible"  class="dialog-center">
-      <img :src="detailImgUrl" alt="公示附件">
-    </el-dialog>
-    <el-dialog title="pdf预览" center :visible.sync="pdfVisible"  class="dialog-center">
-      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
-      <div ref="printContent">
-        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
-      </div>
-      <span slot="footer">
-        <el-button @click="printPDF" type="success">打印</el-button>
-        <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import File from '@/api/file'
 import  { advanceApi } from '@/api/projects'
-import { notEmptyArray } from '@/utils'
+import { notEmptyArray,checkUpload } from '@/utils'
 // import { deepClone } from '@/utils'
-import Pdf from 'vue-pdf'
-import html2canvas from 'html2canvas'
-import printJS from 'print-js'
 export default {
   name: 'ApplyNotice',
-  components: {
-    Pdf
-  },
   data() {
     return {
       // 修改后重新保存
-      imgVisible: false,
-      pdfVisible: false,
-      detailImgUrl: '',
-      pdfURL: '', // Pdf路径
-      pdfPages: undefined,// pdf内容
       hasChanged: false,
       // formLoading: false,
       pageLoading: false,
@@ -149,39 +125,6 @@ export default {
       })
       this.pageLoading = false
     },
-    // 展示文件
-    detailFile(file) {
-      if (/\bpdf/i.test(file.name)) {
-        // 展示pdf
-        this.pdfURL = Pdf.createLoadingTask('/teat.pdf')
-        this.pdfURL.promise.then(pdf => {
-          this.pdfPages = pdf.numPages
-          this.pdfVisible = true
-        }).catch(() => {
-          this.$message.error('pdf预览失败')
-        })
-      } else {
-        this.detailImgUrl = file.url
-        this.imgVisible = true
-      }
-
-    },
-    // 打印pdf
-    printPDF() {
-      html2canvas(this.$refs.printContent, {
-        backgroundColor: null,
-        useCORS: true,
-        windowHeight: document.body.scrollHeight
-      }).then((canvas) => {
-        const url = canvas.toDataURL()
-        printJS({
-          printable: url,
-          type: 'image',
-          documentTitle: this.printName
-        })
-        // console.log(url)
-      })
-    },
     nextProcess(arrow) {
       if (arrow > 0) {
         const count = this.rooms.reduce((c, v) => (this.fileList[v].length + c), 0)
@@ -199,7 +142,7 @@ export default {
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList, type) {
-      const valid = this.checkUpload(file.raw)
+      const valid = checkUpload(file.raw)
       if (valid && file.status === 'ready') {
         const formData = new FormData()
         formData.append('file', file.raw)
@@ -220,24 +163,6 @@ export default {
       } else {
         fileList.pop()
       }
-    },
-    // 图片上传之前判断
-    checkUpload(file) {
-      if (!file.size) {
-        this.$message.error('上传为空！')
-        return false
-      }
-      const typeAllowed = /\bpdf|\bimage/i.test(file.type)
-      const isBig = file.size <= 1024 * 1024 * 10 // 单个文件最大10M
-      if (!typeAllowed) {
-        this.$message.error('只能上传图片或pdf！')
-        return false
-      }
-      if (!isBig) {
-        this.$message.error('图片大小不能超过10MB！')
-        return false
-      }
-      return true
     },
     // 删除文件
     handleUploadRemove(file, fileList, type) {

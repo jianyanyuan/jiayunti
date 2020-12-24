@@ -60,13 +60,13 @@
             <el-input v-model="item.description" disabled />
           </el-form-item>
           <el-form-item label="违规照片:">
-            <upload-list :files="item.illegalFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+            <upload-list :files="item.illegalFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" />
           </el-form-item>
           <el-form-item label="违规回复:" prop="response">
             <el-input v-model="item.response" :disabled="item.status=== 0 || item.status === 2" />
           </el-form-item>
           <el-form-item label="整改照片:" prop="attachments">
-            <upload-list v-if="item.status=== 0 || item.status === 2" :files="item.rectificationFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+            <upload-list v-if="item.status=== 0 || item.status === 2" :files="item.rectificationFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" />
 
             <el-upload v-else :file-list="item.rectificationFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture" action="#" class="form-card" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,index)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" drag :auto-upload="false">
               <div>将文件拖到此处，或点击添加</div>
@@ -106,7 +106,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import mixin from '@/components/UploadList/mixin'
 import { checkUpload, notEmptyArray } from '@/utils'
 import Construction from '@/api/construction'
 import File from '@/api/file'
@@ -114,7 +113,6 @@ import Supervision from '@/api/supervision'
 
 export default {
   name: 'ConstructionFault',
-  mixins: [mixin],
   data() {
     return {
       basic: {},

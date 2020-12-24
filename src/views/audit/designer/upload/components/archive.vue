@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-11 16:42:02
+ * @LastEditTime: 2020-12-24 14:37:31
  * @Description: 居民申请意见汇总表
 -->
 <template>
@@ -36,7 +36,7 @@
         </el-table-column>
         <el-table-column label="保存时间" min-width="250" align="center">
           <template slot-scope="{row}">
-            <span v-if="row.completedAt && row.whetherComplete && !hasChanged">{{ new Date(row.completedAt) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+            <span >{{ new Date(row.completedAt) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -118,6 +118,7 @@ export default {
     handleChange(row) {
       if (!this.updateList.includes(row)) {
         // 引用传递
+        row.completedAt = Date.now()
         this.updateList.push(row)
       }
     },

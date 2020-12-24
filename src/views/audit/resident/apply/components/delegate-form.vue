@@ -17,7 +17,7 @@
         <div slot="header">
           <span>查看</span>
         </div>
-        <upload-list :files="fileList" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+        <upload-list :files="fileList" list-type="picture-card" :disabled="true" />
 
       </el-card>
     </template>
@@ -38,24 +38,10 @@
       <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
       <el-button v-if="hasChanged" type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
     </div>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" class="dialog-center-public">
-      <img :src="detailImgUrl" alt="授权委托书">
-    </el-dialog>
-    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center-public">
-      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
-      <div ref="printContent">
-        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
-      </div>
-      <span slot="footer">
-        <el-button @click="printPDF" type="success">打印</el-button>
-        <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import mixin from '@/mixin/upload-show'
 export default {
   name: 'ApplyDelegate',
   props: {
@@ -68,8 +54,7 @@ export default {
     return {
       typeName: 'delegate-form'
     }
-  },
-  mixins: [mixin]
+  }
 }
 </script>
 

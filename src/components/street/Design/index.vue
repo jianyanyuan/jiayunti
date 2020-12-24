@@ -29,40 +29,25 @@
       </el-tab-pane>
       <el-tab-pane label="设计方案">
         <el-card>
-          <upload-list :files="schemaList" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+          <upload-list :files="schemaList" list-type="picture-card" :disabled="true" />
         </el-card>
       </el-tab-pane>
       <el-tab-pane label="施工图设计">
         <el-card>
-          <upload-list :files="constructionList" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+          <upload-list :files="constructionList" list-type="picture-card" :disabled="true" />
         </el-card>
       </el-tab-pane>
     </el-tabs>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" class="dialog-center">
-      <img :src="detailImgUrl" alt="意见咨询表">
-    </el-dialog>
-
-    <el-dialog title="pdf预览" center :visible.sync="pdfVisible"  class="dialog-center">
-      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
-      <div ref="printContent">
-        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
-      </div>
-      <span slot="footer">
-        <el-button @click="printPDF('printContent')" type="success">打印</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import mixn from '@/components/UploadList/mixin'
 import File from '@/api/file'
 import { notEmptyArray } from '@/utils'
 import { getDesignerApi } from '@/api/projects'
 import Design from '@/api/designer'
 export default {
   name: 'AuditDesign',
-  mixins: [mixn],
   props: {
     id: {
       type: [Number, String],

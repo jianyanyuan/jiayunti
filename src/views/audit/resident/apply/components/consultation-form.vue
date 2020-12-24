@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 08:48:50
+ * @LastEditTime: 2020-12-24 13:35:15
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -17,7 +17,7 @@
         <div slot="header">
           <span>{{ room }}</span>
         </div>
-        <upload-list :files="fileList[room]" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+        <upload-list :files="fileList[room]" list-type="picture-card" :disabled="true" />
       </el-card>
 
     </template>
@@ -53,31 +53,12 @@
 
       <el-button v-if="hasChanged" type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
     </div>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" class="dialog-center-public">
-      <img :src="detailImgUrl" alt="意见咨询表">
-    </el-dialog>
-
-    <el-dialog center :visible.sync="pdfVisible" class="dialog-center-public">
-      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
-      <div ref="printContent">
-        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
-      </div>
-      <span slot="title">
-        <el-button @click="printPDF" type="success" style="float:left">打印</el-button>
-        <span>pdf预览</span>
-        <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import File from '@/api/file'
 import { notEmptyArray,checkUpload } from '@/utils'
-// import { deepClone } from '@/utils'
-import Pdf from 'vue-pdf'
-import html2canvas from 'html2canvas'
-import printJS from 'print-js'
 export default {
   name: 'ApplyConsultation',
   props: {
@@ -86,17 +67,9 @@ export default {
       required: true
     }
   },
-  components: {
-    Pdf
-  },
   data() {
     return {
       // 修改后重新保存
-      imgVisible: false,
-      pdfVisible: false,
-      detailImgUrl: '',
-      pdfURL: '', // Pdf路径
-      pdfPages: undefined,// pdf内容
       hasChanged: false,
       pageLoading: false,
       rooms: [],
@@ -151,39 +124,6 @@ export default {
       })
     },
 
-    // 展示文件
-    detailFile(file) {
-      if (/\bpdf/i.test(file.name)) {
-        // 展示pdf
-        this.pdfURL = Pdf.createLoadingTask(file.url)
-        this.pdfURL.promise.then(pdf => {
-          this.pdfPages = pdf.numPages
-          this.pdfVisible = true
-        }).catch(() => {
-          this.$message.error('pdf预览失败')
-        })
-      } else {
-        this.detailImgUrl = file.url
-        this.imgVisible = true
-      }
-
-    },
-    // 打印pdf
-    printPDF() {
-      html2canvas(this.$refs.printContent, {
-        backgroundColor: null,
-        useCORS: true,
-        windowHeight: 0
-      }).then((canvas) => {
-        const url = canvas.toDataURL()
-        printJS({
-          printable: url,
-          type: 'image',
-          documentTitle: this.printName
-        })
-        // console.log(url)
-      })
-    },
     nextProcess(arrow) {
       if (arrow > 0) {
         const count = this.rooms.reduce((c, v) => (this.fileList[v].length + c), 0)

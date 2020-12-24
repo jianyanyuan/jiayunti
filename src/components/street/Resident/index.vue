@@ -33,37 +33,20 @@
           <div slot="header">
             <span>{{ room }}</span>
           </div>
-          <upload-list :files="fileList[room]" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+          <upload-list :files="fileList[room]" list-type="picture-card" :disabled="true" />
         </el-card>
       </el-tab-pane>
       <el-tab-pane v-for="item in pageContent" :key="item.label" :label="item.label">
         <el-card>
-          <upload-list :files="item.fileList" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
+          <upload-list :files="item.fileList" list-type="picture-card" :disabled="true" />
         </el-card>
       </el-tab-pane>
     </el-tabs>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible"  class="dialog-center-public">
-      <img :src="detailImgUrl" alt="意见咨询表">
-    </el-dialog>
-
-    <el-dialog center :visible.sync="pdfVisible"  class="dialog-center-public">
-      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
-      <div ref="printContent">
-        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
-      </div>
-      <span slot="title">
-        <el-button @click="printPDF('printContent')" type="success" style="float:left">打印</el-button>
-        <span>pdf预览</span>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import File from '@/api/file'
-import Pdf from 'vue-pdf'
-import html2canvas from 'html2canvas'
-import printJS from 'print-js'
 import { notEmptyArray } from '@/utils'
 export default {
   name: 'AuditMaterial',
@@ -77,19 +60,10 @@ export default {
       required: true
     }
   },
-  components: {
-    Pdf
-  },
   data() {
     return {
-      pdfURL: require('@/assets/images/pdf.jpg'),
       tabLoading: false,
       basic: {},// 基础信息
-      imgVisible: false,
-      pdfVisible: false,
-      detailImgUrl: '',
-      pdfURL: '', // Pdf路径
-      pdfPages: undefined,// pdf内容
       rooms: [],// 意见征询表
       fileList: {}, // 意见征询表
       pageContent: [
@@ -180,38 +154,6 @@ export default {
         this.tabLoading = false
         this.$message.error('信息获取失败')
       })
-    },
-    // 打印pdf
-    printPDF(ref) {
-      html2canvas(this.$refs[ref], {
-        backgroundColor: null,
-        useCORS: true,
-        windowHeight: 0
-      }).then((canvas) => {
-        const url = canvas.toDataURL()
-        printJS({
-          printable: url,
-          type: 'image',
-          documentTitle: this.printName
-        })
-      })
-    },
-    // 展示文件
-    detailFile(file) {
-      if (/\bpdf/i.test(file.name)) {
-        // 展示pdf
-        this.pdfURL = Pdf.createLoadingTask(file.url)
-        this.pdfURL.promise.then(pdf => {
-          this.pdfPages = pdf.numPages
-          this.pdfVisible = true
-        }).catch(() => {
-          this.$message.error('pdf预览失败')
-        })
-      } else {
-        this.detailImgUrl = file.url
-        this.imgVisible = true
-      }
-
     }
   }
 }

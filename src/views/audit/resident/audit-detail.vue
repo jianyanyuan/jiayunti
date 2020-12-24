@@ -40,12 +40,10 @@
   </div>
 </template>
 <script>
-// import mixn from '@/components/UploadList/mixin'
 import Community from '@/api/community'
 import { mapState } from 'vuex'
 export default {
   name: 'AuditDetail',
-  // mixins: [mixn],
   data() {
     return {
       pageLoading: false,
