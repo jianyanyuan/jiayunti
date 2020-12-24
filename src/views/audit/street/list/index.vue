@@ -25,7 +25,7 @@
           <el-button type="primary" icon="el-icon-search" @click="goSearch">搜索</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="info" icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
+          <el-button icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
         </el-form-item>
       </el-form>
     </div>

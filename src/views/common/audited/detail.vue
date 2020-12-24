@@ -27,11 +27,11 @@
       </el-timeline-item>
     </el-timeline>
 
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" class="dialog-center-public">
       <img :src="detailImgUrl" alt="意见咨询表">
     </el-dialog>
 
-    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" class="dialog-center-public">
       <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
       <div ref="printContent">
         <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
@@ -55,7 +55,7 @@ export default {
     return {
       pageLoading: false,
       list: [],
-      applyId: null
+      projectId: null
     }
   },
   computed: {
@@ -67,14 +67,14 @@ export default {
     // const valid = status == 1 || status == 3
 
     if (!isNaN(+id) ) {
-      this.applyId = id
+      this.projectId = id
       this.getDetail() // 获取详情
     }
   },
   methods: {
     async getDetail() {
       this.pageLoading = true
-      await Community.checkSingle(this.applyId).then(res => {
+      await Community.checkSingle(this.projectId).then(res => {
         if (notEmptyArray(res)) {
           res.forEach(element => {
             element.files = new Array({ uid: Date.now(), url: element.path })

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-30 14:33:26
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 08:59:18
+ * @LastEditTime: 2020-12-23 13:13:35
  * @Description: 居民查看设计图
 -->
 <template>
@@ -37,7 +37,7 @@
       </div>
       <upload-list :files="files" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
     </el-card>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" class="dialog-center">
       <img :src="detailImgUrl" alt="意见咨询表">
     </el-dialog>
 

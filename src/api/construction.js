@@ -49,10 +49,19 @@ const getInfo = (projectId) => {
     method:'get'
   })
 }
+
+// 获取所有施工单位
+const list = ()=>{
+  return request({
+    url:`/construction`,
+    method:'get'
+  })
+}
 export default {
   addOffer,
   listOffers,
   detailOffer,
   reform,
-  getInfo
+  getInfo,
+  list
 }

@@ -2,10 +2,10 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 08:25:17
+ * @LastEditTime: 2020-12-24 09:19:40
  * @Description:
  */
-import { notEmptyArray } from '@/utils'
+import { resetRouter } from '@/router'
 import { validateUsername, validatePassword } from '@/utils/element-validator'
 
 export default {
@@ -13,8 +13,8 @@ export default {
   data() {
     return {
       loginForm: {
-        username: 'designer',
-        password: '123456'
+        username: '',
+        password: ''
       },
       loginRules: {
         // 用户名非数字开头，2-17位中英文和数字组合
@@ -58,6 +58,7 @@ export default {
             if(!roles) {
               this.$router.push('/login') // 无权限返回登录界面
             }
+            resetRouter() // 重置下路由，避免重复路由
             const accessRoutes = await this.$store.dispatch('permission/generateRoutes', roles)
             // dynamically add accessible routes
             // repair the problem of '/' not found, must place 404 at the end

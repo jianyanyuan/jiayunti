@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-22 09:09:26
+ * @LastEditTime: 2020-12-23 10:37:40
  * @Description: 公示/公告上传
 -->
 <template>
@@ -56,10 +56,10 @@
         </el-upload>
       </el-card>
     </template>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog center title="图片详情" :visible.sync="imgVisible"  class="dialog-center">
       <img :src="detailImgUrl" alt="公示附件">
     </el-dialog>
-    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog title="pdf预览" center :visible.sync="pdfVisible"  class="dialog-center">
       <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
       <div ref="printContent">
         <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
@@ -80,7 +80,6 @@ import { notEmptyArray } from '@/utils'
 import Pdf from 'vue-pdf'
 import html2canvas from 'html2canvas'
 import printJS from 'print-js'
-
 export default {
   name: 'ApplyNotice',
   components: {
@@ -207,6 +206,7 @@ export default {
         const showFile = {
           uid: file.uid,
           name: file.name,
+          url:URL.createObjectURL(file.raw)
         }
         const upload = {
           type,

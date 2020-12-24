@@ -38,10 +38,10 @@
       <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
       <el-button v-if="hasChanged" type="success" icon="el-icon-arrow-right" @click.native.prevent="handlePost">提交</el-button>
     </div>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog center title="图片详情" :visible.sync="imgVisible"  class="dialog-center">
       <img :src="detailImgUrl" alt="方案设计稿">
     </el-dialog>
-    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog title="pdf预览" center :visible.sync="pdfVisible"  class="dialog-center">
       <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
       <div ref="printContent">
         <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />

@@ -31,30 +31,11 @@ const data = {
       applicantName: [{ required: true, validator: validateTrueName, trigger: 'blur' }],
       address: [{ required: true, message: '请选择地址' }],
       phoneNumber: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-      location: [{ required: true, message: '请输入地址' }]
-      // designId: [{ required: true, message: '请选择设计单位', trigger: 'blur' }],
-      // deviceId: [{ required: true, message: '请选择设备', trigger: 'blur' }]
+      location: [{ required: true, message: '请输入地址' }],
+      designId: [{ required: true, message: '请选择设计单位', trigger: 'blur' }],
+      typeAndDevice: [{ required: true, message: '请选择设备', trigger: 'blur' }]
     }
   },
-  dissents: [
-    {
-      name: '李先生',
-      time: '2020-10-12 09:00',
-      phone: '15988800123',
-      address: '苏州高新区',
-      detail: '设计方案不合理',
-      status: 0
-    },
-    {
-      name: '张先生',
-      time: '2020-10-13 08:00',
-      phone: '15988800456',
-      address: '苏州高新区',
-      detail: '设计方案不合理',
-      feedback: '你的需求已知晓，将之后联系',
-      status: 1
-    }
-  ],
   list: [],
   countyProps: {
     value: 'id',

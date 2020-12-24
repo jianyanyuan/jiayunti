@@ -33,8 +33,15 @@ const getInfo = (projectId) => {
   })
 }
 
+const list = ()=> {
+  return request({
+    url:'/design',
+    method:'get'
+  })
+}
 export default {
   getArchives,
   modifyArchives,
-  getInfo
+  getInfo,
+  list
 }

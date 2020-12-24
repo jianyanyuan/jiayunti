@@ -2,12 +2,12 @@
  * @Author: zfd
  * @Date: 2020-10-29 16:05:50
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 08:34:00
+ * @LastEditTime: 2020-12-23 11:08:56
  * @Description: 设计单位列表
 -->
 <template>
   <div class="app-container">
-    <article-list :source="source" :total="0" />
+    <article-list :list="list" />
   </div>
 </template>
 
@@ -34,8 +34,8 @@ export default {
       ]
     }
   },
-  created() {
-
+  methods:{
+    list(){}
   }
 }
 </script>

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-18 15:56:12
+ * @LastEditTime: 2020-12-24 08:48:50
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -27,7 +27,7 @@
         <div slot="header">
           <span>{{ room }}</span>
         </div>
-         <el-upload action="#" :file-list="fileList[room]" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,room)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,room)}" drag :auto-upload="false">
+        <el-upload action="#" :file-list="fileList[room]" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,room)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,room)}" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div class="enclosure-tips">
             所需附件：
@@ -53,17 +53,18 @@
 
       <el-button v-if="hasChanged" type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
     </div>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" class="dialog-center-public">
       <img :src="detailImgUrl" alt="意见咨询表">
     </el-dialog>
 
-    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog center :visible.sync="pdfVisible" class="dialog-center-public">
       <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
       <div ref="printContent">
         <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
       </div>
-      <span slot="footer">
-        <el-button @click="printPDF" type="success">打印</el-button>
+      <span slot="title">
+        <el-button @click="printPDF" type="success" style="float:left">打印</el-button>
+        <span>pdf预览</span>
         <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
       </span>
     </el-dialog>
@@ -72,7 +73,7 @@
 
 <script>
 import File from '@/api/file'
-import { notEmptyArray } from '@/utils'
+import { notEmptyArray,checkUpload } from '@/utils'
 // import { deepClone } from '@/utils'
 import Pdf from 'vue-pdf'
 import html2canvas from 'html2canvas'
@@ -97,7 +98,6 @@ export default {
       pdfURL: '', // Pdf路径
       pdfPages: undefined,// pdf内容
       hasChanged: false,
-      // formLoading: false,
       pageLoading: false,
       rooms: [],
       fileList: {}, // 展示用
@@ -155,7 +155,7 @@ export default {
     detailFile(file) {
       if (/\bpdf/i.test(file.name)) {
         // 展示pdf
-        this.pdfURL = Pdf.createLoadingTask('/teat.pdf')
+        this.pdfURL = Pdf.createLoadingTask(file.url)
         this.pdfURL.promise.then(pdf => {
           this.pdfPages = pdf.numPages
           this.pdfVisible = true
@@ -173,7 +173,7 @@ export default {
       html2canvas(this.$refs.printContent, {
         backgroundColor: null,
         useCORS: true,
-        windowHeight: document.body.scrollHeight
+        windowHeight: 0
       }).then((canvas) => {
         const url = canvas.toDataURL()
         printJS({
@@ -201,12 +201,17 @@ export default {
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList, room) {
-      const valid = this.checkUpload(file.raw)
+      const valid = checkUpload(file.raw)
       if (valid && file.status === 'ready') {
-        this.fileList[room].push({
-          uid: file.uid,
-          name: file.name,
-        })
+        let reader = new FileReader()
+        reader.readAsDataURL(file.raw)
+        reader.onload = (event) => {
+          this.fileList[room].push({
+            uid: file.uid,
+            name: file.name,
+            url: event.target.result // 临时保存base64结果
+          })
+        }
         const formData = new FormData()
         formData.append('file', file.raw)
         this.uploadList.push({
@@ -219,24 +224,6 @@ export default {
       } else {
         fileList.pop()
       }
-    },
-    // 图片上传之前判断
-    checkUpload(file) {
-      if (!file.size) {
-        this.$message.error('上传为空！')
-        return false
-      }
-      const typeAllowed = /\bpdf|\bimage/i.test(file.type)
-      const isBig = file.size <= 1024 * 1024 * 10 // 单个文件最大10M
-      if (!typeAllowed) {
-        this.$message.error('只能上传图片或pdf！')
-        return false
-      }
-      if (!isBig) {
-        this.$message.error('图片大小不能超过10MB！')
-        return false
-      }
-      return true
     },
     // 删除文件
     handleUploadRemove(file, fileList, room) {

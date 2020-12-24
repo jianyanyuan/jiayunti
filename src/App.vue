@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 09:15:58
- * @LastEditTime: 2020-12-16 08:36:51
+ * @LastEditTime: 2020-12-24 10:28:56
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\App.vue
@@ -51,5 +51,8 @@ li{
   .el-form-item {
     margin-bottom: 0;
   }
+}
+.dialog-center-public .el-dialog__body {
+  text-align: center;
 }
 </style>

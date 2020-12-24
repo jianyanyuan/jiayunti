@@ -51,7 +51,7 @@
     <div style="text-align:center">
       <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
     </div>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" class="dialog-center">
       <img :src="detailImgUrl" alt="意见咨询表">
     </el-dialog>
 

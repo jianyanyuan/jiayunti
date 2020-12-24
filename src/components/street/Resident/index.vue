@@ -39,30 +39,21 @@
       <el-tab-pane v-for="item in pageContent" :key="item.label" :label="item.label">
         <el-card>
           <upload-list :files="item.fileList" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
-          <!-- <ul>
-            <li v-for="file in item.fileList" :key="file.id" style="text-align:center">
-              <div v-if="file.type === 'pdf'" :ref="'pdf' + file.id" @click="printPDF('pdf' + file.id)">
-                <Pdf v-for="i in file.pdfPages" :key="i" :src="file.pdfURL" :page="i" />
-              </div>
-              <el-image v-else-if="file.type === 'pdfError'" :src="pdfURL"></el-image>
-              <el-image v-else :src="file.url"></el-image>
-            </li>
-          </ul> -->
         </el-card>
       </el-tab-pane>
     </el-tabs>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog center title="图片详情" :visible.sync="imgVisible"  class="dialog-center-public">
       <img :src="detailImgUrl" alt="意见咨询表">
     </el-dialog>
 
-    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog center :visible.sync="pdfVisible"  class="dialog-center-public">
       <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
       <div ref="printContent">
         <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
       </div>
-      <span slot="footer">
-        <el-button @click="printPDF('printContent')" type="success">打印</el-button>
-        <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
+      <span slot="title">
+        <el-button @click="printPDF('printContent')" type="success" style="float:left">打印</el-button>
+        <span>pdf预览</span>
       </span>
     </el-dialog>
   </div>
@@ -195,7 +186,7 @@ export default {
       html2canvas(this.$refs[ref], {
         backgroundColor: null,
         useCORS: true,
-        windowHeight: document.body.scrollHeight
+        windowHeight: 0
       }).then((canvas) => {
         const url = canvas.toDataURL()
         printJS({
@@ -209,7 +200,7 @@ export default {
     detailFile(file) {
       if (/\bpdf/i.test(file.name)) {
         // 展示pdf
-        this.pdfURL = Pdf.createLoadingTask('/teat.pdf')
+        this.pdfURL = Pdf.createLoadingTask(file.url)
         this.pdfURL.promise.then(pdf => {
           this.pdfPages = pdf.numPages
           this.pdfVisible = true

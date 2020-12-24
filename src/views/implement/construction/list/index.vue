@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-21 15:20:02
+ * @LastEditTime: 2020-12-24 08:15:22
  * @Description:图审列表
 -->
 
@@ -25,7 +25,7 @@
           <el-button type="primary" icon="el-icon-search" @click="goSearch">搜索</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="info" icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
+          <el-button icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
         </el-form-item>
       </el-form>
     </div>

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-29 15:36:07
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 08:34:23
+ * @LastEditTime: 2020-12-23 11:19:05
  * @Description:
 -->
 <template>
@@ -21,13 +21,15 @@
     <div v-for="(s, index) in source" :key="index" class="list-item" @click="$router.push({name:'ResidentArticle',params:{detail}})">
       <div class="list-head">
         <div class="l-h-l">
-          <span>{{ s.name }}</span><span>{{ s.time }}</span>
+          <!-- <span>{{ s.time }}</span> -->
+          <span>{{ s.name }}</span>
         </div>
       </div>
-      <p><span>联系方式：{{ s.phone }}</span>官网：<a :href="s.url" target="_blank" @click.stop="">{{ s.url }}</a></p>
+      <!-- 官网：<a :href="s.url" target="_blank" @click.stop="">{{ s.url }}</a> -->
+      <p><span>联系方式：{{ s.phone }}</span></p>
       <p> 地址：{{ s.address }}</p>
     </div>
-    <el-pagination style="margin-top:20px" background layout="prev, pager, next" :total="total" hide-on-single-page :page-size="10" :pager-count="7" :current-page.sync="query.pi" @current-change="handleCurrentChange" />
+    <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
     <!-- <article>
       <article-show :info="source[current].detail || {}" class="article-container" />
     </article>
@@ -46,22 +48,10 @@
 // import ArticleShow from '@/components/ArticleShow'
 export default {
   name: 'ArticleList',
-  components: {
-  },
   props: {
-    source: {
-      type: Array,
-      required: true,
-      validator: function(value) {
-        return value.length > 0
-      }
-    },
-    total: {
-      type: [Number, String],
-      required: true,
-      validator: function(value) {
-        return isFinite(+value) && +value >= 0
-      }
+    list: {
+      type: Function,
+      required: true
     }
   },
   data() {
@@ -70,8 +60,15 @@ export default {
         name: '',
         phone: '',
         address: '',
-        pi: 1
       },
+      pagination: {
+        total: 0,
+        pageIndex: 1,
+        pageSize: 10
+      },
+      pageLoding: false,
+      source: null,
+      total: 0,
       detail: {
         name: '东莞市六田精密电子有限公司',
         source: '东莞市六田精密电子有限',
@@ -84,10 +81,10 @@ export default {
       }
     }
   },
+  created() {
+    this.list(this)
+  },
   methods: {
-    getEntites() {
-
-    },
     filterEntity() {
       this.getEntites()
     },
@@ -98,12 +95,16 @@ export default {
         address: '',
         pi: 1
       }
-      this.getEntites()
+      this.list()
     },
-    handleCurrentChange(value) {
-      this.query.pi = value
-      this.getEntites()
-    }
+    handleSizeChange(val) {
+      this.pagination.pageSize = val
+      this.list(this)
+    },
+    handleCurrentPageChange(val) {
+      this.pagination.pageIndex = val
+      this.list(this)
+    },
   }
 
 }
@@ -138,9 +139,9 @@ export default {
   //   border-bottom: 1px dashed #409eff;
   //    margin-bottom: 30px;
   // }
-  .list-item:hover{
-  border: 1px solid gray;
-}
+  .list-item:hover {
+    border: 1px solid gray;
+  }
   .list-item {
     // height: 200px;
     border: 1px solid #e5e5ee;
@@ -168,7 +169,5 @@ export default {
       }
     }
   }
-
 }
-
 </style>

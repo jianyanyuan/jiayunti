@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-14 08:21:26
+ * @LastEditTime: 2020-12-23 14:31:41
  * @Description:
  */
 import axios from 'axios'
@@ -24,7 +24,7 @@ const service = axios.create({
   //   }
   // },
   // emulateJSON: true,
-  withCredentials: true // Check cross-site Access-Control
+  // withCredentials: true // Check cross-site Access-Control
 })
 
 // request interceptor

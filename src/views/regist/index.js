@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-10 08:42:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-18 15:35:35
+ * @LastEditTime: 2020-12-24 08:21:38
  * @Description:
  */
 import * as Validator from '@/utils/element-validator'
@@ -85,7 +85,7 @@ export default {
             setTimeout(() => {
               this.loading = false
               this.$router.push('/login')
-            }, 2000)
+            }, 1000)
           }).catch(err => {
             this.$message.error(err)
             this.loading = false

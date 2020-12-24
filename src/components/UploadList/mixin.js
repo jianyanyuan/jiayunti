@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-10 14:17:29
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-10 14:17:29
+ * @LastEditTime: 2020-12-23 13:09:52
  * @Description: 
  */
 import Pdf from 'vue-pdf'
@@ -22,12 +22,12 @@ export default {
       detailImgUrl: '',
     }
   },
-  methods:{
+  methods: {
     // 展示文件
     detailFile(file) {
       if (/\bpdf/i.test(file.name)) {
         // 展示pdf
-        this.pdfURL = Pdf.createLoadingTask('/teat.pdf')
+        this.pdfURL = Pdf.createLoadingTask(file.url)
         this.pdfURL.promise.then(pdf => {
           this.pdfPages = pdf.numPages
           this.pdfVisible = true
@@ -44,7 +44,7 @@ export default {
       html2canvas(this.$refs[refName], {
         backgroundColor: null,
         useCORS: true,
-        windowHeight: document.body.scrollHeight
+        windowHeight: 0
       }).then((canvas) => {
         const url = canvas.toDataURL()
         printJS({

@@ -21,10 +21,10 @@
         <upload-list :files="reportList" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
       </el-card>
       <Audit :id="projectId" :status="status" v-if="conflict !== null" :conflict="conflict" />
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog center title="图片详情" :visible.sync="imgVisible"  class="dialog-center">
       <img :src="detailImgUrl" alt="公示附件">
     </el-dialog>
-    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog title="pdf预览" center :visible.sync="pdfVisible"  class="dialog-center">
       <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
       <div ref="printContent">
         <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />

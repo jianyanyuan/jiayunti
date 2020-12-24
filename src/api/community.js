@@ -2,15 +2,23 @@
  * @Author: zfd
  * @Date: 2020-12-14 10:11:19
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-14 14:42:11
+ * @LastEditTime: 2020-12-24 10:29:28
  * @Description: 
  */
 import request from '@/utils/request'
 
-// 查看审核记录
+// 查看审核历史记录
 const checkSingle = (projectId ) => {
   return request({
     url:'/CommunityReview/' + projectId,
+    method: 'get',
+  })
+}
+
+// 查看最新的审核记录
+const checkLatest = (projectId ) => {
+  return request({
+    url:'/CommunityReview/opinion/' + projectId,
     method: 'get',
   })
 }
@@ -58,5 +66,6 @@ export default {
   listObjection,
   modifyObjection,
   addObjection,
-  removeObjection
+  removeObjection,
+  checkLatest
 }

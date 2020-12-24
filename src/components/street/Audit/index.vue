@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import {checkApi,advanceApi} from '@/api/projects'
+import { checkApi, advanceApi } from '@/api/projects'
 import File from '@/api/file'
 import { mapState } from 'vuex'
 export default {
@@ -104,6 +104,7 @@ export default {
         this.attachment = {
           uid: file.uid,
           name: file.name,
+          url: URL.createObjectURL(file.raw),
           file: formData,
         }
       } else {

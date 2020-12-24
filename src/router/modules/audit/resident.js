@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-22 10:49:14
+ * @LastEditTime: 2020-12-23 11:25:47
  * @LastEditors: zfd
  * @Description: 审批端居民路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -92,7 +92,7 @@ const residentRouter = {
       }
     },
     {
-      path: 'audit-detail',
+      path: 'audited-detail/:id/:status',
       component: () => import('@/views/audit/resident/audit-detail.vue'),
       name: 'ResidentAuditDetail',
       hidden: true,

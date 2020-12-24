@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-22 09:07:01
+ * @LastEditTime: 2020-12-24 10:30:18
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -13,14 +13,11 @@
       <el-card style="margin-bottom:30px">
         <div slot="header">
           <span style="margin-right:20px">审核信息</span>
-          <el-tag :type="audit.status | keyToVal(auditTag)">{{ audit.status | keyToVal(auditStatus) }}</el-tag>
+          <el-tag :type="audit.reviewResult | keyToVal(handleTag)">{{ audit.reviewResult | keyToVal(auditOptions) }}</el-tag>
         </div>
-        <el-form v-if="audit.status !== 0" label-position="left" inline class="demo-table-expand">
-          <el-form-item label="审核人">
-            <span>{{ audit.name }}</span>
-          </el-form-item>
+        <el-form label-position="left" class="demo-table-expand">
           <el-form-item label="审核机构">
-            <span>{{ audit.insitution }}</span>
+            <span>{{ audit.reviewOrganization }}</span>
           </el-form-item>
           <el-form-item label="机构地址：">
             <span>{{ audit.address }}</span>
@@ -29,23 +26,18 @@
             <span>{{ audit.phone }}</span>
           </el-form-item>
           <el-form-item label="审核时间：">
-            <span>{{ audit.time }}</span>
+            <span>{{ audit.auditTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </el-form-item>
           <el-form-item label="审核意见：">
-            <span>{{ audit.comments }}</span>
+            <span>{{ audit.reviewOpinion }}</span>
+          </el-form-item>
+          <el-form-item label="审核结果：">
+            <el-tag :type="audit.reviewResult | keyToVal(handleTag)">{{ audit.reviewResult | keyToVal(auditOptions) }}</el-tag>
+          </el-form-item>
+          <el-form-item label="附件：">
+            <upload-list :files="audit.files" list-type="picture-card" :disabled="true" :handle-preview="detailFile" />
           </el-form-item>
         </el-form>
-        <!-- <div slot=" header">
-            <span>基本信息</span>
-        </div>
-        <div>
-          <p>姓名：{{ basic.name }}</p>
-          <p>详细地址：{{ basic.address }}</p>
-          <p>电话：{{ basic.phone }}</p>
-          <p>加装电梯地址：{{ basic.liftAddress }}</p>
-          <p>设计单位：{{ basic.company }}</p>
-          <p>设备规格：{{ basic.spec }}</p>
-        </div> -->
       </el-card>
     </div>
     <el-upload ref="constructionUpload" class="edit-upload" action="#" list-type="picture-card" :on-remove="handleUploadRemove" :file-list="fileList" :on-change="handleUploadChange" :auto-upload="false">
@@ -55,38 +47,38 @@
     <div style="height:50px;text-align:center">
       <el-button type="primary" size="medium" @click="postApply(typeName)">提 交</el-button>
     </div>
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" class="dialog-center-public">
+      <img :src="detailImgUrl" alt="意见咨询表">
+    </el-dialog>
+
+    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" class="dialog-center-public">
+      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
+      <div ref="printContent">
+        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
+      </div>
+      <span slot="footer">
+        <el-button @click="printPDF('printContent')" type="success">打印</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import File from '@/api/file'
-import { notEmptyArray } from '@/utils'
-import {advanceApi} from '@/api/projects'
+import Community from '@/api/community'
+import { mapState } from 'vuex'
+import mixn from '@/components/UploadList/mixin'
+
+import { notEmptyArray, checkUpload } from '@/utils'
+import { advanceApi } from '@/api/projects'
 export default {
   name: 'DesignerEdit',
+  mixins: [mixn],
   data() {
     return {
       projectId: null,
       status: null,
-      audit: {
-        status: 1,
-        insitution: '图审机构',
-        address: '苏州高新区',
-        phone: '15988800323',
-        name: '李先生',
-        time: '2020-10-13 08:00',
-        comments: '审核通过'
-      },
-      auditStatus: [
-        { key: 0, val: '审核中' },
-        { key: 1, val: '审核未通过' },
-        { key: 2, val: '审核通过' }
-      ],
-      auditTag: [
-        { key: 0, val: 'warning' },
-        { key: 1, val: 'danger' },
-        { key: 2, val: 'success' }
-      ],
+      audit: {},
       typeName: 'construction-review-form',
       pageLoading: false,
       fileList: [], // 展示用
@@ -94,6 +86,9 @@ export default {
       deleteList: [] // 删除用
 
     }
+  },
+  computed: {
+    ...mapState('common', ['handleTag', 'auditOptions'])
   },
   created() {
     const { id, status } = this.$route.params
@@ -111,32 +106,53 @@ export default {
       this.fileList = []
       this.uploadList = []
       this.deleteList = []
-      File.get({ projectId: this.projectId, typeName: this.typeName }).then(res => {
-        if (notEmptyArray(res.content)) {
-          for (const i of res.content) {
-            this.fileList.push({
-              uid: i.id,
-              name: i.filename,
-              url: i.path
-            })
+      const auditAsync = new Promise((resolve, reject) => {
+        Community.checkLatest(this.projectId).then(res => {
+          res.files = new Array({ uid: Date.now(), url: res.path })
+          this.audit = res
+          resolve('ok')
+        }).catch(() => {
+          reject('审核意见获取失败')
+        })
+      })
+      const fileAsync = new Promise((resolve, reject) => {
+        File.get({ projectId: this.projectId, typeName: this.typeName }).then(res => {
+          if (notEmptyArray(res.content)) {
+            for (const i of res.content) {
+              this.fileList.push({
+                uid: i.id,
+                name: i.filename,
+                url: i.path
+              })
+            }
           }
-        }
-        this.pageLoading = false
-      }).catch(err => {
+          resolve('ok')
+        }).catch(err => {
+          reject('施工图获取失败')
+        })
+      })
+      Promise.all([auditAsync, fileAsync]).catch((err) => {
         console.log(err)
         this.$message.error('信息获取失败')
-        this.pageLoading = false
       })
+        .finally(() => {
+          this.pageLoading = false
+        })
     },
 
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
-      const valid = this.checkUpload(file.raw)
+      const valid = checkUpload(file.raw)
       if (valid && file.status === 'ready') {
-        this.fileList.push({
-          uid: file.uid,
-          name: file.name,
+        let reader = new FileReader()
+        reader.readAsDataURL(file.raw)
+        reader.onload((event) => {
+          this.fileList.push({
+            uid: file.uid,
+            name: file.name,
+            url: event.target.result
+          })
         })
         const formData = new FormData()
         formData.append('file', file.raw)
@@ -149,24 +165,6 @@ export default {
       } else {
         fileList.pop()
       }
-    },
-    // 图片上传之前判断
-    checkUpload(file) {
-      if (!file.size) {
-        this.$message.error('上传为空！')
-        return false
-      }
-      const typeAllowed = /\bpdf|\bimage/i.test(file.type)
-      const isBig = file.size <= 1024 * 1024 * 10 // 单个文件最大10M
-      if (!typeAllowed) {
-        this.$message.error('只能上传图片或pdf！')
-        return false
-      }
-      if (!isBig) {
-        this.$message.error('图片大小不能超过10MB！')
-        return false
-      }
-      return true
     },
     // 删除文件
     handleUploadRemove(file, fileList) {
@@ -261,10 +259,6 @@ export default {
 </script>
 
 <style scoped>
-.demo-table-expand {
-  font-size: 0;
-}
-
 .demo-table-expand /deep/ label {
   width: 100px;
   color: #99a9bf;
@@ -278,16 +272,6 @@ export default {
 .basic-container /deep/ .el-card__header:nth-child(1) {
   background: #409eff;
   color: #fff;
-}
-.head {
-  height: 30px;
-}
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
 }
 
 .edit-upload /deep/ .el-upload--picture-card {

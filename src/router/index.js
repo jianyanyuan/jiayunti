@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-06 16:28:54
+ * @LastEditTime: 2020-12-24 09:15:50
  * @Description:
  */
 import Vue from 'vue'
@@ -101,10 +101,16 @@ const createRouter = () => new Router({
 })
 const router = createRouter()
 
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
+}
+
+// 先去除已有路由
+export function addRouter(accessRoutes) {
+  const newRouter = createRouter()
+  router.matcher = newRouter.matcher // reset router
+  router.addRoutes(accessRoutes)
 }
 
 export default router

@@ -88,7 +88,7 @@
         </el-form>
       </el-collapse-item>
     </el-collapse>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" :close-on-click-modal="false" class="dialog-center">
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" class="dialog-center">
       <img :src="detailImgUrl" alt="授权委托书">
     </el-dialog>
     <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">

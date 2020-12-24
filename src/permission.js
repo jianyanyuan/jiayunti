@@ -2,10 +2,11 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 08:23:21
+ * @LastEditTime: 2020-12-24 09:09:51
  * @Description:
  */
-import router from './router'
+import router,{ resetRouter } from './router'
+
 import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
@@ -38,6 +39,7 @@ router.beforeEach(async (to, from, next) => {
         next()
       } else {
         try {
+          resetRouter()
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
           const { roles } = await store.dispatch('user/getInfo')

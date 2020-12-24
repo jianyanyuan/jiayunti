@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-04 10:50:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-15 16:05:21
+ * @LastEditTime: 2020-12-24 08:56:18
  * @Description: 附件上传 + 预览通用模块
  */
 import File from '@/api/file'
@@ -75,10 +75,15 @@ export default {
     handleUploadChange(file, fileList) {
       const valid = this.checkUpload(file.raw)
       if (valid && file.status === 'ready') {
-        this.fileList.push({
-          uid: file.uid,
-          name: file.name,
-        })
+        let reader = new FileReader()
+        reader.readAsDataURL(file.raw)
+        reader.onload = (event) => {
+          this.fileList.push({
+            uid: file.uid,
+            name: file.name,
+            url: event.target.result // 临时保存base64结果
+          })
+        }
         const formData = new FormData()
         formData.append('file', file.raw)
         this.uploadList.push({

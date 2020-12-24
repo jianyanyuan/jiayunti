@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-07 10:00:43
+ * @LastEditTime: 2020-12-24 09:04:19
  * @Description: 用户仓库
  */
 import User from '@/api/user'
@@ -115,8 +115,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       removeToken() // must remove  token  first
       // removeRoleToken()
-      resetRouter()
       commit('RESET_STATE')
+      resetRouter()
       resolve()
     })
   },
