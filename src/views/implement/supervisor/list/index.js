@@ -2,11 +2,11 @@
  * @Author: zfd
  * @Date: 2020-12-01 16:27:21
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 10:51:28
+ * @LastEditTime: 2020-12-25 14:32:11
  * @Description:
  */
 import { mapState } from 'vuex'
-import  { listApi } from '@/api/projects'
+import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 // import Flow from '@/components/street/Flow'
 const data = {
@@ -55,13 +55,12 @@ export default {
     // 获取申请列表
     async listApplies() {
       this.listLoading = true
-      await listApi({ page: this.pagination.pageIndex-1, size: this.pagination.pageSize }).then(res => {
+      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+        this.list = []
+        this.pagination.total = 0
         if (notEmptyArray(res.content)) {
           this.list = res.content
           this.pagination.total = res.totalElements
-        }else {
-          this.list = []
-          this.pagination.total = 0
         }
       }).catch(err => {
         this.$message.error('数据获取失败')
@@ -69,8 +68,8 @@ export default {
       })
       this.listLoading = false
     },
-    goSearch(){},
-    clearQuery(){},
+    goSearch() { },
+    clearQuery() { },
     flowView() {
       this.flowVisible = true
     },

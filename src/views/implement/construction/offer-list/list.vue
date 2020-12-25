@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:27:43
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 10:27:29
+ * @LastEditTime: 2020-12-25 14:31:55
  * @Description: 已审核列表
 -->
 
@@ -98,12 +98,11 @@ export default {
     async listApplies() {
       this.listLoading = true
       await Community.auditHistorylist({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+        this.list = []
+        this.pagination.total = 0
         if (notEmptyArray(res.content)) {
           this.list = res.content
           this.pagination.total = res.totalElements
-        }else {
-          this.list = []
-          this.pagination.total = 0
         }
       }).catch(err => {
         this.$message.error('数据获取失败')
@@ -120,7 +119,7 @@ export default {
       this.listApplies()
     },
     showOffer(row) {
-      this.$router.push({name: 'ConstructionOfferDetail', params: { id: row.id, status: row.statusId } })
+      this.$router.push({ name: 'ConstructionOfferDetail', params: { id: row.id, status: row.statusId } })
     },
     goSearch() { },
     clearQuery() { },

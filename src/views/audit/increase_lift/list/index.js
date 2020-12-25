@@ -7,7 +7,7 @@
  */
 // import Flow from '@/components/street/Flow'
 import { mapState } from 'vuex'
-import {listApi} from '@/api/projects'
+import { listApi } from '@/api/projects'
 import { notEmptyArray, checkUpload } from '@/utils'
 export default {
   name: 'IncreaseLift',
@@ -51,15 +51,14 @@ export default {
     async listApplies() {
       this.listLoading = true
       await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+        this.list = []
+        this.pagination.total = 0
         if (notEmptyArray(res.content)) {
           res.content.forEach(v => {
             v.apply = {}
             this.list.push(v)
           })
           this.pagination.total = res.totalElements
-        }else {
-          this.list = []
-          this.pagination.total = 0
         }
       }).catch(err => {
         this.$message.error('数据获取失败')

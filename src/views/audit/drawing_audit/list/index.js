@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-01 16:37:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 17:09:18
+ * @LastEditTime: 2020-12-25 14:30:29
  * @Description:
  */
 import { mapState } from 'vuex'
@@ -55,15 +55,14 @@ export default {
     async listApplies() {
       this.listLoading = true
       await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+        this.list = []
+        this.pagination.total = 0
         if (notEmptyArray(res.content)) {
           res.content.forEach(v => {
             v.apply = {}
             this.list.push(v)
           })
           this.pagination.total = res.totalElements
-        }else {
-          this.list = []
-          this.pagination.total = 0
         }
       }).catch(err => {
         this.$message.error('数据获取失败')

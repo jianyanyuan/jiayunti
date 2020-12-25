@@ -141,10 +141,9 @@ export default {
     async listApplies() {
       this.listLoading = true
       await listApi().then(res => {
+        this.list = []
         if (notEmptyArray(res.content)) {
           this.list = res.content
-        }else {
-          this.list = []
         }
       }).catch(err => {
         this.$message.error('数据获取失败')
