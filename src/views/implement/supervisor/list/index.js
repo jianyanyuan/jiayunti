@@ -2,47 +2,47 @@
  * @Author: zfd
  * @Date: 2020-12-01 16:27:21
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 14:32:11
+ * @LastEditTime: 2020-12-25 16:30:58
  * @Description:
  */
 import { mapState } from 'vuex'
 import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 // import Flow from '@/components/street/Flow'
-const data = {
-  flowVisible: false,
-  query: {
-    code: '',
-    applyName: '',
-    statusId: ''
-  },
-  list: [],
-  listLoading: false,
-  designStatus: [
-    { key: 0, val: '未审核' },
-    { key: 1, val: '审核未通过' },
-    { key: 2, val: '审核通过' }
-  ],
-  designTag: [
-    { key: 0, val: 'info' },
-    { key: 1, val: 'danger' },
-    { key: 2, val: 'success' }
-  ],
-  pagination: {
-    total: 0,
-    pageIndex: 1,
-    pageSize: 10
-  },
-  uploadModal: {
-    visible: false
-  }
-}
+
 export default {
   // components: {
   //   Flow
   // },
   data() {
-    return data
+    return {
+      flowVisible: false,
+      query: {
+        code: '',
+        applyName: '',
+        statusId: ''
+      },
+      list: [],
+      listLoading: false,
+      designStatus: [
+        { key: 0, val: '未审核' },
+        { key: 1, val: '审核未通过' },
+        { key: 2, val: '审核通过' }
+      ],
+      designTag: [
+        { key: 0, val: 'info' },
+        { key: 1, val: 'danger' },
+        { key: 2, val: 'success' }
+      ],
+      pagination: {
+        total: 0,
+        pageIndex: 1,
+        pageSize: 10
+      },
+      uploadModal: {
+        visible: false
+      }
+    }
   },
   computed: {
     ...mapState('common', ['applyStatus', 'applyTag'])

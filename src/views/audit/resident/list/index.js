@@ -2,7 +2,7 @@ import { mapState, mapGetters } from 'vuex'
 import { deepClone, notEmptyArray } from '@/utils'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
 // import Flow from '@/components/street/Flow'
-import {cancelApi,listApi,addApi} from '@/api/projects'
+import { cancelApi, listApi, addApi } from '@/api/projects'
 const defaultForm = {
   applicantName: '',
   location: [],
@@ -12,43 +12,7 @@ const defaultForm = {
   typeAndDevice: [], // []
   rooms: [{ key: 'defaultRoom', val: '' }]
 }
-const data = {
 
-  fileList: [{ name: '123213' }, { name: '456465' }, { name: '789798' }],
-  formLoading: false,
-  listLoading: false,
-  openLoading: false,
-  auditVisible: false,
-  dissentVisible: false,
-  flowVisible: false,
-  audit: {
-
-  },
-  model: {
-    visible: false,
-    form: deepClone(defaultForm),
-    rules: {
-      applicantName: [{ required: true, validator: validateTrueName, trigger: 'blur' }],
-      address: [{ required: true, message: '请选择地址' }],
-      phoneNumber: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-      location: [{ required: true, message: '请输入地址' }],
-      designId: [{ required: true, message: '请选择设计单位', trigger: 'blur' }],
-      typeAndDevice: [{ required: true, message: '请选择设备', trigger: 'blur' }]
-    }
-  },
-  list: [],
-  countyProps: {
-    value: 'id',
-    label: 'name',
-    children: 'areas'
-  },
-  communityProps: {
-    value: 'id',
-    label: 'name',
-    children: 'communities'
-  },
-  communityOptions:[]
-}
 
 export default {
   name: 'ResidentList',
@@ -56,7 +20,43 @@ export default {
   //   Flow
   // },
   data() {
-    return data
+    return {
+
+      fileList: [{ name: '123213' }, { name: '456465' }, { name: '789798' }],
+      formLoading: false,
+      listLoading: false,
+      openLoading: false,
+      auditVisible: false,
+      dissentVisible: false,
+      flowVisible: false,
+      audit: {
+
+      },
+      model: {
+        visible: false,
+        form: deepClone(defaultForm),
+        rules: {
+          applicantName: [{ required: true, validator: validateTrueName, trigger: 'blur' }],
+          address: [{ required: true, message: '请选择地址' }],
+          phoneNumber: [{ required: true, validator: validatePhone, trigger: 'blur' }],
+          location: [{ required: true, message: '请输入地址' }],
+          designId: [{ required: true, message: '请选择设计单位', trigger: 'blur' }],
+          typeAndDevice: [{ required: true, message: '请选择设备', trigger: 'blur' }]
+        }
+      },
+      list: [],
+      countyProps: {
+        value: 'id',
+        label: 'name',
+        children: 'areas'
+      },
+      communityProps: {
+        value: 'id',
+        label: 'name',
+        children: 'communities'
+      },
+      communityOptions: []
+    }
   },
   computed: {
     ...mapState('common', ['applyStatus', 'applyTag', 'handleStatus', 'handleTag']),

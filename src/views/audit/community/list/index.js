@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:08
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 14:30:02
+ * @LastEditTime: 2020-12-25 16:26:03
  * @Description: 社区端列表
  */
 import { mapState } from 'vuex'
@@ -10,29 +10,29 @@ import { mapState } from 'vuex'
 import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 
-const data = {
-  pagination: {
-    total: 0,
-    pageIndex: 1,
-    pageSize: 10
-  },
-  query: {
-    code: '',
-    applyName: '',
-    audit: ''
-  },
-  list: [],
-  listLoading: false,
-  isFinished: false,
-  flowVisible: false
-}
+
 export default {
   name: 'CommunityList',
   // components: {
   //   Flow
   // },
   data() {
-    return data
+    return {
+      pagination: {
+        total: 0,
+        pageIndex: 1,
+        pageSize: 10
+      },
+      query: {
+        code: '',
+        applyName: '',
+        audit: ''
+      },
+      list: [],
+      listLoading: false,
+      isFinished: false,
+      flowVisible: false
+    }
   },
   computed: {
     ...mapState('common', ['applyStatus', 'applyTag', 'auditOptions'])
