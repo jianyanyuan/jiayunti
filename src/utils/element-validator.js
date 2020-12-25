@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-20 08:23:03
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 10:06:13
+ * @LastEditTime: 2020-12-25 16:17:41
  * @Description: 适用于element ui form rule validator
  */
 
@@ -50,16 +50,17 @@ export function validatePassword(rule, value, callback) {
 }
 
 /**
- * 确认密码校验
+ * pwd确认密码校验
  * @param {规则} rule
  * @param {待校验值} value
  * @param {回调函数} callback
  */
 export function validateConfirmPassword(rule, value, callback) {
-  if (!rule || !value) {
+  
+  if (!rule.pwd || !value) {
     callback(new Error('请输入密码'))
   }
-  if (value !== rule) {
+  if (value !== rule.pwd) {
     callback(new Error('两次密码不一致'))
   }
   const reg = /^[a-zA-Z0-9_.@~!?]{6,17}$/
@@ -97,6 +98,7 @@ export function validatePhone(rule, value, callback) {
  * @param {回调函数} callback
  */
 export function validateNumberCode(rule, value, callback) {
+  
   if (typeof rule.length !== 'number') {
     callback()
   }

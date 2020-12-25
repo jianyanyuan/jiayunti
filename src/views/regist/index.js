@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-10 08:42:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 08:21:38
+ * @LastEditTime: 2020-12-25 16:24:47
  * @Description:
  */
 import * as Validator from '@/utils/element-validator'
@@ -22,45 +22,44 @@ function validateAddress(address) {
   return true
 }
 
-const data = {
-  form: {
-    username: '',
-    password: '',
-    idcard: '',
-    address: 'xxx',
-    phonenumber: '',
-    verificationcode: ''
-  },
-  address:{ county: [], community: [] },
-  rule: {
-    username: [{ required: true, trigger: 'blur',message:'用户名非数字开头，2-30位中英文和数字组合', validator: Validator.validateUsername }],
-    password: [{ required: true, trigger: 'blur',message:'密码需为6-17位数字和英文符号组合', validator: Validator.validatePassword }],
-    idcard: [{ required: true, trigger: 'blur',message:'请输入身份证号', validator: Validator.validateIdCard }],
-    phonenumber: [{ required: true, trigger: 'blur',message:'请输入手机号', validator: Validator.validatePhone }],
-    address: [{ required: true }],
-    verificationcode: [{ required: true, trigger: 'blur', message:'验证码为6位纯数字',validator: Validator.validateNumberCode, length: 6 }]
-  },
-  vertifyDisabled: false,
-  countDown: 60,
-  timer: null,
-  loading: false,
-  communityShow:false,
-  countyProps: {
-    value: 'id',
-    label: 'name',
-    children: 'areas'
-  },
-  communityProps: {
-    value: 'id',
-    label: 'name',
-    children: 'communities'
-  },
-  communityOptions: []
-}
 export default {
   name: 'Regist',
   data() {
-    return data
+    return {
+      form: {
+        username: '',
+        password: '',
+        idcard: '',
+        address: 'xxx',
+        phonenumber: '',
+        verificationcode: ''
+      },
+      address:{ county: [], community: [] },
+      rule: {
+        username: [{ required: true, trigger: 'blur',message:'用户名非数字开头，2-30位中英文和数字组合', validator: Validator.validateUsername }],
+        password: [{ required: true, trigger: 'blur',message:'密码需为6-17位数字和英文符号组合', validator: Validator.validatePassword }],
+        idcard: [{ required: true, trigger: 'blur',message:'请输入身份证号', validator: Validator.validateIdCard }],
+        phonenumber: [{ required: true, trigger: 'blur',message:'请输入手机号', validator: Validator.validatePhone }],
+        address: [{ required: true }],
+        verificationcode: [{ required: true, trigger: 'blur', message:'验证码为6位纯数字',validator: Validator.validateNumberCode, length: 6 }]
+      },
+      vertifyDisabled: false,
+      countDown: 60,
+      timer: null,
+      loading: false,
+      communityShow:false,
+      countyProps: {
+        value: 'id',
+        label: 'name',
+        children: 'areas'
+      },
+      communityProps: {
+        value: 'id',
+        label: 'name',
+        children: 'communities'
+      },
+      communityOptions: []
+    }
   },
   computed: {
     ...mapGetters('common', ['countyOptions'])
@@ -113,7 +112,7 @@ export default {
           })
 
         this.timer = setInterval(() => {
-          if (this.countDown > 0 && this.timer) {
+          if (this.countDown >= 0 && this.timer) {
             this.countDown--
           } else {
             clearInterval(this.timer)

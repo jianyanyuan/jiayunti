@@ -7,10 +7,10 @@
       <el-row type="flex" class="row-bg">
         <el-col :span="17">
           <el-form ref="form" :model="form" :rules="rule" class="regist-form" label-position="top">
-            <el-form-item prop="phone" label="手机号">
+            <el-form-item prop="phonenumber" label="手机号">
               <el-input v-model="form.phonenumber" placeholder="请输入手机号" />
             </el-form-item>
-            <el-form-item prop="otp" label="验证码" class="regist-code-container">
+            <el-form-item prop="verificationcode" label="验证码" class="regist-code-container">
               <el-input v-model="form.verificationcode" placeholder="请输入验证码" class="regist-vertify" @focus="checkPhone" />
               <div class="regist-vertify-g">
                 <el-button v-if="!vertifyDisabled" type="primary" @click="getVertification">获取验证码</el-button>

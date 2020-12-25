@@ -79,6 +79,16 @@ const actions = {
       })
     })
   },
+  // 找回密码
+  findPwd(context, data) {
+    return new Promise((resolve, reject) => {
+      User.findPwd(data).then(res => {
+        resolve('密码修改成功')
+      }).catch(() => {
+        reject('密码修改失败')
+      })
+    })
+  },
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {

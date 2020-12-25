@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-11 11:28:03
+ * @LastEditTime: 2020-12-25 16:13:56
  * @Description:
  */
 import request from '@/utils/request'
@@ -42,6 +42,13 @@ const getUserInfo = () => {
   })
 }
 
+const findPwd = (data) => {
+  return request({
+    url: '/auth/retrievePassword',
+    method: 'post',
+    data
+  })
+}
 // export function logout() {
 //   return request({
 //     url: api_prefix_dev + 'logout',
@@ -53,5 +60,6 @@ export default {
   login,
   regist,
   getCode,
-  getUserInfo
+  getUserInfo,
+  findPwd
 }
