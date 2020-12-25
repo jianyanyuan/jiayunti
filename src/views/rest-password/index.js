@@ -2,10 +2,10 @@
  * @Author: zfd
  * @Date: 2020-11-10 08:42:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 16:17:11
+ * @LastEditTime: 2020-12-25 16:36:00
  * @Description:
  */
-import {validatePassword,validatePhone,validateNumberCode} from '@/utils/element-validator'
+import {validatePassword,validatePhone,validateNumberCode,validateConfirmPassword} from '@/utils/element-validator'
 
 export default {
   name: 'Reset',
@@ -14,11 +14,13 @@ export default {
       form: {
         password: '',
         phonenumber: '',
-        verificationcode: ''
+        verificationcode: '',
+        conPwd:''
       },
       rule: {
         password: [{ required: true, trigger: 'blur',message:'密码需为6-17位数字和英文符号组合', validator: validatePassword }],
         phonenumber: [{ required: true, trigger: 'blur',message:'请输入手机号',  validator: validatePhone }],
+        conPwd: [{ required: true, trigger: 'blur',message:'密码不一致',  validator: validateConfirmPassword }],
         verificationcode: [{ required: true, trigger: 'blur',message:'验证码为6位纯数字', validator: validateNumberCode, length: 6 }]
       },
       vertifyDisabled: false,
@@ -55,6 +57,9 @@ export default {
       if (!this.vertifyDisabled) {
         this.$message.error('请先获取验证码')
       }
+    },
+    setRule() {
+      this.rule.conPwd[0].pwd = this.form.password
     },
     // 获取验证码
     getVertification() {

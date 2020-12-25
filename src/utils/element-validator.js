@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-20 08:23:03
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 16:17:41
+ * @LastEditTime: 2020-12-25 16:36:24
  * @Description: 适用于element ui form rule validator
  */
 
@@ -56,7 +56,6 @@ export function validatePassword(rule, value, callback) {
  * @param {回调函数} callback
  */
 export function validateConfirmPassword(rule, value, callback) {
-  
   if (!rule.pwd || !value) {
     callback(new Error('请输入密码'))
   }

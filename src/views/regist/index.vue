@@ -9,7 +9,10 @@
               <el-input v-model="form.username" placeholder="请输入用户名" autocomplete="off" />
             </el-form-item>
             <el-form-item prop="password" label="登录密码">
-              <el-input v-model="form.password" type="password" autocomplete="off" placeholder="请输入6-12位密码" />
+              <el-input v-model="form.password" type="password" autocomplete="off" placeholder="请输入6-12位密码" @blur="setRule" />
+            </el-form-item>
+            <el-form-item prop="conPwd" label="确认密码">
+              <el-input v-model="form.conPwd" type="password" autocomplete="off" placeholder="请再次输入密码" />
             </el-form-item>
             <!-- <el-form-item prop="name" label="姓名">
               <el-input v-model="form.name" placeholder="请输入真实姓名" autocomplete="off" />
@@ -78,14 +81,14 @@ export default {
 .regist-form {
   position: relative;
   left: 5%;
-  width:500px;
+  width: 500px;
 }
-.regist-address-d{
-  margin:0 5px;
-  color:#394867
+.regist-address-d {
+  margin: 0 5px;
+  color: #394867;
 }
-.regist-code-container ::v-deep .el-form-item__content{
-  height:50px
+.regist-code-container ::v-deep .el-form-item__content {
+  height: 50px;
 }
 .regist-vertify {
   width: 310px;
@@ -117,11 +120,10 @@ export default {
   color: black;
 }
 
-.regist-login{
+.regist-login {
   color: #49a71b;
-  &:hover{
+  &:hover {
     color: black;
   }
 }
-
 </style>

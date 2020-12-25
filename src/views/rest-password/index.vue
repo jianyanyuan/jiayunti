@@ -18,7 +18,10 @@
               </div>
             </el-form-item>
             <el-form-item prop="password" label="新密码">
-              <el-input v-model="form.password" type="password" autocomplete="off" placeholder="请输入6-12位密码" />
+              <el-input v-model="form.password" type="password" autocomplete="off" placeholder="请输入6-12位密码" @blur="setRule" />
+            </el-form-item>
+            <el-form-item prop="conPwd" label="确认密码">
+              <el-input v-model="form.conPwd" type="password" autocomplete="off" placeholder="请再次输入密码" />
             </el-form-item>
             <el-form-item style="text-align:center;margin-top:40px">
               <el-button type="success" :loading="loading" class="regist-submit" @click="postReset('form')">重 置</el-button>
@@ -44,13 +47,13 @@ export default {
 </script>
 <style scoped lang="scss">
 .regist-head {
-    text-align: center;
-    line-height: 150px;
-    height: 150px;
-    font-size: 40px;
-    letter-spacing: 4px;
-    color: #fff;
-    text-shadow: 1px 1px 6px #8c8585;
+  text-align: center;
+  line-height: 150px;
+  height: 150px;
+  font-size: 40px;
+  letter-spacing: 4px;
+  color: #fff;
+  text-shadow: 1px 1px 6px #8c8585;
   background-color: #394867;
 }
 .regist-main {

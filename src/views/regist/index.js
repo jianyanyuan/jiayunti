@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-10 08:42:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 16:24:47
+ * @LastEditTime: 2020-12-25 16:39:15
  * @Description:
  */
 import * as Validator from '@/utils/element-validator'
@@ -32,12 +32,14 @@ export default {
         idcard: '',
         address: 'xxx',
         phonenumber: '',
-        verificationcode: ''
+        verificationcode: '',
+        conPwd:''
       },
       address:{ county: [], community: [] },
       rule: {
         username: [{ required: true, trigger: 'blur',message:'用户名非数字开头，2-30位中英文和数字组合', validator: Validator.validateUsername }],
         password: [{ required: true, trigger: 'blur',message:'密码需为6-17位数字和英文符号组合', validator: Validator.validatePassword }],
+        conPwd: [{ required: true, trigger: 'blur',message:'密码不一致',  validator: Validator.validateConfirmPassword }],
         idcard: [{ required: true, trigger: 'blur',message:'请输入身份证号', validator: Validator.validateIdCard }],
         phonenumber: [{ required: true, trigger: 'blur',message:'请输入手机号', validator: Validator.validatePhone }],
         address: [{ required: true }],
@@ -99,6 +101,9 @@ export default {
       if (!this.vertifyDisabled) {
         this.$message.error('请先获取验证码')
       }
+    },
+    setRule() {
+      this.rule.conPwd[0].pwd = this.form.password
     },
     // 获取验证码
     getVertification() {
