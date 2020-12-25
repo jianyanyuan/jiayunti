@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-22 09:08:44
+ * @LastEditTime: 2020-12-25 13:07:28
  * @LastEditors: zfd
  * @Description: 增梯办管道踏勘
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -128,7 +128,10 @@
 import IncreaseLift from '@/api/increase_lift'
 import { advanceApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
+import Pipe from './class'
 
+import { plainToClass } from 'class-transformer'
+import { validateSync } from 'class-validator'
 export default {
   name: 'Pipe',
   data() {
@@ -214,12 +217,14 @@ export default {
       this.editable = false
     },
     isFinished() {
-      const idx = this.tableData.findIndex(v => !v.whetherComplete)
-      if (idx !== -1) {
-        return false 
-      } else {
-        return true // 全部完成
+      for (let i = 0; i < this.tableData.length; i++) {
+        const data = plainToClass(Pipe, this.tableData[i])
+        const errors = validateSync(data)
+        if (errors.length > 0) {
+          return false
+        }
       }
+      return true // 全部完成
     }
   },
   // 获得工程Id

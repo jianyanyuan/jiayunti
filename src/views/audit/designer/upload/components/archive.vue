@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 14:37:31
+ * @LastEditTime: 2020-12-24 16:24:26
  * @Description: 居民申请意见汇总表
 -->
 <template>
@@ -36,7 +36,7 @@
         </el-table-column>
         <el-table-column label="保存时间" min-width="250" align="center">
           <template slot-scope="{row}">
-            <span >{{ new Date(row.completedAt) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+            <span v-show="row.completedAt">{{ new Date(row.completedAt) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
       </el-table>

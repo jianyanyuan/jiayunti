@@ -102,15 +102,11 @@ export const getBonusApi = (projectId ) => {
   })
 }
 
-// export default {
-//   list,
-//   add,
-//   detail,
-//   update,
-//   advance,
-//   check,
-//   getDesigner,
-//   cancel,
-//   addBonus,
-//   getBonus
-// }
+// 获取增梯办信息
+export const getInsInfoApi = (projectId ) => {
+  return request({
+    url:`/users/${projectId}`,
+    method: 'get'
+  })
+}
+

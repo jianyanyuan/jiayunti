@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-21 15:15:20
+ * @LastEditTime: 2020-12-25 09:46:43
  * @Description: 施工端违规处理
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -68,7 +68,7 @@
           <el-form-item label="整改照片:" prop="attachments">
             <upload-list v-if="item.status=== 0 || item.status === 2" :files="item.rectificationFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" />
 
-            <el-upload v-else :file-list="item.rectificationFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture" action="#" class="form-card" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,index)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" drag :auto-upload="false">
+            <el-upload v-else :file-list="item.rectificationFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" action="#" class="form-card" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,index)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" drag :auto-upload="false">
               <div>将文件拖到此处，或点击添加</div>
               <div>单个文件大小不超过20MB，可上传图片或PDF</div>
             </el-upload>
@@ -88,19 +88,6 @@
         </el-form>
       </el-collapse-item>
     </el-collapse>
-    <el-dialog center title="图片详情" :visible.sync="imgVisible" class="dialog-center">
-      <img :src="detailImgUrl" alt="授权委托书">
-    </el-dialog>
-    <el-dialog title="pdf预览" center :visible.sync="pdfVisible" :close-on-click-modal="false" class="dialog-center">
-      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
-      <div ref="printContent">
-        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
-      </div>
-      <span slot="footer">
-        <el-button @click="printPDF" type="success">打印</el-button>
-        <!-- <el-button type="primary" @click="printImg">转图片打印</el-button> -->
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -131,7 +118,7 @@ export default {
         { key: -1, val: '未整改' },
         { key: 0, val: '整改通过' },
         { key: 1, val: '整改未通过' },
-        { key: 2, val: '未回复' }
+        { key: 2, val: '待审核' }
       ],
       handleTag:[
         { key: -1, val: 'info' },

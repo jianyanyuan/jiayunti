@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-14 10:11:19
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 09:01:10
+ * @LastEditTime: 2020-12-25 13:33:40
  * @Description: 施工单位
  */
 import request from '@/utils/request'
@@ -24,6 +24,16 @@ const listOffers = (projectId, params) => {
     params
   })
 }
+
+// 根据项目获取报价
+const getProOffer = (projectId) => {
+  return request({
+    url: `/constructionPrice/getOneHistory/${projectId}`,
+    method: 'get',
+  })
+}
+
+
 
 // 获取单个报价表
 const detailOffer = (id) => {
@@ -57,11 +67,21 @@ const list = ()=>{
     method:'get'
   })
 }
+
+// 违规是否全部整改完
+const isResolved = (projectId) => {
+  return request({
+    url: `/IllegalBehavior/isResolved/${projectId}`,
+    method:'get'
+  })
+}
 export default {
   addOffer,
   listOffers,
   detailOffer,
   reform,
   getInfo,
-  list
+  list,
+  getProOffer,
+  isResolved
 }

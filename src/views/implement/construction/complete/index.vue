@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-21 16:06:04
+ * @LastEditTime: 2020-12-25 09:57:59
  * @Description: 施工档案归档、竣工验收
 -->
 <template>
@@ -103,7 +103,10 @@ export default {
     async handlePost() {
       this.pageLoading = true
       let error = false
-      if(this.uploadList.length === 0) {
+      const idx1 = this.uploadList.findIndex(v=>v.type === 1) === -1
+      const idx2 = this.uploadList.findIndex(v=>v.type === 0) === -1
+      if(idx1 || idx2) {
+        // 判断是否都上传了
         this.$message.error('请上传附件')
         return
       }

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-24 10:04:41
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 10:58:27
+ * @LastEditTime: 2020-12-25 11:14:36
  * @Description: 
 -->
 <template>
@@ -24,7 +24,7 @@
           <span>{{ audit.phone }}</span>
         </el-form-item>
         <el-form-item label="审核时间：">
-          <span>{{ audit.auditTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ new Date(audit.auditTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </el-form-item>
         <el-form-item label="审核意见：">
           <span>{{ audit.reviewOpinion }}</span>
@@ -58,7 +58,7 @@ export default {
     const { id, status } = this.$route.params
     // 0申请中
 
-    if (!isNaN(+id) && status == 0) {
+    if (!isNaN(+id)) {
       this.projectId = id
       this.getDetail() // 获取详情
     }
@@ -67,7 +67,9 @@ export default {
     async getDetail() {
       this.pageLoading = true
       await Community.checkLatest(this.projectId).then(res => {
-        res.files = new Array({ uid: Date.now(), url: res.path })
+        if(res.path) {
+          res.files = new Array({ uid: Date.now(), url: res.path })
+        }
         this.audit = res
       }).catch(() => {
         this.$message.error('数据获取失败')
@@ -79,7 +81,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
     // 0申请中
-    if (isNaN(+id) || status != 0) {
+    if (isNaN(+id)) {
       // 没有id则返回跳转
       next('/redirect' + from.fullPath)
     } else {

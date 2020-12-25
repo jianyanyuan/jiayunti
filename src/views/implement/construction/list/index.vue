@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 08:15:22
+ * @LastEditTime: 2020-12-25 08:32:28
  * @Description:图审列表
 -->
 
@@ -63,11 +63,11 @@
 
           <template slot-scope="{row}">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="row.statusId === 8" size="mini"  type="warning" plain @click="$router.push({name:'ConstructionProcess',params:{id:row.id,status:row.statusId}})">报价</el-button>
+              <el-button v-if="row.statusId === 8" size="mini"  type="warning" :loading="btnLoading" plain @click="willOffer(row)">报价</el-button>
               <!-- <el-button v-if="row.statusId === 11" size="mini" type="success" plain >开始施工</el-button> -->
 
               <el-button v-if="row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'ConstructionFault',params:{id:row.id,status:row.statusId}})">违规查看</el-button>
-              <el-button v-if="row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'ConstructionComplete',params:{id:row.id,status:row.statusId}})">竣工验收</el-button>
+              <el-button v-if="row.statusId === 11" size="mini" type="warning" plain @click="willComplete(row.id)">竣工验收</el-button>
 
             </el-row>
           </template>
@@ -77,9 +77,9 @@
 
     <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
     <!-- 查看流程 -->
-    <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
+    <!-- <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
       <flow />
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 

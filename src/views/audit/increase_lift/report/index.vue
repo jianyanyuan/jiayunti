@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-22 09:09:08
+ * @LastEditTime: 2020-12-25 11:23:07
  * @Description: 增梯办联合审查报告
 -->
 <template>
@@ -141,10 +141,13 @@ export default {
           }
           checkApi(this.form)
             .then(async () => {
-              await advanceApi(this.projectId, this.status).catch((err) => {
-                this.$message.error(err.message || '流程错误')
-              })
-              this.$router.push('/increase-lift/list')
+              await advanceApi(this.projectId, this.status)
+                .then(() => {
+                  this.$router.push('/increase-lift/list')
+                })
+                .catch((err) => {
+                  this.$message.error('部门流转未完成')
+                })
             })
             .catch(() => {
               this.$message.error('审核失败')

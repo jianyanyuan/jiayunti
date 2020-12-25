@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-24 15:16:23
+ * @LastEditTime: 2020-12-24 16:36:56
  * @Description: 居民异议反馈查看
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -18,7 +18,7 @@
             <span>{{ design.designName }}</span>
           </el-form-item>
           <el-form-item label="时间">
-            <span>{{ design.designtime |parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+            <span>{{ new Date(design.designtime) |parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </el-form-item>
           <el-form-item label="详细地址">
             <span>{{ design.address }}</span>
@@ -45,7 +45,7 @@
         </template>
         <el-form label-width="120px" class="center-form">
           <el-form-item label="时间：">
-            {{ item.time | parseTime('{y}-{m}-{d} {h}-{i}')}}
+            {{ new Date(item.time) | parseTime('{y}-{m}-{d} {h}-{i}')}}
           </el-form-item>
           <el-form-item label="联系方式：">
             {{ item.phoneNumber }}
@@ -137,11 +137,12 @@ export default {
       })
       const infoAsync = new Promise((resolve, reject) => {
         Design.getInfo(this.projectId).then(res => {
-          if (!res) {
+          if (res) {
             this.design = res
             resolve('ok')
+          } else {
+            reject('设计单位信息获取失败')
           }
-          reject('设计单位信息获取失败')
         })
           .catch((err) => {
             reject('设计单位信息获取失败')

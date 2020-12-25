@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:43:23
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 15:10:27
+ * @LastEditTime: 2020-12-24 16:21:47
  * @Description: 审核意见
 -->
 <template>
@@ -21,7 +21,7 @@
           <p>
             <span class="audit-tip">附件：</span>
 
-            <upload-list :files="item.files" list-type="picture-card" :disabled="true" />
+            <upload-list style="margin-top:20px" :files="item.files" list-type="picture-card" :disabled="true" />
           </p>
         </el-card>
       </el-timeline-item>
@@ -62,7 +62,9 @@ export default {
       await Community.checkSingle(this.projectId).then(res => {
         if (notEmptyArray(res)) {
           res.forEach(element => {
-            element.files = new Array({ uid: Date.now(), url: element.path })
+            if(element.path) {
+              element.files = new Array({ uid: Date.now(), url: element.path })
+            }
             this.list.push(element)
           });
         }

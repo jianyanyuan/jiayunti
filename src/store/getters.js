@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-10 08:27:17
+ * @LastEditTime: 2020-12-25 10:24:29
  * @Description:
  */
 import { notEmptyArray } from '@/utils'
@@ -33,8 +33,8 @@ const getters = {
         return result.join('/')
       }
     }catch(err) {
-      console.log(err)
-      console.log('地址')
+      // console.log(err)
+      // console.log('地址')
       return ''
     }
   },

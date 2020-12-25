@@ -23,7 +23,7 @@ const checkLatest = (projectId ) => {
   })
 }
 
-// 审核历史记录
+// 审核历史记录 / 报价历史记录
 const auditHistorylist = (params) => {
   return request({
     url: '/project/getHistoryAccording/history',

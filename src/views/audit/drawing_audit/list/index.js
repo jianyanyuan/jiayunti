@@ -2,18 +2,18 @@
  * @Author: zfd
  * @Date: 2020-12-01 16:37:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-22 09:08:23
+ * @LastEditTime: 2020-12-24 17:09:18
  * @Description:
  */
 import { mapState } from 'vuex'
-import Flow from '@/components/street/Flow'
+// import Flow from '@/components/street/Flow'
 import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 export default {
   name: 'DrawingList',
-  components: {
-    Flow
-  },
+  // components: {
+  //   Flow
+  // },
   data() {
     return {
       flowVisible: false,
@@ -61,6 +61,9 @@ export default {
             this.list.push(v)
           })
           this.pagination.total = res.totalElements
+        }else {
+          this.list = []
+          this.pagination.total = 0
         }
       }).catch(err => {
         this.$message.error('数据获取失败')

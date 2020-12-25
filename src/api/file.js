@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-21 14:32:21
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-21 08:52:17
+ * @LastEditTime: 2020-12-24 17:33:31
  * @Description:
  */
 import request from '@/utils/request'
@@ -66,12 +66,19 @@ const get =  (params) => {
 // 报价材料上传
 const uploadOffer = (ConstructionPriceId, data ) => {
   return request({
-    url: api_prefix_dev + 'uploadIllegalFile/'+ ConstructionPriceId ,
+    url: api_prefix_dev + 'uploadPriceFile?ConstructionPriceId='+ ConstructionPriceId ,
     method: 'post',
     data
   })
 }
 
+// 现场照片获取
+const getLocalFile = (projectId) => {
+  return request({
+    url: `${api_prefix_dev}getLocalFile?projectId=${projectId}&typeName=locale-form`,
+    method: 'get'
+  })
+}
 // 违规文件上传
 /**
  * 
@@ -102,5 +109,6 @@ export default {
   getConsultation,
   get,
   uploadOffer,
-  uploadFault
+  uploadFault,
+  getLocalFile
 }

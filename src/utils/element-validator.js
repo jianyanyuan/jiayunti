@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-20 08:23:03
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-17 10:38:51
+ * @LastEditTime: 2020-12-25 10:06:13
  * @Description: 适用于element ui form rule validator
  */
 
@@ -77,7 +77,8 @@ export function validateConfirmPassword(rule, value, callback) {
  * @param {回调函数} callback
  */
 export function validatePhone(rule, value, callback) {
-  const reg = /^1[3456789]\d{9}$/
+  const reg = /^(13[0-9]|14[01456879]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[0-3,5-9])\d{8}$/
+  // const reg = /^1[3456789]\d{9}$/
   if (!value) {
     callback(new Error('请输入手机号'))
   } else {

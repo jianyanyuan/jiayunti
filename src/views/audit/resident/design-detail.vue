@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-30 14:33:26
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 13:13:35
+ * @LastEditTime: 2020-12-24 16:38:31
  * @Description: 居民查看设计图
 -->
 <template>
@@ -19,7 +19,7 @@
             <span>{{ design.designName }}</span>
           </el-form-item>
           <el-form-item label="时间">
-            <span>{{ design.designtime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+            <span>{{ new Date(design.designtime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </el-form-item>
           <el-form-item label="详细地址">
             <span>{{ design.address }}</span>

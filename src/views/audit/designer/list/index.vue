@@ -117,9 +117,9 @@
       <p>审核单位：XXX图审机构 审核人员：XXX 联系电话：0512XXXX 工作时间：周一至周五 9:00-11:00 14:00-17:00</p>
     </div> -->
     <!-- 查看流程 -->
-    <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
+    <!-- <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
       <flow />
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 

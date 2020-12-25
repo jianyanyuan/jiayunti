@@ -2,19 +2,19 @@
  * @Author: zfd
  * @Date: 2020-12-10 11:06:02
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-22 09:07:40
+ * @LastEditTime: 2020-12-24 17:06:04
  * @Description: 
  */
 import { mapState } from 'vuex'
-import Flow from '@/components/street/Flow'
+// import Flow from '@/components/street/Flow'
 import File from '@/api/file'
 import {listApi,advanceApi} from '@/api/projects'
 import { notEmptyArray,checkUpload } from '@/utils'
 export default {
   name: 'DesignerList',
-  components: {
-    Flow
-  },
+  // components: {
+  //   Flow
+  // },
   data() {
     return {
       flowVisible: false,
@@ -65,6 +65,9 @@ export default {
             this.list.push(v)
           })
           this.pagination.total = res.totalElements
+        }else {
+          this.list = []
+          this.pagination.total = 0
         }
       }).catch(err => {
         this.$message.error('数据获取失败')
@@ -146,6 +149,7 @@ export default {
                 .catch(() => (this.$message.error('流程错误')))
               this.uploadVisible = false
               this.uploadId = null
+              this.listApplies()
 
             }
           }

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 09:06:05
- * @LastEditTime: 2020-12-23 09:17:27
+ * @LastEditTime: 2020-12-25 09:14:57
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\components\street\design\index.vue
@@ -16,7 +16,7 @@
               <span>{{ design.designName }}</span>
             </el-form-item>
             <el-form-item label="时间">
-              <span>{{ new Date(design.designtime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+              <span v-show="design.designtime">{{ new Date(design.designtime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
             </el-form-item>
             <el-form-item label="电话">
               <span>{{ design.phone }}</span>
@@ -74,7 +74,7 @@ export default {
       this.pageLoading = true
       const infoAsync = new Promise((resolve, reject) => {
         Design.getInfo(this.id).then(res => {
-          if (!res) {
+          if (res) {
             this.design = res
             resolve('ok')
           }

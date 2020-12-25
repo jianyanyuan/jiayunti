@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-16 09:05:18
+ * @LastEditTime: 2020-12-25 10:33:52
  * @LastEditors: zfd
  * @Description: construction process
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -56,29 +56,22 @@ export default {
   },
   created() {
     const { id, status } = this.$route.params
-    //3第二次提交材料
+    //8施工报价
     if (!isNaN(+id) && status == 8) {
       this.projectId = id
       this.status = status
     }
   },
   methods: {
-    // change(event) {
-    //   if (event.target.className === 'stepBtn') {
-    //     this.curStep = +event.target.attributes['step-index'].value
-    //   }
-    // },
+
     handleProcess(length) {
       this.curStep += length
-    },
-    submitApplay() {
-
     }
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
-    //3第二次提交材料
+    //8施工报价
     const illegal = isNaN(+id) || status != 8
 
     if (illegal) {

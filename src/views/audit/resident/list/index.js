@@ -1,7 +1,7 @@
 import { mapState, mapGetters } from 'vuex'
 import { deepClone, notEmptyArray } from '@/utils'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
-import Flow from '@/components/street/Flow'
+// import Flow from '@/components/street/Flow'
 import {cancelApi,listApi,addApi} from '@/api/projects'
 const defaultForm = {
   applicantName: '',
@@ -52,9 +52,9 @@ const data = {
 
 export default {
   name: 'ResidentList',
-  components: {
-    Flow
-  },
+  // components: {
+  //   Flow
+  // },
   data() {
     return data
   },
@@ -143,6 +143,8 @@ export default {
       await listApi().then(res => {
         if (notEmptyArray(res.content)) {
           this.list = res.content
+        }else {
+          this.list = []
         }
       }).catch(err => {
         this.$message.error('数据获取失败')

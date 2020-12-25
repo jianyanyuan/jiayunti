@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 08:25:29
+ * @LastEditTime: 2020-12-25 11:09:51
  * @Description:申请列表
 -->
 
@@ -51,7 +51,8 @@
               <el-button v-if="scope.row.statusId === 8" size="mini" type="warning" plain @click="$router.push({name:'ResidentOffer',params:{id:scope.row.id,status:scope.row.statusId}})">选择报价</el-button>
               <!-- <el-tag v-if="scope.row.statusId === 10" size="medium" type="success" effect="light">申请已通过</el-tag> -->
               <el-tag v-if="scope.row.statusId === 13" size="medium" type="danger" effect="light">已驳回</el-tag>
-              <el-button v-if="[0,13].includes(scope.row.statusId) && scope.row.whetherThrough===1" size="mini" plain type="danger" @click="$router.push({name:'ResidentAuditDetail',params:{id:scope.row.id,status:scope.row.statusId}})">审核意见</el-button>
+              <el-button v-if="scope.row.statusId ===0 && scope.row.whetherThrough===1" size="mini" plain type="danger" @click="$router.push({name:'ResidentAuditDetail',params:{id:scope.row.id,status:scope.row.statusId}})">审核意见</el-button>
+              <el-button v-if="scope.row.statusId === 13" size="mini" plain type="danger" @click="$router.push({name:'ResidentAuditDetail',params:{id:scope.row.id,status:scope.row.statusId}})">驳回原因</el-button>
 
               <el-tag v-if="scope.row.statusId === 14" size="medium" type="info" effect="light">已撤销</el-tag>
               <el-button v-if="scope.row.statusId === 11" size="mini" type="warning" plain @click="$router.push({path:'/resident/fault-detail',query:{id:scope.row.id,status:scope.row.statusId}})">违规查看</el-button>

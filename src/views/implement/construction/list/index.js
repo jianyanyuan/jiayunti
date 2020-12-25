@@ -2,18 +2,19 @@
  * @Author: zfd
  * @Date: 2020-12-10 11:06:02
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-17 09:56:18
+ * @LastEditTime: 2020-12-25 13:37:43
  * @Description: 
  */
 import { mapState } from 'vuex'
-import Flow from '@/components/street/Flow'
-import  { listApi } from '@/api/projects'
+// import Flow from '@/components/street/Flow'
+import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
+import Construction from '@/api/construction'
 export default {
   name: 'DesignerList',
-  components: {
-    Flow
-  },
+  // components: {
+  //   Flow
+  // },
   data() {
     return {
       flowVisible: false,
@@ -22,7 +23,7 @@ export default {
         applyName: '',
         status: ''
       },
-      designStatus:{},
+      designStatus: {},
       list: [],
       listLoading: false,
       pagination: {
@@ -30,7 +31,8 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      expandLoading: false
+      expandLoading: false,
+      btnLoading: false
     }
   },
   computed: {
@@ -50,12 +52,51 @@ export default {
             this.list.push(v)
           })
           this.pagination.total = res.totalElements
+        } else {
+          this.list = []
+          this.pagination.total = 0
         }
       }).catch(err => {
         this.$message.error('数据获取失败')
         console.log(err)
       })
       this.listLoading = false
+    },
+    async willOffer(row) {
+      let valid = true
+      this.btnLoading = true
+      await Construction.getProOffer(row.id).then((res) => {
+        if (Object.keys(res).length !== 0) {
+          valid = false
+        }
+      })
+        .catch(() => {
+          valid = false
+        })
+      this.btnLoading = false
+      if (valid) {
+        this.$router.push({ name: 'ConstructionProcess', params: { id: row.id, status: row.statusId } })
+      } else {
+        this.$message.error('请勿重复报价')
+      }
+    },
+    async willComplete(id) {
+      let valid = true
+      this.btnLoading = true
+      await Construction.isResolved(id).then((res) => {
+        if (res.result !== 0) {
+          valid = false
+        }
+      })
+        .catch(() => {
+          valid = false
+        })
+      this.btnLoading = false
+      if (valid) {
+        this.$router.push({ name: 'ConstructionComplete', params: { id: row.id, status: row.statusId } })
+      } else {
+        this.$message.error('违规未处理完毕!')
+      }
     },
     flowView() {
       this.flowVisible = true

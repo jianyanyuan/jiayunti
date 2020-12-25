@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-17 09:40:40
+ * @LastEditTime: 2020-12-25 09:10:06
  * @LastEditors: zfd
  * @Description: 居民查看报价单详情
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -34,7 +34,7 @@
         </tr>
         <tr>
           <td>报价时间</td>
-          <td>{{ construction.offerTime }}</td>
+          <td>{{ construction.offerTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</td>
           <td>施工周期（天）</td>
           <td>{{ construction.constructionPeriod }}</td>
         </tr>
@@ -57,7 +57,7 @@
             <a v-for="file in construction.priceFileList" :key="file.name" class="file-display">
               <i class="el-icon-document" />
               {{ file.filename }}
-              <i class="el-icon-download" style="float:right" />
+              <i class="el-icon-download" style="float:right" @click="download(file)" />
             </a>
           </td>
         </tr>
@@ -135,9 +135,7 @@ export default {
           console.log(err)
           this.$message.error('报价获取失败')
         })
-        .finally(() => {
-          this.pageLoading = false
-        })
+        .finally(() => (this.pageLoading = false))
     },
     openModal() {
       Supervision.list()
@@ -151,13 +149,29 @@ export default {
         })
     },
     async handlePost() {
-      await advanceApi(this.projectId, this.status,this.construction.constructionId,this.supervisorId)
-      .then(()=>{
-        this.$router.push('/resident/list')
-      })
-      .catch(() => {
-        this.$message.error('流程错误')
-      })
+      await advanceApi(this.projectId, this.status, this.construction.constructionId, this.supervisorId)
+        .then(() => {
+          this.$router.push('/resident/list')
+        })
+        .catch(() => {
+          this.$message.error('流程错误')
+        })
+    },
+    download(file) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', file.path, true);
+      xhr.responseType = "blob";    // 返回类型blob
+      xhr.onload = function () {
+        if (this.status === 200) {
+          var blob = this.response;// 获取返回值
+          var a = document.createElement('a');
+          a.download = file.filename;
+          a.href = window.URL.createObjectURL(blob);
+          a.click();
+        }
+      };
+      // 发送ajax请求
+      xhr.send();
     }
   },
   // 获得工程Id

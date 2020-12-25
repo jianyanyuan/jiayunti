@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-04 10:50:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 08:56:18
+ * @LastEditTime: 2020-12-25 09:33:23
  * @Description: 附件上传 + 预览通用模块
  */
 import File from '@/api/file'
@@ -52,22 +52,42 @@ export default {
       this.fileList = []
       this.uploadList = []
       this.deleteList = []
-      File.get({ projectId: this.id, typeName: this.typeName }).then(res => {
-        if (notEmptyArray(res.content)) {
-          for (const i of res.content) {
-            this.fileList.push({
-              uid: i.id,
-              name: i.filename,
-              url: i.path
-            })
+      if (this.typeName === 'locale-form') {
+        File.getLocalFile(this.id).then(res => {
+          if (notEmptyArray(res.content)) {
+            for (const i of res.content) {
+              this.fileList.push({
+                uid: i.id,
+                name: i.filename,
+                url: i.path
+              })
+            }
           }
-        }
-        this.pageLoading = false
-      }).catch(err => {
-        console.log(err)
-        this.$message.error('信息获取失败')
-        this.pageLoading = false
-      })
+          this.pageLoading = false
+        }).catch(err => {
+          console.log(err)
+          this.$message.error('信息获取失败')
+          this.pageLoading = false
+        })
+      } else {
+        File.get({ projectId: this.id, typeName: this.typeName }).then(res => {
+          if (notEmptyArray(res.content)) {
+            for (const i of res.content) {
+              this.fileList.push({
+                uid: i.id,
+                name: i.filename,
+                url: i.path
+              })
+            }
+          }
+          this.pageLoading = false
+        }).catch(err => {
+          console.log(err)
+          this.$message.error('信息获取失败')
+          this.pageLoading = false
+        })
+      }
+
     },
 
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用

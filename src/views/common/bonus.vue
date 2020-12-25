@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-22 10:07:42
+ * @LastEditTime: 2020-12-25 10:03:41
  * @Description: 补贴派发
 -->
 <template>
@@ -15,10 +15,10 @@
     <el-card class="upload-card" style="margin-bottom:30px">
       <el-form :model="model" :rules="model.rule">
         <el-form-item label="补助金额（元）:" prop="money">
-          <el-input v-model="model.money" />
+          <el-input v-model="model.money" :disabled="!isIns" />
         </el-form-item>
         <el-form-item label="证明材料:" prop="attachments">
-          <el-upload v-if="model.attachments.length === 0 && isIns" action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList)}" list-type="picture" drag multiple :auto-upload="false">
+          <el-upload v-if="model.attachments.length === 0 && isIns" action="#" :on-remove="handleUploadRemove" :on-change="function(file,fileList){return handleUploadChange(file,fileList)}" drag multiple :auto-upload="false">
             <!-- <i class="el-icon-upload" /> -->
             <div>将文件拖到此处，或点击添加</div>
             <p>单个文件大小不超过20MB</p>
@@ -69,7 +69,7 @@ export default {
 
   computed: {
     isIns() {
-      return this.$store.getters.roles.includes('ROLE_INCREASE_LIFT')
+      return this.$store.getters.roles?.includes('ROLE_INCREASE_LIFT')
     }
   },
   watch: {
@@ -89,8 +89,7 @@ export default {
       this.pageLoading = true
       await getBonusApi(this.projectId)
         .then((res) => {
-          // 没有返回{}
-          if (Object.keys(res).length > 0) {
+          if (res.money && res.fileTypes) {
             this.uploaded = true
             const reg = /(?=(\B\d{3})+$)/g
             this.model.money = res.money.toString().replace(reg, ',')

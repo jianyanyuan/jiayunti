@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 14:31:41
+ * @LastEditTime: 2020-12-25 10:59:16
  * @Description:
  */
 import axios from 'axios'
@@ -71,9 +71,9 @@ service.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           Message({
-            message: '登录错误,请重新登录',
+            message: '登录失败,请重新登录',
             type: 'error',
-            duration: 5 * 1000
+            duration: 3 * 1000
           })
           removeToken()
           router.push('/login')
@@ -82,14 +82,14 @@ service.interceptors.response.use(
           Message({
             message: '操作无权限',
             type: 'error',
-            duration: 5 * 1000
+            duration: 3 * 1000
           })
           break
         case 500:
           Message({
             message: '服务器错误',
             type: 'error',
-            duration: 5 * 1000
+            duration: 3 * 1000
           })
           break
         default:

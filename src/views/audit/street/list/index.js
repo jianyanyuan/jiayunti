@@ -2,13 +2,13 @@
  * @Author: zfd
  * @Date: 2020-12-01 16:27:21
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-01 16:36:50
+ * @LastEditTime: 2020-12-24 16:41:41
  * @Description:
  */
 import { mapState } from 'vuex'
 import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
-import Flow from '@/components/street/Flow'
+// import Flow from '@/components/street/Flow'
 const data = {
   flowVisible: false,
   query: {
@@ -38,9 +38,9 @@ const data = {
   }
 }
 export default {
-  components: {
-    Flow
-  },
+  // components: {
+  //   Flow
+  // },
   data() {
     return data
   },
@@ -59,6 +59,9 @@ export default {
         if (notEmptyArray(res.content)) {
           this.list = res.content
           this.pagination.total = res.totalElements
+        }else {
+          this.list = []
+          this.pagination.total = 0
         }
       }).catch(err => {
         this.$message.error('数据获取失败')

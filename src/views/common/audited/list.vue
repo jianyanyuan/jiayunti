@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:27:43
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 15:08:38
+ * @LastEditTime: 2020-12-25 10:53:53
  * @Description: 已审核列表
 -->
 
@@ -37,23 +37,24 @@
           </template>
         </el-table-column>
         <el-table-column label="编号" prop="projectName" />
+        <el-table-column label="申请人" prop="applicantName" />
         <el-table-column label="提交时间" align="center" prop="addTime" sortable min-width="145px">
           <template slot-scope="{row}">
             <i class="el-icon-time" />
             <span>{{ new Date(row.addTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="审核时间" align="center" prop="auditTime" sortable min-width="145px">
-          <template v-if="scope.row.auditTime" slot-scope="scope">
+        <el-table-column label="最新处理时间" align="center" prop="updateTime" sortable min-width="145px">
+          <template v-if="scope.row.updateTime" slot-scope="scope">
             <i class="el-icon-time" />
-            <span>{{ new Date(scope.row.auditTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+            <span>{{ new Date(scope.row.updateTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center" prop="whetherThrough" sortable>
+        <!-- <el-table-column label="状态" align="center" prop="whetherThrough" sortable>
           <template slot-scope="scope">
             <el-tag :type="scope.row.whetherThrough | keyToVal(auditOptions)">{{ scope.row.whetherThrough | keyToVal(auditOptions) }}</el-tag>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <!-- <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button size="mini" type="warning" @click="">审核意见</el-button>
@@ -100,6 +101,9 @@ export default {
         if (notEmptyArray(res.content)) {
           this.list = res.content
           this.pagination.total = res.totalElements
+        }else {
+          this.list = []
+          this.pagination.total = 0
         }
       }).catch(err => {
         this.$message.error('数据获取失败')
@@ -120,7 +124,7 @@ export default {
       const reg = /\/(.*)\//
       const prefix = this.$route.fullPath.match(reg)[1]
       const path = `/${prefix}/audited-detail`
-      this.$router.push({path, query: { id: row.id, status: row.statusId } })
+      this.$router.push({ path, query: { id: row.id, status: row.statusId } })
     },
     goSearch() { },
     clearQuery() { },

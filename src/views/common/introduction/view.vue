@@ -1,3 +1,10 @@
+<!--
+ * @Author: zfd
+ * @Date: 2020-10-28 13:47:36
+ * @LastEditors: zfd
+ * @LastEditTime: 2020-12-25 10:57:13
+ * @Description: 
+-->
 <template>
   <div class="intro-container">
     <header>
@@ -24,7 +31,6 @@ export default {
     }
   },
   created() {
-    console.log('created')
     // 2
   },
   beforeRouteEnter(to, from, next) {

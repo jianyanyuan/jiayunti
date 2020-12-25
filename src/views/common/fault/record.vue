@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-23 09:10:24
+ * @LastEditTime: 2020-12-25 09:23:19
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -97,10 +97,7 @@ export default {
     getInfo() {
       this.pageLoading = true
       Construction.getInfo(this.projectId).then(res => {
-        if (!res) {
-          this.construction = res
-        }
-        this.$message.error('信息获取失败')
+        this.construction = res
       })
         .catch((err) => {
           this.$message.error('信息获取失败')

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-17 08:32:13
+ * @LastEditTime: 2020-12-25 08:33:48
  * @LastEditors: zfd
  * @Description: 施工报价
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -22,7 +22,7 @@
         <tr>
           <td>施工单位</td>
           <td>
-            <el-input v-model="construction.constructionUnit" placeholder="请输入施工单位" auto-complete="false" />
+            {{construction.constructionUnit}}
           </td>
           <td>联系人</td>
           <td>
@@ -90,7 +90,7 @@ import { validateSync } from 'class-validator'
 import { Construction } from './class'
 import Api from '@/api/construction'
 import File from '@/api/file'
-import { notEmptyArray } from '@/utils'
+import { notEmptyArray,checkUpload } from '@/utils'
 export default {
   name: 'ConstructionOffer',
   props: {
@@ -106,14 +106,14 @@ export default {
   data() {
     return {
       construction: {
-        constructionUnit: '南通一建',
-        address: '江苏省',
-        phoneNumber: '15988800323',
-        contact: '蒋一帆',
+        constructionUnit: this.$store.getters.username,
+        address: '',
+        phoneNumber: '',
+        contact: '',
         offerTime: '',
-        constructionPeriod: '10',
-        materialCost: '100',
-        artificialCost: '100'
+        constructionPeriod: '',
+        materialCost: '',
+        artificialCost: ''
       },
       uploadList: [], // 上传用
       pageLoading: false,
@@ -124,7 +124,6 @@ export default {
 
   },
   created() {
-
   },
   methods: {
     nextProcess(arrow) {
@@ -134,7 +133,7 @@ export default {
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
-      const valid = this.checkUpload(file.raw)
+      const valid = checkUpload(file.raw)
       if (valid && file.status === 'ready') {
         const formData = new FormData()
         formData.append('file', file.raw)
@@ -147,24 +146,6 @@ export default {
         fileList.pop()
       }
     },
-    // 图片上传之前判断
-    checkUpload(file) {
-      if (!file.size) {
-        this.$message.error('上传为空！')
-        return false
-      }
-      const typeAllowed = /\bpdf|\bimage/i.test(file.type)
-      const isBig = file.size <= 1024 * 1024 * 10 // 单个文件最大10M
-      if (!typeAllowed) {
-        this.$message.error('只能上传图片或pdf！')
-        return false
-      }
-      if (!isBig) {
-        this.$message.error('图片大小不能超过10MB！')
-        return false
-      }
-      return true
-    },
     // 删除文件
     handleUploadRemove(file, fileList) {
       // 未上传 --> 取消上传
@@ -176,6 +157,7 @@ export default {
       const data = plainToClass(Construction, this.construction)
       const errors = validateSync(data)
       if (errors.length > 0) {
+        console.log(errors)
         this.$message.error('请补全信息')
         return
       }

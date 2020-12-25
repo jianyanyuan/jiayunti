@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-23 09:07:30
+ * @LastEditTime: 2020-12-25 09:43:43
  * @Description: 施工端违规处理
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -65,11 +65,11 @@
 
           </el-form-item>
           <el-form-item label="处理回复:" v-if="item.status === 0 || item.status === 1">
-            <el-input v-model="item.toResponse" type="textarea" autosize v-if="item.toResponse" />
+            <el-input v-model="item.toResponse" type="textarea" autosize v-if="item.toResponse" disabled />
           </el-form-item>
           <el-form-item label="处理结果:" v-if="item.status === 0 || item.status === 1">
             <el-select v-model="item.result" disabled v-if="item.toResponse">
-              <el-option v-for="result in auditOptions" :key="result.val" :value="result.key" :label="result.val" />
+              <el-option v-for="result in auditOptions" :key="result.val" :value="result.key" :label="result.val" disabled />
             </el-select>
           </el-form-item>
         </el-form>
@@ -110,7 +110,7 @@ export default {
     ...mapState('common', ['auditOptions'])
   },
   created() {
-    const { id, status } = this.$route.params
+    const { id, status } = this.$route.query
     //11 施工中
     if (!isNaN(+id) && status == 11) {
       this.projectId = id
@@ -123,11 +123,12 @@ export default {
       this.pageLoading = true
       const infoAsync = new Promise((resolve, reject) => {
         Construction.getInfo(this.projectId).then(res => {
-          if (!res) {
+          if (res) {
             this.construction = res
             resolve('ok')
+          } else {
+            reject('施工单位单位信息获取失败')
           }
-          reject('施工单位单位信息获取失败')
         })
           .catch((err) => {
             reject('施工单位单位信息获取失败')
@@ -165,7 +166,7 @@ export default {
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    const { id, status } = to.params
+    const { id, status } = to.query
     // 11 施工中
     if (isNaN(+id) || status != 11) {
       // 没有id则返回跳转

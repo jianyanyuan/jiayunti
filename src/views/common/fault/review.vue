@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-02 14:20:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 09:13:46
+ * @LastEditTime: 2020-12-25 09:42:23
  * @Description:
 -->
 <!--
@@ -163,7 +163,7 @@ export default {
       })
       const infoAsync = new Promise((resolve, reject) => {
         Construction.getInfo(this.projectId).then(res => {
-          if (!res) {
+          if (res) {
             this.construction = res
             resolve('ok')
           }

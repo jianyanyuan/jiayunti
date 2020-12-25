@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 09:19:40
+ * @LastEditTime: 2020-12-24 15:56:51
  * @Description:
  */
 import { resetRouter } from '@/router'
@@ -76,11 +76,11 @@ export default {
             .catch(async (err) => {
               await this.$store.dispatch('user/resetToken')
               console.log(err)
-              this.$message.error(err)
+              // this.$message.error(err)
               this.loading = false
             })
         } else {
-          this.$message.error('请输入正确的用户名密码')
+          // this.$message.error('请输入正确的用户名密码')
           return false
         }
       })

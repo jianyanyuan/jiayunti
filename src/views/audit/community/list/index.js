@@ -2,11 +2,11 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:08
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-22 09:06:45
+ * @LastEditTime: 2020-12-24 16:41:14
  * @Description: 社区端列表
  */
 import { mapState } from 'vuex'
-import Flow from '@/components/street/Flow'
+// import Flow from '@/components/street/Flow'
 import {listApi} from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 
@@ -28,9 +28,9 @@ const data = {
 }
 export default {
   name: 'CommunityList',
-  components: {
-    Flow
-  },
+  // components: {
+  //   Flow
+  // },
   data() {
     return data
   },
@@ -48,6 +48,9 @@ export default {
         if (notEmptyArray(res.content)) {
           this.list = res.content
           this.pagination.total = res.totalElements
+        }else {
+          this.list = []
+          this.pagination.total = 0
         }
       }).catch(err => {
         this.$message.error('数据获取失败')

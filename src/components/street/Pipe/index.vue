@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-17 10:30:19
+ * @LastEditTime: 2020-12-25 10:14:18
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -68,7 +68,7 @@
 <script>
 import IncreaseLift from '@/api/increase_lift'
 import { notEmptyArray } from '@/utils'
-
+import {getInsInfoApi} from '@/api/projects'
 export default {
   name: 'AuditPipe',
   props: {
@@ -95,13 +95,13 @@ export default {
     detailApply() {
       this.pageLoading = true
       const basicAsync = new Promise((resolve, reject) => {
-        this.$store.dispatch('getProjectBasic', this.id)
+        getInsInfoApi(this.id)
           .then(res => {
             this.increaseLift = res
             resolve('获取成功')
           })
           .catch(() => {
-            reject('基础信息获取失败')
+            reject('增梯办信息获取失败')
           })
       })
       const detailAsync = new Promise((resolve, reject) => {

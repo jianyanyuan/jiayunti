@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-15 14:19:44
+ * @LastEditTime: 2020-12-24 17:11:45
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -17,7 +17,7 @@
             <span>{{ design.designName }}</span>
           </el-form-item>
           <el-form-item label="时间">
-            <span>{{ design.designtime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+            <span>{{ new Date(design.designtime) | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
           </el-form-item>
           <el-form-item label="详细地址">
             <span>{{ design.address }}</span>
@@ -92,11 +92,12 @@ export default {
       })
       const infoAsync = new Promise((resolve, reject) => {
         Design.getInfo(this.projectId).then(res => {
-          if (!res) {
+          if (res) {
             this.design = res
             resolve('ok')
+          } else {
+            reject('设计单位信息获取失败')
           }
-          reject('设计单位信息获取失败')
         })
           .catch((err) => {
             reject('设计单位信息获取失败')

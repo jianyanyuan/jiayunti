@@ -26,7 +26,7 @@
             <span>{{ audit.phone }}</span>
           </el-form-item>
           <el-form-item label="审核时间：">
-            <span>{{ audit.auditTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+            <span>{{ new Date(audit.auditTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </el-form-item>
           <el-form-item label="审核意见：">
             <span>{{ audit.reviewOpinion }}</span>

@@ -2,18 +2,18 @@
  * @Author: zfd
  * @Date: 2020-12-15 09:12:06
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-22 08:20:49
+ * @LastEditTime: 2020-12-24 16:43:00
  * @Description: 增梯办列表
  */
-import Flow from '@/components/street/Flow'
+// import Flow from '@/components/street/Flow'
 import { mapState } from 'vuex'
 import {listApi} from '@/api/projects'
 import { notEmptyArray, checkUpload } from '@/utils'
 export default {
   name: 'IncreaseLift',
-  components: {
-    Flow
-  },
+  // components: {
+  //   Flow
+  // },
   data() {
 
     return {
@@ -57,6 +57,9 @@ export default {
             this.list.push(v)
           })
           this.pagination.total = res.totalElements
+        }else {
+          this.list = []
+          this.pagination.total = 0
         }
       }).catch(err => {
         this.$message.error('数据获取失败')

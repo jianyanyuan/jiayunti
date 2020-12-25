@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-07 10:57:23
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 15:13:54
+ * @LastEditTime: 2020-12-24 16:06:43
  * @Description: 
 -->
 <template>
@@ -40,11 +40,11 @@
         </slot>
       </li>
     </transition-group>
-    <el-dialog center title="图片详情"  :visible.sync="imgVisible" class="dialog-center-public">
+    <el-dialog center title="图片详情" :visible.sync="imgVisible" class="dialog-center-public">
       <img :src="detailImgUrl" alt="意见咨询表">
     </el-dialog>
 
-    <el-dialog  center   :visible.sync="pdfVisible" class="dialog-center-public">
+    <el-dialog center :visible.sync="pdfVisible" class="dialog-center-public">
       <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
       <div ref="printContent">
         <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
@@ -70,8 +70,8 @@ export default {
       pdfImgURL: require('@/assets/images/pdf.jpg'),
       errorURL: require('@/assets/images/error.jpg'),
       loadingURL: require('@/assets/images/loading.gif'),
-       // 修改后重新保存
-       pdfURL:'',
+      // 修改后重新保存
+      pdfURL: '',
       pdfVisible: false,
       pdfPages: undefined, // pdf内容
       imgVisible: false,
@@ -100,11 +100,13 @@ export default {
       this.detailFile(file);
     },
     handleURL(file) {
-      return /\bpdf$/i.test(file.url) ? this.pdfImgURL : file.url
+      const isPdf = /\bpdf/i.test(file.name) || /\bpdf$/i.test(file.url)
+      return isPdf ? this.pdfImgURL : file.url
     },
-        // 展示文件
+    // 展示文件
     detailFile(file) {
-      if (/\bpdf$/i.test(file.url)) {
+      const isPdf = /\bpdf/i.test(file.name) || /\bpdf$/i.test(file.url)
+      if (isPdf) {
         // 展示pdf
         this.pdfURL = Pdf.createLoadingTask(file.url)
         this.pdfURL.promise.then(pdf => {
