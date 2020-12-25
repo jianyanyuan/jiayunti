@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-25 09:46:43
+ * @LastEditTime: 2020-12-25 14:54:10
  * @Description: 施工端违规处理
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -68,7 +68,7 @@
           <el-form-item label="整改照片:" prop="attachments">
             <upload-list v-if="item.status=== 0 || item.status === 2" :files="item.rectificationFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" />
 
-            <el-upload v-else :file-list="item.rectificationFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" action="#" class="form-card" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,index)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" drag :auto-upload="false">
+            <el-upload v-else action="#" class="form-card" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,index)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,index)}" drag :auto-upload="false">
               <div>将文件拖到此处，或点击添加</div>
               <div>单个文件大小不超过20MB，可上传图片或PDF</div>
             </el-upload>
