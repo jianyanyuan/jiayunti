@@ -80,10 +80,10 @@ export default {
         this.$message.error('请勿重复报价')
       }
     },
-    async willComplete(id) {
+    async willComplete(row) {
       let valid = true
       this.btnLoading = true
-      await Construction.isResolved(id).then((res) => {
+      await Construction.isResolved(row.id).then((res) => {
         if (res.result !== 0) {
           valid = false
         }

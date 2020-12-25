@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 08:32:28
+ * @LastEditTime: 2020-12-25 13:40:42
  * @Description:图审列表
 -->
 
@@ -67,7 +67,7 @@
               <!-- <el-button v-if="row.statusId === 11" size="mini" type="success" plain >开始施工</el-button> -->
 
               <el-button v-if="row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'ConstructionFault',params:{id:row.id,status:row.statusId}})">违规查看</el-button>
-              <el-button v-if="row.statusId === 11" size="mini" type="warning" plain @click="willComplete(row.id)">竣工验收</el-button>
+              <el-button v-if="row.statusId === 11" size="mini" type="warning" plain @click="willComplete(row)">竣工验收</el-button>
 
             </el-row>
           </template>
