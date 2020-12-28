@@ -2,12 +2,12 @@
  * @Author: zfd
  * @Date: 2020-10-30 14:33:26
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-28 15:38:45
+ * @LastEditTime: 2020-12-28 16:31:07
  * @Description: 居民查看设计图
 -->
 <template>
   <div class="app-container" v-loading="pageLoading">
-    <el-page-header content="设计图" @back="$router.go(-1)" />
+    <el-page-header content="设计图" style="margin-bottom:30px" @back="$router.go(-1)" />
 
     <div class="basic-container">
       <el-card style="margin-bottom:30px">
@@ -43,6 +43,7 @@
 <script>
 import File from '@/api/file'
 import Design from '@/api/designer'
+import { notEmptyArray } from '@/utils'
 export default {
   name: 'AuditDetail',
 

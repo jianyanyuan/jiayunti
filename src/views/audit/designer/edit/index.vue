@@ -7,7 +7,7 @@
 -->
 <template>
   <div class="app-container">
-    <el-page-header style="margin-bottom:20px" content="修改设计图" @back="$router.go(-1)" />
+    <el-page-header style="margin-bottom:30px" content="修改设计图" @back="$router.go(-1)" />
 
     <div class="basic-container">
       <el-card style="margin-bottom:30px">

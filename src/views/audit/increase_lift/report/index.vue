@@ -7,7 +7,7 @@
 -->
 <template>
   <div class="app-container">
-    <el-page-header style="margin-bottom:20px" content="上传联合审批报告" @back="$router.go(-1)" />
+    <el-page-header style="margin-bottom:30px" content="上传联合审批报告" @back="$router.go(-1)" />
 
     <el-card>
       <div slot="header">
