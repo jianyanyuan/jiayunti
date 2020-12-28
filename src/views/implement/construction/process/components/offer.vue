@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-25 08:33:48
+ * @LastEditTime: 2020-12-28 08:09:25
  * @LastEditors: zfd
  * @Description: 施工报价
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -90,7 +90,7 @@ import { validateSync } from 'class-validator'
 import { Construction } from './class'
 import Api from '@/api/construction'
 import File from '@/api/file'
-import { notEmptyArray,checkUpload } from '@/utils'
+import { notEmptyArray, checkUpload } from '@/utils'
 export default {
   name: 'ConstructionOffer',
   props: {
@@ -133,7 +133,7 @@ export default {
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
-      const valid = checkUpload(file.raw)
+      const valid = this.checkUpload(file.raw)
       if (valid && file.status === 'ready') {
         const formData = new FormData()
         formData.append('file', file.raw)
@@ -145,6 +145,18 @@ export default {
       } else {
         fileList.pop()
       }
+    },
+    checkUpload(file) {
+      if (!file.size) {
+        this.$message.error('上传为空！')
+        return false
+      }
+      const isBig = file.size <= 1024 * 1024 * 20 // 单个文件最大20M
+      if (!isBig) {
+        this.$message.error('图片大小不能超过20MB！')
+        return false
+      }
+      return true
     },
     // 删除文件
     handleUploadRemove(file, fileList) {

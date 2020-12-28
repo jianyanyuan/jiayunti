@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 10:59:16
+ * @LastEditTime: 2020-12-28 14:58:04
  * @Description:
  */
 import axios from 'axios'
@@ -85,13 +85,13 @@ service.interceptors.response.use(
             duration: 3 * 1000
           })
           break
-        case 500:
-          Message({
-            message: '服务器错误',
-            type: 'error',
-            duration: 3 * 1000
-          })
-          break
+        // case 500:
+        //   Message({
+        //     message: '服务器错误',
+        //     type: 'error',
+        //     duration: 3 * 1000
+        //   })
+        //   break
         default:
           if (error.message.includes('timeout')) {   // 判断请求异常信息中是否含有超时timeout字符串
             Message({

@@ -40,25 +40,6 @@
       </el-table-column>
       <el-table-column type="expand">
         <template slot-scope="{ row }">
-          <!-- <el-card style="margin-bottom:30px" class="expand-info">
-            <div slot="header">
-              <span>设计信息</span>
-            </div>
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="设计单位">
-                <span>{{ row.design.org }}</span>
-              </el-form-item>
-              <el-form-item label="时间">
-                <span>{{ row.design.time }}</span>
-              </el-form-item>
-              <el-form-item label="详细地址">
-                <span>{{ row.design.address }}</span>
-              </el-form-item>
-              <el-form-item label="电话">
-                <span>{{ row.design.phone }}</span>
-              </el-form-item>
-            </el-form>
-          </el-card> -->
           <el-card style="margin-bottom:30px" class="expand-info">
             <div slot="header">
               <span>申请信息</span>
@@ -95,17 +76,6 @@
           <span>{{ scope.row.apply.time }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="设计单位" min-width="200" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.design.org }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="设计时间" min-width="200" prop="design.time" sortable align="center">
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.design.time }}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column label="违规时间" min-width="200" prop="auditTime" sortable align="center">
         <template v-if="scope.row.auditTime" slot-scope="scope">
           <i class="el-icon-time" />

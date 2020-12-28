@@ -18,7 +18,7 @@
             <span>{{ design.designName }}</span>
           </el-form-item>
           <el-form-item label="时间">
-            <span>{{ new Date(design.designtime) |parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+            <span v-show="design.designtime">{{ new Date(design.designtime) |parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </el-form-item>
           <el-form-item label="详细地址">
             <span>{{ design.address }}</span>

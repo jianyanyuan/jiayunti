@@ -70,9 +70,9 @@ export default {
     },
     goSearch() { },
     clearQuery() { },
-    flowView() {
-      this.flowVisible = true
-    },
+    // flowView() {
+    //   this.flowVisible = true
+    // },
     handleSizeChange(val) {
       this.pagination.pageSize = val
       this.listApplies()

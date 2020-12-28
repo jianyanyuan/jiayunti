@@ -15,7 +15,7 @@ export default {
     mode: {
       type: String,
       default: 'observer',
-      validator: function(value) {
+      validator: function (value) {
         // 1. observer 借助 MutationObserver API https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver
         // 2. listener 借助 UEditor 的 contentChange 事件 https://ueditor.baidu.com/doc/#UE.Editor:contentChange
         return ['observer', 'listener'].indexOf(value) !== -1
@@ -27,14 +27,14 @@ export default {
     },
     config: {
       type: Object,
-      default: function() {
+      default: function () {
         return {}
       }
     },
     init: {
       type: Function,
-      default: function() {
-        return () => {}
+      default: function () {
+        return () => { }
       }
     },
     destroy: {
@@ -48,13 +48,13 @@ export default {
     observerDebounceTime: {
       type: Number,
       default: 50,
-      validator: function(value) {
+      validator: function (value) {
         return value >= 20
       }
     },
     observerOptions: {
       type: Object,
-      default: function() {
+      default: function () {
         // https://developer.mozilla.org/en-US/docs/Web/API/MutationObserverInit
         return {
           attributes: true, // 是否监听 DOM 元素的属性变化
@@ -143,6 +143,11 @@ export default {
       this.$emit('beforeInit', this.id, this.mixedConfig) // 虽然这个驼峰的写法会导致使用 DOM 模版时出现监听事件自动转小写的 BUG，但如果经过编译的话并不会有这个问题，为了兼容历史版本，不做删除，参考 https://vuejs.org/v2/guide/components-custom-events.html#Event-Names
       this.editor = window.UE.getEditor(this.id, this.mixedConfig)
       this.editor.addListener('ready', () => {
+        // 配置请求query参数
+        // this.editor.execCommand('serverparam', {
+        //   'key1': 'value1',
+        //   'key2': 'value2',
+        // })
         if (this.status === 2) { // 使用 keep-alive 组件会出现这种情况
           this.editor.setContent(this.value)
         } else {
@@ -190,7 +195,7 @@ export default {
         configScript.type = 'text/javascript'
         configScript.src = this.mixedConfig.UEDITOR_HOME_URL + 'ueditor.config.js'
         document.getElementsByTagName('head')[0].appendChild(configScript)
-        configScript.onload = function() {
+        configScript.onload = function () {
           if (window.UE && window.UEDITOR_CONFIG && Object.keys(window.UEDITOR_CONFIG).length !== 0) {
             resolve()
           } else {
@@ -209,7 +214,7 @@ export default {
         coreScript.type = 'text/javascript'
         coreScript.src = this.mixedConfig.UEDITOR_HOME_URL + 'ueditor.all.min.js'
         document.getElementsByTagName('head')[0].appendChild(coreScript)
-        coreScript.onload = function() {
+        coreScript.onload = function () {
           if (window.UE && window.UE.getEditor) {
             resolve()
           } else {

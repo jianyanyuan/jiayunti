@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 15:56:51
+ * @LastEditTime: 2020-12-28 11:56:19
  * @Description:
  */
 import { resetRouter } from '@/router'
@@ -70,7 +70,8 @@ export default {
             }
             accessRoutes.splice(accessRoutes.length - 1, 0, { path: '/', redirect: '/' + roleHome, hidden: true })
             this.$router.addRoutes(accessRoutes)
-            this.$router.push({ path: this.redirect || '/' })
+            // this.redirect || 
+            this.$router.push({ path: '/' })
             this.loading = false
           })
             .catch(async (err) => {

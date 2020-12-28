@@ -55,6 +55,7 @@ export default {
         label: 'name',
         children: 'communities'
       },
+      expandLoading:false,
       communityOptions: []
     }
   },
@@ -68,6 +69,15 @@ export default {
     this.listApplies()
   },
   methods: {
+    async handleExpand(row, expandedRows) {
+      if (Object.keys(row.apply).length === 0) {
+        this.expandLoading = true
+        const apply = await this.$store.dispatch('getProjectBasic', row.id)
+        const idx = this.list.findIndex(v => v.id === row.id)
+        this.$set(this.list[idx], 'apply', apply)
+        this.expandLoading = false
+      }
+    },
     // 打开申请Modal
     openAdd() {
       // 重置表格
@@ -143,7 +153,13 @@ export default {
       await listApi().then(res => {
         this.list = []
         if (notEmptyArray(res.content)) {
-          this.list = res.content
+          // this.list = res.content
+          if(notEmptyArray(res.content)) {
+            res.content.forEach(v => {
+              v.apply = {}
+              this.list.push(v)
+            })
+          }
         }
       }).catch(err => {
         this.$message.error('数据获取失败')
@@ -151,11 +167,11 @@ export default {
       })
       this.listLoading = false
     },
-    flowView(row, column, event) {
-      if (row.status !== 0) {
-        this.flowVisible = true
-      }
-    },
+    // flowView(row, column, event) {
+    //   if (row.status !== 0) {
+    //     this.flowVisible = true
+    //   }
+    // },
 
     handleRoom(index) {
       if (index === 0) {

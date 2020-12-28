@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-28 13:42:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-22 15:56:50
+ * @LastEditTime: 2020-12-28 08:50:22
  * @Description: 设计单位介绍
 -->
 <template>
@@ -76,13 +76,15 @@ export default {
         initialFrameWidth: '100%',
         UEDITOR_HOME_URL: '/UEditor/',
         // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
-        serverUrl: 'http://35.201.165.105:8000/controller.php'
+        serverUrl: 'http://35.201.165.105:8000/controller.php',
         // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况，如果需要特殊配置，参考下方的常见问题2
         // UEDITOR_HOME_URL: '/static/UEditor/'
         // 配合最新编译的资源文件，你可以实现添加自定义Request Headers,详情https://github.com/HaoChuan9421/ueditor/commits/dev-1.4.3.3
-        // headers: {
-        //   access_token: '37e7c9e3fda54cca94b8c88a4b5ddbf3'
-        // }        enableAutoSave: false // 开启从草稿箱恢复功能需要手动设置固定的 editorId，否则组件会默认随机一个，如果页面刷新，下次渲染的时候 editorId 会重新随机，导致无法加载草稿箱数据
+        headers: {
+          Authorization: this.$store.getters.token
+        },
+        image:'customImage',       
+        enableAutoSave: false // 开启从草稿箱恢复功能需要手动设置固定的 editorId，否则组件会默认随机一个，如果页面刷新，下次渲染的时候 editorId 会重新随机，导致无法加载草稿箱数据
       }
     }
   },

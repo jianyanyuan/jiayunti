@@ -75,9 +75,9 @@ export default {
         this.expandLoading = false
       }
     },
-    flowView() {
-      this.flowVisible = true
-    },
+    // flowView() {
+    //   this.flowVisible = true
+    // },
 
     goSearch() {
     },

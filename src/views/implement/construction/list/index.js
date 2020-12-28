@@ -97,9 +97,9 @@ export default {
         this.$message.error('违规未处理完毕!')
       }
     },
-    flowView() {
-      this.flowVisible = true
-    },
+    // flowView() {
+    //   this.flowVisible = true
+    // },
     goSearch() { },
     clearQuery() { },
     handleSizeChange(val) {

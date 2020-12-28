@@ -2,14 +2,14 @@
  * @Author: zfd
  * @Date: 2020-12-10 11:06:02
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 14:29:34
+ * @LastEditTime: 2020-12-28 15:32:08
  * @Description: 
  */
 import { mapState } from 'vuex'
 // import Flow from '@/components/street/Flow'
 import File from '@/api/file'
-import {listApi,advanceApi} from '@/api/projects'
-import { notEmptyArray,checkUpload } from '@/utils'
+import { listApi, advanceApi } from '@/api/projects'
+import { notEmptyArray, checkUpload } from '@/utils'
 export default {
   name: 'DesignerList',
   // components: {
@@ -83,9 +83,9 @@ export default {
         this.expandLoading = false
       }
     },
-    flowView() {
-      this.flowVisible = true
-    },
+    // flowView() {
+    //   this.flowVisible = true
+    // },
     goSearch() { },
     clearQuery() { },
     // 上传施工图设计
@@ -143,12 +143,12 @@ export default {
               this.$message.error('文件上传失败，请重新上传')
             } else {
               this.$message.success('上传完成')
+              this.listApplies()
               // 施工图设计阶段 --> 施工图审核
               advanceApi(this.uploadId, 6)
                 .catch(() => (this.$message.error('流程错误')))
               this.uploadVisible = false
               this.uploadId = null
-              this.listApplies()
 
             }
           }

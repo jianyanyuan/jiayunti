@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 11:09:51
+ * @LastEditTime: 2020-12-28 14:46:06
  * @Description:申请列表
 -->
 
@@ -11,10 +11,38 @@
     <el-button type="primary" size="medium" style="margin-bottom:20px" :loading="openLoading" @click="openAdd">新增申请</el-button>
 
     <el-card>
-      <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row @row-dblclick="flowView">
+      <!-- @row-dblclick="flowView" -->
+      <el-table v-loading="listLoading" class="design-table" @expand-change="handleExpand" row-key="id" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row>
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column type="expand">
+          <template slot-scope="{ row }">
+            <el-form label-position="left" v-loading="expandLoading" inline class="demo-table-expand">
+              <el-form-item label="申请人">
+                {{ row.apply.applicantName }}
+              </el-form-item>
+              <el-form-item label="申请时间">
+                {{ row.apply.createTime }}
+              </el-form-item>
+              <el-form-item label="用户地址">
+                {{ row.apply.address }}
+              </el-form-item>
+              <el-form-item label="电话">
+                {{ row.apply.phoneNumber }}
+              </el-form-item>
+              <el-form-item label="加装电梯地址">
+                {{ row.apply.location }}
+              </el-form-item>
+              <el-form-item label="设计单位">
+                {{ row.apply.designName }}
+              </el-form-item>
+              <el-form-item label="设备">
+                {{ row.apply.device }}
+              </el-form-item>
+            </el-form>
           </template>
         </el-table-column>
         <el-table-column label="编号" prop="projectName" />
@@ -62,7 +90,7 @@
         </el-table-column>
         <el-table-column label="撤销申请" align="center">
           <template slot-scope="scope">
-            <el-popconfirm v-if="scope.row.statusId !== 13 && scope.row.statusId !== 14" title="确认撤销申请吗？" @onConfirm="cancelApply(scope.row)">
+            <el-popconfirm v-if="scope.row.statusId !== 13 && scope.row.statusId !== 14 && scope.row.statusId !== 12" title="确认撤销申请吗？" @onConfirm="cancelApply(scope.row)">
               <el-button slot="reference" size="mini" type="text">撤 销</el-button>
             </el-popconfirm>
           </template>
@@ -125,9 +153,9 @@
       </div>
     </el-dialog>
     <!-- 查看流程 -->
-    <el-dialog v-el-drag-dialog title="申请流程" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
+    <!-- <el-dialog v-el-drag-dialog title="申请流程" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
       <flow />
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -138,6 +166,19 @@ export default {
 }
 </script>
 <style scoped lang="scss">
+.design-table {
+  width: 100%;
+  margin-bottom: 30px;
+}
+.design-table .demo-table-expand ::v-deep label {
+  width: 100px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-left: 150px;
+  margin-bottom: 0;
+  width: 100%;
+}
 .dialog-container {
   min-width: 700px;
 }

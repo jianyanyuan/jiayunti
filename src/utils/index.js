@@ -119,11 +119,14 @@ export function checkUpload(file) {
     return false
   }
   if (!isBig) {
-    this.$message.error('图片大小不能超过10MB！')
+    this.$message.error('图片大小不能超过20MB！')
     return false
   }
   return true
 }
+
+
+
 /**
  * utf-8编码的16进制形式
  * @param {*} text 

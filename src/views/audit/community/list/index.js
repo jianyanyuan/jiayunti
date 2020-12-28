@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:08
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 16:26:03
+ * @LastEditTime: 2020-12-28 11:28:16
  * @Description: 社区端列表
  */
 import { mapState } from 'vuex'
@@ -15,7 +15,7 @@ export default {
   name: 'CommunityList',
   // components: {
   //   Flow
-  // },
+  // }, 
   data() {
     return {
       pagination: {
@@ -59,9 +59,9 @@ export default {
     },
     goSearch() { },
     clearQuery() { },
-    flowView() {
-      this.flowVisible = true
-    },
+    // flowView() {
+    //   this.flowVisible = true
+    // },
     handleSizeChange(val) {
       this.pagination.pageSize = val
       this.listApplies()

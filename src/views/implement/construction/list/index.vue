@@ -30,7 +30,7 @@
       </el-form>
     </div>
     <el-card>
-      <el-table v-loading="listLoading" class="design-table" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'addTime', order: 'descending'}" @row-dblclick="flowView">
+      <el-table v-loading="listLoading" class="design-table" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'addTime', order: 'descending'}" >
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
