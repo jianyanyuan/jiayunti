@@ -253,13 +253,5 @@ export default {
   background: #409eff;
   color: #fff;
 }
-.expand-info .demo-table-expand ::v-deep label {
-  width: 100px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-left: 150px;
-  margin-bottom: 0;
-  width: 100%;
-}
+
 </style>

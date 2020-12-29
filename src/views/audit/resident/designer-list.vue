@@ -3,7 +3,7 @@
  * @Date: 2020-10-29 16:05:50
  * @LastEditors: zfd
  * @LastEditTime: 2020-10-30 14:55:07
- * @Description: 设备列表
+ * @Description: 设计院列表
 -->
 <template>
   <div class="app-container">
@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     list(_this) {
-      _this.pageLoding = true
+      _this.pageLoading = true
       Designer.list({ page: _this.pagination.pageIndex - 1, size: _this.pagination.pageSize }).then((res) => {
         _this.source = res.content.map(v=>({
           id:v.id,
@@ -40,7 +40,7 @@ export default {
         _this.$message.error('列表获取失败')
       })
         .finally(() => {
-          _this.pageLoding = false
+          _this.pageLoading = false
         })
     }
   }

@@ -2,8 +2,8 @@
   <div>
     <el-tabs tab-position="left" v-loading="tabLoading">
       <el-tab-pane label="基本资料">
-        <el-card class="expand-info">
-          <el-form label-position="left" inline class="demo-table-expand">
+        <el-card class="table-expand-public">
+          <el-form label-position="left" inline class="expand-form-p">
             <el-form-item label="申请人">
               {{ basic.applicantName }}
             </el-form-item>
@@ -159,14 +159,3 @@ export default {
 }
 </script>
 
-<style scoped>
-.expand-info .demo-table-expand ::v-deep label {
-  width: 100px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-left: 150px;
-  margin-bottom: 0;
-  width: 100%;
-}
-</style>

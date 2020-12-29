@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-29 13:53:41
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 14:46:49
+ * @LastEditTime: 2020-12-29 16:24:42
  * @Description: 
 -->
 <template>
@@ -23,7 +23,7 @@
         <el-button type="primary" icon="el-icon-search" @click="listApplies">搜索</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
+        <el-button icon="el-icon-circle-close" @click="clearQuery">重置</el-button>
       </el-form-item>
     </el-form>
   </div>

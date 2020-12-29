@@ -32,7 +32,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-table v-loading="listLoading" class="design-table" :data="list" element-loading-text="Loading" border fit highlight-current-row :default-sort="{prop: 'status', order: 'ascending'}">
+    <el-table v-loading="listLoading" class="table-expand-public" :data="list" element-loading-text="Loading" border fit highlight-current-row :default-sort="{prop: 'status', order: 'ascending'}">
       <el-table-column align="center" label="序号" min-width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
@@ -40,11 +40,11 @@
       </el-table-column>
       <el-table-column type="expand">
         <template slot-scope="{ row }">
-          <el-card style="margin-bottom:30px" class="expand-info">
+          <el-card style="margin-bottom:30px" class="table-expand-public">
             <div slot="header">
               <span>申请信息</span>
             </div>
-            <el-form label-position="left" inline class="demo-table-expand">
+            <el-form label-position="left" inline class="expand-form-p">
               <el-form-item label="申请人">
                 <span>{{ row.apply.name }}</span>
               </el-form-item>
@@ -212,9 +212,6 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      uploadModal: {
-        visible: false
-      },
       projectId: null,
       status: null
     }
@@ -257,39 +254,4 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
 
-.expand-info ::v-deep .el-card__header {
-  background: #409eff;
-  color: #fff;
-}
-.demo-table-expand {
-  font-size: 0;
-}
-.design-table {
-  width: 100%;
-  margin-bottom: 30px;
-}
-.design-table .demo-table-expand ::v-deep label {
-  width: 100px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-left: 150px;
-  margin-bottom: 0;
-  width: 100%;
-}
-.uploadModal ::v-deep .el-upload-dragger {
-  padding: 40px 5px;
-  border: 2px solid #e5e5e5;
-  color: #777;
-  -webkit-transition: background-color 0.2s linear;
-  transition: background-color 0.2s linear;
-}
-.uploadModal ::v-deep .el-upload-dragger:hover {
-  background: #f6f6f6;
-}
-.uploadModal ::v-deep .el-dialog__body {
-  text-align: center;
-}
-</style>

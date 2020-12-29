@@ -59,7 +59,7 @@
             <el-input v-model="item.description" disabled />
           </el-form-item>
           <el-form-item label="违规照片:">
-            <upload-list :files="item.illegalFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true"  />
+            <upload-list :files="item.illegalFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" />
           </el-form-item>
           <el-form-item label="违规回复:" v-if="item.status !== -1">
             <el-input v-model="item.response" disabled />
@@ -83,6 +83,8 @@
         </el-form>
       </el-collapse-item>
     </el-collapse>
+    <div class="empty-content-public" v-if="list.length === 0">暂无违规记录</div>
+
   </div>
 </template>
 

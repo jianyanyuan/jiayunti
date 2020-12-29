@@ -10,7 +10,7 @@
   <div class="app-container">
     <FilterList :status="unionStatus" @listFn="listApplies" />
     <el-card>
-      <el-table v-loading="listLoading" row-key="id" class="design-table" @expand-change="handleExpand" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row>
+      <el-table v-loading="listLoading" row-key="id" class="table-expand-public" @expand-change="handleExpand" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row>
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
@@ -18,7 +18,7 @@
         </el-table-column>
         <el-table-column type="expand">
           <template slot-scope="{ row }">
-            <el-form label-position="left" v-loading="expandLoading" inline class="demo-table-expand">
+            <el-form label-position="left" v-loading="expandLoading" inline class="expand-form-p">
               <el-form-item label="申请人">
                 {{ row.apply.applicantName }}
               </el-form-item>
@@ -94,23 +94,3 @@ export default {
   ...index
 }
 </script>
-<style lang="scss" scoped>
-.expand-info ::v-deep .el-card__header {
-  background: #409eff;
-  color: #fff;
-}
-
-.design-table {
-  width: 100%;
-  margin-bottom: 30px;
-}
-.design-table .demo-table-expand ::v-deep label {
-  width: 100px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-left: 150px;
-  margin-bottom: 0;
-  width: 100%;
-}
-</style>

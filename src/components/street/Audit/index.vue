@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-16 16:35:29
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-21 17:16:43
+ * @LastEditTime: 2020-12-29 15:19:04
  * @Description:
 -->
 <template>
@@ -58,7 +58,7 @@ export default {
     return {
       pageLoading: false,
       form: {
-        reviewOpinions: '',
+        reviewOpinions: '通过',
         reviewResults: 0
       },
       rule: {

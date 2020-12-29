@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 14:14:53
+ * @LastEditTime: 2020-12-29 16:45:44
  * @Description:设计列表
 -->
 
@@ -10,7 +10,7 @@
   <div class="app-container">
     <FilterList :status="designStatus" @listFn="listApplies" />
     <el-card>
-      <el-table v-loading="listLoading" class="design-table" @expand-change="handleExpand" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'addTime', order: 'descending'}" >
+      <el-table v-loading="listLoading" class="table-expand-public" @expand-change="handleExpand" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'addTime', order: 'descending'}" >
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
@@ -18,7 +18,7 @@
         </el-table-column>
         <el-table-column type="expand">
           <template slot-scope="{ row }">
-            <el-form label-position="left" v-loading="expandLoading" inline class="demo-table-expand">
+            <el-form label-position="left" v-loading="expandLoading" inline class="expand-form-p">
               <el-form-item label="申请人">
                 {{ row.apply.applicantName }}
               </el-form-item>
@@ -111,19 +111,7 @@ export default {
 </script>
 <style scoped>
 
-.design-table {
-  width: 100%;
-  margin-bottom: 30px;
-}
-.design-table .demo-table-expand /deep/ label {
-  width: 100px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-left: 150px;
-  margin-bottom: 0;
-  width: 100%;
-}
+
 .uploadModal /deep/ .el-upload-dragger {
   padding: 40px 5px;
   border: 2px solid #e5e5e5;

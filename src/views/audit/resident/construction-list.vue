@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-29 16:05:50
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 11:20:23
+ * @LastEditTime: 2020-12-29 16:22:57
  * @Description: 施工单位列表
 -->
 <template>
@@ -22,7 +22,7 @@ export default {
 
   methods: {
     list(_this) {
-      _this.pageLoding = true
+      _this.pageLoading = true
       Construction.list({ page: _this.pagination.pageIndex - 1, size: _this.pagination.pageSize }).then((res) => {
         _this.source = res.content.map(v=>({
           id:v.id,
@@ -36,7 +36,7 @@ export default {
         _this.$message.error('列表获取失败')
       })
         .finally(() => {
-          _this.pageLoding = false
+          _this.pageLoading = false
         })
     }
   }

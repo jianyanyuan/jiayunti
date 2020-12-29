@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 14:06:02
+ * @LastEditTime: 2020-12-29 16:43:13
  * @Description:街道审核列表
 -->
 
@@ -10,7 +10,7 @@
   <div class="app-container">
     <FilterList :status="streetStatus" @listFn="listApplies" />
     <el-card>
-      <el-table v-loading="listLoading" row-key="id" class="design-table" @expand-change="handleExpand" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row>
+      <el-table v-loading="listLoading" row-key="id" class="table-expand-public" @expand-change="handleExpand" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row>
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
@@ -18,7 +18,7 @@
         </el-table-column>
         <el-table-column type="expand">
           <template slot-scope="{ row }">
-            <el-form label-position="left" v-loading="expandLoading" inline class="demo-table-expand">
+            <el-form label-position="left" v-loading="expandLoading" inline class="expand-form-p">
               <el-form-item label="申请人">
                 {{ row.apply.applicantName }}
               </el-form-item>
@@ -97,34 +97,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.expand-info ::v-deep .el-card__header {
-  background: #409eff;
-  color: #fff;
-}
-.design-table {
-  width: 100%;
-  margin-bottom: 30px;
-}
-.design-table .demo-table-expand ::v-deep label {
-  width: 100px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-left: 150px;
-  margin-bottom: 0;
-  width: 100%;
-}
-.uploadModal ::v-deep .el-upload-dragger {
-  padding: 40px 5px;
-  border: 2px solid #e5e5e5;
-  color: #777;
-  -webkit-transition: background-color 0.2s linear;
-  transition: background-color 0.2s linear;
-}
-.uploadModal ::v-deep .el-upload-dragger:hover {
-  background: #f6f6f6;
-}
-.uploadModal ::v-deep .el-dialog__body {
-  text-align: center;
-}
+
+
 </style>

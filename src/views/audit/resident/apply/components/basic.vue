@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 13:50:20
+ * @LastEditTime: 2020-12-29 14:57:07
  * @Description: 居民申请基本资料
 -->
 <template>
@@ -207,6 +207,8 @@ export default {
         this.form.location = [residentialQuarters, building, unit]
         if (notEmptyArray(rooms)) {
           this.form.rooms = rooms.map(v => ({ key: v, val: v }))
+        }else {
+          this.form.rooms = [{ key: Date.now(), val: '' }]
         }
         this.hasChanged = false
         this.formLoading = false

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 09:15:58
- * @LastEditTime: 2020-12-24 14:27:05
+ * @LastEditTime: 2020-12-29 16:39:53
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\App.vue
@@ -51,6 +51,7 @@ li {
     margin-bottom: 0;
   }
 }
+// 展示居中
 .dialog-center-public .el-dialog__body {
   text-align: center;
 }
@@ -58,10 +59,32 @@ li {
   width: 100%;
   // object-fit: scale-down;
 }
+// 空内容
 .empty-content-public {
   line-height: 60px;
   color: #909399;
   text-align: center;
   font-size: 24px;
+}
+
+// table expand展开
+.table-expand-public {
+  width: 100%;
+  margin-bottom: 30px;
+  .el-card__header {
+    background: #409eff;
+    color: #fff;
+  }
+  .expand-form-p {
+    label {
+      width: 100px;
+      color: #99a9bf;
+    }
+    .el-form-item {
+      margin-left: 150px;
+      margin-bottom: 0;
+      width: 100%;
+    }
+  }
 }
 </style>

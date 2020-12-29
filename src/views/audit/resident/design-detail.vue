@@ -14,7 +14,7 @@
         <div slot="header">
           <span>设计信息</span>
         </div>
-        <el-form label-position="left" inline class="demo-table-expand">
+        <el-form label-position="left" inline class="expand-form-p">
           <el-form-item label="设计单位">
             <span>{{ design.designName }}</span>
           </el-form-item>
@@ -130,11 +130,11 @@ export default {
   background: #409eff;
   color: #fff;
 }
-.demo-table-expand /deep/ label {
+.expand-form-p /deep/ label {
   width: 100px;
   color: #99a9bf;
 }
-.demo-table-expand .el-form-item {
+.expand-form-p .el-form-item {
   margin-left: 20px;
   margin-bottom: 0;
   width: 100%;

@@ -68,25 +68,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.expand-info ::v-deep .el-card__header {
-  background: #409eff;
-  color: #fff;
-}
-.demo-table-expand {
-  font-size: 0;
-}
-.design-table {
-  width: 100%;
-  margin-bottom: 30px;
-}
-.design-table .demo-table-expand ::v-deep label {
-  width: 100px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-left: 150px;
-  margin-bottom: 0;
-  width: 100%;
-}
+
 
 </style>

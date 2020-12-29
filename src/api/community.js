@@ -24,11 +24,12 @@ const checkLatest = (projectId ) => {
 }
 
 // 审核历史记录 / 报价历史记录
-const auditHistorylist = (params) => {
+const auditHistorylist = (params,data) => {
   return request({
     url: '/project/getHistoryAccording/history',
-    method: 'get',
-    params
+    method: 'post',
+    params,
+    data
   })
 }
 // 异议处理

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:27:43
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 14:31:55
+ * @LastEditTime: 2020-12-29 16:05:32
  * @Description: 已审核列表
 -->
 
@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import Community from '@/api/community'
 import { notEmptyArray } from '@/utils'
 import FilterList from '@/components/Filter'
@@ -68,7 +67,6 @@ export default {
     }
   },
   computed: {
-    ...mapState('common', ['auditOptions'])
 
   },
   created() { this.listApplies() },

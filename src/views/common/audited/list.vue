@@ -2,33 +2,13 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:27:43
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 09:40:42
+ * @LastEditTime: 2020-12-29 16:02:09
  * @Description: 已审核列表
 -->
 
 <template>
   <div class="app-container">
-    <div class="list-query-public">
-      <el-form ref="queryForm" :inline="true" :model="query" size="small">
-        <el-form-item label="编号" prop="Name " style="margin-right: 30px">
-          <el-input v-model="query.code" />
-        </el-form-item>
-        <el-form-item label="申请人" prop="applyName " style="margin-right: 30px">
-          <el-input v-model="query.applyName" />
-        </el-form-item>
-        <el-form-item label="状态" prop="audit " style="margin-right: 30px">
-          <el-select v-model="query.audit">
-            <el-option v-for="item in auditOptions" :key="item.val" :label="item.val" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="goSearch">搜索</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+    <FilterList @listFn="listApplies" />
     <el-card>
       <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row @row-dblclick="showAudit">
         <el-table-column align="center" label="序号" width="50">
@@ -67,11 +47,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import Community from '@/api/community'
 import { notEmptyArray } from '@/utils'
+import FilterList from '@/components/Filter'
 export default {
   name: 'CommunityAudited',
+  components:{
+    FilterList
+  },
   data() {
     return {
       pagination: {
@@ -89,15 +72,14 @@ export default {
     }
   },
   computed: {
-    ...mapState('common', ['auditOptions'])
 
   },
   created() { this.listApplies() },
   methods: {
     // 获取已审核列表
-    async listApplies() {
+    async listApplies(query ={}) {
       this.listLoading = true
-      await Community.auditHistorylist({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+      await Community.auditHistorylist({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize },query).then(res => {
         if (notEmptyArray(res.content)) {
           this.list = res.content
           this.pagination.total = res.totalElements
@@ -125,9 +107,7 @@ export default {
       const prefix = this.$route.fullPath.match(reg)[1]
       const path = `/${prefix}/audited-detail`
       this.$router.push({ path, query: { id: row.id, status: row.statusId } })
-    },
-    goSearch() { },
-    clearQuery() { },
+    }
   }
 }
 

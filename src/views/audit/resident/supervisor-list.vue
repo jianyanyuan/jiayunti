@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     list(_this) {
-      _this.pageLoding = true
+      _this.pageLoading = true
       Supervision.list({ page: _this.pagination.pageIndex - 1, size: _this.pagination.pageSize }).then((res) => {
         _this.source = res.map(v => ({
           id: v.id,
@@ -36,7 +36,7 @@ export default {
           _this.$message.error('列表获取失败')
         })
         .finally(() => {
-          _this.pageLoding = false
+          _this.pageLoading = false
         })
     }
   }

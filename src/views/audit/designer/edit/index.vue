@@ -15,7 +15,7 @@
           <span style="margin-right:20px">审核信息</span>
           <el-tag :type="audit.reviewResult | keyToVal(handleTag)">{{ audit.reviewResult | keyToVal(auditOptions) }}</el-tag>
         </div>
-        <el-form label-position="left" class="demo-table-expand">
+        <el-form label-position="left" class="expand-form-p">
           <el-form-item label="审核机构">
             <span>{{ audit.reviewOrganization }}</span>
           </el-form-item>
@@ -244,11 +244,11 @@ export default {
 </script>
 
 <style scoped>
-.demo-table-expand /deep/ label {
+.expand-form-p /deep/ label {
   width: 100px;
   color: #99a9bf;
 }
-.demo-table-expand .el-form-item {
+.expand-form-p .el-form-item {
   margin-left: 20px;
   margin-bottom: 0;
   width: 100%;

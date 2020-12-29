@@ -15,7 +15,7 @@
         </div>
         <div>
           审核状态：<el-tag :type="audit.status | keyToVal(auditTag)">{{ audit.status | keyToVal(auditStatus) }}</el-tag>
-          <el-form v-if="audit.status !== 0" label-position="left" inline class="demo-table-expand">
+          <el-form v-if="audit.status !== 0" label-position="left" inline class="expand-form-p">
             <el-form-item label="审核人">
               <span>{{ audit.name }}</span>
             </el-form-item>
@@ -52,7 +52,7 @@
         <div slot="header">
           <span>申请信息</span>
         </div>
-        <el-form label-position="left" inline class="demo-table-expand">
+        <el-form label-position="left" inline class="expand-form-p">
           <el-form-item label="申请人">
             <span>{{ apply.name }}</span>
           </el-form-item>
@@ -154,15 +154,15 @@ export default {
 </script>
 
 <style scoped>
-.demo-table-expand {
+.expand-form-p {
   font-size: 0;
 }
 
-.demo-table-expand /deep/ label {
+.expand-form-p /deep/ label {
   width: 100px;
   color: #99a9bf;
 }
-.demo-table-expand .el-form-item {
+.expand-form-p .el-form-item {
   margin-left: 20px;
   margin-bottom: 0;
   width: 100%;

@@ -36,9 +36,6 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      uploadModal: {
-        visible: false
-      },
       expandLoading:false
     }
   },

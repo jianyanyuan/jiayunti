@@ -2,19 +2,19 @@
  * @Author: zfd
  * @Date: 2020-10-29 15:36:07
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 11:19:05
+ * @LastEditTime: 2020-12-29 16:25:48
  * @Description:
 -->
 <template>
-  <div class="list-container">
+  <div class="list-container" v-loading="pageLoading">
     <div class="query-container">
       筛选项：
       <el-input v-model="query.name" placeholder="主体名称" size="small" />
       <el-input v-model="query.phone" placeholder="联系方式" size="small" />
       <el-input v-model="query.address" placeholder="地址" size="small" />
       <div>
-        <el-button size="small" @click="filterEntity">搜索</el-button>
-        <el-button size="small" type="primary" @click="clearQuery">重置</el-button>
+        <el-button size="small" icon="el-icon-search" type="primary" @click="filterEntity">搜索</el-button>
+        <el-button size="small" icon="el-icon-circle-close"  @click="clearQuery">重置</el-button>
       </div>
 
     </div>
@@ -66,7 +66,7 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      pageLoding: false,
+      pageLoading: false,
       source: null,
       total: 0,
       detail: {

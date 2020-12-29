@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:43:23
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 16:21:47
+ * @LastEditTime: 2020-12-29 16:53:58
  * @Description: 审核意见
 -->
 <template>
@@ -19,7 +19,7 @@
             <el-tag :type="item.reviewResult | keyToVal(handleTag)">{{ item.reviewResult | keyToVal(auditOptions) }}</el-tag>
           </p>
           <p>
-            <span class="audit-tip">附件：</span>
+            <span class="audit-tip" v-if="item.files">附件：</span>
 
             <upload-list style="margin-top:20px" :files="item.files" list-type="picture-card" :disabled="true" />
           </p>
