@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:27:43
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 10:53:53
+ * @LastEditTime: 2020-12-29 09:40:42
  * @Description: 已审核列表
 -->
 
@@ -50,11 +50,11 @@
             <span>{{ new Date(scope.row.updateTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <!-- <el-table-column label="状态" align="center" prop="whetherThrough" sortable>
+        <el-table-column label="状态" align="center" prop="whetherThrough" sortable>
           <template slot-scope="scope">
-            <el-tag :type="scope.row.whetherThrough | keyToVal(auditOptions)">{{ scope.row.whetherThrough | keyToVal(auditOptions) }}</el-tag>
+            <el-tag :type="scope.row.whetherThrough === 0 ? 'success':'danger'">{{ scope.row.whetherThrough === 0 ? '通过':'未通过' }}</el-tag>
           </template>
-        </el-table-column> -->
+        </el-table-column>
         <!-- <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button size="mini" type="warning" @click="">审核意见</el-button>
@@ -62,7 +62,7 @@
         </el-table-column> -->
       </el-table>
     </el-card>
-    <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
+    <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
   </div>
 </template>
 

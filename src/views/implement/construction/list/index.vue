@@ -8,32 +8,39 @@
 
 <template>
   <div class="app-container">
-    <div class="list-query-public">
-      <el-form ref="queryForm" :inline="true" :model="query" size="small">
-        <el-form-item label="编号" prop="Name " style="margin-right: 30px">
-          <el-input v-model="query.code" />
-        </el-form-item>
-        <el-form-item label="申请人" prop="applyName " style="margin-right: 30px">
-          <el-input v-model="query.applyName" />
-        </el-form-item>
-        <el-form-item label="状态" prop="status " style="margin-right: 30px">
-          <el-select v-model="query.status">
-            <el-option v-for="item in designStatus" :key="item.val" :label="item.val" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="goSearch">搜索</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+    <FilterList :status="conStatus" @listFn="listApplies" />
     <el-card>
-      <el-table v-loading="listLoading" class="design-table" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'addTime', order: 'descending'}" >
+      <el-table v-loading="listLoading" class="design-table"  :data="list" @expand-change="handleExpand" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'addTime', order: 'descending'}">
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column type="expand">
+          <template slot-scope="{ row }">
+            <el-form label-position="left" v-loading="expandLoading" inline class="demo-table-expand">
+              <el-form-item label="申请人">
+                {{ row.apply.applicantName }}
+              </el-form-item>
+              <el-form-item label="申请时间">
+                {{ row.apply.createTime }}
+              </el-form-item>
+              <el-form-item label="用户地址">
+                {{ row.apply.address }}
+              </el-form-item>
+              <el-form-item label="电话">
+                {{ row.apply.phoneNumber }}
+              </el-form-item>
+              <el-form-item label="加装电梯地址">
+                {{ row.apply.location }}
+              </el-form-item>
+              <el-form-item label="设计单位">
+                {{ row.apply.designName }}
+              </el-form-item>
+              <el-form-item label="设备">
+                {{ row.apply.device }}
+              </el-form-item>
+            </el-form>
           </template>
         </el-table-column>
         <el-table-column label="编号" prop="projectName" min-width="200" align="center" />
@@ -63,7 +70,7 @@
 
           <template slot-scope="{row}">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="row.statusId === 8" size="mini"  type="warning" :loading="btnLoading" plain @click="willOffer(row)">报价</el-button>
+              <el-button v-if="row.statusId === 8" size="mini" type="warning" :loading="btnLoading" plain @click="willOffer(row)">报价</el-button>
               <!-- <el-button v-if="row.statusId === 11" size="mini" type="success" plain >开始施工</el-button> -->
 
               <el-button v-if="row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'ConstructionFault',params:{id:row.id,status:row.statusId}})">违规查看</el-button>
@@ -75,7 +82,7 @@
       </el-table>
     </el-card>
 
-    <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
+    <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
     <!-- 查看流程 -->
     <!-- <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
       <flow />
@@ -94,8 +101,18 @@ export default {
   background: #409eff;
   color: #fff;
 }
-.demo-table-expand {
-  font-size: 0;
+.design-table {
+  width: 100%;
+  margin-bottom: 30px;
+}
+.design-table .demo-table-expand ::v-deep label {
+  width: 100px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-left: 150px;
+  margin-bottom: 0;
+  width: 100%;
 }
 .design-table {
   width: 100%;

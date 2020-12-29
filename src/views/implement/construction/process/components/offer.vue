@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-28 08:09:25
+ * @LastEditTime: 2020-12-29 09:46:17
  * @LastEditors: zfd
  * @Description: 施工报价
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -68,7 +68,7 @@
 
             <el-upload action="#" :on-remove="handleUploadRemove" :on-change="handleUploadChange" :auto-upload="false">
               <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+              <div slot="tip" class="el-upload__tip">单个文件大小不超过20M</div>
             </el-upload>
           </td>
         </tr>

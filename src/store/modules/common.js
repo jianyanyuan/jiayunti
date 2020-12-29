@@ -2,7 +2,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-12-18 13:31:52
+ * @LastEditTime: 2020-12-29 14:23:58
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -85,7 +85,7 @@ const state = {
     { key: 9, val: 'warning' },
     { key: 10, val: 'warning' },
     { key: 11, val: 'info' },
-    { key: 12, val: 'info' },
+    { key: 12, val: 'success' },
     { key: 13, val: 'warning' },
     { key: 14, val: 'info' }
 

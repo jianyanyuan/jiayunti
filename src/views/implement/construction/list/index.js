@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-10 11:06:02
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 14:31:41
+ * @LastEditTime: 2020-12-29 14:33:52
  * @Description: 
  */
 import { mapState } from 'vuex'
@@ -10,20 +10,19 @@ import { mapState } from 'vuex'
 import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 import Construction from '@/api/construction'
+import FilterList from '@/components/Filter'
 export default {
   name: 'DesignerList',
-  // components: {
-  //   Flow
-  // },
+  components: {
+    FilterList
+  },
   data() {
     return {
       flowVisible: false,
-      query: {
-        code: '',
-        applyName: '',
-        status: ''
-      },
-      designStatus: {},
+      conStatus: [
+        {key:8,val:'报价'},
+        {key:11,val:'施工中'}
+      ],
       list: [],
       listLoading: false,
       pagination: {
@@ -32,7 +31,8 @@ export default {
         pageSize: 10
       },
       expandLoading: false,
-      btnLoading: false
+      btnLoading: false,
+      expandLoading: false
     }
   },
   computed: {
@@ -43,9 +43,9 @@ export default {
   },
   methods: {
     // 获取申请列表
-    async listApplies() {
+    async listApplies(query={}) {
       this.listLoading = true
-      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize },query).then(res => {
         this.list = []
         this.pagination.total = 0
         if (notEmptyArray(res.content)) {
@@ -97,11 +97,18 @@ export default {
         this.$message.error('违规未处理完毕!')
       }
     },
+    async handleExpand(row, expandedRows) {
+      if (Object.keys(row.apply).length === 0) {
+        this.expandLoading = true
+        const apply = await this.$store.dispatch('getProjectBasic', row.id)
+        const idx = this.list.findIndex(v => v.id === row.id)
+        this.$set(this.list[idx], 'apply', apply)
+        this.expandLoading = false
+      }
+    },
     // flowView() {
     //   this.flowVisible = true
     // },
-    goSearch() { },
-    clearQuery() { },
     handleSizeChange(val) {
       this.pagination.pageSize = val
       this.listApplies()

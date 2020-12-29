@@ -18,13 +18,12 @@ export default {
 }
 </script>
 <style lang="scss">
-
 // 单页面表格居中显示
 .center-form {
   width: 820px;
   margin: 50px auto 0;
 }
-li{
+li {
   list-style: none;
 }
 ::-webkit-scrollbar {
@@ -58,5 +57,11 @@ li{
 .dialog-center-public img {
   width: 100%;
   // object-fit: scale-down;
+}
+.empty-content-public {
+  line-height: 60px;
+  color: #909399;
+  text-align: center;
+  font-size: 24px;
 }
 </style>

@@ -2,33 +2,13 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-15 15:43:39
+ * @LastEditTime: 2020-12-29 14:14:53
  * @Description:设计列表
 -->
 
 <template>
   <div class="app-container">
-    <div class="list-query-public">
-      <el-form ref="queryForm" :inline="true" :model="query" size="small">
-        <el-form-item label="编号" prop="Name " style="margin-right: 30px">
-          <el-input v-model="query.code" />
-        </el-form-item>
-        <el-form-item label="申请人" prop="applyName " style="margin-right: 30px">
-          <el-input v-model="query.applyName" />
-        </el-form-item>
-        <el-form-item label="状态" prop="status " style="margin-right: 30px">
-          <el-select v-model="query.status">
-            <el-option v-for="item in designStatus" :key="item.val" :label="item.val" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="goSearch">搜索</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+    <FilterList :status="designStatus" @listFn="listApplies" />
     <el-card>
       <el-table v-loading="listLoading" class="design-table" @expand-change="handleExpand" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'addTime', order: 'descending'}" >
         <el-table-column align="center" label="序号" width="50">
@@ -100,7 +80,7 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
+    <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
 
     <el-dialog center title="上传" :visible.sync="uploadVisible" :close-on-click-modal="false" class="uploadModal">
       <el-upload ref="constructionUpload" action="#" class="form-card" :on-remove="handleUploadRemove" :on-change="handleUploadChange" drag :auto-upload="false">

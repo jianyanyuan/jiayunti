@@ -2,32 +2,12 @@
  * @Author: zfd
  * @Date: 2020-12-17 13:51:32
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 10:52:55
+ * @LastEditTime: 2020-12-29 08:50:50
  * @Description: 监理单位列表
 -->
 <template>
   <div class="app-container">
-    <div class="list-query-public">
-      <el-form ref="queryForm" :inline="true" :model="query" size="small">
-        <el-form-item label="编号" prop="Name " style="margin-right: 30px">
-          <el-input v-model="query.code" />
-        </el-form-item>
-        <el-form-item label="申请人" prop="applyName " style="margin-right: 30px">
-          <el-input v-model="query.applyName" />
-        </el-form-item>
-        <el-form-item label="状态" prop="statusId " style="margin-right: 30px">
-          <el-select v-model="query.statusId">
-            <el-option v-for="item in designStatus" :key="item.val" :label="item.val" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="goSearch">搜索</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="info" icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+    <FilterList @listFn="listApplies" />
     <el-card>
       <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row >
         <el-table-column align="center" label="序号" width="50">
@@ -61,7 +41,6 @@
         <el-table-column align="center" label="操作" min-width="145px">
           <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="scope.row.statusId === 9" size="mini" plain type="warning" @click="$router.push({name:'StreetCheck',params:{id:scope.row.id,status:scope.row.statusId}})">审 核</el-button>
               <el-button v-if="scope.row.statusId === 11" size="mini" plain type="info" @click="$router.push({path:'/supervision/fault-record',query:{id:scope.row.id,status:scope.row.statusId}})">违规记录</el-button>
               <el-button v-if="scope.row.statusId === 11" size="mini" plain type="warning" @click="$router.push({path:'/supervision/fault-review',query:{id:scope.row.id,status:scope.row.statusId}})">违规处理</el-button>
             </el-row>
@@ -70,7 +49,7 @@
       </el-table>
     </el-card>
 
-    <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
+    <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
     <!-- 查看流程 -->
     <!-- <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
       <flow />
@@ -109,17 +88,5 @@ export default {
   margin-bottom: 0;
   width: 100%;
 }
-.uploadModal ::v-deep .el-upload-dragger {
-  padding: 40px 5px;
-  border: 2px solid #e5e5e5;
-  color: #777;
-  -webkit-transition: background-color 0.2s linear;
-  transition: background-color 0.2s linear;
-}
-.uploadModal ::v-deep .el-upload-dragger:hover {
-  background: #f6f6f6;
-}
-.uploadModal ::v-deep .el-dialog__body {
-  text-align: center;
-}
+
 </style>

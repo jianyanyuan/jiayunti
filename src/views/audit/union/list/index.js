@@ -2,18 +2,19 @@
  * @Author: zfd
  * @Date: 2020-12-01 16:27:21
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-17 11:20:26
+ * @LastEditTime: 2020-12-29 14:28:32
  * @Description:
  */
 import { mapState } from 'vuex'
 import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 // import Flow from '@/components/street/Flow'
-
+import FilterList from '@/components/Filter'
 export default {
-  // components: {
-  //   Flow
-  // },
+  name:'UnionList',
+  components: {
+    FilterList
+  },
   data() {
     return {
       flowVisible: false,
@@ -24,24 +25,15 @@ export default {
       },
       list: [],
       listLoading: false,
-      designStatus: [
-        { key: 0, val: '未审核' },
-        { key: 1, val: '审核未通过' },
-        { key: 2, val: '审核通过' }
-      ],
-      designTag: [
-        { key: 0, val: 'info' },
-        { key: 1, val: 'danger' },
-        { key: 2, val: 'success' }
+      unionStatus: [
+        { key: 10, val: '联合审查' }
       ],
       pagination: {
         total: 0,
         pageIndex: 1,
         pageSize: 10
       },
-      uploadModal: {
-        visible: false
-      }
+      expandLoading:false
     }
   },
   computed: {
@@ -53,21 +45,32 @@ export default {
   },
   methods: {
     // 获取申请列表
-    async listApplies() {
+    async listApplies(query={}) {
       this.listLoading = true
-      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize },query).then(res => {
+        this.list = []
+        this.pagination.total = 0
         if (notEmptyArray(res.content)) {
-          this.list = res.content
+          res.content.forEach(v => {
+            v.apply = {}
+            this.list.push(v)
+          })
           this.pagination.total = res.totalElements
-        } else {
-          this.list = []
-          this.pagination.total = 0
         }
       }).catch(err => {
         this.$message.error('数据获取失败')
         console.log(err)
       })
       this.listLoading = false
+    },
+    async handleExpand(row, expandedRows) {
+      if (Object.keys(row.apply).length === 0) {
+        this.expandLoading = true
+        const apply = await this.$store.dispatch('getProjectBasic', row.id)
+        const idx = this.list.findIndex(v => v.id === row.id)
+        this.$set(this.list[idx], 'apply', apply)
+        this.expandLoading = false
+      }
     },
     // flowView() {
     //   this.flowVisible = true

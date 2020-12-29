@@ -8,27 +8,7 @@
 
 <template>
   <div class="app-container">
-    <div class="list-query-public">
-      <el-form ref="queryForm" :inline="true" :model="query" size="small">
-        <el-form-item label="编号" prop="Name " style="margin-right: 30px">
-          <el-input v-model="query.code" />
-        </el-form-item>
-        <el-form-item label="申请人" prop="applyName " style="margin-right: 30px">
-          <el-input v-model="query.applyName" />
-        </el-form-item>
-        <el-form-item label="状态" prop="audit " style="margin-right: 30px">
-          <el-select v-model="query.audit">
-            <el-option v-for="item in auditOptions" :key="item.val" :label="item.val" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="goSearch">搜索</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+    <FilterList @listFn="listApplies" />
     <el-card>
       <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row @row-dblclick="showOffer">
         <el-table-column align="center" label="序号" width="50">
@@ -62,7 +42,7 @@
         </el-table-column> -->
       </el-table>
     </el-card>
-    <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
+    <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
   </div>
 </template>
 
@@ -70,19 +50,18 @@
 import { mapState } from 'vuex'
 import Community from '@/api/community'
 import { notEmptyArray } from '@/utils'
+import FilterList from '@/components/Filter'
 export default {
   name: 'CommunityAudited',
+  components:{
+    FilterList
+  },
   data() {
     return {
       pagination: {
         total: 0,
         pageIndex: 1,
         pageSize: 10
-      },
-      query: {
-        code: '',
-        applyName: '',
-        audit: ''
       },
       list: [],
       listLoading: false
@@ -95,9 +74,9 @@ export default {
   created() { this.listApplies() },
   methods: {
     // 获取已审核列表
-    async listApplies() {
+    async listApplies(query={}) {
       this.listLoading = true
-      await Community.auditHistorylist({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+      await Community.auditHistorylist({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize },query).then(res => {
         this.list = []
         this.pagination.total = 0
         if (notEmptyArray(res.content)) {

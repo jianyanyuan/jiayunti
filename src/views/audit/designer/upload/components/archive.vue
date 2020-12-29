@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 16:24:26
+ * @LastEditTime: 2020-12-29 09:01:04
  * @Description: 居民申请意见汇总表
 -->
 <template>
@@ -123,9 +123,7 @@ export default {
       }
     },
     nextProcess(arrow) {
-      const idx = this.tableData.findIndex(v => {
-        v.drawingPaperType.includes('必选') && v.whetherComplete === false
-      })
+      const idx = this.tableData.findIndex(v => v.drawingPaperType.includes('必选') && v.whetherComplete === false)
       if (idx === -1) {
         this.$emit('nextProcess', arrow)
       } else {

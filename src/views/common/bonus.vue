@@ -2,14 +2,15 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 13:51:40
+ * @LastEditTime: 2020-12-29 10:11:00
  * @Description: 补贴派发
 -->
 <template>
   <div class="app-container" v-loading="pageLoading">
+    <el-page-header content="补贴派发" style="margin-bottom:30px" @back="$router.go(-1)" />
+
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
-      <span>补贴派发</span>
-      <el-button v-if="!uploaded" type="success" style="float:right" @click="handlePost">提 交</el-button>
+      <!-- <span>补贴派发</span> -->
     </el-row>
 
     <el-card class="upload-card" style="margin-bottom:30px">
@@ -27,6 +28,12 @@
         </el-form-item>
       </el-form>
     </el-card>
+        <el-row type="flex" justify="center" align="middle" style="padding:18px 20px">
+      <!-- <span>补贴派发</span> -->
+                <el-button v-if="!uploaded" type="success" style="float:right" @click="handlePost">提 交</el-button>
+
+    </el-row>
+
   </div>
 </template>
 
@@ -128,7 +135,7 @@ export default {
         this.$message.error('保存失败，请重新保存')
         return
       }
-      await addBonusApi(this.projectId, { id: this.projectId, money: this.model.money.replace(',','') })
+      await addBonusApi(this.projectId, { id: this.projectId, money: this.model.money.replace(',', '') })
         .then(() => {
           this.$router.go(-1)
         })

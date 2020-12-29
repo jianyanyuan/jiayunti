@@ -2,38 +2,45 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-22 10:08:57
+ * @LastEditTime: 2020-12-29 14:00:15
  * @Description:申请列表
 -->
 
 <template>
   <div class="app-container">
-    <div class="list-query-public">
-      <el-form ref="queryForm" :inline="true" :model="query" size="small">
-        <el-form-item label="编号" prop="Name " style="margin-right: 30px">
-          <el-input v-model="query.code" />
-        </el-form-item>
-        <el-form-item label="申请人" prop="applyName " style="margin-right: 30px">
-          <el-input v-model="query.applyName" />
-        </el-form-item>
-        <el-form-item label="审核" prop="audit " style="margin-right: 30px">
-          <el-select v-model="query.audit">
-            <el-option v-for="item in auditOptions" :key="item.val" :label="item.val" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="goSearch">搜索</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button icon="el-icon-circle-close" @click="clearQuery">清除</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+    <FilterList :status="communityStatus" @listFn="listApplies" />
     <el-card>
-      <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row >
+      <el-table v-loading="listLoading" class="design-table" row-key="id" @expand-change="handleExpand" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row>
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column type="expand">
+          <template slot-scope="{ row }">
+            <el-form label-position="left" v-loading="expandLoading" inline class="demo-table-expand">
+              <el-form-item label="申请人">
+                {{ row.apply.applicantName }}
+              </el-form-item>
+              <el-form-item label="申请时间">
+                {{ row.apply.createTime }}
+              </el-form-item>
+              <el-form-item label="用户地址">
+                {{ row.apply.address }}
+              </el-form-item>
+              <el-form-item label="电话">
+                {{ row.apply.phoneNumber }}
+              </el-form-item>
+              <el-form-item label="加装电梯地址">
+                {{ row.apply.location }}
+              </el-form-item>
+              <el-form-item label="设计单位">
+                {{ row.apply.designName }}
+              </el-form-item>
+              <el-form-item label="设备">
+                {{ row.apply.device }}
+              </el-form-item>
+            </el-form>
           </template>
         </el-table-column>
         <el-table-column label="编号" prop="projectName" />
@@ -70,7 +77,7 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
+    <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
 
     <!-- 查看流程 -->
     <!-- <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
@@ -94,5 +101,18 @@ export default {
   color: #777;
   -webkit-transition: background-color 0.2s linear;
   transition: background-color 0.2s linear;
+}
+.design-table {
+  width: 100%;
+  margin-bottom: 30px;
+}
+.design-table .demo-table-expand /deep/ label {
+  width: 100px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-left: 150px;
+  margin-bottom: 0;
+  width: 100%;
 }
 </style>

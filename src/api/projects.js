@@ -10,11 +10,12 @@ import request from '@/utils/request'
 const api_prefix_dev = '/project'
 
 // 根据token获取工程列表
-export const listApi = (params) => {
+export const listApi = (params,data) => {
   return request({
     url: api_prefix_dev + '/getroleproject',
-    method: 'get',
-    params
+    method: 'post',
+    params,
+    data
   })
 }
 

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 10:41:17
+ * @LastEditTime: 2020-12-29 13:50:20
  * @Description: 居民申请基本资料
 -->
 <template>
@@ -79,7 +79,7 @@ const defaultForm = {
   location: [],
   address: { county: [], community: [] }, //
   phoneNumber: '',
-  rooms: [],
+  rooms: [{ key: Date.now(), val: '' }],
   designId: '',
   typeAndDevice: [] // []
 }

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-29 16:05:50
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-16 16:01:40
+ * @LastEditTime: 2020-12-29 09:48:58
  * @Description: 报价列表
 -->
 <template>
@@ -22,13 +22,13 @@
       <div v-for="(s, index) in list" :key="index" class="list-item" @click="$router.push({name:'ResidentOfferDetail',params:{id:projectId,offerId:s.id,status}})">
         <div class="list-head">
           <div class="l-h-l">
-            <span>{{ s.constructionUnit }}</span><span>{{ s.offerTime }}</span>
+            <span>{{ s.constructionUnit }}</span><span>{{ s.offerTime | parseTime }}</span>
           </div>
         </div>
         <p><span>联系方式：{{ s.phoneNumber }}</span><span>报价（元）:{{ s.cost }}</span><span>施工周期（天）：{{ s.constructionPeriod }}</span></p>
         <p> 地址：{{ s.address }}</p>
       </div>
-      <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" hide-on-single-page :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
+      <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
     </div>
 
   </div>

@@ -13,7 +13,6 @@ const defaultForm = {
   rooms: [{ key: 'defaultRoom', val: '' }]
 }
 
-
 export default {
   name: 'ResidentList',
   // components: {
@@ -22,12 +21,9 @@ export default {
   data() {
     return {
 
-      fileList: [{ name: '123213' }, { name: '456465' }, { name: '789798' }],
       formLoading: false,
       listLoading: false,
       openLoading: false,
-      auditVisible: false,
-      dissentVisible: false,
       flowVisible: false,
       audit: {
 
@@ -150,7 +146,7 @@ export default {
     // 获取申请列表
     async listApplies() {
       this.listLoading = true
-      await listApi().then(res => {
+      await listApi({},{}).then(res => {
         this.list = []
         if (notEmptyArray(res.content)) {
           // this.list = res.content

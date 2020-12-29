@@ -2,36 +2,32 @@
  * @Author: zfd
  * @Date: 2020-12-15 09:12:06
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 16:43:00
+ * @LastEditTime: 2020-12-29 14:23:03
  * @Description: 增梯办列表
  */
 // import Flow from '@/components/street/Flow'
 import { mapState } from 'vuex'
 import { listApi } from '@/api/projects'
-import { notEmptyArray, checkUpload } from '@/utils'
+import { notEmptyArray } from '@/utils'
+import FilterList from '@/components/Filter'
 export default {
   name: 'IncreaseLift',
-  // components: {
-  //   Flow
-  // },
+  components: {
+    FilterList
+  },
   data() {
 
     return {
       expandLoading: false,
-      query: {
-        code: '',
-        applyName: '',
-        designName: '',
-        status: ''
-      },
       flowVisible: false,
 
       list: [],
       listLoading: false,
-      designStatus: [
-        { key: 0, val: '未审核' },
-        { key: 1, val: '审核未通过' },
-        { key: 2, val: '审核通过' }
+      insStatus: [
+        { key: 5, val: '管道踏勘' },
+        { key: 10, val: '联合报告' },
+        { key: 11, val: '施工监管' },
+        { key: 12, val: '补贴派发' }
       ],
       pagination: {
         total: 0,
@@ -48,9 +44,9 @@ export default {
   },
   methods: {
     // 获取申请列表
-    async listApplies() {
+    async listApplies(query={}) {
       this.listLoading = true
-      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize },query).then(res => {
         this.list = []
         this.pagination.total = 0
         if (notEmptyArray(res.content)) {
@@ -78,13 +74,6 @@ export default {
     // flowView() {
     //   this.flowVisible = true
     // },
-
-    goSearch() {
-    },
-    clearQuery() {
-
-    },
-
     handleSizeChange(val) {
       this.pagination.pageSize = val
       this.listApplies()

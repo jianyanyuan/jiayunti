@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-24 16:36:56
+ * @LastEditTime: 2020-12-29 09:11:40
  * @Description: 居民异议反馈查看
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -66,6 +66,7 @@
 
       </el-collapse-item>
     </el-collapse>
+    <div class="empty-content-public" v-if="objection.length === 0">暂无异议</div>
   </div>
 </template>
 
