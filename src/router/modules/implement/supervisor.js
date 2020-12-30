@@ -64,9 +64,9 @@ const supervisorRouter = {
       path: 'intro_edit',
       component: () => import('@/views/common/introduction/edit.vue'), // Parent router-view
       name: 'SuperIntroEdit',
-      // hidden: true,
+      hidden: true,
       meta: {
-        title: '公司介绍-编辑',
+        title: '编辑',
         icon: 'edit',
         roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
       }

@@ -8035,7 +8035,8 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
             }
 
             if(serverUrl) {
-                serverUrl = serverUrl + (serverUrl.indexOf('?') == -1 ? '?':'&') + 'action=' + (actionName || '');
+              console.log(serverUrl)
+                // serverUrl = serverUrl + (serverUrl.indexOf('?') == -1 ? '?':'&') + 'action=' + (actionName || '');
                 return utils.formatUrl(serverUrl);
             } else {
                 return '';
@@ -8090,27 +8091,96 @@ UE.Editor.defaultOptions = function(editor){
 
                 var configUrl = me.getActionUrl('config'),
                     isJsonp = utils.isCrossDomainUrl(configUrl);
-
+                    console.log('configUrl',configUrl)
+                    try {
+                      var config = {
+                        // 单个文件上传
+                        imageActionName: "uploadimage",
+                        imageFieldName: "file",
+                        imageMaxSize: 2048000,
+                        imageAllowFiles: [
+                          ".png",
+                          ".jpg",
+                          ".jpeg",
+                          ".gif",
+                          ".bmp"
+                        ],
+                        imageCompressEnable: true,
+                        imageCompressBorder: 1600,
+                        imageInsertAlign: "none",
+                        // 附件上传
+                        fileActionName: "uploadfile",
+                        fileFieldName: "file",
+                        fileMaxSize: 51200000,
+                        fileAllowFiles: [
+                          ".png",
+                          ".jpg",
+                          ".jpeg",
+                          ".gif",
+                          ".bmp",
+                          ".flv",
+                          ".swf",
+                          ".mkv",
+                          ".avi",
+                          ".rm",
+                          ".rmvb",
+                          ".mpeg",
+                          ".mpg",
+                          ".ogg",
+                          ".ogv",
+                          ".mov",
+                          ".wmv",
+                          ".mp4",
+                          ".webm",
+                          ".mp3",
+                          ".wav",
+                          ".mid",
+                          ".rar",
+                          ".zip",
+                          ".tar",
+                          ".gz",
+                          ".7z",
+                          ".bz2",
+                          ".cab",
+                          ".iso",
+                          ".doc",
+                          ".docx",
+                          ".xls",
+                          ".xlsx",
+                          ".ppt",
+                          ".pptx",
+                          ".pdf",
+                          ".txt",
+                          ".md",
+                          ".xml"
+                        ]
+                      }
+                      utils.extend(me.options, config);
+                      me.fireEvent('serverConfigLoaded');
+                      me._serverConfigLoaded = true;
+                  } catch (e) {
+                      showErrorMsg(me.getLang('loadconfigFormatError'));
+                  }
                 /* 发出ajax请求 */
-                me._serverConfigLoaded = false;
+                // me._serverConfigLoaded = false;
 
-                configUrl && UE.ajax.request(configUrl,{
-                    'method': 'GET',
-                    'dataType': isJsonp ? 'jsonp':'',
-                    'onsuccess':function(r){
-                        try {
-                            var config = isJsonp ? r:eval("("+r.responseText+")");
-                            utils.extend(me.options, config);
-                            me.fireEvent('serverConfigLoaded');
-                            me._serverConfigLoaded = true;
-                        } catch (e) {
-                            showErrorMsg(me.getLang('loadconfigFormatError'));
-                        }
-                    },
-                    'onerror':function(){
-                        showErrorMsg(me.getLang('loadconfigHttpError'));
-                    }
-                });
+                // configUrl && UE.ajax.request(configUrl,{
+                //     'method': 'GET',
+                //     'dataType': isJsonp ? 'jsonp':'',
+                //     'onsuccess':function(r){
+                //         try {
+                //             var config = isJsonp ? r:eval("("+r.responseText+")");
+                //             utils.extend(me.options, config);
+                //             me.fireEvent('serverConfigLoaded');
+                //             me._serverConfigLoaded = true;
+                //         } catch (e) {
+                //             showErrorMsg(me.getLang('loadconfigFormatError'));
+                //         }
+                //     },
+                //     'onerror':function(){
+                //         showErrorMsg(me.getLang('loadconfigHttpError'));
+                //     }
+                //});
             } catch(e){
                 showErrorMsg(me.getLang('loadconfigError'));
             }
@@ -8241,6 +8311,7 @@ UE.ajax = function() {
         var str = url + (url.indexOf("?")==-1?"?":"&") + (method=="POST"?"":submitStr+ "&noCache=" + +new Date);
         xhr.open(method, str, ajaxOpts.async);
         xhr.onreadystatechange = function() {
+          // debugger
             if (xhr.readyState == 4) {
                 if (!timeIsOut && xhr.status == 200) {
                     ajaxOpts.onsuccess(xhr);
@@ -23356,6 +23427,7 @@ UE.plugin.register('snapscreen', function (){
                     }
 
                     function onSuccess(rs){
+                      // debugger
                         try{
                             rs = eval("("+ rs +")");
                             if(rs.state == 'SUCCESS'){
@@ -23745,6 +23817,7 @@ UE.plugin.register('music', function (){
 UE.plugin.register('autoupload', function (){
 
     function sendAndInsertFile(file, editor) {
+      // debugger
         var me  = editor;
         //模拟数据
         var fieldName, urlPrefix, maxSize, allowFiles, actionUrl,
@@ -23767,8 +23840,9 @@ UE.plugin.register('autoupload', function (){
                 'timeout': 4000
             });
         };
-
+        // debugger
         if (filetype == 'image') {
+          // debugger
             loadingHtml = '<img class="loadingclass" id="' + loadingId + '" src="' +
                 me.options.themePath + me.options.theme +
                 '/images/spacer.gif" title="' + (me.getLang('autoupload.loading') || '') + '" >';
@@ -23785,12 +23859,14 @@ UE.plugin.register('autoupload', function (){
                 }
             };
         } else {
+          // debugger
             loadingHtml = '<p>' +
                 '<img class="loadingclass" id="' + loadingId + '" src="' +
                 me.options.themePath + me.options.theme +
                 '/images/spacer.gif" title="' + (me.getLang('autoupload.loading') || '') + '" >' +
                 '</p>';
             successHandler = function(data) {
+              // debugger
                 var link = urlPrefix + data.url,
                     loader = me.document.getElementById(loadingId);
 
@@ -23833,6 +23909,7 @@ UE.plugin.register('autoupload', function (){
         xhr.open("post", url, true);
         xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         xhr.addEventListener('load', function (e) {
+          // debugger
             try{
                 var json = (new Function("return " + utils.trim(e.target.response)))();
                 if (json.state == 'SUCCESS' && json.url) {
@@ -23884,6 +23961,7 @@ UE.plugin.register('autoupload', function (){
                                 file = items[len];
                                 if(file.getAsFile) file = file.getAsFile();
                                 if(file && file.size > 0) {
+                                  // debugger
                                     sendAndInsertFile(file, me);
                                     hasImg = true;
                                 }
@@ -24501,6 +24579,7 @@ UE.plugin.register('simpleupload', function() {
     containerBtn.appendChild(form);
 
     input.addEventListener('change', function(event) {
+      // debugger
       if (!input.value) return;
       var loadingId = 'loading_' + (+new Date()).toString(36);
       var imageActionUrl = me.getActionUrl(me.getOpt('imageActionName'));
@@ -24543,11 +24622,13 @@ UE.plugin.register('simpleupload', function() {
         }
       }
       xhr.onload = function() {
+        // debugger
         if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
           var res = JSON.parse(xhr.responseText)
-          var link = me.options.imageUrlPrefix + res.url;
-
-          if (res.state == 'SUCCESS' && res.url) {
+          // var link = me.options.imageUrlPrefix + res.url;
+          // 二次开发
+          var link = res.fileAddress
+          if (link) {
             loader = me.document.getElementById(loadingId);
             loader.setAttribute('src', link);
             loader.setAttribute('_src', link);
@@ -24557,13 +24638,27 @@ UE.plugin.register('simpleupload', function() {
             domUtils.removeClasses(loader, 'loadingclass');
             me.fireEvent("contentchange");
           } else {
-            showErrorLoader(res.state);
+            showErrorLoader('图片上传错误');
           }
+
+          // if (res.state == 'SUCCESS' && res.url) {
+          //   loader = me.document.getElementById(loadingId);
+          //   loader.setAttribute('src', link);
+          //   loader.setAttribute('_src', link);
+          //   loader.setAttribute('title', res.title || '');
+          //   loader.setAttribute('alt', res.original || '');
+          //   loader.removeAttribute('id');
+          //   domUtils.removeClasses(loader, 'loadingclass');
+          //   me.fireEvent("contentchange");
+          // } else {
+          //   showErrorLoader(res.state);
+          // }
         } else {
           showErrorLoader(me.getLang('simpleupload.loadError'));
         }
       };
       xhr.onerror = function() {
+        // debugger
         showErrorLoader(me.getLang('simpleupload.loadError'));
       };
       xhr.send(new FormData(form));
@@ -24718,8 +24813,8 @@ UE.plugin.register('serverparam', function (){
 UE.plugin.register('insertfile', function (){
 
     var me = this;
-
     function getFileIcon(url){
+      // debugger
         var ext = url.substr(url.lastIndexOf('.') + 1).toLowerCase(),
             maps = {
                 "rar":"icon_rar.gif",
@@ -24758,6 +24853,7 @@ UE.plugin.register('insertfile', function (){
         commands:{
             'insertfile': {
                 execCommand: function (command, filelist){
+                  // debugger
                     filelist = utils.isArray(filelist) ? filelist : [filelist];
 
                     var i, item, icon, title,
@@ -27817,6 +27913,7 @@ UE.ui = baidu.editor.ui = {};
                     className:'edui-for-' + cmd,
                     title:editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
                     onclick:function () {
+                      // debugger
                         editor.execCommand(cmd);
                     },
                     theme:editor.options.theme,

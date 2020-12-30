@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:14
- * @LastEditTime: 2020-12-24 17:26:13
+ * @LastEditTime: 2020-12-30 10:06:29
  * @LastEditors: zfd
  * @Description: 实施段施工路由表
  * @FilePath: \jiayunti\src\router\modules\implement\construction.js
@@ -83,9 +83,9 @@ const constructionRouter = {
       path: 'intro_edit',
       component: () => import('@/views/common/introduction/edit.vue'), // Parent router-view
       name: 'ConIntroEdit',
-      // hidden: true,
+      hidden: true,
       meta: {
-        title: '公司介绍-编辑',
+        title: '编辑',
         icon: 'edit',
         roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
       }

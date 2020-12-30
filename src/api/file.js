@@ -100,7 +100,14 @@ const uploadFault = (data, IllegalBehaviorId, type) => {
     }
   })
 }
-
+// 上传
+// const uploadInfoFile = (data ) => {
+//   return request({
+//     url: api_prefix_dev + 'uploadImage',
+//     method: 'post',
+//     data
+//   })
+// }
 export default {
   upload,
   remove,

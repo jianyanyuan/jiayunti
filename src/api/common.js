@@ -31,8 +31,42 @@ const getDesign = () => {
   })
 }
 
+// 单位信息api
+const getArticle = () => {
+  return request({
+    url: '/Company',
+    method: 'get'
+  })
+
+}
+
+const modifyArticle = (newCompany) => {
+  return request({
+    url: '/Company',
+    method: 'put',
+    data: newCompany
+  })
+}
+
+const addArticle = (data) => {
+  return request({
+    url: '/Company',
+    method: 'post',
+    data
+  })
+}
+const getArticleById = (id) => {
+  return request({
+    url: '/Company/' + id,
+    method: 'get',
+  })
+}
 export default {
   getAddress,
   getDevice,
-  getDesign
+  getDesign,
+  getArticle,
+  modifyArticle,
+  addArticle,
+  getArticleById
 }

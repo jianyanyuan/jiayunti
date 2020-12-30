@@ -2,43 +2,105 @@
  * @Author: zfd
  * @Date: 2020-10-28 13:47:36
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 10:57:13
+ * @LastEditTime: 2020-12-30 10:57:30
  * @Description: 
 -->
 <template>
-  <div class="intro-container">
-    <header>
-      <h1>{{ designer.name }}</h1>
-      <p>来源：<span>{{ designer.source }}</span>日期：<span>{{ designer.date }}</span><span>作者：{{ designer.author }}</span></p>
-      <p>公司官网：<a :href="designer.link" target="_blank">{{ designer.link }}</a></p>
-    </header>
-    <article v-html="designer.desc" />
+  <div class="app-container">
+    <el-button v-if="id===null" @click="clickEdit" type="warning">修改</el-button>
+    <div class="intro-container" v-loading="pageLoading">
+      <template v-if="detail">
+        <header>
+          <h1>
+            {{ detail.companyName }}
+          </h1>
+          <p v-if="detail.articleSource || detail.author">
+            <span v-if="detail.articleSource">来源：{{ detail.articleSource }}</span>
+            <span v-if="detail.author">作者：{{ detail.author }}</span>
+          </p>
+          <p>
+            <span>地址：{{ detail.address }}</span>
+            <span>联系方式：{{ detail.phone }}</span>
+            <a v-if="detail.link" :href="detail.link" target="_blank">公司官网：{{ detail.link }}</a>
+          </p>
+        </header>
+        <article v-html="detail.introduction" />
+      </template>
+      <template v-else>
+        <div class="empty-content-public">暂无介绍</div>
+      </template>
+    </div>
   </div>
+
 </template>
 <script>
+import Common from '@/api/common'
 export default {
-  name: 'Introduction',
+  name: 'IntroView',
   data() {
     return {
-      designer: {
-        name: '东莞市六田精密电子有限公司',
-        source: '东莞市六田精密电子有限',
-        date: '2019-01-15 18:11',
-        author: '非尔思科技',
-        desc: '<p><span style=\"color: rgb(68, 68, 68); font-family: 微软雅黑, Arial; background-color: rgb(255, 255, 255);\">东莞市六田精密电子有限公司成立于2010年5月，是一家专业设计制造精密五金冲压模具、生产精密端子、外壳、精密弹片等精密五金冲压件，模具工装件的五金冲压厂家。产品广泛应用于移动电脑设备，数位相机，行动通讯设备、汽车/航空/航海电子零组件，医疗电子、智能家电、IC、3C产品及户外防水等领域。</span></p><p><img src=\"http://www.szfec.cn/uploads/190109/1-1Z109160005K3.jpg\" alt=\"东莞市六田精密电子有限公司\"/></p>',
-        link: 'http://www.szfec.cn/case/qiyewangzhananli/9.html'
-      }
+      pageLoading: false,
+      detail: null,
+      id: null
     }
   },
   created() {
-    // 2
+    const { id } = this.$route.query
+    if (id) {
+      this.id = id
+      this.getDetailById()
+    } else {
+      this.getDetail()
+    }
+
+  },
+  methods: {
+    getDetail() {
+      this.pageLoading = true
+      Common.getArticle()
+        .then(res => {
+          if (res) {
+            this.detail = res
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+          this.$message.error('信息获取失败')
+        })
+        .finally(() => {
+          this.pageLoading = false
+        })
+    },
+    getDetailById() {
+      this.pageLoading = true
+      Common.getArticleById()
+        .then(res => {
+          if (res) {
+            this.detail = res
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+          this.$message.error('信息获取失败')
+        })
+        .finally(() => {
+          this.pageLoading = false
+        })
+    },
+    clickEdit() {
+      const reg = /\/(.*)\//
+      const prefix = this.$route.fullPath.match(reg)[1]
+      const path = `/${prefix}/intro_edit`
+      const type = this.detail ? 0: 1 //0修改 1保存 
+      this.$router.push({ path,query:{type} })
+    }
   },
   beforeRouteEnter(to, from, next) {
     // 1
     next((vm) => {
       // 3
-      if (to.params.designer) {
-        vm.designer = to.params.designer
+      if (to.params.detail) {
+        vm.detail = to.params.detail
       }
       // if (to.query.type === "today") {
       //   let today = new Date();
@@ -51,20 +113,21 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.intro-container{
+.intro-container {
   width: 70%;
   margin: 0 auto;
   min-width: 900px;
-  header{
+  header {
     text-align: center;
-    border-bottom: 1px solid #E2E2E2;
+    border-bottom: 1px solid #e2e2e2;
   }
-  p,span{
+  p,
+  span {
     margin-right: 20px;
     font-size: 14px;
     color: #808080;
   }
-  a:hover{
+  a:hover {
     color: #3282b8;
   }
 }

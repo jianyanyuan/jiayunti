@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-22 11:02:59
+ * @LastEditTime: 2020-12-30 10:23:45
  * @LastEditors: zfd
  * @Description: 设备路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -35,9 +35,9 @@ const deviceRouter = {
       path: 'intro_edit',
       component: () => import('@/views/common/introduction/edit.vue'), // Parent router-view
       name: 'DeviceIntroEdit',
-      // hidden: true,
+      hidden: true,
       meta: {
-        title: '公司介绍-编辑',
+        title: '编辑',
         icon: 'edit',
         roles: ['ROLE_ADMIN', 'ROLE_DEVICE']
       }
