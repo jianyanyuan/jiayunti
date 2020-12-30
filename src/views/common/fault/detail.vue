@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-25 09:43:43
+ * @LastEditTime: 2020-12-30 09:37:50
  * @Description: 施工端违规处理
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -75,6 +75,7 @@
         </el-form>
       </el-collapse-item>
     </el-collapse>
+    <div class="empty-content-public" v-if="list.length === 0">暂无违规记录</div>
   </div>
 </template>
 

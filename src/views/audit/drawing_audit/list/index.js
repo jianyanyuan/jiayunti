@@ -2,18 +2,19 @@
  * @Author: zfd
  * @Date: 2020-12-01 16:37:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 14:30:29
+ * @LastEditTime: 2020-12-30 09:29:28
  * @Description:
  */
 import { mapState } from 'vuex'
 // import Flow from '@/components/street/Flow'
 import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
+import FilterList from '@/components/Filter'
 export default {
   name: 'DrawingList',
-  // components: {
-  //   Flow
-  // },
+  components: {
+    FilterList
+  },
   data() {
     return {
       flowVisible: false,
@@ -52,9 +53,9 @@ export default {
   },
   methods: {
     // 获取申请列表
-    async listApplies() {
+    async listApplies(query={}) {
       this.listLoading = true
-      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize },query).then(res => {
         this.list = []
         this.pagination.total = 0
         if (notEmptyArray(res.content)) {
@@ -79,8 +80,6 @@ export default {
         this.expandLoading = false
       }
     },
-    goSearch() { },
-    clearQuery() { },
     // flowView() {
     //   this.flowVisible = true
     // },

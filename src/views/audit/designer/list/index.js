@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-10 11:06:02
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 13:46:28
+ * @LastEditTime: 2020-12-30 09:26:18
  * @Description: 
  */
 import { mapState } from 'vuex'
@@ -24,7 +24,8 @@ export default {
       listLoading: false,
       designStatus: [
         { key: 2, val: '方案设计' },
-        { key: 6, val: '施工图设计' }
+        { key: 6, val: '施工图设计' },
+        { key: 7, val: '施工图修改' }
       ],
       pagination: {
         total: 0,
@@ -46,7 +47,7 @@ export default {
   },
   methods: {
     // 获取申请列表
-    async listApplies(query={}) {
+    async listApplies(query = {}) {
       this.listLoading = true
       await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }, query).then(res => {
         this.list = []
@@ -132,9 +133,11 @@ export default {
           this.$message.error('文件上传失败，请重新上传')
         } else {
           this.$message.success('上传完成')
-          this.listApplies()
           // 施工图设计阶段 --> 施工图审核
           advanceApi(this.uploadId, 6)
+            .then(async () => {
+              await this.listApplies()
+            })
             .catch(() => (this.$message.error('流程错误')))
           this.uploadVisible = false
           this.uploadId = null

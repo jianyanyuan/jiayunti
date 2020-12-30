@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-02 14:20:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 15:36:00
+ * @LastEditTime: 2020-12-30 09:43:13
  * @Description:
 -->
 <!--
@@ -153,6 +153,8 @@ export default {
                   v.status = v.result // 整改结果
                 }
               }
+              v.result = 0
+              v.toResponse = '通过'
             })
           }
           this.list = res

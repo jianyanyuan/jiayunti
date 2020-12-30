@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-25 09:10:06
+ * @LastEditTime: 2020-12-30 09:31:50
  * @LastEditors: zfd
  * @Description: 居民查看报价单详情
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -54,10 +54,10 @@
         <tr>
           <td>材料</td>
           <td colspan="3" style="text-align:left">
-            <a v-for="file in construction.priceFileList" :key="file.name" class="file-display">
+            <a v-for="file in construction.priceFileList" :key="file.name" class="file-display" @click="download(file)">
               <i class="el-icon-document" />
               {{ file.filename }}
-              <i class="el-icon-download" style="float:right" @click="download(file)" />
+              <i class="el-icon-download" style="float:right" />
             </a>
           </td>
         </tr>

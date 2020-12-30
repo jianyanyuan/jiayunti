@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 16:30:45
+ * @LastEditTime: 2020-12-30 09:15:38
  * @Description:申请列表
 -->
 
@@ -140,7 +140,7 @@
         </el-form-item>
         <!-- 单元下业主 -->
         <el-form-item v-for="(room, index) in model.form.rooms" :key="room.key" :label="'房间编号' + (index+1)" :prop="'rooms.' + index + '.val'" :rules="{required: true, message: '房间编号不能为空', trigger: 'blur'}">
-          <el-input v-model="room.val" auto-complete="off">
+          <el-input v-model="room.val" auto-complete="off" placeholder="房间编号">
             <template slot="append">
               <el-button :icon="index == 0 ? 'el-icon-plus' : 'el-icon-minus'" @click="handleRoom(index)" />
             </template>

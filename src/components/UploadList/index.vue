@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-07 10:57:23
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 16:06:43
+ * @LastEditTime: 2020-12-30 09:20:18
  * @Description: 
 -->
 <template>
@@ -51,7 +51,7 @@
       </div>
       <span slot="title">
         <el-button @click="printPDF('printContent')" type="success" style="float:left">打印</el-button>
-        <span>pdf预览</span>
+        <span class="pdf-title">PDF预览</span>
       </span>
     </el-dialog>
   </div>
@@ -150,5 +150,9 @@ export default {
 .el-upload-list__item,
 .el-upload-list__item-actions {
   outline: none;
+}
+.pdf-title {
+  font-size: 20px;
+  line-height: 40px;
 }
 </style>

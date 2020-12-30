@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-29 13:53:41
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 16:24:42
+ * @LastEditTime: 2020-12-30 09:44:53
  * @Description: 
 -->
 <template>
@@ -14,7 +14,7 @@
       <el-form-item label="申请人" prop="applicantName " style="margin-right: 30px">
         <el-input v-model="query.applicantName" />
       </el-form-item>
-      <el-form-item label="状态" prop="status " style="margin-right: 30px" v-if="status">
+      <el-form-item label="操作" prop="status " style="margin-right: 30px" v-if="status">
         <el-select v-model="query.status">
           <el-option v-for="item in status" :key="item.val" :label="item.val" :value="item.key" />
         </el-select>
