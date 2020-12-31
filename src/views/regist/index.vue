@@ -6,19 +6,19 @@
         <el-col :span="18">
           <el-form ref="form" :model="form" :rules="rule" class="regist-form" label-position="top">
             <el-form-item prop="username" label="用户名">
-              <el-input v-model="form.username" placeholder="请输入用户名"  />
+              <el-input v-model="form.username" placeholder="请输入用户名" />
             </el-form-item>
             <el-form-item prop="password" label="登录密码">
-              <el-input v-model="form.password" type="password"  placeholder="请输入6-12位密码" @blur="setRule" />
+              <el-input v-model="form.password" type="password" placeholder="请输入6-12位密码" @blur="setRule" />
             </el-form-item>
             <el-form-item prop="conPwd" label="确认密码">
-              <el-input v-model="form.conPwd" type="password"  placeholder="请再次输入密码" />
+              <el-input v-model="form.conPwd" type="password" placeholder="请再次输入密码" />
             </el-form-item>
             <!-- <el-form-item prop="name" label="姓名">
               <el-input v-model="form.name" placeholder="请输入真实姓名"  />
             </el-form-item> -->
             <el-form-item prop="idcard" label="身份证">
-              <el-input v-model="form.idcard" placeholder="请输入身份证"  />
+              <el-input v-model="form.idcard" placeholder="请输入身份证" />
             </el-form-item>
             <el-form-item prop="address" label="地址">
               <el-cascader v-model="address.county" :options="countyOptions" :props="countyProps" @change="changeAddress" @focus="focusAddress" />

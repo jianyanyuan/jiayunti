@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 09:15:50
+ * @LastEditTime: 2020-12-31 16:26:24
  * @Description:
  */
 import Vue from 'vue'
@@ -95,7 +95,7 @@ export const constantRoutes = [
  */
 export const asyncRoutes = modules.concat({ path: '*', redirect: '/404', hidden: true })
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
