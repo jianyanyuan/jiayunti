@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-31 11:22:00
+ * @LastEditTime: 2020-12-31 12:07:57
  * @LastEditors: zfd
  * @Description: 施工报价
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -22,21 +22,21 @@
         <tr>
           <td>施工单位</td>
           <td>
-            {{ construction.constructionUnit }}
+            <el-input v-model="construction.constructionUnit" placeholder="请输入单位名" />
           </td>
           <td>联系人</td>
           <td>
-            <el-input v-model="construction.contact" placeholder="请输入联系人" auto-complete="false" />
+            <el-input v-model="construction.contact" placeholder="请输入联系人" />
           </td>
         </tr>
         <tr>
           <td>联系电话</td>
           <td>
-            <el-input v-model="construction.phoneNumber" placeholder="请输入联系电话" auto-complete="false" />
+            <el-input v-model="construction.phoneNumber" placeholder="请输入联系电话" />
           </td>
           <td>地址</td>
           <td>
-            <el-input v-model="construction.address" placeholder="请输入联系地址" auto-complete="false" />
+            <el-input v-model="construction.address" placeholder="请输入联系地址" />
           </td>
         </tr>
         <tr>

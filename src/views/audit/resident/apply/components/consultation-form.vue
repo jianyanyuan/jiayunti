@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 11:15:27
+ * @LastEditTime: 2020-12-31 12:38:39
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -165,81 +165,50 @@ export default {
     },
     // 删除文件
     handleUploadRemove(file, fileList, room) {
-      // const index = this.fileList[room].findIndex(v => v.uid === file.uid)
-      // const removed = this.fileList[room].splice(index, 1)
       const cancelIdx = this.fileList[room].findIndex(f => f.uid === file.uid)
-      this.fileList[room].splice(cancelIdx, 1)
       if (file.url === undefined) {
         // 未上传 --> 取消上传
+        this.fileList[room].splice(cancelIdx, 1)
         const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
         this.uploadList.splice(removeIdx, 1)
       } else {
-        // 已上传的 --> 待删除
-        this.deleteList.push(
-          {
-            room,
-            projectId: this.id,
-            uid: file.uid,
-            name: file.name
-          }
-        )
+        File.removeOpinion(file.uid)
+          .then(() => {
+            this.fileList[room].splice(cancelIdx, 1)
+          })
+          .catch(() => {
+            this.$message.error('删除失败')
+          })
       }
     },
 
     // 保存修改
-    postFile() {
+    async postFile() {
       this.pageLoading = true
-      let uploadAsync = new Promise(resolove => resolove('未修改'))
-      let deleteAsync = new Promise(resolove => resolove('未修改'))
       if (notEmptyArray(this.uploadList)) {
-        let error = false
-        uploadAsync = new Promise((resolove, reject) => {
-          this.uploadList.forEach(async(v, i) => {
-            const { room, projectId, file } = v
-
-            const last = i === this.uploadList.length - 1
-            await File.uploadOpinion(file, { room, projectId })
-              .catch(() => {
-                // 上传失败
-                const failIdx = this.fileList[room].findIndex(f => f.uid === v.uid)
-                this.fileList[room].splice(failIdx, 1)
-                error = true
-              })
-            this.uploadList.splice(i, 1)
-            if (last) {
-              error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
-            }
-          })
-        })
-      }
-      if (notEmptyArray(this.deleteList)) {
-        let error = false
-        deleteAsync = new Promise((resolove, reject) => {
-          this.deleteList.forEach(async(v, i) => {
-            const last = i === this.deleteList.length - 1
-            await File.removeOpinion(v.uid)
-              // .then(() => {
-              //   const delIndx = this.fileList[v.room].findIndex(f => f.uid === v.uid)
-              //   this.fileList[v.room].splice(delIndx, 1)
-              // })
-              .catch(() => {
-                this.fileList[v.room].push(v)
-                error = true
-              })
-            if (last) {
-              error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
-            }
-            this.deleteList.splice(i, 1)
-          })
-        })
-      }
-      Promise.all([uploadAsync, deleteAsync]).then(() => {
-        this.pageLoading = false
+        let err = false
+        for (const idx in this.uploadList) {
+          const { room, projectId, file } = this.uploadList[idx]
+          await File.uploadOpinion(file, { room, projectId })
+            .catch(() => {
+              // 上传失败
+              err = true
+              const failIdx = this.fileList[room].findIndex(f => f.uid === this.uploadList[idx].uid)
+              this.fileList[room].splice(failIdx, 1)
+            })
+        }
+        this.uploadList = []
+        if (err) {
+          this.$message.error('保存失败')
+        }
         this.hasChanged = true
-      }).catch(() => {
-        this.$message.error('保存失败')
         this.pageLoading = false
-      })
+        this.detailApply()
+      } else {
+        this.hasChanged = true
+        this.pageLoading = false
+        this.detailApply()
+      }
     }
   }
 }
