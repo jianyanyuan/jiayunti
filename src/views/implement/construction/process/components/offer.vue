@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-29 09:46:17
+ * @LastEditTime: 2020-12-31 11:22:00
  * @LastEditors: zfd
  * @Description: 施工报价
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -22,7 +22,7 @@
         <tr>
           <td>施工单位</td>
           <td>
-            {{construction.constructionUnit}}
+            {{ construction.constructionUnit }}
           </td>
           <td>联系人</td>
           <td>
@@ -90,7 +90,7 @@ import { validateSync } from 'class-validator'
 import { Construction } from './class'
 import Api from '@/api/construction'
 import File from '@/api/file'
-import { notEmptyArray, checkUpload } from '@/utils'
+import { notEmptyArray } from '@/utils'
 export default {
   name: 'ConstructionOffer',
   props: {
@@ -134,7 +134,7 @@ export default {
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
       const valid = this.checkUpload(file.raw)
-      if (valid && file.status === 'ready') {
+      if (valid && file.url === undefined) {
         const formData = new FormData()
         formData.append('file', file.raw)
         this.uploadList.push({
@@ -169,8 +169,8 @@ export default {
       const data = plainToClass(Construction, this.construction)
       const errors = validateSync(data)
       if (errors.length > 0) {
-        console.log(errors)
-        this.$message.error('请补全信息')
+        const { constraints } = errors[0]
+        this.$message.error(Object.values(constraints)[0])
         return
       }
       this.pageLoading = true
@@ -179,7 +179,7 @@ export default {
       if (id) {
         let error = false
         if (notEmptyArray(this.uploadList)) {
-          this.uploadList.forEach(async (v, i) => {
+          this.uploadList.forEach(async(v, i) => {
             const { file } = v
             await File.uploadOffer(id, file)
               .catch(() => {
@@ -198,7 +198,7 @@ export default {
         this.$message.error('提交失败')
         this.pageLoading = false
       }
-    },
+    }
   }
 }
 </script>

@@ -1,12 +1,12 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-29 09:11:40
+ * @LastEditTime: 2020-12-31 10:34:00
  * @Description: 居民异议反馈查看
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="app-container">
     <el-page-header content="异议反馈" style="margin-bottom:50px" @back="$router.go(-1)" />
     <div class="basic-container">
       <el-card style="margin-bottom:30px">
@@ -45,7 +45,7 @@
         </template>
         <el-form label-width="120px" class="center-form">
           <el-form-item label="时间：">
-            {{ new Date(item.time) | parseTime('{y}-{m}-{d} {h}-{i}')}}
+            {{ new Date(item.time) | parseTime('{y}-{m}-{d} {h}-{i}') }}
           </el-form-item>
           <el-form-item label="联系方式：">
             {{ item.phoneNumber }}
@@ -66,7 +66,7 @@
 
       </el-collapse-item>
     </el-collapse>
-    <div class="empty-content-public" v-if="objection.length === 0">暂无异议</div>
+    <div v-if="objection.length === 0" class="empty-content-public">暂无异议</div>
   </div>
 </template>
 
@@ -95,7 +95,7 @@ export default {
   created() {
     const { id, status } = this.$route.params
     // 3异议查看
-    if (!isNaN(+id) && status == 3) {
+    if (!isNaN(+id) && +status === 3) {
       this.projectId = id
       this.status = status
       this.detailApply()
@@ -119,7 +119,7 @@ export default {
             }
             resolve('ok')
           })
-          .catch(err => {
+          .catch(() => {
             reject('方案获取失败')
           })
       })
@@ -131,8 +131,7 @@ export default {
             }
             resolve('ok')
           })
-          .catch((err) => {
-            console.log(err)
+          .catch(() => {
             reject('异议获取失败')
           })
       })
@@ -145,26 +144,24 @@ export default {
             reject('设计单位信息获取失败')
           }
         })
-          .catch((err) => {
+          .catch(() => {
             reject('设计单位信息获取失败')
           })
       })
       Promise.all([fileAsync, objectionAsync, infoAsync])
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
           this.$message.error('信息获取失败')
         })
         .finally(() => {
           this.pageLoading = false
         })
-
-    },
+    }
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
     // 公示阶段，异议查看
-    if (isNaN(+id) || status != 3) {
+    if (isNaN(+id) || +status !== 3) {
       // 没有id则返回跳转
       next('/redirect' + from.fullPath)
     } else {

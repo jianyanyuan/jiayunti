@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-09 19:47:59
- * @LastEditTime: 2020-11-20 15:23:39
+ * @LastEditTime: 2020-12-31 11:25:27
  * @Description: main.js
  * @FilePath: \vue-admin-template\src\main.js
  */
@@ -24,8 +24,6 @@ import * as filters from '@/filters' // global filters
 
 import UploadList from '@/components/UploadList'
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui modal-drag
-
-
 
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })

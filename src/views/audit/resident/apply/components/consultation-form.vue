@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 13:35:15
+ * @LastEditTime: 2020-12-31 11:15:27
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -58,7 +58,7 @@
 
 <script>
 import File from '@/api/file'
-import { notEmptyArray,checkUpload } from '@/utils'
+import { notEmptyArray, checkUpload } from '@/utils'
 export default {
   name: 'ApplyConsultation',
   props: {
@@ -75,7 +75,7 @@ export default {
       rooms: [],
       fileList: {}, // 展示用
       uploadList: [], // 上传用
-      deleteList: [], // 删除用
+      deleteList: [] // 删除用
     }
   },
 
@@ -117,8 +117,7 @@ export default {
           }
         }
         this.pageLoading = false
-      }).catch(err => {
-        console.log(err)
+      }).catch(() => {
         this.$message.error('信息获取失败')
         this.pageLoading = false
       })
@@ -129,8 +128,7 @@ export default {
         const count = this.rooms.reduce((c, v) => (this.fileList[v].length + c), 0)
         if (count >= this.rooms.length * 3) {
           this.$emit('nextProcess', arrow)
-        }
-        else {
+        } else {
           this.$message.error('请补全附件，附件分开上传')
         }
       } else {
@@ -142,8 +140,8 @@ export default {
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList, room) {
       const valid = checkUpload(file.raw)
-      if (valid && file.status === 'ready') {
-        let reader = new FileReader()
+      if (valid && file.url === undefined) {
+        const reader = new FileReader()
         reader.readAsDataURL(file.raw)
         reader.onload = (event) => {
           this.fileList[room].push({
@@ -169,13 +167,12 @@ export default {
     handleUploadRemove(file, fileList, room) {
       // const index = this.fileList[room].findIndex(v => v.uid === file.uid)
       // const removed = this.fileList[room].splice(index, 1)
+      const cancelIdx = this.fileList[room].findIndex(f => f.uid === file.uid)
+      this.fileList[room].splice(cancelIdx, 1)
       if (file.url === undefined) {
         // 未上传 --> 取消上传
-        const cancelIdx = this.fileList[room].findIndex(f => f.uid === file.uid)
-        this.fileList[room].splice(cancelIdx, 1)
         const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
         this.uploadList.splice(removeIdx, 1)
-
       } else {
         // 已上传的 --> 待删除
         this.deleteList.push(
@@ -197,7 +194,7 @@ export default {
       if (notEmptyArray(this.uploadList)) {
         let error = false
         uploadAsync = new Promise((resolove, reject) => {
-          this.uploadList.forEach(async (v, i) => {
+          this.uploadList.forEach(async(v, i) => {
             const { room, projectId, file } = v
 
             const last = i === this.uploadList.length - 1
@@ -218,15 +215,14 @@ export default {
       if (notEmptyArray(this.deleteList)) {
         let error = false
         deleteAsync = new Promise((resolove, reject) => {
-          this.deleteList.forEach(async (v, i) => {
+          this.deleteList.forEach(async(v, i) => {
             const last = i === this.deleteList.length - 1
             await File.removeOpinion(v.uid)
-              .then(() => {
-                const delIndx = this.fileList[v.room].findIndex(f => f.uid === v.uid)
-                this.fileList[v.room].splice(delIndx, 1)
-              })
-              .catch((err) => {
-                console.log(err)
+              // .then(() => {
+              //   const delIndx = this.fileList[v.room].findIndex(f => f.uid === v.uid)
+              //   this.fileList[v.room].splice(delIndx, 1)
+              // })
+              .catch(() => {
                 this.fileList[v.room].push(v)
                 error = true
               })

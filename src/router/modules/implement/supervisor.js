@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-17 13:48:31
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-22 11:02:37
+ * @LastEditTime: 2020-12-31 12:03:29
  * @Description: 监理单位路由表
  */
 import Layout from '@/layout'
@@ -17,7 +17,7 @@ const supervisorRouter = {
     icon: 'supervisor',
     roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
   },
-  
+
   children: [
     {
       path: 'list',

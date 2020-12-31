@@ -51,7 +51,7 @@ export default {
         label: 'name',
         children: 'communities'
       },
-      expandLoading:false,
+      expandLoading: false,
       communityOptions: []
     }
   },
@@ -94,8 +94,7 @@ export default {
         // this.model.form.address = this.$store.getters.addressPlain
         this.model.form.phoneNumber = this.$store.getters['phone'] ?? ''
         this.model.visible = true
-      }).catch((err) => {
-        console.log(err)
+      }).catch(() => {
         this.$message.error('信息获取失败')
       }).finally(() => (this.openLoading = false))
     },
@@ -104,14 +103,13 @@ export default {
       const { id } = row
       cancelApi(id).then(() => {
         this.listApplies()
-      }).catch(err => {
-        console.log(err)
+      }).catch(() => {
         this.$message.error('撤销失败')
       })
     },
     // 提交申请
     postApply() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid, errors) => {
         if (valid) {
           const { location, rooms, address } = this.model.form
           if (notEmptyArray(location) && location.length === 3) {
@@ -131,35 +129,33 @@ export default {
           addApi(this.model.form).then(res => {
             this.model.visible = false
             this.listApplies()
-          }).catch(err => {
-            console.log(err)
+          }).catch(() => {
+            this.$message.error('新增申请失败')
           })
             .finally(() => {
               this.formLoading = false
             })
-
         } else {
-          this.$message.error('请补全信息')
+          this.$message.error(Object.values(errors)[0][0].message)
         }
       })
     },
     // 获取申请列表
     async listApplies() {
       this.listLoading = true
-      await listApi({},{}).then(res => {
+      await listApi({}, {}).then(res => {
         this.list = []
         if (notEmptyArray(res.content)) {
           // this.list = res.content
-          if(notEmptyArray(res.content)) {
+          if (notEmptyArray(res.content)) {
             res.content.forEach(v => {
               v.apply = {}
               this.list.push(v)
             })
           }
         }
-      }).catch(err => {
+      }).catch(() => {
         this.$message.error('数据获取失败')
-        console.log(err)
       })
       this.listLoading = false
     },

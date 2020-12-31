@@ -9,11 +9,11 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
 import router from '@/router'
-import { getToken,removeToken } from '@/utils/auth'
+import { getToken, removeToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  timeout: 5000, // request timeout
+  timeout: 5000 // request timeout
   // retry: 3, // 设置全局请求次数
   // retryDelay: 1000, // 设置全局请求间隙
   // headers: {'Content-Type': 'application/json;charset=UTF-8'}
@@ -67,7 +67,7 @@ service.interceptors.response.use(
     console.log(error)
 
     // 对响应错误做点什么
-    if(error.response?.status) {
+    if (error.response?.status) {
       switch (error.response.status) {
         case 401:
           Message({
@@ -93,7 +93,7 @@ service.interceptors.response.use(
         //   })
         //   break
         default:
-          if (error.message.includes('timeout')) {   // 判断请求异常信息中是否含有超时timeout字符串
+          if (error.message.includes('timeout')) { // 判断请求异常信息中是否含有超时timeout字符串
             Message({
               message: '请求超时',
               type: 'error',

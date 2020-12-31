@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-24 10:30:18
+ * @LastEditTime: 2020-12-31 11:19:40
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -77,8 +77,8 @@ export default {
   },
   created() {
     const { id, status } = this.$route.params
-    //3第二次提交材料
-    if (!isNaN(+id) && status == 6) {
+    // 3第二次提交材料
+    if (!isNaN(+id) && +status === 6) {
       this.projectId = id
       this.status = status
       this.detailApply()
@@ -112,12 +112,11 @@ export default {
             }
           }
           resolve('ok')
-        }).catch(err => {
+        }).catch(() => {
           reject('施工图获取失败')
         })
       })
-      Promise.all([auditAsync, fileAsync]).catch((err) => {
-        console.log(err)
+      Promise.all([auditAsync, fileAsync]).catch(() => {
         this.$message.error('信息获取失败')
       })
         .finally(() => {
@@ -129,8 +128,8 @@ export default {
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
       const valid = checkUpload(file.raw)
-      if (valid && file.status === 'ready') {
-        let reader = new FileReader()
+      if (valid && file.url === undefined) {
+        const reader = new FileReader()
         reader.readAsDataURL(file.raw)
         reader.onload((event) => {
           this.fileList.push({
@@ -153,10 +152,10 @@ export default {
     },
     // 删除文件
     handleUploadRemove(file, fileList) {
+      const cancelIdx = this.fileList.findIndex(f => f.uid === file.uid)
+      this.fileList.splice(cancelIdx, 1)
       if (file.url === undefined) {
         // 未上传 --> 取消上传
-        const cancelIdx = this.fileList.findIndex(f => f.uid === file.uid)
-        this.fileList.splice(cancelIdx, 1)
         const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
         this.uploadList.splice(removeIdx, 1)
       } else {
@@ -179,7 +178,7 @@ export default {
       if (notEmptyArray(this.uploadList)) {
         let error = false
         uploadAsync = new Promise((resolove, reject) => {
-          this.uploadList.forEach(async (v, i) => {
+          this.uploadList.forEach(async(v, i) => {
             const { projectId, file } = v
             const last = i === this.uploadList.length - 1
             await File.upload(file, { projectId, typeName })
@@ -199,15 +198,14 @@ export default {
       if (notEmptyArray(this.deleteList)) {
         let error = false
         deleteAsync = new Promise((resolove, reject) => {
-          this.deleteList.forEach(async (v, i) => {
+          this.deleteList.forEach(async(v, i) => {
             const last = i === this.deleteList.length - 1
             await File.remove(v.uid)
-              .then(() => {
-                const delIndx = this.fileList.findIndex(f => f.uid === v.uid)
-                this.fileList.splice(delIndx, 1)
-              })
-              .catch((err) => {
-                console.log(err)
+              // .then(() => {
+              //   const delIndx = this.fileList.findIndex(f => f.uid === v.uid)
+              //   this.fileList.splice(delIndx, 1)
+              // })
+              .catch(() => {
                 this.fileList.push(v)
                 error = true
               })
@@ -218,22 +216,21 @@ export default {
           })
         })
       }
-      Promise.all([uploadAsync, deleteAsync]).then(async () => {
+      Promise.all([uploadAsync, deleteAsync]).then(async() => {
         await advanceApi(this.projectId, this.status)
           .catch(() => (this.$message.error('流程错误')))
         this.pageLoading = false
         this.$router.push('/designer/list')
-      }).catch((err) => {
-        console.log(err)
+      }).catch(() => {
         this.$message.error('保存失败')
         this.pageLoading = false
       })
-    },
+    }
   },
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
-    //3第二次提交材料
-    const illegal = isNaN(+id) || status != 6
+    // 3第二次提交材料
+    const illegal = isNaN(+id) || +status !== 6
 
     if (illegal) {
       next('/redirect' + from.fullPath)

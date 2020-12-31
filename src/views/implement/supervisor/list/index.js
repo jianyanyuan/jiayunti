@@ -11,7 +11,7 @@ import { notEmptyArray } from '@/utils'
 // import Flow from '@/components/street/Flow'
 import FilterList from '@/components/Filter'
 export default {
-  name:'SupList',
+  name: 'SupList',
   components: {
     FilterList
   },
@@ -36,18 +36,17 @@ export default {
   },
   methods: {
     // 获取申请列表
-    async listApplies(query={}) {
+    async listApplies(query = {}) {
       this.listLoading = true
-      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize },query).then(res => {
+      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }, query).then(res => {
         this.list = []
         this.pagination.total = 0
         if (notEmptyArray(res.content)) {
           this.list = res.content
           this.pagination.total = res.totalElements
         }
-      }).catch(err => {
+      }).catch(() => {
         this.$message.error('数据获取失败')
-        console.log(err)
       })
       this.listLoading = false
     },

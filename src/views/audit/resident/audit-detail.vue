@@ -2,11 +2,11 @@
  * @Author: zfd
  * @Date: 2020-12-24 10:04:41
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 11:14:36
- * @Description: 
+ * @LastEditTime: 2020-12-31 11:32:51
+ * @Description:
 -->
 <template>
-  <div class="basic-container app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="basic-container app-container">
     <el-page-header content="审核意见" style="margin-bottom:30px" @back="$router.go(-1)" />
     <el-card style="margin-bottom:30px">
       <div slot="header">
@@ -67,7 +67,7 @@ export default {
     async getDetail() {
       this.pageLoading = true
       await Community.checkLatest(this.projectId).then(res => {
-        if(res.path) {
+        if (res.path) {
           res.files = new Array({ uid: Date.now(), url: res.path })
         }
         this.audit = res

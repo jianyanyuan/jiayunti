@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:08
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 14:12:54
+ * @LastEditTime: 2020-12-31 11:35:37
  * @Description: 社区端列表
  */
 import { mapState } from 'vuex'
@@ -15,7 +15,7 @@ export default {
   name: 'CommunityList',
   components: {
     FilterList
-  }, 
+  },
   data() {
     return {
       pagination: {
@@ -55,9 +55,8 @@ export default {
           })
           this.pagination.total = res.totalElements
         }
-      }).catch(err => {
+      }).catch(() => {
         this.$message.error('数据获取失败')
-        console.log(err)
       })
       this.listLoading = false
     },

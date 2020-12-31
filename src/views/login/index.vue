@@ -3,7 +3,7 @@
     <div class="title-container">
       <h3 class="title">苏州市既有多层住宅增设电梯云服务平台</h3>
     </div>
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form"  label-position="left" @keyup.enter.prevent="handleLogin">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" label-position="left" @keyup.enter.prevent="handleLogin">
 
       <el-form-item prop="username">
         <span class="svg-container">

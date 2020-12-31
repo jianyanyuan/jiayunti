@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-18 15:54:37
+ * @LastEditTime: 2020-12-31 11:30:55
  * @LastEditors: zfd
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -19,7 +19,7 @@
 
     <div class="dynamic-component-container">
       <keep-alive>
-        <component :is="curComponent" v-if="applyId" @nextProcess="handleProcess" :id="applyId" :status="status" />
+        <component :is="curComponent" v-if="applyId" :id="applyId" :status="status" @nextProcess="handleProcess" />
       </keep-alive>
     </div>
 
@@ -58,6 +58,14 @@ export default {
       return this.componentGroup[this.curStep]
     }
   },
+  created() {
+    const { id, status } = this.$route.params
+    // 0第一次提交材料
+    if (!isNaN(+id) && +status === 0) {
+      this.applyId = id
+      this.status = status
+    }
+  },
   methods: {
     // change(event) {
     //   if (event.target.className === 'stepBtn') {
@@ -68,19 +76,11 @@ export default {
       this.curStep += length
     }
   },
-  created() {
-    const { id, status } = this.$route.params
-    // 0第一次提交材料
-    if (!isNaN(+id) && status == 0) {
-      this.applyId = id
-      this.status = status
-    }
-  },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
     // 0第一次提交材料
-    if (isNaN(+id) || status != 0) {
+    if (isNaN(+id) || +status !== 0) {
       // 没有id则返回跳转
       next('/redirect' + from.fullPath)
     } else {

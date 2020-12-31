@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-01 16:27:21
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 14:28:32
+ * @LastEditTime: 2020-12-31 11:29:18
  * @Description:
  */
 import { mapState } from 'vuex'
@@ -11,7 +11,7 @@ import { notEmptyArray } from '@/utils'
 // import Flow from '@/components/street/Flow'
 import FilterList from '@/components/Filter'
 export default {
-  name:'UnionList',
+  name: 'UnionList',
   components: {
     FilterList
   },
@@ -33,7 +33,7 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      expandLoading:false
+      expandLoading: false
     }
   },
   computed: {
@@ -45,9 +45,9 @@ export default {
   },
   methods: {
     // 获取申请列表
-    async listApplies(query={}) {
+    async listApplies(query = {}) {
       this.listLoading = true
-      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize },query).then(res => {
+      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }, query).then(res => {
         this.list = []
         this.pagination.total = 0
         if (notEmptyArray(res.content)) {
@@ -57,9 +57,8 @@ export default {
           })
           this.pagination.total = res.totalElements
         }
-      }).catch(err => {
+      }).catch(() => {
         this.$message.error('数据获取失败')
-        console.log(err)
       })
       this.listLoading = false
     },

@@ -2,11 +2,11 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 15:19:59
+ * @LastEditTime: 2020-12-31 11:20:25
  * @Description: 公示/公告上传
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="app-container">
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
       <span>材料上传</span>
       <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修 改</el-button>
@@ -61,8 +61,8 @@
 
 <script>
 import File from '@/api/file'
-import  { advanceApi } from '@/api/projects'
-import { notEmptyArray,checkUpload } from '@/utils'
+import { advanceApi } from '@/api/projects'
+import { notEmptyArray, checkUpload } from '@/utils'
 // import { deepClone } from '@/utils'
 export default {
   name: 'ApplyNotice',
@@ -89,8 +89,8 @@ export default {
   },
   created() {
     const { id, status } = this.$route.params
-    //3第二次提交材料
-    if (!isNaN(+id) && status == 3) {
+    // 3第二次提交材料
+    if (!isNaN(+id) && +status === 3) {
       this.id = id
       this.status = status
       this.detailApply()
@@ -104,7 +104,7 @@ export default {
       this.reportList = []
       this.uploadList = []
       this.deleteList = []
-      this.dirName.forEach(async (v, i) => {
+      this.dirName.forEach(async(v, i) => {
         await File.get({ projectId: this.id, typeName: v })
           .then(res => {
             if (notEmptyArray(res.content)) {
@@ -118,8 +118,7 @@ export default {
               }
             }
           })
-          .catch(err => {
-            console.log(err)
+          .catch(() => {
             this.$message.error('信息获取失败')
           })
       })
@@ -130,13 +129,13 @@ export default {
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList, type) {
       const valid = checkUpload(file.raw)
-      if (valid && file.status === 'ready') {
+      if (valid && file.url === undefined) {
         const formData = new FormData()
         formData.append('file', file.raw)
         const showFile = {
           uid: file.uid,
           name: file.name,
-          url:URL.createObjectURL(file.raw)
+          url: URL.createObjectURL(file.raw)
         }
         const upload = {
           type,
@@ -146,7 +145,6 @@ export default {
         const arr = type === 0 ? 'contentList' : 'reportList'
         this[arr].push(showFile)
         this.uploadList.push(upload)
-
       } else {
         fileList.pop()
       }
@@ -156,20 +154,20 @@ export default {
       // const index = this.fileList[room].findIndex(v => v.uid === file.uid)
       // const removed = this.fileList[room].splice(index, 1)
       const arr = type === 0 ? 'contentList' : 'reportList'
+      const cancelIdx = this[arr].findIndex(f => f.uid === file.uid)
+      this[arr].splice(cancelIdx, 1)
       if (file.url === undefined) {
         // 未上传 --> 取消上传
-        const cancelIdx = this[arr].findIndex(f => f.uid === file.uid)
-        this[arr].splice(cancelIdx, 1)
+
         const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
         this.uploadList.splice(removeIdx, 1)
-
       } else {
         // 已上传的 --> 待删除
         this.deleteList.push(
           {
             type,
             projectId: this.id,
-            uid: file.uid,
+            uid: file.uid
           }
         )
       }
@@ -177,16 +175,16 @@ export default {
 
     // 保存修改
     postFile() {
-      if(this.contentList.length === 0 || this.reportList.length === 0) {
+      if (this.contentList.length === 0 || this.reportList.length === 0) {
         this.$message.error('请补全附件')
         return
       }
       this.pageLoading = true
-      let asyncList = []
+      const asyncList = []
       if (notEmptyArray(this.uploadList)) {
         let error = false
         const uploadAsync = new Promise((resolove, reject) => {
-          this.uploadList.forEach(async (v, i) => {
+          this.uploadList.forEach(async(v, i) => {
             const { type, file } = v
             const arr = type === 0 ? 'contentList' : 'reportList'
             const last = i === this.uploadList.length - 1
@@ -208,16 +206,15 @@ export default {
       if (notEmptyArray(this.deleteList)) {
         let error = false
         const deleteAsync = new Promise((resolove, reject) => {
-          this.deleteList.forEach(async (v, i) => {
+          this.deleteList.forEach(async(v, i) => {
             const last = i === this.deleteList.length - 1
             const arr = v.type === 0 ? 'contentList' : 'reportList'
             await File.remove(v.uid)
-              .then(() => {
-                const delIndx = this[arr].findIndex(f => f.uid === v.uid)
-                this[arr].splice(delIndx, 1)
-              })
-              .catch((err) => {
-                console.log(err)
+              // .then(() => {
+              //   const delIndx = this[arr].findIndex(f => f.uid === v.uid)
+              //   this[arr].splice(delIndx, 1)
+              // })
+              .catch(() => {
                 this[arr].push(v)
                 error = true
               })
@@ -229,13 +226,12 @@ export default {
         })
         asyncList.push(deleteAsync)
       }
-      Promise.all(asyncList).then(async () => {
+      Promise.all(asyncList).then(async() => {
         await advanceApi(this.id, 3).catch(() => {
           this.$message.error('流程错误')
         })
         this.$router.push('/resident/list')
-      }).catch((err) => {
-        console.log(err)
+      }).catch(() => {
         this.$message.error('保存失败')
       })
         .finally(() => {
@@ -246,8 +242,8 @@ export default {
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
-    //3第二次提交材料
-    const illegal = isNaN(+id) || status != 3
+    // 3第二次提交材料
+    const illegal = isNaN(+id) || +status !== 3
 
     if (illegal) {
       next('/redirect' + from.fullPath)

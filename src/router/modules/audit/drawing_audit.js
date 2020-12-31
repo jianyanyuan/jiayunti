@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-24 15:09:58
+ * @LastEditTime: 2020-12-31 12:03:16
  * @LastEditors: zfd
  * @Description: 审批端图审路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
@@ -61,7 +61,7 @@ const drawingAuditRouter = {
         icon: 'community',
         roles: ['ROLE_ADMIN', 'ROLE_DRAWING_AUDIT']
       }
-    },
+    }
   ]
 }
 

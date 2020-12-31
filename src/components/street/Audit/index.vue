@@ -2,12 +2,12 @@
  * @Author: zfd
  * @Date: 2020-10-16 16:35:29
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 15:19:04
+ * @LastEditTime: 2020-12-31 10:43:00
  * @Description:
 -->
 <template>
   <div v-loading="pageLoading">
-    <el-form label-width="120px" ref="form" :model="form" :rules="rule">
+    <el-form ref="form" label-width="120px" :model="form" :rules="rule">
       <el-form-item label="审核意见:" prop="reviewOpinions">
         <el-input v-model="form.reviewOpinions" type="textarea" :rows="4" />
       </el-form-item>
@@ -25,7 +25,7 @@
         <el-select v-model="form.reviewResults" :disabled="conflict === true">
           <el-option v-for="item in auditOptions" :key="item.val" :value="item.key" :label="item.val" />
         </el-select>
-        <el-tag type="danger" style="margin-left:20px" size="large" v-if="conflict === true" class="audit-conflict">异议冲突</el-tag>
+        <el-tag v-if="conflict === true" type="danger" style="margin-left:20px" size="large" class="audit-conflict">异议冲突</el-tag>
       </el-form-item>
       <el-form-item class="audit-operation">
         <el-button type="success" size="medium" icon="el-icon-upload2" @click="handlePost">提 交</el-button>
@@ -39,6 +39,7 @@
 import { checkApi, advanceApi } from '@/api/projects'
 import File from '@/api/file'
 import { mapState } from 'vuex'
+import { checkUpload } from '@/utils'
 export default {
   name: 'Audit',
   props: {
@@ -65,12 +66,7 @@ export default {
         reviewOpinions: [{ required: true, message: '请给出审核意见', trigger: 'blur' }],
         reviewResults: [{ required: true, message: '请给出审核结果', trigger: 'blur' }]
       },
-      attachment: null,
-    }
-  },
-  created() {
-    if (this.conflict === true) {
-      this.form.reviewResults = 1 // 不通过
+      attachment: null
     }
   },
   computed: {
@@ -91,43 +87,29 @@ export default {
       }
     },
     ...mapState('common', ['auditOptions'])
-
+  },
+  created() {
+    if (this.conflict === true) {
+      this.form.reviewResults = 1 // 不通过
+    }
   },
   methods: {
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
-      const valid = this.checkUpload(file.raw)
-      if (valid && file.status === 'ready') {
+      const valid = checkUpload(file.raw)
+      if (valid && file.url === undefined) {
         const formData = new FormData()
         formData.append('file', file.raw)
         this.attachment = {
           uid: file.uid,
           name: file.name,
           url: URL.createObjectURL(file.raw),
-          file: formData,
+          file: formData
         }
       } else {
         fileList.pop()
       }
-    },
-    // 图片上传之前判断
-    checkUpload(file) {
-      if (!file.size) {
-        this.$message.error('上传为空！')
-        return false
-      }
-      const typeAllowed = /\bpdf|\bimage/i.test(file.type)
-      const isBig = file.size <= 1024 * 1024 * 10 // 单个文件最大10M
-      if (!typeAllowed) {
-        this.$message.error('只能上传图片或pdf！')
-        return false
-      }
-      if (!isBig) {
-        this.$message.error('图片大小不能超过10MB！')
-        return false
-      }
-      return true
     },
     // 删除文件
     handleUploadRemove(file, fileList) {
@@ -135,11 +117,11 @@ export default {
       fileList = []
     },
     handlePost() {
-      this.$refs.form.validate(async valid => {
+      this.$refs.form.validate(async(valid, errors) => {
         if (valid) {
           this.pageLoading = true
           this.form.projectId = this.id
-          if (this.status == 10) {
+          if (+this.status === 10) {
             // 10 联合审查，4个部门，type要区分
             const roleMapType = new Map([['ROLE_CAPITAL_RULE', 11], ['ROLE_HOUSE_CONSTRUCTION', 12], ['ROLE_URBAN_MANAGEMENT', 13], ['ROLE_MARKET_SUPERVISOR', 14]])
             this.form.type = roleMapType.get(this.$store.getters.roles[0])
@@ -159,8 +141,8 @@ export default {
             }
           }
           checkApi(this.form)
-            .then(async () => {
-              if (this.status != 10) {
+            .then(async() => {
+              if (+this.status !== 10) {
                 // 10 联合审查 审核过,流程不前进
                 await advanceApi(this.id, this.status).catch(() => {
                   this.$message.error('流程错误')
@@ -175,7 +157,7 @@ export default {
               this.pageLoading = false
             })
         } else {
-          this.$message.error('请补全信息')
+          this.$message.error(Object.values(errors)[0][0].message)
         }
       })
     },

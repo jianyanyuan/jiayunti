@@ -8035,7 +8035,6 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
             }
 
             if(serverUrl) {
-              console.log(serverUrl)
                 // serverUrl = serverUrl + (serverUrl.indexOf('?') == -1 ? '?':'&') + 'action=' + (actionName || '');
                 return utils.formatUrl(serverUrl);
             } else {
@@ -8091,7 +8090,6 @@ UE.Editor.defaultOptions = function(editor){
 
                 var configUrl = me.getActionUrl('config'),
                     isJsonp = utils.isCrossDomainUrl(configUrl);
-                    console.log('configUrl',configUrl)
                     try {
                       var config = {
                         // 单个文件上传
@@ -24865,8 +24863,8 @@ UE.plugin.register('insertfile', function (){
                         icon = iconDir + getFileIcon(item.url);
                         title = item.title || item.url.substr(item.url.lastIndexOf('/') + 1);
                         html += '<p style="line-height: 16px;">' +
-                            '<img style="vertical-align: middle; margin-right: 2px;" src="'+ icon + '" _src="' + icon + '" />' +
-                            '<a style="font-size:12px; color:#0066cc;" href="' + item.url +'" title="' + title + '">' + title + '</a>' +
+                            // '<img style="vertical-align: middle; margin-right: 2px;" src="'+ icon + '" _src="' + icon + '" />' +
+                            '<a style="font-size:12px; color:#0066cc;" target="_blank"  href="' + item.url +'" title="' + title + '">' + title + '</a>' +
                             '</p>';
                     }
                     me.execCommand('insertHtml', html);

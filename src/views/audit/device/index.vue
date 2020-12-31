@@ -2,29 +2,29 @@
  * @Author: zfd
  * @Date: 2020-12-22 10:55:27
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 08:31:38
- * @Description: 
+ * @LastEditTime: 2020-12-31 10:38:13
+ * @Description:
 -->
 <template>
   <div class="app-container">
     <el-row :gutter="20">
       <el-col :span="6">
         <div class="device-left">
-          <el-input placeholder="搜索设备" v-model="treeKey">
-            <el-button slot="append" icon="el-icon-search" @click="filterDevice"></el-button>
+          <el-input v-model="treeKey" placeholder="搜索设备">
+            <el-button slot="append" icon="el-icon-search" @click="filterDevice" />
           </el-input>
           <div class="device-tree">
             <div class="device-tree-btn">
               <el-button size="medium" @click="appendDevice">新增</el-button>
             </div>
-            <el-tree style="min-height:500px" @check="filterApply" :data="data" ref="tree" :filter-node-method="filterNode" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]" :props="defaultProps">
-              <span slot-scope="{ node, data }">
+            <el-tree ref="tree" style="min-height:500px" :data="data" :filter-node-method="filterNode" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]" :props="defaultProps" @check="filterApply">
+              <span slot-scope="{ node, dt }">
                 <span>{{ node.label }}</span>
                 <span class="custom-tree-node">
-                  <el-button v-if="data.children" type="text" size="mini" @click.stop="() => appendDevice(data)">
+                  <el-button v-if="dt.children" type="text" size="mini" @click.stop="() => appendDevice(dt)">
                     新增
                   </el-button>
-                  <el-popconfirm title="确认删除该设备吗？" @onConfirm="removeDevice(data)">
+                  <el-popconfirm title="确认删除该设备吗？" @onConfirm="removeDevice(dt)">
                     <el-button slot="reference" size="mini" type="text">删除</el-button>
                   </el-popconfirm>
 
@@ -58,7 +58,7 @@
             </el-form>
           </div>
           <el-card>
-            <el-table v-loading="listLoading" class="table-expand-public" @expand-change="handleExpand" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'addTime', order: 'descending'}">
+            <el-table v-loading="listLoading" class="table-expand-public" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'addTime', order: 'descending'}" @expand-change="handleExpand">
               <el-table-column align="center" label="序号" width="50">
                 <template slot-scope="scope">
                   {{ scope.$index + 1 }}
@@ -66,7 +66,7 @@
               </el-table-column>
               <el-table-column type="expand">
                 <template slot-scope="{ row }">
-                  <el-form label-position="left" v-loading="expandLoading" inline class="expand-form-p">
+                  <el-form v-loading="expandLoading" label-position="left" inline class="expand-form-p">
                     <el-form-item label="申请人">
                       {{ row.apply.applicantName }}
                     </el-form-item>
@@ -182,10 +182,10 @@ export default {
       model: {
         visible: false,
         form: {},
-        disable:false,
+        disable: false,
         rules: {
-          brand: [{ required: true, message: '请输入设备品牌',trigger:'blur' }],
-          type: [{ required: true, message: '请输入设备型号',trigger:'blur' }]
+          brand: [{ required: true, message: '请输入设备品牌', trigger: 'blur' }],
+          type: [{ required: true, message: '请输入设备型号', trigger: 'blur' }]
         }
       },
       list: [],
@@ -216,7 +216,7 @@ export default {
     //     }
     //   }).catch(err => {
     //     this.$message.error('数据获取失败')
-    //     console.log(err)
+    //     )
     //   })
     //   this.listLoading = false
     // },
@@ -242,7 +242,7 @@ export default {
       //   this.$set(data, 'children', []);
       // }
       // data.children.push(newChild);
-      if(data.children) {
+      if (data.children) {
         this.model.form.brand = data.label
         this.model.disable = true
       }
@@ -251,7 +251,7 @@ export default {
     resetFrom(formName) {
       this.model.form = {}
       this.$refs[formName].clearValidate()
-            this.model.disable = false
+      this.model.disable = false
     },
     handleSizeChange(val) {
       this.pagination.pageSize = val
@@ -260,8 +260,8 @@ export default {
       this.pagination.pageIndex = val
     },
     filterNode(value, data) {
-      if (!value) return true;
-      return data.label.indexOf(value) !== -1;
+      if (!value) return true
+      return data.label.indexOf(value) !== -1
     },
     filterDevice() {
       this.$refs.tree.filter(this.treeKey)
@@ -289,6 +289,5 @@ export default {
   padding: 10px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
-
 
 </style>

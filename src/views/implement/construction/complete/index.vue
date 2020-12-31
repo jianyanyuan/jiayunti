@@ -2,11 +2,11 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 09:57:59
+ * @LastEditTime: 2020-12-31 11:21:32
  * @Description: 施工档案归档、竣工验收
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="app-container">
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
       <span>材料上传</span>
       <el-button type="success" style="float:right" @click="handlePost">提 交</el-button>
@@ -16,7 +16,7 @@
       <div slot="header">
         <span>档案归档</span>
       </div>
-      <el-upload action="#"  :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,0)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,0)}" drag :auto-upload="false">
+      <el-upload action="#" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,0)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,0)}" drag :auto-upload="false">
         <!-- <i class="el-icon-upload" /> -->
         <div>将文件拖到此处，或点击添加</div>
         <p>单个文件大小不超过20MB，可上传图片或PDF</p>
@@ -26,7 +26,7 @@
       <div slot="header">
         <span>竣工验收</span>
       </div>
-      <el-upload action="#"  :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,1)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,1)}" drag :auto-upload="false">
+      <el-upload action="#" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,1)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,1)}" drag :auto-upload="false">
         <!-- <i class="el-icon-upload" /> -->
         <div>将文件拖到此处，或点击添加</div>
         <p>单个文件大小不超过20MB，可上传图片或PDF</p>
@@ -38,7 +38,7 @@
 <script>
 import File from '@/api/file'
 import { advanceApi } from '@/api/projects'
-import { notEmptyArray, checkUpload } from '@/utils'
+import { checkUpload } from '@/utils'
 // import { deepClone } from '@/utils
 
 export default {
@@ -62,20 +62,19 @@ export default {
   },
   created() {
     const { id, status } = this.$route.params
-    //3第二次提交材料
-    if (!isNaN(+id) && status == 11) {
+    // 3第二次提交材料
+    if (!isNaN(+id) && +status === 11) {
       this.projectId = id
       this.status = status
     }
   },
   methods: {
 
-
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList, type) {
       const valid = checkUpload(file.raw)
-      if (valid && file.status === 'ready') {
+      if (valid && file.url === undefined) {
         const formData = new FormData()
         formData.append('file', file.raw)
         const upload = {
@@ -84,7 +83,6 @@ export default {
           file: formData
         }
         this.uploadList.push(upload)
-
       } else {
         fileList.pop()
       }
@@ -95,7 +93,6 @@ export default {
         // 未上传 --> 取消上传
         const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
         this.uploadList.splice(removeIdx, 1)
-
       }
     },
 
@@ -103,14 +100,14 @@ export default {
     async handlePost() {
       this.pageLoading = true
       let error = false
-      const idx1 = this.uploadList.findIndex(v=>v.type === 1) === -1
-      const idx2 = this.uploadList.findIndex(v=>v.type === 0) === -1
-      if(idx1 || idx2) {
+      const idx1 = this.uploadList.findIndex(v => v.type === 1) === -1
+      const idx2 = this.uploadList.findIndex(v => v.type === 0) === -1
+      if (idx1 || idx2) {
         // 判断是否都上传了
         this.$message.error('请上传附件')
         return
       }
-      this.uploadList.forEach(async (v, i) => {
+      this.uploadList.forEach(async(v, i) => {
         const { type, file } = v
         await File.upload(file, { typeName: this.dirName[type], projectId: this.projectId })
           .then(() => {
@@ -137,8 +134,8 @@ export default {
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
-    //3第二次提交材料
-    const illegal = isNaN(+id) || status != 11
+    // 3第二次提交材料
+    const illegal = isNaN(+id) || +status !== 11
 
     if (illegal) {
       next('/redirect' + from.fullPath)

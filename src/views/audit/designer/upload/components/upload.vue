@@ -47,7 +47,7 @@ import mixin from '@/mixin/upload-show'
 
 export default {
   name: 'DesignerScheme',
-  mixins:[mixin],
+  mixins: [mixin],
   props: {
     id: {
       type: [Number, String],

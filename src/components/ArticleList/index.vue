@@ -2,23 +2,23 @@
  * @Author: zfd
  * @Date: 2020-10-29 15:36:07
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 16:25:48
+ * @LastEditTime: 2020-12-31 10:43:27
  * @Description:
 -->
 <template>
-  <div class="list-container" v-loading="pageLoading">
+  <div class="list-container">
     <div class="query-container">
       筛选项：
       <el-input v-model="query.name" placeholder="主体名称" size="small" />
       <el-input v-model="query.phone" placeholder="联系方式" size="small" />
       <el-input v-model="query.address" placeholder="地址" size="small" />
       <div>
-        <el-button size="small" icon="el-icon-search" type="primary" @click="filterEntity">搜索</el-button>
-        <el-button size="small" icon="el-icon-circle-close"  @click="clearQuery">重置</el-button>
+        <el-button size="small" type="primary" @click="filterEntity">搜索</el-button>
+        <el-button size="small" @click="clearQuery">重置</el-button>
       </div>
 
     </div>
-    <div v-for="(s, index) in source" :key="index" class="list-item" @click="$router.push({name:'ResidentArticle',params:{detail}})">
+    <div v-for="(s, index) in source" :key="index" class="list-item" @click="$router.push({name:'ResidentArticle',params:{id:s.userId}})">
       <div class="list-head">
         <div class="l-h-l">
           <!-- <span>{{ s.time }}</span> -->
@@ -59,52 +59,36 @@ export default {
       query: {
         name: '',
         phone: '',
-        address: '',
+        address: ''
       },
       pagination: {
         total: 0,
         pageIndex: 1,
         pageSize: 10
       },
-      pageLoading: false,
-      source: null,
-      total: 0,
-      detail: {
-        name: '东莞市六田精密电子有限公司',
-        source: '东莞市六田精密电子有限',
-        date: '2019-01-15 18:11',
-        phone: '15988800323',
-        address: '中国江苏省南京市玄武区珠江路687号2幢',
-        author: '非尔思科技',
-        desc: '<p><span style=\"color: rgb(68, 68, 68); font-family: 微软雅黑, Arial; background-color: rgb(255, 255, 255);\">东莞市六田精密电子有限公司成立于2010年5月，是一家专业设计制造精密五金冲压模具、生产精密端子、外壳、精密弹片等精密五金冲压件，模具工装件的五金冲压厂家。产品广泛应用于移动电脑设备，数位相机，行动通讯设备、汽车/航空/航海电子零组件，医疗电子、智能家电、IC、3C产品及户外防水等领域。</span></p><p style="text-align:center"><img src=\"http://www.szfec.cn/uploads/190109/1-1Z109160005K3.jpg\" alt=\"东莞市六田精密电子有限公司\"/></p>',
-        link: 'http://www.szfec.cn/case/qiyewangzhananli/9.html'
-      }
+      pageLoding: false,
+      source: null
     }
   },
   created() {
-    this.list(this)
+    this.list(this, {})
   },
   methods: {
     filterEntity() {
-      this.getEntites()
+      this.list(this, this.query)
     },
     clearQuery() {
-      this.query = {
-        name: '',
-        phone: '',
-        address: '',
-        pi: 1
-      }
-      this.list()
+      this.query = {}
+      this.list(this, this.query)
     },
     handleSizeChange(val) {
       this.pagination.pageSize = val
-      this.list(this)
+      this.list(this, this.query)
     },
     handleCurrentPageChange(val) {
       this.pagination.pageIndex = val
-      this.list(this)
-    },
+      this.list(this, this.query)
+    }
   }
 
 }

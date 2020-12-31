@@ -2,11 +2,11 @@
  * @Author: zfd
  * @Date: 2020-10-28 13:42:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-30 13:32:36
+ * @LastEditTime: 2020-12-30 17:23:45
  * @Description: 设计单位介绍
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="app-container">
     <!-- <div class="preview" v-html="msg" /> -->
     <el-form ref="form" :model="org" :rules="rule" label-width="120px" label-position="top" class="handle-form">
       <el-form-item label="单位名称:" prop="companyName">
@@ -25,7 +25,7 @@
         <el-input v-model="org.author" />
       </el-form-item>
       <el-form-item label="官网链接:">
-        <el-input v-model="org.link" />
+        <el-input v-model="org.link" placeholder="http://xxxx" :maxlength="100" />
       </el-form-item>
       <el-form-item label="公司介绍:" prop="introduction">
         <vue-ueditor-wrap :key="1" v-model="org.introduction" :config="myConfig" editor-id="editor_one" :destroy="true" />
@@ -37,6 +37,23 @@
         <el-button type="success" @click="handlePost">保 存</el-button>
       </el-row>
     </el-form>
+    <el-dialog :visible.sync="modalVisible" class="intro-container">
+      <header>
+        <h1>
+          {{ org.companyName }}
+        </h1>
+        <p v-if="org.articleSource || org.author">
+          <span v-if="org.articleSource">来源：{{ org.articleSource }}</span>
+          <span v-if="org.author">作者：{{ org.author }}</span>
+        </p>
+        <p>
+          <span>地址：{{ org.address }}</span>
+          <span>联系方式：{{ org.phone }}</span>
+          <a v-if="org.link" :href="org.link" target="_blank">公司官网：{{ org.link }}</a>
+        </p>
+      </header>
+      <article v-html="org.introduction" />
+    </el-dialog>
   </div>
 </template>
 
@@ -56,16 +73,16 @@ export default {
         articleSource: '',
         link: '',
         author: '',
-        introduction: '的萨大萨达',
-        address: '滨河路1979号',
-        phone: '15988800323'
+        introduction: '',
+        address: '',
+        phone: ''
       },
+      modalVisible: false,
       pageLoading: false,
       type: 0,
       rule: {
         companyName: [{ required: true, message: '请输入单位名称', trigger: 'blur' }],
         // source: [{ required: true, message: '请输入文章来源', trigger: 'blur' }],
-        // author: [{ required: true, message: '请输入作者', trigger: 'blur' }],
         introduction: [{ required: true, message: '请输入单位简介', trigger: 'blur' }],
         address: [{ required: true, message: '请输入单位地址', trigger: 'blur' }],
         phone: [{ required: true, message: '请输入联系方式', validator: validatePhone, trigger: 'blur' }]
@@ -80,7 +97,7 @@ export default {
         UEDITOR_HOME_URL: '/UEditor/',
         // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
         serverUrl: 'http://192.168.0.191:8342/api/file/uploadImage',
-                // 
+        //
 
         // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况，如果需要特殊配置，参考下方的常见问题2
         // UEDITOR_HOME_URL: '/static/UEditor/'
@@ -95,23 +112,38 @@ export default {
   created() {
     const { type } = this.$route.query
     this.type = type
+    if (type === 0) {
+      // 修改
+      this.getDetail()
+    }
   },
   methods: {
-
+    getDetail() {
+      this.pageLoading = true
+      Common.getArticle()
+        .then(res => {
+          if (res) {
+            this.org = res
+          }
+        })
+        .catch(() => {
+          this.$message.error('信息获取失败')
+        })
+        .finally(() => {
+          this.pageLoading = false
+        })
+    },
     clickView() {
-      const reg = /\/(.*)\//
-      const prefix = this.$route.fullPath.match(reg)[1]
-      const path = `/${prefix}/introduction`
-      this.$router.push({ path, params: { detail: this.org } })
+      this.modalVisible = true
     },
     goView() {
       const reg = /\/(.*)\//
       const prefix = this.$route.fullPath.match(reg)[1]
       const path = `/${prefix}/introduction`
-      this.$router.push({ path, params: { detail: this.org } })
+      this.$router.push({ path, params: { org: this.org }})
     },
     handlePost() {
-      this.$refs.form.validate(async (success, errors) => {
+      this.$refs.form.validate(async(success, errors) => {
         if (success) {
           this.pageLoading = true
           if (this.type === 0) {
@@ -129,7 +161,7 @@ export default {
           this.goView()
           this.pageLoading = false
         } else {
-          console.log(errors)
+          this.$message.error(Object.values(errors)[0][0].message)
         }
       })
     }
@@ -137,7 +169,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .preview {
   min-height: 200px;
   width: 100%;
@@ -145,5 +177,22 @@ export default {
 .handle-form {
   width: 820px;
   margin: 50px auto 0;
+}
+.intro-container {
+  width: 70%;
+  margin: 0 auto;
+  min-width: 900px;
+  header {
+    text-align: center;
+  }
+  p,
+  span {
+    margin-right: 20px;
+    font-size: 14px;
+    color: #808080;
+  }
+  a:hover {
+    color: #3282b8;
+  }
 }
 </style>

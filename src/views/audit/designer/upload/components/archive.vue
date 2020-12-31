@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 09:01:04
+ * @LastEditTime: 2020-12-31 11:34:26
  * @Description: 居民申请意见汇总表
 -->
 <template>
@@ -25,7 +25,7 @@
         </el-table-column>
         <el-table-column label="项目" min-width="180" prop="drawingPaperType" align="center">
           <template slot-scope="{row}">
-            {{row.drawingPaperType}}
+            {{ row.drawingPaperType }}
           </template>
         </el-table-column>
         <el-table-column label="是否完成" min-width="180" align="center">
@@ -48,7 +48,6 @@
 </template>
 
 <script>
-import File from '@/api/file'
 import Designer from '@/api/designer'
 import { notEmptyArray } from '@/utils'
 export default {
@@ -109,8 +108,7 @@ export default {
             this.tableLoading = false
           }
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
           this.tableLoading = false
           this.$message.error('数据获取失败')
         })

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-14 09:59:54
+ * @LastEditTime: 2020-12-31 11:35:29
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -20,7 +20,7 @@
 
     <div class="dynamic-component-container">
       <keep-alive>
-        <component v-if="projectId && status" :is="curComponent" :id="projectId" :status="status" />
+        <component :is="curComponent" v-if="projectId && status" :id="projectId" :status="status" />
       </keep-alive>
     </div>
 
@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import Flow from '@/components/street/Flow'
 import Resident from '@/components/street/Resident'
 // import Design from '@/components/street/Design'
 // import Pipe from '@/components/street/Pipe'
@@ -39,7 +38,7 @@ export default {
   components: {
     Audit,
     // Design,
-    Resident,
+    Resident
     // Flow
     // Pipe
   },
@@ -47,8 +46,8 @@ export default {
     return {
       projectId: null,
       status: null,
-      stepBtnGroup: [/*'申请流程图',*/  '居民申请材料', '审核'],
-      componentGroup: [/**'Flow', */ 'Resident', 'Audit'],
+      stepBtnGroup: ['居民申请材料', '审核'],
+      componentGroup: ['Resident', 'Audit'],
       curStep: 0
     }
   },
@@ -60,7 +59,7 @@ export default {
   created() {
     const { id, status } = this.$route.params
     // 1社区受理 3社区第二次受理
-    const valid = status == 1 || status == 3
+    const valid = +status === 1 || +status === 3
     if (!isNaN(+id) && valid) {
       this.projectId = id
       this.status = status
@@ -77,7 +76,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
     // 1社区受理 3社区第二次受理
-    const valid = status == 1 || status == 3
+    const valid = +status === 1 || +status === 3
     if (isNaN(+id) || !valid) {
       // 没有id则返回跳转
       next('/redirect' + from.fullPath)

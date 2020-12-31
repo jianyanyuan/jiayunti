@@ -2,21 +2,10 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-21 17:31:07
+ * @LastEditTime: 2020-12-31 12:00:02
  * @Description: 申请项目仓库
  */
-import {listApi} from '@/api/projects'
-
-const getDefaultState = () => {
-  return {
-    // token: getToken(),
-    // id: null,
-    // username: null,
-    // address: null,
-    // phone: null,
-    // roles: null
-  }
-}
+import { listApi } from '@/api/projects'
 
 const state = {
 

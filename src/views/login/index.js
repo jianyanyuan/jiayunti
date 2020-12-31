@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-11 10:16:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-28 11:56:19
+ * @LastEditTime: 2020-12-31 10:32:34
  * @Description:
  */
 import { resetRouter } from '@/router'
@@ -29,7 +29,7 @@ export default {
   },
   watch: {
     $route: {
-      handler: function (route) {
+      handler: function(route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
@@ -47,15 +47,14 @@ export default {
       })
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate((valid, errors) => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(async () => {
+          this.$store.dispatch('user/login', this.loginForm).then(async() => {
             const { roles } = await this.$store.dispatch('user/getInfo').catch(err => {
-              console.log(err)
               this.$message.error(err)
             })
-            if(!roles) {
+            if (!roles) {
               this.$router.push('/login') // 无权限返回登录界面
             }
             resetRouter() // 重置下路由，避免重复路由
@@ -70,18 +69,14 @@ export default {
             }
             accessRoutes.splice(accessRoutes.length - 1, 0, { path: '/', redirect: '/' + roleHome, hidden: true })
             this.$router.addRoutes(accessRoutes)
-            // this.redirect || 
             this.$router.push({ path: '/' })
             this.loading = false
+          }).catch(async() => {
+            await this.$store.dispatch('user/resetToken')
+            this.loading = false
           })
-            .catch(async (err) => {
-              await this.$store.dispatch('user/resetToken')
-              console.log(err)
-              // this.$message.error(err)
-              this.loading = false
-            })
         } else {
-          // this.$message.error('请输入正确的用户名密码')
+          this.$message.error(Object.values(errors)[0][0].message)
           return false
         }
       })

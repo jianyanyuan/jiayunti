@@ -14,7 +14,7 @@ const adminRouter = {
   path: '/admin',
   component: Layout,
   redirect: '/resident/list',
-  hidden:true,
+  hidden: true,
   meta: {
     roles: ['ROLE_ADMIN']
   }

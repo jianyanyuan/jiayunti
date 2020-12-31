@@ -2,11 +2,11 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 10:11:00
+ * @LastEditTime: 2020-12-31 11:21:17
  * @Description: 补贴派发
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="app-container">
     <el-page-header content="补贴派发" style="margin-bottom:30px" @back="$router.go(-1)" />
 
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
@@ -28,9 +28,9 @@
         </el-form-item>
       </el-form>
     </el-card>
-        <el-row type="flex" justify="center" align="middle" style="padding:18px 20px">
+    <el-row type="flex" justify="center" align="middle" style="padding:18px 20px">
       <!-- <span>补贴派发</span> -->
-                <el-button v-if="!uploaded" type="success" style="float:right" @click="handlePost">提 交</el-button>
+      <el-button v-if="!uploaded" type="success" style="float:right" @click="handlePost">提 交</el-button>
 
     </el-row>
 
@@ -40,7 +40,7 @@
 <script>
 import File from '@/api/file'
 import { addBonusApi, getBonusApi } from '@/api/projects'
-import { notEmptyArray, checkUpload } from '@/utils'
+import { checkUpload } from '@/utils'
 
 export default {
   name: 'Bonus',
@@ -63,8 +63,8 @@ export default {
         money: '',
         attachments: [],
         rule: {
-          money: [{ required: true, validator: formatterDecimal, message: "请给出补助金额", trigger: 'blur' }],
-          attachments: [{ required: true, message: "请上传证明材料" }]
+          money: [{ required: true, validator: formatterDecimal, message: '请给出补助金额', trigger: 'blur' }],
+          attachments: [{ required: true, message: '请上传证明材料' }]
         }
       },
       projectId: null, // 工程id
@@ -84,8 +84,8 @@ export default {
   },
   created() {
     const { id, status } = this.$route.query
-    //12 补贴派发
-    if (!isNaN(+id) && status == 12) {
+    // 12 补贴派发
+    if (!isNaN(+id) && +status === 12) {
       this.projectId = id
       this.status = status
       this.detailApply()
@@ -103,8 +103,7 @@ export default {
             this.model.attachments = res.fileTypes.map(v => ({ uid: v.id, name: v.filename, url: v.path }))
           }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
           this.$message.error('信息获取失败')
         })
         .finally(() => {
@@ -119,7 +118,7 @@ export default {
         this.$message.error('请上传附件')
         return
       }
-      this.uploadList.forEach(async (v, i) => {
+      this.uploadList.forEach(async(v, i) => {
         const { file } = v
         await File.upload(file, { typeName: this.typeName, projectId: this.projectId })
           .then(() => {
@@ -150,7 +149,7 @@ export default {
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
       const valid = checkUpload(file.raw)
-      if (valid && file.status === 'ready') {
+      if (valid && file.url === undefined) {
         const formData = new FormData()
         formData.append('file', file.raw)
         this.uploadList.push({
@@ -168,13 +167,13 @@ export default {
       // this.fileList.splice(cancelIdx, 1)
       const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
       this.uploadList.splice(removeIdx, 1)
-    },
+    }
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.query
-    //12 补贴派发
-    const illegal = isNaN(+id) || status != 12
+    // 12 补贴派发
+    const illegal = isNaN(+id) || +status !== 12
 
     if (illegal) {
       next('/redirect' + from.fullPath)

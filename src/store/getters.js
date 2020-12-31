@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 10:24:29
+ * @LastEditTime: 2020-12-31 10:40:53
  * @Description:
  */
 import { notEmptyArray } from '@/utils'
@@ -16,15 +16,15 @@ const getters = {
   address: state => state.user.address?.map(v => +v),
   addressPlain: state => {
     let source = state.common.address
-    if(!source) {
+    if (!source) {
       return ''
     }
     const idxMap = new Map([[0, 'areas'], [1, 'streets'], [2, 'communities']])
     try {
       if (notEmptyArray(state.user.address)) {
         const result = state.user.address.reduce((init, value, index) => {
-          const target = source.find(v => v.id == value)
-          if(!target){
+          const target = source.find(v => v.id === value)
+          if (!target) {
             throw new Error('数据异常')
           }
           source = target[idxMap.get(index)]
@@ -32,8 +32,8 @@ const getters = {
         }, [])
         return result.join('/')
       }
-    }catch(err) {
-      // console.log(err)
+    } catch (err) {
+      // )
       // console.log('地址')
       return ''
     }

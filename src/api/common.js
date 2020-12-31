@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-10 13:58:25
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-11 08:11:19
+ * @LastEditTime: 2020-12-31 10:44:05
  * @Description:
  */
 import request from '@/utils/request'
@@ -16,18 +16,22 @@ const getAddress = () => {
 }
 
 // 获取设备选择项
-const getDevice = () => {
+const getDevice = (params, data) => {
   return request({
-    url: '/device',
-    method: 'get'
+    url: '/device/getAll',
+    method: 'post',
+    params,
+    data
   })
 }
 
 // 获取设计单位选择项
-const getDesign = () => {
+const getDesign = (params, data) => {
   return request({
-    url: '/design',
-    method: 'get'
+    url: '/design/getAll',
+    method: 'post',
+    params,
+    data
   })
 }
 
@@ -37,7 +41,6 @@ const getArticle = () => {
     url: '/Company',
     method: 'get'
   })
-
 }
 
 const modifyArticle = (newCompany) => {
@@ -58,7 +61,7 @@ const addArticle = (data) => {
 const getArticleById = (id) => {
   return request({
     url: '/Company/' + id,
-    method: 'get',
+    method: 'get'
   })
 }
 export default {

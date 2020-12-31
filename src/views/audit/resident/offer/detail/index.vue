@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-30 09:31:50
+ * @LastEditTime: 2020-12-31 11:32:23
  * @LastEditors: zfd
  * @Description: 居民查看报价单详情
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="app-container">
     <el-page-header content="施工报价" style="margin-bottom:50px" @back="$router.go(-1)" />
 
     <table class="input-form">
@@ -20,7 +20,7 @@
         <tr>
           <td>施工单位</td>
           <td>
-            <router-link :to="{ name: 'user', params: { userId: 123 }}">{{ construction.constructionUnit }}</router-link>
+            <router-link :to="{ name: 'ResidentArticle', params: { id: construction.userId }}">{{ construction.constructionUnit }}</router-link>
           </td>
           <td>联系人</td>
           <td>{{ construction.contact }}</td>
@@ -42,13 +42,13 @@
           <td rowspan="2">项目（元）</td>
           <td>人工费</td>
           <td colspan="2">
-            {{construction.artificialCost}}
+            {{ construction.artificialCost }}
           </td>
         </tr>
         <tr>
           <td>材料费</td>
           <td colspan="2">
-            {{construction.materialCost}}
+            {{ construction.materialCost }}
           </td>
         </tr>
         <tr>
@@ -68,7 +68,7 @@
     </div>
     <el-dialog center title="选择监理单位" :visible.sync="superviseVisible" :close-on-click-modal="false">
       <el-radio-group v-model="supervisorId">
-        <el-radio :label="s.id" v-for="(s, index) in supervisors" :key="index">
+        <el-radio v-for="(s, index) in supervisors" :key="index" :label="s.id">
           <div class="list-item">
             <div class="list-head">
               <div class="l-h-l">
@@ -92,7 +92,6 @@
 <script>
 import Construction from '@/api/construction'
 import Supervision from '@/api/supervision'
-import { notEmptyArray } from '@/utils'
 import { advanceApi } from '@/api/projects'
 export default {
   name: 'Offer',
@@ -117,7 +116,7 @@ export default {
   created() {
     const { id, offerId, status } = this.$route.params
     // 8选择报价
-    if (!isNaN(+id) && status == 8 && !isNaN(+offerId)) {
+    if (!isNaN(+id) && +status === 8 && !isNaN(+offerId)) {
       this.projectId = id
       this.status = status
       this.offerId = offerId
@@ -131,20 +130,18 @@ export default {
         .then(res => {
           this.construction = res
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
           this.$message.error('报价获取失败')
         })
         .finally(() => (this.pageLoading = false))
     },
     openModal() {
-      Supervision.list()
+      Supervision.list({}, {})
         .then(res => {
-          this.supervisors = res
+          this.supervisors = res.content
           this.superviseVisible = true
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
           this.$message.error('监理单位获取失败')
         })
     },
@@ -158,27 +155,27 @@ export default {
         })
     },
     download(file) {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', file.path, true);
-      xhr.responseType = "blob";    // 返回类型blob
-      xhr.onload = function () {
+      var xhr = new XMLHttpRequest()
+      xhr.open('GET', file.path, true)
+      xhr.responseType = 'blob' // 返回类型blob
+      xhr.onload = function() {
         if (this.status === 200) {
-          var blob = this.response;// 获取返回值
-          var a = document.createElement('a');
-          a.download = file.filename;
-          a.href = window.URL.createObjectURL(blob);
-          a.click();
+          var blob = this.response// 获取返回值
+          var a = document.createElement('a')
+          a.download = file.filename
+          a.href = window.URL.createObjectURL(blob)
+          a.click()
         }
-      };
+      }
       // 发送ajax请求
-      xhr.send();
+      xhr.send()
     }
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, offerId, status } = to.params
     // 8选择报价
-    if (isNaN(+id) || status != 8 || isNaN(+offerId)) {
+    if (isNaN(+id) || +status !== 8 || isNaN(+offerId)) {
       // 没有id则返回跳转
       next('/redirect' + from.fullPath)
     } else {

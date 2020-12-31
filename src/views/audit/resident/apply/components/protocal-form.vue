@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 08:54:21
+ * @LastEditTime: 2020-12-31 11:23:21
  * @Description: 居民申请项目协议书
 -->
 <template>
@@ -46,7 +46,7 @@ import mixin from '@/mixin/upload-show'
 
 export default {
   name: 'ApplyProtocal',
-  mixins:[mixin],
+  mixins: [mixin],
   props: {
     id: {
       type: [Number, String],

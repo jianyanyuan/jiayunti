@@ -2,11 +2,11 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:43:23
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 16:53:58
+ * @LastEditTime: 2020-12-31 11:27:37
  * @Description: 审核意见
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="app-container">
     <el-page-header content="审核历史" @back="$router.go(-1)" />
 
     <el-timeline class="audit-timeline">
@@ -19,7 +19,7 @@
             <el-tag :type="item.reviewResult | keyToVal(handleTag)">{{ item.reviewResult | keyToVal(auditOptions) }}</el-tag>
           </p>
           <p>
-            <span class="audit-tip" v-if="item.files">附件：</span>
+            <span v-if="item.files" class="audit-tip">附件：</span>
 
             <upload-list style="margin-top:20px" :files="item.files" list-type="picture-card" :disabled="true" />
           </p>
@@ -51,7 +51,7 @@ export default {
     // 1社区第一次受理 3社区第二次受理
     // const valid = status == 1 || status == 3
 
-    if (!isNaN(+id) ) {
+    if (!isNaN(+id)) {
       this.projectId = id
       this.getDetail() // 获取详情
     }
@@ -62,11 +62,11 @@ export default {
       await Community.checkSingle(this.projectId).then(res => {
         if (notEmptyArray(res)) {
           res.forEach(element => {
-            if(element.path) {
+            if (element.path) {
               element.files = new Array({ uid: Date.now(), url: element.path })
             }
             this.list.push(element)
-          });
+          })
         }
       }).catch(() => {
         this.$message.error('数据获取失败')

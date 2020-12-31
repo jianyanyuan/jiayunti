@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-25 10:14:18
+ * @LastEditTime: 2020-12-31 10:41:05
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -45,7 +45,7 @@
           </el-table-column>
           <el-table-column label="是否完成" min-width="180" align="center">
             <template slot-scope="{row}">
-              {{ row.whetherComplete ? '是' : '否'}}
+              {{ row.whetherComplete ? '是' : '否' }}
               <!-- <el-checkbox v-model="row.isComplete">是</el-checkbox> -->
             </template>
           </el-table-column>
@@ -68,7 +68,7 @@
 <script>
 import IncreaseLift from '@/api/increase_lift'
 import { notEmptyArray } from '@/utils'
-import {getInsInfoApi} from '@/api/projects'
+import { getInsInfoApi } from '@/api/projects'
 export default {
   name: 'AuditPipe',
   props: {
@@ -84,7 +84,7 @@ export default {
   data() {
     return {
       increaseLift: {},
-      pageLoading:false,
+      pageLoading: false,
       tableData: []
     }
   },
@@ -118,15 +118,12 @@ export default {
       })
       Promise.all([basicAsync, detailAsync]).then(() => {
         this.pageLoading = false
-      }).catch((err) => {
-        console.log(err)
+      }).catch(() => {
         this.pageLoading = false
         this.$message.error('信息获取失败')
       })
-
-    },
+    }
   }
 }
 </script>
-
 

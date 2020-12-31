@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 09:06:05
- * @LastEditTime: 2020-12-25 09:14:57
+ * @LastEditTime: 2020-12-31 10:41:34
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\components\street\design\index.vue
@@ -80,7 +80,7 @@ export default {
           }
           reject('设计单位信息获取失败')
         })
-          .catch((err) => {
+          .catch(() => {
             reject('设计单位信息获取失败')
           })
       })
@@ -90,8 +90,7 @@ export default {
             this.design = res
             resolve('ok')
           })
-          .catch(err => {
-            console.log(err)
+          .catch(() => {
             reject('设计单位信息获取失败')
           })
       })
@@ -109,8 +108,7 @@ export default {
             }
             resolve('ok')
           })
-          .catch(err => {
-            console.log(err)
+          .catch(() => {
             reject('方案设计调取失败')
           })
       })
@@ -128,14 +126,13 @@ export default {
             }
             resolve('ok')
           })
-          .catch(err => {
-            console.log(err)
+          .catch(() => {
             reject('施工图调取失败')
           })
       })
-      Promise.all([designerAsync, schemaAsync, constructionAsync,infoAsync])
+      Promise.all([designerAsync, schemaAsync, constructionAsync, infoAsync])
         .then(() => (this.pageLoading = false))
-        .catch(err => {
+        .catch(() => {
           this.pageLoading = false
           this.$message.error('信息获取失败')
         })
@@ -143,5 +140,4 @@ export default {
   }
 }
 </script>
-
 

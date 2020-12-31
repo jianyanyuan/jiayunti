@@ -2,25 +2,25 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-16 15:04:48
+ * @LastEditTime: 2020-12-31 10:40:22
  * @Description: 公示/公告审核
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
-      <el-card class="upload-card" style="margin-bottom:30px">
-        <div slot="header">
-          <span>公示内容</span>
-        </div>
-        <upload-list :files="contentList" list-type="picture-card" :disabled="true" />
+  <div v-loading="pageLoading" class="app-container">
+    <el-card class="upload-card" style="margin-bottom:30px">
+      <div slot="header">
+        <span>公示内容</span>
+      </div>
+      <upload-list :files="contentList" list-type="picture-card" :disabled="true" />
 
-      </el-card>
-      <el-card class="upload-card" style="margin-bottom:30px">
-        <div slot="header">
-          <span>公示公告</span>
-        </div>
-        <upload-list :files="reportList" list-type="picture-card" :disabled="true" />
-      </el-card>
-      <Audit :id="projectId" :status="status" v-if="conflict !== null" :conflict="conflict" />
+    </el-card>
+    <el-card class="upload-card" style="margin-bottom:30px">
+      <div slot="header">
+        <span>公示公告</span>
+      </div>
+      <upload-list :files="reportList" list-type="picture-card" :disabled="true" />
+    </el-card>
+    <Audit v-if="conflict !== null" :id="projectId" :status="status" :conflict="conflict" />
   </div>
 </template>
 
@@ -59,8 +59,8 @@ export default {
   },
   created() {
     const { id, status } = this.$route.params
-    //3第二次提交材料
-    if (!isNaN(+id) && status == 4) {
+    // 3第二次提交材料
+    if (!isNaN(+id) && +status === 4) {
       this.projectId = id
       this.status = status
       this.detailApply()
@@ -75,7 +75,7 @@ export default {
       this.reportList = []
       this.uploadList = []
       this.deleteList = []
-      this.dirName.forEach(async (v, i) => {
+      this.dirName.forEach(async(v, i) => {
         await File.get({ projectId: this.projectId, typeName: v })
           .then(res => {
             if (notEmptyArray(res.content)) {
@@ -89,8 +89,7 @@ export default {
               }
             }
           })
-          .catch(err => {
-            console.log(err)
+          .catch(() => {
             this.$message.error('信息获取失败')
           })
       })
@@ -100,27 +99,25 @@ export default {
       Community.listObjection(this.projectId)
         .then(res => {
           if (Array.isArray(res)) {
-            const idx = res.findIndex(v=> v.result == 1)
-            if(idx !== -1) {
+            const idx = res.findIndex(v => +v.result === 1)
+            if (idx !== -1) {
               this.conflict = true
-            }else {
+            } else {
               this.conflict = false
             }
           }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
           this.$message.error('信息获取失败')
         })
-    
     }
 
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
-    //3第二次提交材料
-    const illegal = isNaN(+id) || status != 4
+    // 3第二次提交材料
+    const illegal = isNaN(+id) || +status !== 4
 
     if (illegal) {
       next('/redirect' + from.fullPath)

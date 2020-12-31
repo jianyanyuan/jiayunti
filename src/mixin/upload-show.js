@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-04 10:50:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 09:33:23
+ * @LastEditTime: 2020-12-31 11:19:03
  * @Description: 附件上传 + 预览通用模块
  */
 import File from '@/api/file'
@@ -10,7 +10,7 @@ import File from '@/api/file'
 import Pdf from 'vue-pdf'
 import html2canvas from 'html2canvas'
 import printJS from 'print-js'
-import { notEmptyArray } from '@/utils'
+import { notEmptyArray, checkUpload } from '@/utils'
 
 export default {
   components: {
@@ -64,8 +64,7 @@ export default {
             }
           }
           this.pageLoading = false
-        }).catch(err => {
-          console.log(err)
+        }).catch(() => {
           this.$message.error('信息获取失败')
           this.pageLoading = false
         })
@@ -81,21 +80,19 @@ export default {
             }
           }
           this.pageLoading = false
-        }).catch(err => {
-          console.log(err)
+        }).catch(() => {
           this.$message.error('信息获取失败')
           this.pageLoading = false
         })
       }
-
     },
 
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
-      const valid = this.checkUpload(file.raw)
-      if (valid && file.status === 'ready') {
-        let reader = new FileReader()
+      const valid = checkUpload(file.raw)
+      if (valid && file.url === undefined) {
+        const reader = new FileReader()
         reader.readAsDataURL(file.raw)
         reader.onload = (event) => {
           this.fileList.push({
@@ -116,30 +113,12 @@ export default {
         fileList.pop()
       }
     },
-    // 图片上传之前判断
-    checkUpload(file) {
-      if (!file.size) {
-        this.$message.error('上传为空！')
-        return false
-      }
-      const typeAllowed = /\bpdf|\bimage/i.test(file.type)
-      const isBig = file.size <= 1024 * 1024 * 10 // 单个文件最大10M
-      if (!typeAllowed) {
-        this.$message.error('只能上传图片或pdf！')
-        return false
-      }
-      if (!isBig) {
-        this.$message.error('图片大小不能超过10MB！')
-        return false
-      }
-      return true
-    },
     // 删除文件
     handleUploadRemove(file, fileList) {
+      const cancelIdx = this.fileList.findIndex(f => f.uid === file.uid)
+      this.fileList.splice(cancelIdx, 1)
       if (file.url === undefined) {
         // 未上传 --> 取消上传
-        const cancelIdx = this.fileList.findIndex(f => f.uid === file.uid)
-        this.fileList.splice(cancelIdx, 1)
         const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
         this.uploadList.splice(removeIdx, 1)
       } else {
@@ -162,7 +141,7 @@ export default {
       if (notEmptyArray(this.uploadList)) {
         let error = false
         uploadAsync = new Promise((resolove, reject) => {
-          this.uploadList.forEach(async (v, i) => {
+          this.uploadList.forEach(async(v, i) => {
             const { projectId, file } = v
             const last = i === this.uploadList.length - 1
             await File.upload(file, { projectId, typeName })
@@ -182,15 +161,14 @@ export default {
       if (notEmptyArray(this.deleteList)) {
         let error = false
         deleteAsync = new Promise((resolove, reject) => {
-          this.deleteList.forEach(async (v, i) => {
+          this.deleteList.forEach(async(v, i) => {
             const last = i === this.deleteList.length - 1
             await File.remove(v.uid)
-              .then(() => {
-                const delIndx = this.fileList.findIndex(f => f.uid === v.uid)
-                this.fileList.splice(delIndx, 1)
-              })
-              .catch((err) => {
-                console.log(err)
+              // .then(() => {
+              //   const delIndx = this.fileList.findIndex(f => f.uid === v.uid)
+              //   this.fileList.splice(delIndx, 1)
+              // })
+              .catch(() => {
                 this.fileList.push(v)
                 error = true
               })
@@ -204,8 +182,7 @@ export default {
       Promise.all([uploadAsync, deleteAsync]).then(() => {
         this.pageLoading = false
         this.hasChanged = true
-      }).catch((err) => {
-        console.log(err)
+      }).catch(() => {
         this.$message.error('保存失败')
         this.pageLoading = false
       })

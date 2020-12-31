@@ -72,7 +72,7 @@ export function deepClone(obj) {
  */
 export function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result
-  const later = function () {
+  const later = function() {
     // 距上一次触发时间间隔
     const last = +new Date() - timestamp
     // 上次被包装函数被调用时间间隔 last 小于设定时间间隔 wait
@@ -87,7 +87,7 @@ export function debounce(func, wait, immediate) {
       }
     }
   }
-  return function (...args) {
+  return function(...args) {
     context = this
     timestamp = +new Date()
     const callNow = immediate && !timeout
@@ -125,59 +125,55 @@ export function checkUpload(file) {
   return true
 }
 
-
-
 /**
  * utf-8编码的16进制形式
- * @param {*} text 
+ * @param {*} text
  */
-function encodeUtf8Hex(text) {
-  const code = encodeURIComponent(text);
-  const bytes = [];
+export function encodeUtf8Hex(text) {
+  const code = encodeURIComponent(text)
+  const bytes = []
   for (var i = 0; i < code.length; i++) {
-    const c = code.charAt(i);
+    const c = code.charAt(i)
     if (c === '%') {
-      const hex = code.charAt(i + 1) + code.charAt(i + 2);
-      bytes.push(hex);
-      i += 2;
-    }
-    else bytes.push(c.charCodeAt(0).toString(16));
+      const hex = code.charAt(i + 1) + code.charAt(i + 2)
+      bytes.push(hex)
+      i += 2
+    } else bytes.push(c.charCodeAt(0).toString(16))
   }
-  return bytes;
+  return bytes
 }
 
-function decodeUtf8Hex(bytes) {
-  var encoded = "";
+export function decodeUtf8Hex(bytes) {
+  var encoded = ''
   for (var i = 0; i < bytes.length; i++) {
-    encoded += '%' + bytes[i];
+    encoded += '%' + bytes[i]
   }
-  return decodeURIComponent(encoded);
+  return decodeURIComponent(encoded)
 }
 
 /**
  * utf-8编码
- * @param {*} text 
+ * @param {*} text
  */
-function encodeUtf8(text) {
-  const code = encodeURIComponent(text);
-  const bytes = [];
+export function encodeUtf8(text) {
+  const code = encodeURIComponent(text)
+  const bytes = []
   for (var i = 0; i < code.length; i++) {
-    const c = code.charAt(i);
+    const c = code.charAt(i)
     if (c === '%') {
-      const hex = code.charAt(i + 1) + code.charAt(i + 2);
-      const hexVal = parseInt(hex, 16);
-      bytes.push(hexVal);
-      i += 2;
-    }
-    else bytes.push(c.charCodeAt(0));
+      const hex = code.charAt(i + 1) + code.charAt(i + 2)
+      const hexVal = parseInt(hex, 16)
+      bytes.push(hexVal)
+      i += 2
+    } else bytes.push(c.charCodeAt(0))
   }
-  return bytes;
+  return bytes
 }
 
-function decodeUtf8(bytes) {
-  var encoded = "";
+export function decodeUtf8(bytes) {
+  var encoded = ''
   for (var i = 0; i < bytes.length; i++) {
-    encoded += '%' + bytes[i].toString(16);
+    encoded += '%' + bytes[i].toString(16)
   }
-  return decodeURIComponent(encoded);
+  return decodeURIComponent(encoded)
 }

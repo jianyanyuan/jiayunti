@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-10 08:42:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 16:39:15
+ * @LastEditTime: 2020-12-31 11:25:45
  * @Description:
  */
 import * as Validator from '@/utils/element-validator'
@@ -33,23 +33,23 @@ export default {
         address: 'xxx',
         phonenumber: '',
         verificationcode: '',
-        conPwd:''
+        conPwd: ''
       },
-      address:{ county: [], community: [] },
+      address: { county: [], community: [] },
       rule: {
-        username: [{ required: true, trigger: 'blur',message:'用户名非数字开头，2-30位中英文和数字组合', validator: Validator.validateUsername }],
-        password: [{ required: true, trigger: 'blur',message:'密码需为6-17位数字和英文符号组合', validator: Validator.validatePassword }],
-        conPwd: [{ required: true, trigger: 'blur',message:'密码不一致',  validator: Validator.validateConfirmPassword }],
-        idcard: [{ required: true, trigger: 'blur',message:'请输入身份证号', validator: Validator.validateIdCard }],
-        phonenumber: [{ required: true, trigger: 'blur',message:'请输入手机号', validator: Validator.validatePhone }],
+        username: [{ required: true, trigger: 'blur', message: '用户名非数字开头，2-30位中英文和数字组合', validator: Validator.validateUsername }],
+        password: [{ required: true, trigger: 'blur', message: '密码需为6-17位数字和英文符号组合', validator: Validator.validatePassword }],
+        conPwd: [{ required: true, trigger: 'blur', message: '两次密码不一致', validator: Validator.validateConfirmPassword }],
+        idcard: [{ required: true, trigger: 'blur', message: '请输入身份证号', validator: Validator.validateIdCard }],
+        phonenumber: [{ required: true, trigger: 'blur', message: '请输入手机号', validator: Validator.validatePhone }],
         address: [{ required: true }],
-        verificationcode: [{ required: true, trigger: 'blur', message:'验证码为6位纯数字',validator: Validator.validateNumberCode, length: 6 }]
+        verificationcode: [{ required: true, trigger: 'blur', message: '验证码为6位纯数字', validator: Validator.validateNumberCode, length: 6 }]
       },
       vertifyDisabled: false,
       countDown: 60,
       timer: null,
       loading: false,
-      communityShow:false,
+      communityShow: false,
       countyProps: {
         value: 'id',
         label: 'name',
@@ -72,7 +72,7 @@ export default {
   methods: {
     // 注册用户
     submit(formName) {
-      this.$refs[formName].validate((success, err) => {
+      this.$refs[formName].validate((success, errors) => {
         if (success) {
           const validAddress = validateAddress(this.address)
           if (validAddress !== true) {
@@ -92,7 +92,7 @@ export default {
             this.loading = false
           })
         } else {
-          this.$message.error('请补全注册信息')
+          this.$message.error(Object.values(errors)[0][0].message)
         }
       })
     },
@@ -111,8 +111,7 @@ export default {
       if (this.form.phonenumber && reg.test(this.form.phonenumber)) {
         this.vertifyDisabled = true
         this.$store.dispatch('user/getCode', { role: this.form.phonenumber })
-          .catch((err) => {
-            console.log(err)
+          .catch(() => {
             this.$message.error('验证码获取失败,请稍后重试')
           })
 

@@ -2,16 +2,18 @@
  * @Author: zfd
  * @Date: 2020-12-16 16:51:27
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 10:49:19
+ * @LastEditTime: 2020-12-31 10:43:34
  * @Description: 监理单位接口
  */
 import request from '@/utils/request'
 
 // 监理单位列表
-const list = () => {
+const list = (params, data) => {
   return request({
-    url: "/Supervision",
-    method: 'get'
+    url: '/Supervision',
+    method: 'post',
+    params,
+    data
   })
 }
 
@@ -34,7 +36,7 @@ const faultReply = (toResponseRequest) => {
 }
 
 // 违规获取
-const getFault = (projectId ) => {
+const getFault = (projectId) => {
   return request({
     url: `/IllegalBehavior/${projectId}`,
     method: 'get'

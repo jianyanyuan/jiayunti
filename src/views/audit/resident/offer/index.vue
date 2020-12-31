@@ -2,11 +2,11 @@
  * @Author: zfd
  * @Date: 2020-10-29 16:05:50
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 09:48:58
+ * @LastEditTime: 2020-12-31 11:32:41
  * @Description: 报价列表
 -->
 <template>
-  <div class="app-container" v-loading="listLoading">
+  <div v-loading="listLoading" class="app-container">
     <div class="list-container">
       <div class="query-container">
         筛选项：
@@ -55,14 +55,14 @@ export default {
       },
       list: [],
       listLoading: false,
-      projectId:null,
-      status:null
+      projectId: null,
+      status: null
     }
   },
   created() {
     const { id, status } = this.$route.params
     // 8选择报价
-    if (!isNaN(+id) && status == 8) {
+    if (!isNaN(+id) && +status === 8) {
       this.projectId = id
       this.status = status
       this.listOffers()
@@ -71,14 +71,13 @@ export default {
   methods: {
     async listOffers() {
       this.listLoading = true
-      await Construction.listOffers(this.projectId,{ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
+      await Construction.listOffers(this.projectId, { page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }).then(res => {
         if (notEmptyArray(res.content)) {
           this.list = res.content
           this.pagination.total = res.totalElements
         }
-      }).catch(err => {
+      }).catch(() => {
         this.$message.error('数据获取失败')
-        console.log(err)
       })
       this.listLoading = false
     },
@@ -101,13 +100,13 @@ export default {
     handleCurrentPageChange(val) {
       this.pagination.pageIndex = val
       this.listOffers()
-    },
+    }
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
     // 8选择报价
-    if (isNaN(+id) || status != 8) {
+    if (isNaN(+id) || +status !== 8) {
       // 没有id则返回跳转
       next('/redirect' + from.fullPath)
     } else {

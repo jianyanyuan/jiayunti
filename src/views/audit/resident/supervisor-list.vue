@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-29 16:05:50
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-23 11:30:34
+ * @LastEditTime: 2020-12-31 11:33:28
  * @Description: 监理单位列表
 -->
 <template>
@@ -20,19 +20,19 @@ export default {
     ArticleList
   },
   methods: {
-    list(_this) {
+    list(_this, query = {}) {
       _this.pageLoading = true
-      Supervision.list({ page: _this.pagination.pageIndex - 1, size: _this.pagination.pageSize }).then((res) => {
-        _this.source = res.map(v => ({
+      Supervision.list({ page: _this.pagination.pageIndex - 1, size: _this.pagination.pageSize }, query).then((res) => {
+        _this.source = res.content.map(v => ({
           id: v.id,
           name: v.supervisionName,
           address: v.address,
-          phone: v.phone
+          phone: v.phone,
+          userId: v.userId
         }))
-        _this.total = 0
+        _this.pagination.total = res.totalElements
       })
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
           _this.$message.error('列表获取失败')
         })
         .finally(() => {

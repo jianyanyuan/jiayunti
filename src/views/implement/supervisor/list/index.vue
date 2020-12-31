@@ -2,14 +2,14 @@
  * @Author: zfd
  * @Date: 2020-12-17 13:51:32
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 08:50:50
+ * @LastEditTime: 2020-12-31 11:27:26
  * @Description: 监理单位列表
 -->
 <template>
   <div class="app-container">
     <FilterList @listFn="listApplies" />
     <el-card>
-      <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row >
+      <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row>
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
@@ -68,6 +68,5 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
 
 </style>

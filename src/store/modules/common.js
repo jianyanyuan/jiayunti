@@ -2,7 +2,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-09-24 23:00:59
- * @LastEditTime: 2020-12-29 14:23:58
+ * @LastEditTime: 2020-12-31 10:40:35
  * @Description: common state
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
@@ -58,7 +58,7 @@ const state = {
     { key: 1, val: '社区受理' },
     { key: 2, val: '方案设计' },
     { key: 3, val: '公示阶段' }, // 社区异议记录 居民异议查看  居民提交材料
-    { key: 4, val: '公示审核' }, 
+    { key: 4, val: '公示审核' },
     { key: 5, val: '管道踏勘' },
     { key: 6, val: '施工图设计' },
     { key: 7, val: '施工图审核' },
@@ -192,7 +192,7 @@ const actions = {
   // get device
   getDevice({ commit }) {
     return new Promise((resolve, reject) => {
-      Common.getDevice().then(res => {
+      Common.getDevice({}, {}).then(res => {
         if (res.content) {
           commit('SET_DEVICE', res.content)
           resolve(res.content)
@@ -207,7 +207,7 @@ const actions = {
   // get design
   getDesign({ commit }) {
     return new Promise((resolve, reject) => {
-      Common.getDesign().then(res => {
+      Common.getDesign({}, {}).then(res => {
         if (res.content) {
           commit('SET_DESIGN', res.content)
           resolve(res.content)

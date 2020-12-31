@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:27:43
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 16:05:32
+ * @LastEditTime: 2020-12-31 11:26:50
  * @Description: 已审核列表
 -->
 
@@ -52,7 +52,7 @@ import { notEmptyArray } from '@/utils'
 import FilterList from '@/components/Filter'
 export default {
   name: 'CommunityAudited',
-  components:{
+  components: {
     FilterList
   },
   data() {
@@ -72,18 +72,17 @@ export default {
   created() { this.listApplies() },
   methods: {
     // 获取已审核列表
-    async listApplies(query={}) {
+    async listApplies(query = {}) {
       this.listLoading = true
-      await Community.auditHistorylist({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize },query).then(res => {
+      await Community.auditHistorylist({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }, query).then(res => {
         this.list = []
         this.pagination.total = 0
         if (notEmptyArray(res.content)) {
           this.list = res.content
           this.pagination.total = res.totalElements
         }
-      }).catch(err => {
+      }).catch(() => {
         this.$message.error('数据获取失败')
-        console.log(err)
       })
       this.listLoading = false
     },
@@ -96,10 +95,10 @@ export default {
       this.listApplies()
     },
     showOffer(row) {
-      this.$router.push({ name: 'ConstructionOfferDetail', params: { id: row.id, status: row.statusId } })
+      this.$router.push({ name: 'ConstructionOfferDetail', params: { id: row.id, status: row.statusId }})
     },
     goSearch() { },
-    clearQuery() { },
+    clearQuery() { }
   }
 }
 

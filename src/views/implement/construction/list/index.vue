@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 13:40:42
+ * @LastEditTime: 2020-12-31 11:26:39
  * @Description:图审列表
 -->
 
@@ -10,7 +10,7 @@
   <div class="app-container">
     <FilterList :status="conStatus" @listFn="listApplies" />
     <el-card>
-      <el-table v-loading="listLoading" class="table-expand-public"  :data="list" @expand-change="handleExpand" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'addTime', order: 'descending'}">
+      <el-table v-loading="listLoading" class="table-expand-public" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'addTime', order: 'descending'}" @expand-change="handleExpand">
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
@@ -18,7 +18,7 @@
         </el-table-column>
         <el-table-column type="expand">
           <template slot-scope="{ row }">
-            <el-form label-position="left" v-loading="expandLoading" inline class="expand-form-p">
+            <el-form v-loading="expandLoading" label-position="left" inline class="expand-form-p">
               <el-form-item label="申请人">
                 {{ row.apply.applicantName }}
               </el-form-item>
@@ -70,7 +70,7 @@
 
           <template slot-scope="{row}">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="row.statusId === 8" size="mini" type="warning" :loading="btnLoading" plain @click="willOffer(row)">报价</el-button>
+              <el-button v-if="row.statusId === 8" size="mini" type="warning" plain @click="willOffer(row)">报价</el-button>
               <!-- <el-button v-if="row.statusId === 11" size="mini" type="success" plain >开始施工</el-button> -->
 
               <el-button v-if="row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'ConstructionFault',params:{id:row.id,status:row.statusId}})">违规查看</el-button>

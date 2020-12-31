@@ -2,8 +2,8 @@
  * @Author: zfd
  * @Date: 2020-12-10 11:06:02
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-30 09:26:18
- * @Description: 
+ * @LastEditTime: 2020-12-31 11:34:57
+ * @Description:
  */
 import { mapState } from 'vuex'
 // import Flow from '@/components/street/Flow'
@@ -59,9 +59,8 @@ export default {
           })
           this.pagination.total = res.totalElements
         }
-      }).catch(err => {
+      }).catch(() => {
         this.$message.error('数据获取失败')
-        console.log(err)
       })
       this.listLoading = false
     },
@@ -86,7 +85,7 @@ export default {
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
       const valid = checkUpload(file.raw)
-      if (valid && file.status === 'ready') {
+      if (valid && file.url === undefined) {
         const formData = new FormData()
         formData.append('file', file.raw)
         this.uploadList.push({
@@ -118,7 +117,7 @@ export default {
       if (notEmptyArray(this.uploadList)) {
         let error = false
         // let last = true
-        this.uploadList.forEach(async (v, i) => {
+        this.uploadList.forEach(async(v, i) => {
           const { projectId, file } = v
           // last = i === this.uploadList.length - 1
           await File.upload(file, { projectId, typeName: 'construction-design' })
@@ -135,13 +134,12 @@ export default {
           this.$message.success('上传完成')
           // 施工图设计阶段 --> 施工图审核
           advanceApi(this.uploadId, 6)
-            .then(async () => {
+            .then(async() => {
               await this.listApplies()
             })
             .catch(() => (this.$message.error('流程错误')))
           this.uploadVisible = false
           this.uploadId = null
-
         }
       }
     }

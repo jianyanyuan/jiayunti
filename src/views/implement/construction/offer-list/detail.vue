@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-30 09:32:27
+ * @LastEditTime: 2020-12-30 16:35:49
  * @LastEditors: zfd
  * @Description: 居民查看报价单详情
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="app-container">
     <el-page-header content="报价单" style="margin-bottom:50px" @back="$router.go(-1)" />
 
     <table class="input-form">
@@ -20,7 +20,7 @@
         <tr>
           <td>施工单位</td>
           <td>
-            <router-link :to="{ name: 'user', params: { userId: 123 }}">{{ construction.constructionUnit }}</router-link>
+            {{ construction.constructionUnit }}
           </td>
           <td>联系人</td>
           <td>{{ construction.contact }}</td>
@@ -42,13 +42,13 @@
           <td rowspan="2">项目（元）</td>
           <td>人工费</td>
           <td colspan="2">
-            {{construction.artificialCost}}
+            {{ construction.artificialCost }}
           </td>
         </tr>
         <tr>
           <td>材料费</td>
           <td colspan="2">
-            {{construction.materialCost}}
+            {{ construction.materialCost }}
           </td>
         </tr>
         <tr>
@@ -76,7 +76,7 @@ export default {
         priceFileList: []
       },
       projectId: null,
-      pageLoading: false,
+      pageLoading: false
     }
   },
   computed: {
@@ -96,8 +96,7 @@ export default {
         .then(res => {
           this.construction = res
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
           this.$message.error('报价获取失败')
         })
         .finally(() => {
@@ -105,20 +104,20 @@ export default {
         })
     },
     download(file) {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', file.path, true);
-      xhr.responseType = "blob";    // 返回类型blob
-      xhr.onload = function () {
+      var xhr = new XMLHttpRequest()
+      xhr.open('GET', file.path, true)
+      xhr.responseType = 'blob' // 返回类型blob
+      xhr.onload = function() {
         if (this.status === 200) {
-          var blob = this.response;// 获取返回值
-          var a = document.createElement('a');
-          a.download = file.filename;
-          a.href = window.URL.createObjectURL(blob);
-          a.click();
+          var blob = this.response// 获取返回值
+          var a = document.createElement('a')
+          a.download = file.filename
+          a.href = window.URL.createObjectURL(blob)
+          a.click()
         }
-      };
+      }
       // 发送ajax请求
-      xhr.send();
+      xhr.send()
     }
 
   },
@@ -131,7 +130,7 @@ export default {
     } else {
       next()
     }
-  },
+  }
 
 }
 </script>

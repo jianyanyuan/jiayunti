@@ -2,11 +2,11 @@
  * @Author: zfd
  * @Date: 2020-10-30 14:33:26
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-28 16:31:07
+ * @LastEditTime: 2020-12-31 11:33:19
  * @Description: 居民查看设计图
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="app-container">
     <el-page-header content="设计图" style="margin-bottom:30px" @back="$router.go(-1)" />
 
     <div class="basic-container">
@@ -59,8 +59,8 @@ export default {
   },
   created() {
     const { id, status } = this.$route.params
-    //7 施工图审核
-    if (!isNaN(+id) && status == 7) {
+    // 7 施工图审核
+    if (!isNaN(+id) && +status === 7) {
       this.projectId = id
       this.status = status
       this.detailApply()
@@ -84,8 +84,7 @@ export default {
             }
             resolve('ok')
           })
-          .catch(err => {
-            console.log(err)
+          .catch(() => {
             reject('附件获取失败')
           })
       })
@@ -97,13 +96,12 @@ export default {
           }
           reject('设计单位信息获取失败')
         })
-          .catch((err) => {
+          .catch(() => {
             reject('设计单位信息获取失败')
           })
       })
       Promise.all([fileAsync, infoAsync])
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
           this.$message.error('信息获取失败')
         })
         .finally(() => {
@@ -114,8 +112,8 @@ export default {
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
-    //7 施工图审核
-    const illegal = isNaN(+id) || status != 7
+    // 7 施工图审核
+    const illegal = isNaN(+id) || +status !== 7
 
     if (illegal) {
       next('/redirect' + from.fullPath)

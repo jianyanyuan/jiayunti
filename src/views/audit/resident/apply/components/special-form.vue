@@ -46,7 +46,7 @@ import { advanceApi } from '@/api/projects'
 import mixin from '@/mixin/upload-show'
 export default {
   name: 'ApplySpecial',
-  mixins:[mixin],
+  mixins: [mixin],
   props: {
     id: {
       type: [Number, String],

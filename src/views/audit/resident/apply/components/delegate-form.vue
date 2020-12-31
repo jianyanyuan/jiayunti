@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 08:53:32
+ * @LastEditTime: 2020-12-31 11:30:33
  * @Description: 居民申请授权委托书
 -->
 <template>
@@ -45,7 +45,7 @@
 import mixin from '@/mixin/upload-show'
 export default {
   name: 'ApplyDelegate',
-  mixins:[mixin],
+  mixins: [mixin],
   props: {
     id: {
       type: [Number, String],

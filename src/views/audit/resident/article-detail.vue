@@ -2,14 +2,13 @@
  * @Author: zfd
  * @Date: 2020-10-29 16:05:50
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-30 11:19:40
+ * @LastEditTime: 2020-12-31 10:34:10
  * @Description: 居民文章详情
 -->
 <template>
 
   <div class="app-container">
-    <article-show :info="detail" />
-
+    <article-show v-if="id" :id="id" />
   </div>
 
 </template>
@@ -23,23 +22,24 @@ export default {
   },
   data() {
     return {
-      detail: {}
+      id: null
     }
   },
   created() {
-
+    const { id } = this.$route.params
+    if (!isNaN(+id)) {
+      this.id = id
+    }
   },
   beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (to.params.detail && typeof to.params.detail === 'object') {
-        vm.detail = to.params.detail
-      }
-    })
+    const { id } = to.params
+    if (isNaN(+id)) {
+      next('/redirect' + from.fullPath)
+    } else {
+      next()
+    }
   },
   methods: {
-    filterEntity() {
-
-    }
   }
 }
 </script>

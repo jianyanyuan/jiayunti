@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 14:55:58
+ * @LastEditTime: 2020-12-31 11:24:35
  * @Description: 居民申请授权委托书
 -->
 <template>
@@ -46,7 +46,7 @@ import mixin from '@/mixin/upload-show'
 
 export default {
   name: 'ConstructionLocale',
-  mixins:[mixin],
+  mixins: [mixin],
   props: {
     id: {
       type: [Number, String],

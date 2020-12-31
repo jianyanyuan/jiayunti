@@ -1,12 +1,12 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-29 10:07:03
+ * @LastEditTime: 2020-12-31 11:22:33
  * @Description: 施工端违规处理
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="app-container">
     <div class="basic-container">
       <el-card style="margin-bottom:30px">
         <div slot="header">
@@ -73,22 +73,22 @@
               <div>单个文件大小不超过20MB，可上传图片或PDF</div>
             </el-upload>
           </el-form-item>
-          <el-form-item label="处理回复:" prop="toResponse" v-if="item.status === 0 || item.status === 1">
+          <el-form-item v-if="item.status === 0 || item.status === 1" label="处理回复:" prop="toResponse">
             <el-input v-model="item.toResponse" type="textarea" autosize disabled />
           </el-form-item>
-          <el-form-item label="处理结果:" prop="result" v-if="item.status === 0 || item.status === 1">
+          <el-form-item v-if="item.status === 0 || item.status === 1" label="处理结果:" prop="result">
             <el-select v-model="item.result" disabled>
               <el-option v-for="result in auditOptions" :key="result.val" :value="result.key" :label="result.val" />
             </el-select>
           </el-form-item>
           <el-row type="flex" justify="center" style="margin:50px 0">
-            <el-button type="primary" @click="handlePost" v-if="item.status === -1 || item.status === 1">保 存</el-button>
+            <el-button v-if="item.status === -1 || item.status === 1" type="primary" @click="handlePost">保 存</el-button>
             <!-- <el-button @click="$router.go(-1)">返 回</el-button> -->
           </el-row>
         </el-form>
       </el-collapse-item>
     </el-collapse>
-        <div class="empty-content-public" v-if="list.length === 0">暂无违规</div>
+    <div v-if="list.length === 0" class="empty-content-public">暂无违规</div>
 
   </div>
 </template>
@@ -122,7 +122,7 @@ export default {
         { key: 1, val: '整改未通过' },
         { key: 2, val: '待审核' }
       ],
-      handleTag:[
+      handleTag: [
         { key: -1, val: 'info' },
         { key: 0, val: 'success' },
         { key: 1, val: 'danger' },
@@ -135,8 +135,8 @@ export default {
   },
   created() {
     const { id, status } = this.$route.params
-    //11 施工中
-    if (!isNaN(+id) && status == 11) {
+    // 11 施工中
+    if (!isNaN(+id) && +status === 11) {
       this.projectId = id
       this.status = status
       this.listFaults()
@@ -180,22 +180,19 @@ export default {
         })
       })
       Promise.all([basicAsync, detailAsync])
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
           this.pageLoading = false
           this.$message.error('信息获取失败')
         })
         .finally(() => {
           this.pageLoading = false
         })
-
-
     },
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList, index) {
       const valid = checkUpload(file.raw)
-      if (valid && file.status === 'ready') {
+      if (valid && file.url === undefined) {
         const formData = new FormData()
         formData.append('file', file.raw)
         if (this.list[index].attachments === undefined) {
@@ -226,11 +223,11 @@ export default {
     // 保存修改
     async postFile(reforms) {
       this.pageLoading = true
-      for (let idx in reforms) {
+      for (const idx in reforms) {
         let error = false
         const { id, response } = reforms[idx]
         await Construction.reform([{ id, response }])
-          .catch((err) => {
+          .catch(() => {
             error = true
             // 违规保存失败，重新
             this.postFailed = reforms.slice(idx)
@@ -239,7 +236,7 @@ export default {
           this.$message.error('保存失败，请重新保存')
           return false // 记录上传失败
         }
-        for (let a of reforms[idx].attachments) {
+        for (const a of reforms[idx].attachments) {
           await File.uploadFault(a.file, id, this.typeName)
             .catch(() => {
               error = true
@@ -291,7 +288,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
     // 11 施工中
-    if (isNaN(+id) || status != 11) {
+    if (isNaN(+id) || +status !== 11) {
       // 没有id则返回跳转
       next('/redirect' + from.fullPath)
     } else {

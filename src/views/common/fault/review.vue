@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-02 14:20:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-30 09:43:13
+ * @LastEditTime: 2020-12-31 11:28:56
  * @Description:
 -->
 <!--
@@ -13,7 +13,7 @@
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="app-container">
     <div class="basic-container">
       <el-card style="margin-bottom:30px">
         <div slot="header">
@@ -36,7 +36,7 @@
       <el-collapse-item v-for="(item, index) in list" :key="index">
         <template slot="title">
           监管单位：{{ item.submitter }}
-          <el-tag :type="item.status  | keyToVal(handleTag)" style="margin-left:20px">{{ item.status | keyToVal(handleFault) }}</el-tag>
+          <el-tag :type="item.status | keyToVal(handleTag)" style="margin-left:20px">{{ item.status | keyToVal(handleFault) }}</el-tag>
         </template>
         <!-- <div>
           建议人：{{ item.name }}
@@ -61,29 +61,29 @@
           <el-form-item label="违规照片:">
             <upload-list :files="item.illegalFile.map(f =>({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" />
           </el-form-item>
-          <el-form-item label="违规回复:" v-if="item.status !== -1">
+          <el-form-item v-if="item.status !== -1" label="违规回复:">
             <el-input v-model="item.response" disabled />
           </el-form-item>
-          <el-form-item label="整改照片:" v-if="item.status !== -1">
+          <el-form-item v-if="item.status !== -1" label="整改照片:">
             <upload-list :files="item.rectificationFile.map(f => ({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" />
 
           </el-form-item>
-          <el-form-item label="处理回复:" prop="toResponse" v-if="item.status !== -1">
+          <el-form-item v-if="item.status !== -1" label="处理回复:" prop="toResponse">
             <el-input v-model="item.toResponse" type="textarea" autosize :disabled="item.status=== 0" />
           </el-form-item>
-          <el-form-item label="处理结果:" prop="result" v-if="item.status !== -1">
+          <el-form-item v-if="item.status !== -1" label="处理结果:" prop="result">
             <el-select v-model="item.result" :disabled="item.status=== 0">
               <el-option v-for="result in auditOptions" :key="result.val" :value="result.key" :label="result.val" />
             </el-select>
           </el-form-item>
           <el-row type="flex" justify="center" style="margin:50px 0">
-            <el-button type="primary" @click="handlePost" v-if="item.status === 2 || item.status === 1">保 存</el-button>
+            <el-button v-if="item.status === 2 || item.status === 1" type="primary" @click="handlePost">保 存</el-button>
             <!-- <el-button @click="$router.go(-1)">返 回</el-button> -->
           </el-row>
         </el-form>
       </el-collapse-item>
     </el-collapse>
-    <div class="empty-content-public" v-if="list.length === 0">暂无违规记录</div>
+    <div v-if="list.length === 0" class="empty-content-public">暂无违规记录</div>
 
   </div>
 </template>
@@ -124,12 +124,12 @@ export default {
     }
   },
   computed: {
-    ...mapState('common', ["auditOptions"])
+    ...mapState('common', ['auditOptions'])
   },
   created() {
     const { id, status } = this.$route.query
-    //11 施工中
-    if (!isNaN(+id) && status == 11) {
+    // 11 施工中
+    if (!isNaN(+id) && +status === 11) {
       this.projectId = id
       this.status = status
       this.listFaults()
@@ -141,7 +141,7 @@ export default {
       const faultAsync = new Promise((resolve, reject) => {
         Supervision.getFault(this.projectId).then(res => {
           if (notEmptyArray(res)) {
-            res = res.filter(v => v.createdBy == this.$store.getters.userid)
+            res = res.filter(v => v.createdBy === this.$store.getters.userid)
             res.forEach(v => {
               if (!v.response) {
                 v.status = -1 // 未整改
@@ -159,10 +159,8 @@ export default {
           }
           this.list = res
           resolve('ok')
-
         }).catch(() => {
           reject('异议获取失败')
-
         })
       })
       const infoAsync = new Promise((resolve, reject) => {
@@ -173,19 +171,17 @@ export default {
           }
           reject('施工单位单位信息获取失败')
         })
-          .catch((err) => {
+          .catch(() => {
             reject('施工单位单位信息获取失败')
           })
       })
       Promise.all([faultAsync, infoAsync])
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
           this.$message.error('信息获取失败')
         })
         .finally(() => {
           this.pageLoading = false
         })
-
     },
     handlePost() {
       const data = this.list.filter(v => v.response).map(v => ({ id: v.id, result: v.result, toResponse: v.toResponse }))
@@ -206,7 +202,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.query
     // 11 施工中
-    if (isNaN(+id) || status != 11) {
+    if (isNaN(+id) || +status !== 11) {
       // 没有id则返回跳转
       next('/redirect' + from.fullPath)
     } else {

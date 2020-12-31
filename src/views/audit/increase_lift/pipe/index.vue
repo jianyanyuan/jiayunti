@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-25 13:07:28
+ * @LastEditTime: 2020-12-31 10:36:14
  * @LastEditors: zfd
  * @Description: 增梯办管道踏勘
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="app-container">
     <div class="basic-container">
       <el-card style="margin-bottom:30px">
         <div slot="header">
@@ -43,7 +43,7 @@
     <el-card style="margin-bottom:30px">
       <div slot="header">
         <el-row type="flex" justify="space-between" align="middle">
-          <span>管道踏勘</span>
+          <span>管道踏勘（须踏勘完全部项目）</span>
           <!-- <el-button v-if="editable" type="primary" style="float:right" @click="editable = !editable">提 交</el-button> -->
           <el-button v-if="editable" type="primary" style="float:right" @click="handlePost">保 存</el-button>
           <el-button v-else type="primary" style="float:right" @click="editable = !editable">修 改</el-button>
@@ -104,7 +104,7 @@
         </el-table-column>
         <el-table-column label="是否完成" min-width="180" align="center">
           <template slot-scope="{row}">
-            {{ row.whetherComplete ? '是' : '否'}}
+            {{ row.whetherComplete ? '是' : '否' }}
             <!-- <el-checkbox v-model="row.isComplete">是</el-checkbox> -->
           </template>
         </el-table-column>
@@ -149,8 +149,8 @@ export default {
   },
   created() {
     const { id, status } = this.$route.params
-    // 2方案设计
-    if (!isNaN(+id) && status == 5) {
+    // 5管道踏勘
+    if (!isNaN(+id) && +status === 5) {
       this.projectId = id
       this.status = status
       this.detailApply()
@@ -183,12 +183,10 @@ export default {
       })
       Promise.all([basicAsync, detailAsync]).then(() => {
         this.pageLoading = false
-      }).catch((err) => {
-        console.log(err)
+      }).catch(() => {
         this.pageLoading = false
         this.$message.error('信息获取失败')
       })
-
     },
     handleChange(row) {
       if (!this.updateList.includes(row)) {
@@ -209,7 +207,6 @@ export default {
           this.pageLoading = false
           this.detailApply()
         }
-
       }).catch(res => {
         this.pageLoading = false
         this.$message.error('保存失败')
@@ -230,8 +227,8 @@ export default {
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
-    // 2方案设计
-    if (isNaN(+id) || status != 5) {
+    // 5管道踏勘
+    if (isNaN(+id) || +status !== 5) {
       next('/redirect' + from.fullPath)
     } else {
       next()

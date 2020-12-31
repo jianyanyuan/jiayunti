@@ -2,10 +2,10 @@
  * @Author: zfd
  * @Date: 2020-11-10 08:42:48
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 16:36:00
+ * @LastEditTime: 2020-12-31 11:25:15
  * @Description:
  */
-import {validatePassword,validatePhone,validateNumberCode,validateConfirmPassword} from '@/utils/element-validator'
+import { validatePassword, validatePhone, validateNumberCode, validateConfirmPassword } from '@/utils/element-validator'
 
 export default {
   name: 'Reset',
@@ -15,18 +15,18 @@ export default {
         password: '',
         phonenumber: '',
         verificationcode: '',
-        conPwd:''
+        conPwd: ''
       },
       rule: {
-        password: [{ required: true, trigger: 'blur',message:'密码需为6-17位数字和英文符号组合', validator: validatePassword }],
-        phonenumber: [{ required: true, trigger: 'blur',message:'请输入手机号',  validator: validatePhone }],
-        conPwd: [{ required: true, trigger: 'blur',message:'密码不一致',  validator: validateConfirmPassword }],
-        verificationcode: [{ required: true, trigger: 'blur',message:'验证码为6位纯数字', validator: validateNumberCode, length: 6 }]
+        password: [{ required: true, trigger: 'blur', message: '密码需为6-17位数字和英文符号组合', validator: validatePassword }],
+        phonenumber: [{ required: true, trigger: 'blur', message: '请输入手机号', validator: validatePhone }],
+        conPwd: [{ required: true, trigger: 'blur', message: '两次密码不一致', validator: validateConfirmPassword }],
+        verificationcode: [{ required: true, trigger: 'blur', message: '验证码为6位纯数字', validator: validateNumberCode, length: 6 }]
       },
       vertifyDisabled: false,
       countDown: 60,
       timer: null,
-      loading: false,
+      loading: false
     }
   },
   created() {
@@ -34,7 +34,7 @@ export default {
   methods: {
     // 重置密码
     postReset(formName) {
-      this.$refs[formName].validate((success, err) => {
+      this.$refs[formName].validate((success, errors) => {
         if (success) {
           this.loading = true
           this.$store.dispatch('user/findPwd', this.form).then((res) => {
@@ -48,7 +48,7 @@ export default {
             this.loading = false
           })
         } else {
-          this.$message.error('请补全信息')
+          this.$message.error(Object.values(errors)[0][0].message)
         }
       })
     },
@@ -67,8 +67,7 @@ export default {
       if (this.form.phonenumber && reg.test(this.form.phonenumber)) {
         this.vertifyDisabled = true
         this.$store.dispatch('user/getCode', { role: this.form.phonenumber })
-          .catch((err) => {
-            console.log(err)
+          .catch(() => {
             this.$message.error('验证码获取失败,请稍后重试')
           })
 
@@ -85,7 +84,6 @@ export default {
         this.$message.error('请先输入手机号')
       }
     }
-    
 
   }
 }

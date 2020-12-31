@@ -1,12 +1,12 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-29 16:52:39
+ * @LastEditTime: 2020-12-31 11:23:08
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="app-container">
     <div class="basic-container">
       <el-card style="margin-bottom:30px">
         <div slot="header">
@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { checkUpload } from '@/utils'
 import File from '@/api/file'
 import Supervision from '@/api/supervision'
@@ -86,8 +85,8 @@ export default {
   },
   created() {
     const { id, status } = this.$route.query
-    //11 施工中
-    if (!isNaN(+id) && status == 11) {
+    // 11 施工中
+    if (!isNaN(+id) && +status === 11) {
       this.projectId = id
       this.status = status
       this.getInfo()
@@ -99,7 +98,7 @@ export default {
       Construction.getInfo(this.projectId).then(res => {
         this.construction = res
       })
-        .catch((err) => {
+        .catch(() => {
           this.$message.error('信息获取失败')
         })
         .finally(() => {
@@ -110,7 +109,7 @@ export default {
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList, index) {
       const valid = checkUpload(file.raw)
-      if (valid && file.status === 'ready') {
+      if (valid && file.url === undefined) {
         const formData = new FormData()
         formData.append('file', file.raw)
         this.faults[index].attachments.push(
@@ -144,7 +143,7 @@ export default {
     // 保存修改
     async postFile(faults) {
       this.pageLoading = true
-      for (let idx in faults) {
+      for (const idx in faults) {
         let faultId
         let error = false
         const { projectId, description, time } = faults[idx]
@@ -152,7 +151,7 @@ export default {
           .then((res) => {
             faultId = res[0].id
           })
-          .catch((err) => {
+          .catch(() => {
             error = true
             // 违规保存失败，重新上传该违规记录
             this.postFailed = faults.slice(idx)
@@ -161,7 +160,7 @@ export default {
           this.$message.error('保存失败，请重新保存')
           return false // 记录上传失败
         }
-        for (let a of faults[idx].attachments) {
+        for (const a of faults[idx].attachments) {
           await File.uploadFault(a.file, faultId, this.typeName)
             .catch(() => {
               error = true
@@ -210,7 +209,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.query
     // 11 施工中
-    if (isNaN(+id) || status != 11) {
+    if (isNaN(+id) || +status !== 11) {
       // 没有id则返回跳转
       next('/redirect' + from.fullPath)
     } else {

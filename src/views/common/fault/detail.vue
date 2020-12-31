@@ -1,12 +1,12 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-30 09:37:50
+ * @LastEditTime: 2020-12-31 11:28:05
  * @Description: 施工端违规处理
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
 <template>
-  <div class="app-container" v-loading="pageLoading">
+  <div v-loading="pageLoading" class="app-container">
     <el-page-header content="违规查看" style="margin-bottom:30px" @back="$router.go(-1)" />
 
     <div class="basic-container">
@@ -31,7 +31,7 @@
       <el-collapse-item v-for="(item, index) in list" :key="index">
         <template slot="title">
           监管单位：{{ item.submitter }}
-          <el-tag :type="item.status  | keyToVal(handleTag)" style="margin-left:20px">{{ item.status | keyToVal(handleFault) }}</el-tag>
+          <el-tag :type="item.status | keyToVal(handleTag)" style="margin-left:20px">{{ item.status | keyToVal(handleFault) }}</el-tag>
         </template>
         <!-- <div>
           建议人：{{ item.name }}
@@ -58,24 +58,24 @@
 
           </el-form-item>
           <el-form-item label="违规回复:">
-            <el-input v-model="item.response" disabled v-if="item.status !== -1" />
+            <el-input v-if="item.status !== -1" v-model="item.response" disabled />
           </el-form-item>
           <el-form-item label="整改照片:">
             <upload-list v-if="item.status !== -1" :files="item.rectificationFile.map(f => ({uid:f.id,name: f.filename, url: f.path }))" list-type="picture-card" :disabled="true" />
 
           </el-form-item>
-          <el-form-item label="处理回复:" v-if="item.status === 0 || item.status === 1">
-            <el-input v-model="item.toResponse" type="textarea" autosize v-if="item.toResponse" disabled />
+          <el-form-item v-if="item.status === 0 || item.status === 1" label="处理回复:">
+            <el-input v-if="item.toResponse" v-model="item.toResponse" type="textarea" autosize disabled />
           </el-form-item>
-          <el-form-item label="处理结果:" v-if="item.status === 0 || item.status === 1">
-            <el-select v-model="item.result" disabled v-if="item.toResponse">
+          <el-form-item v-if="item.status === 0 || item.status === 1" label="处理结果:">
+            <el-select v-if="item.toResponse" v-model="item.result" disabled>
               <el-option v-for="result in auditOptions" :key="result.val" :value="result.key" :label="result.val" disabled />
             </el-select>
           </el-form-item>
         </el-form>
       </el-collapse-item>
     </el-collapse>
-    <div class="empty-content-public" v-if="list.length === 0">暂无违规记录</div>
+    <div v-if="list.length === 0" class="empty-content-public">暂无违规记录</div>
   </div>
 </template>
 
@@ -112,8 +112,8 @@ export default {
   },
   created() {
     const { id, status } = this.$route.query
-    //11 施工中
-    if (!isNaN(+id) && status == 11) {
+    // 11 施工中
+    if (!isNaN(+id) && +status === 11) {
       this.projectId = id
       this.status = status
       this.listFaults()
@@ -131,7 +131,7 @@ export default {
             reject('施工单位单位信息获取失败')
           }
         })
-          .catch((err) => {
+          .catch(() => {
             reject('施工单位单位信息获取失败')
           })
       })
@@ -156,20 +156,19 @@ export default {
         })
       })
       Promise.all([faultAsync, infoAsync])
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
           this.$message.error('信息获取失败')
         })
         .finally(() => {
           this.pageLoading = false
         })
-    },
+    }
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.query
     // 11 施工中
-    if (isNaN(+id) || status != 11) {
+    if (isNaN(+id) || +status !== 11) {
       // 没有id则返回跳转
       next('/redirect' + from.fullPath)
     } else {

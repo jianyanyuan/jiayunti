@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-30 09:15:14
+ * @LastEditTime: 2020-12-31 11:30:20
  * @Description: 居民申请基本资料
 -->
 <template>
@@ -15,7 +15,7 @@
           <el-button v-else type="primary" style="float:right" @click="updateApply">保存</el-button>
         </el-row>
       </div>
-      <el-form ref="form" class="basic-form" v-loading="formLoading" :model="form" :rules="rules" label-width="120px" :disabled="!hasChanged">
+      <el-form ref="form" v-loading="formLoading" class="basic-form" :model="form" :rules="rules" label-width="120px" :disabled="!hasChanged">
         <el-form-item label="申请人" prop="applicantName">
           <el-input v-model="form.applicantName" />
         </el-form-item>
@@ -62,7 +62,7 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <div style="text-align:center" v-if="!hasChanged">
+    <div v-if="!hasChanged" style="text-align:center">
       <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
     </div>
   </div>
@@ -132,7 +132,7 @@ export default {
       this.communityOptions = this.$store.getters['common/communityOptions'](this.form.address.county)
       this.form.address.community = this.$store.getters['address'].slice(2)
       // this.form.phoneNumber = this.$store.getters['phone'] ?? ''
-    }).catch((err) => {
+    }).catch(() => {
       this.$message.error('信息获取失败')
     })
   },
@@ -149,17 +149,17 @@ export default {
       }
     },
     nextProcess(arrow) {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid, errors) => {
         if (valid) {
           this.$emit('nextProcess', arrow)
         } else {
-          this.$message.error('请补全信息')
+          this.$message.error(Object.values(errors)[0][0].message)
         }
       })
     },
     // 修改申请
     updateApply() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid, errors) => {
         if (valid) {
           const { location, rooms } = this.form
           if (notEmptyArray(location) && location.length === 3) {
@@ -177,20 +177,19 @@ export default {
           // this.form.address = address.community.concat(address.county)
           this.formLoading = true
           updateApi(this.id, this.form).then(res => {
-            if (res.id == this.id) {
+            if (res.id === this.id) {
               this.detailApply()
               // this.$message.success('修改成功')
             } else {
               this.$message.error('修改失败')
               this.formLoading = false
             }
-          }).catch(err => {
-            console.log(err)
+          }).catch(() => {
             this.formLoading = false
             this.$message.error('修改失败')
           })
         } else {
-          this.$message.error('信息错误')
+          this.$message.error(Object.values(errors)[0][0].message)
         }
       })
     },
@@ -207,14 +206,12 @@ export default {
         this.form.location = [residentialQuarters, building, unit]
         if (notEmptyArray(rooms)) {
           this.form.rooms = rooms.map(v => ({ key: v, val: v }))
-        }else {
+        } else {
           this.form.rooms = [{ key: Date.now(), val: '' }]
         }
         this.hasChanged = false
         this.formLoading = false
-
-      }).catch(err => {
-        console.log(err)
+      }).catch(() => {
         this.formLoading = false
         this.$message.error('信息获取失败')
       })

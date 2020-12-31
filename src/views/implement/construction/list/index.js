@@ -2,8 +2,8 @@
  * @Author: zfd
  * @Date: 2020-12-10 11:06:02
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-29 14:33:52
- * @Description: 
+ * @LastEditTime: 2020-12-31 11:26:31
+ * @Description:
  */
 import { mapState } from 'vuex'
 // import Flow from '@/components/street/Flow'
@@ -20,8 +20,8 @@ export default {
     return {
       flowVisible: false,
       conStatus: [
-        {key:8,val:'报价'},
-        {key:11,val:'施工中'}
+        { key: 8, val: '报价' },
+        { key: 11, val: '施工中' }
       ],
       list: [],
       listLoading: false,
@@ -30,8 +30,6 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      expandLoading: false,
-      btnLoading: false,
       expandLoading: false
     }
   },
@@ -43,9 +41,9 @@ export default {
   },
   methods: {
     // 获取申请列表
-    async listApplies(query={}) {
+    async listApplies(query = {}) {
       this.listLoading = true
-      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize },query).then(res => {
+      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }, query).then(res => {
         this.list = []
         this.pagination.total = 0
         if (notEmptyArray(res.content)) {
@@ -55,15 +53,13 @@ export default {
           })
           this.pagination.total = res.totalElements
         }
-      }).catch(err => {
+      }).catch(() => {
         this.$message.error('数据获取失败')
-        console.log(err)
       })
       this.listLoading = false
     },
     async willOffer(row) {
       let valid = true
-      this.btnLoading = true
       await Construction.getProOffer(row.id).then((res) => {
         if (Object.keys(res).length !== 0) {
           valid = false
@@ -72,16 +68,14 @@ export default {
         .catch(() => {
           valid = false
         })
-      this.btnLoading = false
       if (valid) {
-        this.$router.push({ name: 'ConstructionProcess', params: { id: row.id, status: row.statusId } })
+        this.$router.push({ name: 'ConstructionProcess', params: { id: row.id, status: row.statusId }})
       } else {
         this.$message.error('请勿重复报价')
       }
     },
     async willComplete(row) {
       let valid = true
-      this.btnLoading = true
       await Construction.isResolved(row.id).then((res) => {
         if (res.result !== 0) {
           valid = false
@@ -90,9 +84,8 @@ export default {
         .catch(() => {
           valid = false
         })
-      this.btnLoading = false
       if (valid) {
-        this.$router.push({ name: 'ConstructionComplete', params: { id: row.id, status: row.statusId } })
+        this.$router.push({ name: 'ConstructionComplete', params: { id: row.id, status: row.statusId }})
       } else {
         this.$message.error('违规未处理完毕!')
       }
@@ -117,7 +110,6 @@ export default {
       this.pagination.pageIndex = val
       this.listApplies()
     }
-
 
   }
 }

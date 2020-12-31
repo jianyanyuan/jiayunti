@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-17 09:57:58
+ * @LastEditTime: 2020-12-31 11:29:52
  * @LastEditors: zfd
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -20,7 +20,7 @@
 
     <div class="dynamic-component-container">
       <keep-alive>
-        <component v-if="projectId && status" :is="curComponent" :id="projectId" :status="status" />
+        <component :is="curComponent" v-if="projectId && status" :id="projectId" :status="status" />
       </keep-alive>
     </div>
 
@@ -44,8 +44,8 @@ export default {
   },
   data() {
     return {
-      stepBtnGroup: [/*'申请流程图',*/ '居民申请材料', '设计院设计', '管道踏勘记录', '审核'],
-      componentGroup: [/*'Flow',*/ 'Resident', 'Design', 'Pipe', 'Audit'],
+      stepBtnGroup: ['居民申请材料', '设计院设计', '管道踏勘记录', '审核'],
+      componentGroup: ['Resident', 'Design', 'Pipe', 'Audit'],
       curStep: 0,
       projectId: null,
       status: null
@@ -58,8 +58,8 @@ export default {
   },
   created() {
     const { id, status } = this.$route.params
-    //9街道审核  10 联合审查轮转
-    const valid = status == 9 || status == 10
+    // 9街道审核  10 联合审查轮转
+    const valid = +status === 9 || +status === 10
 
     if (!isNaN(+id) && valid) {
       this.projectId = id
@@ -76,8 +76,8 @@ export default {
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
-    //9街道审核  10 联合审查轮转
-    const valid = status == 9 || status == 10
+    // 9街道审核  10 联合审查轮转
+    const valid = +status === 9 || +status === 10
     const illegal = isNaN(+id) || !valid
 
     if (illegal) {

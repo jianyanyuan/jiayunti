@@ -71,8 +71,8 @@ const inlRouter = {
         title: '补贴派发',
         roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
       }
-    },
-    
+    }
+
   ]
 }
 

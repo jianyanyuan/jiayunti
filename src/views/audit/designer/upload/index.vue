@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-15 17:25:42
+ * @LastEditTime: 2020-12-31 11:34:43
  * @LastEditors: zfd
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -17,9 +17,9 @@
     </div>
     <div class="line-divider" />
 
-    <div class="dynamic-component-container" v-if="projectId && status">
+    <div v-if="projectId && status" class="dynamic-component-container">
       <keep-alive>
-        <component :is="curComponent"  @nextProcess="handleProcess" :id="projectId" :status="status" />
+        <component :is="curComponent" :id="projectId" :status="status" @nextProcess="handleProcess" />
       </keep-alive>
     </div>
 
@@ -53,7 +53,7 @@ export default {
   created() {
     const { id, status } = this.$route.params
     // 2方案设计
-    if (!isNaN(+id) && status == 2) {
+    if (!isNaN(+id) && +status === 2) {
       this.projectId = id
       this.status = status
     }
@@ -75,7 +75,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
     // 2方案设计
-    if (isNaN(+id) || status != 2) {
+    if (isNaN(+id) || +status !== 2) {
       next('/redirect' + from.fullPath)
     } else {
       next()

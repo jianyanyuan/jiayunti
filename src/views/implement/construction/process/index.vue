@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-25 10:33:52
+ * @LastEditTime: 2020-12-31 11:27:16
  * @LastEditors: zfd
  * @Description: construction process
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
@@ -17,9 +17,9 @@
     </div>
     <div class="line-divider" />
 
-    <div class="dynamic-component-container" v-if="projectId && status">
+    <div v-if="projectId && status" class="dynamic-component-container">
       <keep-alive>
-        <component :is="curComponent" @nextProcess="handleProcess" :id="projectId" :status="status"  />
+        <component :is="curComponent" :id="projectId" :status="status" @nextProcess="handleProcess" />
       </keep-alive>
     </div>
 
@@ -34,7 +34,7 @@ import Offer from './components/offer.vue'
 // import ProtocalForm from '@/components/resident/protocal-form'
 
 export default {
-  name:'Process',
+  name: 'Process',
   components: {
     Basic,
     Locale,
@@ -45,8 +45,8 @@ export default {
       stepBtnGroup: ['施工资料', '查看现场', '报价'],
       componentGroup: ['Basic', 'Locale', 'Offer'],
       curStep: 0,
-      projectId:null,
-      status:null
+      projectId: null,
+      status: null
     }
   },
   computed: {
@@ -56,7 +56,7 @@ export default {
   },
   created() {
     const { id, status } = this.$route.params
-    //8施工报价
+    // 8施工报价
     if (!isNaN(+id) && status == 8) {
       this.projectId = id
       this.status = status
@@ -71,7 +71,7 @@ export default {
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
-    //8施工报价
+    // 8施工报价
     const illegal = isNaN(+id) || status != 8
 
     if (illegal) {

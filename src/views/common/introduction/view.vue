@@ -2,13 +2,13 @@
  * @Author: zfd
  * @Date: 2020-10-28 13:47:36
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-30 10:57:30
- * @Description: 
+ * @LastEditTime: 2020-12-31 11:29:07
+ * @Description:
 -->
 <template>
   <div class="app-container">
-    <el-button v-if="id===null" @click="clickEdit" type="warning">修改</el-button>
-    <div class="intro-container" v-loading="pageLoading">
+    <el-button v-if="id===null" type="warning" @click="clickEdit">修改</el-button>
+    <div v-loading="pageLoading" class="intro-container">
       <template v-if="detail">
         <header>
           <h1>
@@ -52,7 +52,6 @@ export default {
     } else {
       this.getDetail()
     }
-
   },
   methods: {
     getDetail() {
@@ -63,8 +62,7 @@ export default {
             this.detail = res
           }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
           this.$message.error('信息获取失败')
         })
         .finally(() => {
@@ -79,8 +77,7 @@ export default {
             this.detail = res
           }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
           this.$message.error('信息获取失败')
         })
         .finally(() => {
@@ -91,25 +88,25 @@ export default {
       const reg = /\/(.*)\//
       const prefix = this.$route.fullPath.match(reg)[1]
       const path = `/${prefix}/intro_edit`
-      const type = this.detail ? 0: 1 //0修改 1保存 
-      this.$router.push({ path,query:{type} })
+      const type = this.detail ? 0 : 1 // 0修改 1保存
+      this.$router.push({ path, query: { type }})
     }
-  },
-  beforeRouteEnter(to, from, next) {
-    // 1
-    next((vm) => {
-      // 3
-      if (to.params.detail) {
-        vm.detail = to.params.detail
-      }
-      // if (to.query.type === "today") {
-      //   let today = new Date();
-      //   vm.query.StartTime = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()} 00:00:00`;
-      //   vm.query.EndTime = new Date();
-      //   vm.getTickets();
-      // }
-    })
   }
+  // beforeRouteEnter(to, from, next) {
+  //   // 1
+  //   next((vm) => {
+  //     // 3
+  //     if (to.params.detail) {
+  //       vm.detail = to.params.detail
+  //     }
+  //     // if (to.query.type === "today") {
+  //     //   let today = new Date();
+  //     //   vm.query.StartTime = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()} 00:00:00`;
+  //     //   vm.query.EndTime = new Date();
+  //     //   vm.getTickets();
+  //     // }
+  //   })
+  // }
 }
 </script>
 <style lang="scss" scoped>
@@ -119,7 +116,6 @@ export default {
   min-width: 900px;
   header {
     text-align: center;
-    border-bottom: 1px solid #e2e2e2;
   }
   p,
   span {

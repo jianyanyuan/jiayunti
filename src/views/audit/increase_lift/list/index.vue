@@ -10,7 +10,7 @@
   <div class="app-container">
     <FilterList :status="insStatus" @listFn="listApplies" />
     <el-card>
-      <el-table v-loading="listLoading" class="table-expand-public" @expand-change="handleExpand" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'addTime', order: 'descending'}" >
+      <el-table v-loading="listLoading" class="table-expand-public" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'addTime', order: 'descending'}" @expand-change="handleExpand">
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
@@ -18,7 +18,7 @@
         </el-table-column>
         <el-table-column type="expand">
           <template slot-scope="{ row }">
-            <el-form label-position="left" v-loading="expandLoading" inline class="expand-form-p">
+            <el-form v-loading="expandLoading" label-position="left" inline class="expand-form-p">
               <el-form-item label="申请人">
                 {{ row.apply.applicantName }}
               </el-form-item>

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-14 10:11:19
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 13:33:40
+ * @LastEditTime: 2020-12-31 10:43:58
  * @Description: 施工单位
  */
 import request from '@/utils/request'
@@ -29,11 +29,9 @@ const listOffers = (projectId, params) => {
 const getProOffer = (projectId) => {
   return request({
     url: `/constructionPrice/getOneHistory/${projectId}`,
-    method: 'get',
+    method: 'get'
   })
 }
-
-
 
 // 获取单个报价表
 const detailOffer = (id) => {
@@ -48,23 +46,25 @@ const reform = (responseRequest) => {
   return request({
     url: `/IllegalBehavior`,
     method: 'put',
-    data:responseRequest
+    data: responseRequest
   })
 }
 
 // 获取施工单位信息
 const getInfo = (projectId) => {
   return request({
-    url:`/construction/${projectId}`,
-    method:'get'
+    url: `/construction/${projectId}`,
+    method: 'get'
   })
 }
 
 // 获取所有施工单位
-const list = ()=>{
+const list = (params, data) => {
   return request({
-    url:`/construction`,
-    method:'get'
+    url: `/construction`,
+    method: 'post',
+    params,
+    data
   })
 }
 
@@ -72,7 +72,7 @@ const list = ()=>{
 const isResolved = (projectId) => {
   return request({
     url: `/IllegalBehavior/isResolved/${projectId}`,
-    method:'get'
+    method: 'get'
   })
 }
 export default {

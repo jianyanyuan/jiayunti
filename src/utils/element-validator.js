@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-20 08:23:03
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 16:36:24
+ * @LastEditTime: 2020-12-31 11:35:52
  * @Description: 适用于element ui form rule validator
  */
 
@@ -97,7 +97,6 @@ export function validatePhone(rule, value, callback) {
  * @param {回调函数} callback
  */
 export function validateNumberCode(rule, value, callback) {
-  
   if (typeof rule.length !== 'number') {
     callback()
   }

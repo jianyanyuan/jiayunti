@@ -150,7 +150,7 @@ export default {
         asyncReq.push(fileAsync)
       }
       Promise.all(asyncReq).then(() => (this.tabLoading = false)).catch(err => {
-        console.log(err)
+        
         this.tabLoading = false
         this.$message.error('信息获取失败')
       })

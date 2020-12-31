@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 13:26:07
+ * @LastEditTime: 2020-12-31 11:27:00
  * @Description: 施工端资料查看
 -->
 <template>
@@ -55,8 +55,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { deepClone } from '@/utils'
+
 import File from '@/api/file'
 import { notEmptyArray } from '@/utils'
 export default {
@@ -84,7 +83,6 @@ export default {
   },
   activated() {
     this.detailApply()
-
   },
   methods: {
     detailApply() {
@@ -113,16 +111,13 @@ export default {
               resolve('获取成功')
             }
           })
-          .catch(err => {
-            console.log(err)
+          .catch(() => {
             reject('基础信息获取失败')
-
           })
       })
       Promise.all([basicAsync, detailAsync]).then(() => {
         this.pageLoading = false
-      }).catch((err) => {
-        console.log(err)
+      }).catch(() => {
         this.pageLoading = false
         this.$message.error('信息获取失败')
       })
@@ -130,7 +125,7 @@ export default {
     nextProcess(length) {
       this.$emit('nextProcess', length)
     }
-  },
+  }
 
 }
 </script>

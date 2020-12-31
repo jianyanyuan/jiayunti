@@ -15,7 +15,7 @@ export default {
     mode: {
       type: String,
       default: 'observer',
-      validator: function (value) {
+      validator: function(value) {
         // 1. observer 借助 MutationObserver API https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver
         // 2. listener 借助 UEditor 的 contentChange 事件 https://ueditor.baidu.com/doc/#UE.Editor:contentChange
         return ['observer', 'listener'].indexOf(value) !== -1
@@ -27,13 +27,13 @@ export default {
     },
     config: {
       type: Object,
-      default: function () {
+      default: function() {
         return {}
       }
     },
     init: {
       type: Function,
-      default: function () {
+      default: function() {
         return () => { }
       }
     },
@@ -48,13 +48,13 @@ export default {
     observerDebounceTime: {
       type: Number,
       default: 50,
-      validator: function (value) {
+      validator: function(value) {
         return value >= 20
       }
     },
     observerOptions: {
       type: Object,
-      default: function () {
+      default: function() {
         // https://developer.mozilla.org/en-US/docs/Web/API/MutationObserverInit
         return {
           attributes: true, // 是否监听 DOM 元素的属性变化
@@ -195,7 +195,7 @@ export default {
         configScript.type = 'text/javascript'
         configScript.src = this.mixedConfig.UEDITOR_HOME_URL + 'ueditor.config.js'
         document.getElementsByTagName('head')[0].appendChild(configScript)
-        configScript.onload = function () {
+        configScript.onload = function() {
           if (window.UE && window.UEDITOR_CONFIG && Object.keys(window.UEDITOR_CONFIG).length !== 0) {
             resolve()
           } else {
@@ -214,7 +214,7 @@ export default {
         coreScript.type = 'text/javascript'
         coreScript.src = this.mixedConfig.UEDITOR_HOME_URL + 'ueditor.all.js'
         document.getElementsByTagName('head')[0].appendChild(coreScript)
-        coreScript.onload = function () {
+        coreScript.onload = function() {
           if (window.UE && window.UE.getEditor) {
             resolve()
           } else {

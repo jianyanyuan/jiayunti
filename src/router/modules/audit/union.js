@@ -18,7 +18,7 @@ const unionRouter = {
   meta: {
     title: '联合审查',
     icon: 'institution',
-    roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE','ROLE_HOUSE_CONSTRUCTION','ROLE_URBAN_MANAGEMENT','ROLE_MARKET_SUPERVISOR']
+    roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE', 'ROLE_HOUSE_CONSTRUCTION', 'ROLE_URBAN_MANAGEMENT', 'ROLE_MARKET_SUPERVISOR']
   },
   children: [
     {
@@ -28,7 +28,7 @@ const unionRouter = {
       meta: {
         title: '申请列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE','ROLE_HOUSE_CONSTRUCTION','ROLE_URBAN_MANAGEMENT','ROLE_MARKET_SUPERVISOR']
+        roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE', 'ROLE_HOUSE_CONSTRUCTION', 'ROLE_URBAN_MANAGEMENT', 'ROLE_MARKET_SUPERVISOR']
       }
     },
     {
@@ -38,7 +38,7 @@ const unionRouter = {
       hidden: true,
       meta: {
         title: '审核',
-        roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE','ROLE_HOUSE_CONSTRUCTION','ROLE_URBAN_MANAGEMENT','ROLE_MARKET_SUPERVISOR']
+        roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE', 'ROLE_HOUSE_CONSTRUCTION', 'ROLE_URBAN_MANAGEMENT', 'ROLE_MARKET_SUPERVISOR']
       }
     },
     {
@@ -48,7 +48,7 @@ const unionRouter = {
       meta: {
         title: '已审核列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE','ROLE_HOUSE_CONSTRUCTION','ROLE_URBAN_MANAGEMENT','ROLE_MARKET_SUPERVISOR']
+        roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE', 'ROLE_HOUSE_CONSTRUCTION', 'ROLE_URBAN_MANAGEMENT', 'ROLE_MARKET_SUPERVISOR']
       }
     },
     {
@@ -58,11 +58,10 @@ const unionRouter = {
       hidden: true,
       meta: {
         title: '审核详情',
-        roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE','ROLE_HOUSE_CONSTRUCTION','ROLE_URBAN_MANAGEMENT','ROLE_MARKET_SUPERVISOR']
+        roles: ['ROLE_ADMIN', 'ROLE_CAPITAL_RULE', 'ROLE_HOUSE_CONSTRUCTION', 'ROLE_URBAN_MANAGEMENT', 'ROLE_MARKET_SUPERVISOR']
       }
-    },
-    
-    
+    }
+
   ]
 }
 

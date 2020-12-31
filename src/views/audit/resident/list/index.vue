@@ -12,7 +12,7 @@
 
     <el-card>
       <!-- @row-dblclick="flowView" -->
-      <el-table v-loading="listLoading" class="table-expand-public" @expand-change="handleExpand" row-key="id" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row>
+      <el-table v-loading="listLoading" class="table-expand-public" row-key="id" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row @expand-change="handleExpand">
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
@@ -20,7 +20,7 @@
         </el-table-column>
         <el-table-column type="expand">
           <template slot-scope="{ row }">
-            <el-form label-position="left" v-loading="expandLoading" inline class="expand-form-p">
+            <el-form v-loading="expandLoading" label-position="left" inline class="expand-form-p">
               <el-form-item label="申请人">
                 {{ row.apply.applicantName }}
               </el-form-item>

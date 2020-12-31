@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-25 11:23:07
+ * @LastEditTime: 2020-12-31 10:35:46
  * @Description: 增梯办联合审查报告
 -->
 <template>
@@ -15,7 +15,7 @@
           <span>联合审批报告</span>
         </el-row>
       </div>
-      <el-form label-width="120px" ref="form" :model="form" :rules="rule">
+      <el-form ref="form" label-width="120px" :model="form" :rules="rule">
         <el-form-item label="审核意见:" prop="reviewOpinions">
           <el-input v-model="form.reviewOpinions" type="textarea" :rows="4" />
         </el-form-item>
@@ -46,7 +46,7 @@
 import { advanceApi, checkApi } from '@/api/projects'
 import File from '@/api/file'
 import { mapState } from 'vuex'
-
+import { checkUpload } from '@/utils'
 export default {
   name: 'UnionReport',
   data() {
@@ -74,7 +74,7 @@ export default {
   created() {
     const { id, status } = this.$route.params
     // 10 联合审查
-    const valid = status == 1 || status == 10
+    const valid = +status === 1 || +status === 10
     if (!isNaN(+id) && valid) {
       this.projectId = id
       this.status = status
@@ -84,36 +84,18 @@ export default {
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
-      const valid = this.checkUpload(file.raw)
-      if (valid && file.status === 'ready') {
+      const valid = checkUpload(file.raw)
+      if (valid && file.url === undefined) {
         const formData = new FormData()
         formData.append('file', file.raw)
         this.form.attachment = {
           uid: file.uid,
           name: file.name,
-          file: formData,
+          file: formData
         }
       } else {
         fileList.pop()
       }
-    },
-    // 图片上传之前判断
-    checkUpload(file) {
-      if (!file.size) {
-        this.$message.error('上传为空！')
-        return false
-      }
-      const typeAllowed = /\bpdf|\bimage/i.test(file.type)
-      const isBig = file.size <= 1024 * 1024 * 10 // 单个文件最大10M
-      if (!typeAllowed) {
-        this.$message.error('只能上传图片或pdf！')
-        return false
-      }
-      if (!isBig) {
-        this.$message.error('图片大小不能超过10MB！')
-        return false
-      }
-      return true
     },
     // 删除文件
     handleUploadRemove(file, fileList) {
@@ -125,7 +107,7 @@ export default {
         this.$message.error('请上传报告')
         return
       }
-      this.$refs.form.validate(async valid => {
+      this.$refs.form.validate(async(valid, errors) => {
         if (valid) {
           this.pageLoading = true
           this.form.projectId = this.projectId
@@ -140,12 +122,12 @@ export default {
             return
           }
           checkApi(this.form)
-            .then(async () => {
+            .then(async() => {
               await advanceApi(this.projectId, this.status)
                 .then(() => {
                   this.$router.push('/increase-lift/list')
                 })
-                .catch((err) => {
+                .catch(() => {
                   this.$message.error('部门流转未完成')
                 })
             })
@@ -156,16 +138,16 @@ export default {
               this.pageLoading = false
             })
         } else {
-          this.$message.error('请补全信息')
+          this.$message.error(Object.values(errors)[0][0].message)
         }
       })
-    },
+    }
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
     const { id, status } = to.params
     // 10 联合审查报告
-    const valid = status == 1 || status == 10
+    const valid = +status === 1 || +status === 10
     if (isNaN(+id) || !valid) {
       // 没有id则返回跳转
       next('/redirect' + from.fullPath)

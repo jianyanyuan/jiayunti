@@ -52,7 +52,7 @@ import { notEmptyArray } from '@/utils'
 import FilterList from '@/components/Filter'
 export default {
   name: 'CommunityAudited',
-  components:{
+  components: {
     FilterList
   },
   data() {
@@ -77,19 +77,18 @@ export default {
   created() { this.listApplies() },
   methods: {
     // 获取已审核列表
-    async listApplies(query ={}) {
+    async listApplies(query = {}) {
       this.listLoading = true
-      await Community.auditHistorylist({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize },query).then(res => {
+      await Community.auditHistorylist({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }, query).then(res => {
         if (notEmptyArray(res.content)) {
           this.list = res.content
           this.pagination.total = res.totalElements
-        }else {
+        } else {
           this.list = []
           this.pagination.total = 0
         }
-      }).catch(err => {
+      }).catch(() => {
         this.$message.error('数据获取失败')
-        console.log(err)
       })
       this.listLoading = false
     },
@@ -106,7 +105,7 @@ export default {
       const reg = /\/(.*)\//
       const prefix = this.$route.fullPath.match(reg)[1]
       const path = `/${prefix}/audited-detail`
-      this.$router.push({ path, query: { id: row.id, status: row.statusId } })
+      this.$router.push({ path, query: { id: row.id, status: row.statusId }})
     }
   }
 }
