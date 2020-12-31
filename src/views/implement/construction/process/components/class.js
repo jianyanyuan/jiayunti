@@ -2,10 +2,10 @@
  * @Author: zfd
  * @Date: 2020-12-16 14:34:34
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 11:27:08
+ * @LastEditTime: 2020-12-31 13:47:37
  * @Description:
  */
-import { IsMobilePhone, Matches, IsString, MinLength, IsDate, IsNumber, Min, IsDateString } from 'class-validator'
+import { IsMobilePhone, IsString, MinLength, IsNumber, Min } from 'class-validator'
 
 export class Construction {
   @IsString({ message: '请输入合法的施工单位' })
@@ -16,7 +16,7 @@ export class Construction {
   @MinLength(2, { message: '联系人最小长度为2' })
   contact
 
-  @IsMobilePhone('zh-CN', { strictMode: false }, { message: '请输入手机号' })
+  @IsMobilePhone('zh-CN', { strictMode: false }, { message: '请输入联系方式' })
   phoneNumber
 
   @IsString({ message: '请输入合法的地址' })

@@ -118,17 +118,18 @@ export default {
         this.$message.error('请上传附件')
         return
       }
-      this.uploadList.forEach(async(v, i) => {
-        const { file } = v
+      for (const idx in this.uploadList) {
+        const { file } = this.uploadList[idx]
         await File.upload(file, { typeName: this.typeName, projectId: this.projectId })
           .then(() => {
-            this.uploadList.splice(i, 1)
+            this.uploadList.splice(idx, 1)
           })
           .catch(() => {
             // 上传失败
             error = true
           })
-      })
+      }
+      this.uploadList = []
       if (error) {
         this.pageLoading = false
         this.$message.error('保存失败，请重新保存')

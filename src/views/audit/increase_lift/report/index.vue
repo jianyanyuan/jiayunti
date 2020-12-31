@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 10:35:46
+ * @LastEditTime: 2020-12-31 14:01:32
  * @Description: 增梯办联合审查报告
 -->
 <template>
@@ -25,8 +25,8 @@
             <div class="enclosure-tips">
               联合审查报告
             </div>
-            <div>将文件拖到此处，或点击添加</div>
-            <div>单个文件大小不超过20MB，可上传图片或PDF</div>
+            <div>将文件拖到此处，或点击添加。只允许上传单个文件。</div>
+            <div>文件大小不超过20MB，可上传图片或PDF</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="审核结果:" prop="reviewResults">
@@ -56,7 +56,7 @@ export default {
       typeName: 'union-report',
       pageLoading: false,
       form: {
-        reviewOpinions: '',
+        reviewOpinions: '通过',
         reviewResults: 0,
         attachment: null
       },

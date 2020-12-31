@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-29 16:05:50
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 11:32:41
+ * @LastEditTime: 2020-12-31 13:49:49
  * @Description: 报价列表
 -->
 <template>
@@ -19,15 +19,19 @@
         </div>
 
       </div>
-      <div v-for="(s, index) in list" :key="index" class="list-item" @click="$router.push({name:'ResidentOfferDetail',params:{id:projectId,offerId:s.id,status}})">
-        <div class="list-head">
-          <div class="l-h-l">
-            <span>{{ s.constructionUnit }}</span><span>{{ s.offerTime | parseTime }}</span>
+      <template v-if="list.length > 0">
+        <div v-for="(s, index) in list" :key="index" class="list-item" @click="$router.push({name:'ResidentOfferDetail',params:{id:projectId,offerId:s.id,status}})">
+          <div class="list-head">
+            <div class="l-h-l">
+              <span>{{ s.constructionUnit }}</span><span>{{ s.offerTime | parseTime }}</span>
+            </div>
           </div>
+          <p><span>联系方式：{{ s.phoneNumber }}</span><span>报价（元）:{{ s.cost }}</span><span>施工周期（天）：{{ s.constructionPeriod }}</span></p>
+          <p> 地址：{{ s.address }}</p>
         </div>
-        <p><span>联系方式：{{ s.phoneNumber }}</span><span>报价（元）:{{ s.cost }}</span><span>施工周期（天）：{{ s.constructionPeriod }}</span></p>
-        <p> 地址：{{ s.address }}</p>
-      </div>
+      </template>
+      <div v-else class="empty-content-public">暂无报价</div>
+
       <el-pagination style="margin-top:20px" background layout="prev, pager, next, total,sizes,jumper" :total="pagination.total" :page-size="pagination.pageSize" :page-sizes="[10,20,50]" :current-page.sync="pagination.pageIndex" @size-change="handleSizeChange" @current-change="handleCurrentPageChange" />
     </div>
 

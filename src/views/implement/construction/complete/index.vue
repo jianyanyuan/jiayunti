@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 11:21:32
+ * @LastEditTime: 2020-12-31 14:16:28
  * @Description: 施工档案归档、竣工验收
 -->
 <template>
@@ -16,7 +16,7 @@
       <div slot="header">
         <span>档案归档</span>
       </div>
-      <el-upload action="#" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,0)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,0)}" drag :auto-upload="false">
+      <el-upload action="#" :file-list="archiveList" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,0)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,0)}" drag :auto-upload="false">
         <!-- <i class="el-icon-upload" /> -->
         <div>将文件拖到此处，或点击添加</div>
         <p>单个文件大小不超过20MB，可上传图片或PDF</p>
@@ -26,7 +26,7 @@
       <div slot="header">
         <span>竣工验收</span>
       </div>
-      <el-upload action="#" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,1)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,1)}" drag :auto-upload="false">
+      <el-upload action="#" :file-list="finishList" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,1)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,1)}" drag :auto-upload="false">
         <!-- <i class="el-icon-upload" /> -->
         <div>将文件拖到此处，或点击添加</div>
         <p>单个文件大小不超过20MB，可上传图片或PDF</p>
@@ -51,7 +51,9 @@ export default {
       uploadList: [], // 上传用
       dirName: ['construction-record', 'construction-complete'],
       projectId: null, // 工程id
-      status: null // 工程阶段标识位
+      status: null, // 工程阶段标识位
+      archiveList: [],
+      finishList: []
     }
   },
 
@@ -77,11 +79,17 @@ export default {
       if (valid && file.url === undefined) {
         const formData = new FormData()
         formData.append('file', file.raw)
+        const showFile = {
+          uid: file.uid,
+          name: file.name
+        }
         const upload = {
           type,
           uid: file.uid,
           file: formData
         }
+        const arr = type === 0 ? 'archiveList' : 'finishList'
+        this[arr].push(showFile)
         this.uploadList.push(upload)
       } else {
         fileList.pop()
@@ -89,11 +97,11 @@ export default {
     },
     // 删除文件
     handleUploadRemove(file, fileList, type) {
-      if (file.url === undefined) {
-        // 未上传 --> 取消上传
-        const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
-        this.uploadList.splice(removeIdx, 1)
-      }
+      const arr = type === 0 ? 'archiveList' : 'finishList'
+      const cancelIdx = this[arr].findIndex(f => f.uid === file.uid)
+      this[arr].splice(cancelIdx, 1)
+      const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
+      this.uploadList.splice(removeIdx, 1)
     },
 
     // 保存修改
@@ -107,19 +115,21 @@ export default {
         this.$message.error('请上传附件')
         return
       }
-      this.uploadList.forEach(async(v, i) => {
-        const { type, file } = v
+      for (const idx in this.uploadList) {
+        const { type, file } = this.uploadList[idx]
+        const arr = type === 0 ? 'archiveList' : 'finishList'
         await File.upload(file, { typeName: this.dirName[type], projectId: this.projectId })
-          .then(() => {
-            this.uploadList.splice(i, 1)
-          })
           .catch(() => {
             // 上传失败
+            const failIdx = this[arr].findIndex(f => f.uid === this.uploadList[idx].uid)
+            this[arr].splice(failIdx, 1)
             error = true
           })
-      })
+      }
+      this.uploadList = []
+      this.pageLoading = false
       if (error) {
-        this.$message.error('保存失败，请重新保存')
+        this.$message.error('部分文件保存失败')
         return
       }
       await advanceApi(this.projectId, this.status)

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-21 14:32:21
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 17:33:31
+ * @LastEditTime: 2020-12-31 13:11:21
  * @Description:
  */
 import request from '@/utils/request'
@@ -38,15 +38,15 @@ const uploadOpinion = (data, params) => {
 }
 
 // 删除意见征询表
-const  removeOpinion =  (id) => {
+const removeOpinion = (id) => {
   return request({
     url: api_prefix_dev + 'deleteOpinionFile/' + id,
-    method: 'delete',
+    method: 'delete'
   })
 }
 
 // 查询意见征询表
-const getConsultation =  (params) => {
+const getConsultation = (params) => {
   return request({
     url: api_prefix_dev + 'getConsultationFile',
     method: 'get',
@@ -55,7 +55,7 @@ const getConsultation =  (params) => {
 }
 
 // 查询文件
-const get =  (params) => {
+const get = (params) => {
   return request({
     url: api_prefix_dev + 'getFile',
     method: 'get',
@@ -64,9 +64,9 @@ const get =  (params) => {
 }
 
 // 报价材料上传
-const uploadOffer = (ConstructionPriceId, data ) => {
+const uploadOffer = (ConstructionPriceId, data) => {
   return request({
-    url: api_prefix_dev + 'uploadPriceFile?ConstructionPriceId='+ ConstructionPriceId ,
+    url: api_prefix_dev + 'uploadPriceFile?ConstructionPriceId=' + ConstructionPriceId,
     method: 'post',
     data
   })
@@ -81,10 +81,10 @@ const getLocalFile = (projectId) => {
 }
 // 违规文件上传
 /**
- * 
- * @param {*} data 
- * @param {*} IllegalBehaviorId 
- * @param {*} type 
+ *
+ * @param {*} data
+ * @param {*} IllegalBehaviorId
+ * @param {*} type
  * illegal 违规附件
  * rectification 整改附件
  */

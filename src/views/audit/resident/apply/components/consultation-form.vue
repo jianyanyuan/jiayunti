@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 12:38:39
+ * @LastEditTime: 2020-12-31 12:57:05
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -74,8 +74,7 @@ export default {
       pageLoading: false,
       rooms: [],
       fileList: {}, // 展示用
-      uploadList: [], // 上传用
-      deleteList: [] // 删除用
+      uploadList: [] // 上传用
     }
   },
 
@@ -147,7 +146,8 @@ export default {
           this.fileList[room].push({
             uid: file.uid,
             name: file.name,
-            url: event.target.result // 临时保存base64结果
+            url: event.target.result,
+            type: 'temp' // 临时保存base64结果
           })
         }
         const formData = new FormData()

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-10 11:06:02
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 11:34:57
+ * @LastEditTime: 2020-12-31 13:39:50
  * @Description:
  */
 import { mapState } from 'vuex'
@@ -34,7 +34,7 @@ export default {
       },
       uploadVisible: false,
       uploadId: null, // 待施工图设计的工程id
-      fileList: [],
+      uploadLoading: false,
       uploadList: [],
       expandLoading: false
     }
@@ -113,33 +113,37 @@ export default {
       this.listApplies()
     },
     // 上传施工图设计稿
-    designUpload() {
+    async designUpload() {
+      this.uploadLoading = true
       if (notEmptyArray(this.uploadList)) {
         let error = false
         // let last = true
-        this.uploadList.forEach(async(v, i) => {
-          const { projectId, file } = v
-          // last = i === this.uploadList.length - 1
+        for (const idx in this.uploadList) {
+          const { projectId, file } = this.uploadList[idx]
           await File.upload(file, { projectId, typeName: 'construction-design' })
             .catch(() => {
               // 上传失败
+              const failIdx = this.$refs.constructionUpload.uploadFiles.findIndex(f => f.uid === this.uploadList[idx].uid)
+              this.$refs.constructionUpload.uploadFiles.splice(failIdx, 1)
               error = true
             })
-          this.uploadList.splice(i, 1)
-        })
-        this.$refs.constructionUpload.uploadFiles = []
+        }
+        this.uploadList = []
         if (error) {
-          this.$message.error('文件上传失败，请重新上传')
+          this.$message.error('文件上传失败')
+          this.uploadLoading = false
         } else {
           this.$message.success('上传完成')
+          this.$refs.constructionUpload.uploadFiles = []
+          this.uploadLoading = false
           // 施工图设计阶段 --> 施工图审核
           advanceApi(this.uploadId, 6)
             .then(async() => {
               await this.listApplies()
+              this.uploadVisible = false
+              this.uploadId = null
             })
             .catch(() => (this.$message.error('流程错误')))
-          this.uploadVisible = false
-          this.uploadId = null
         }
       }
     }

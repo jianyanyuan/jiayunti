@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-31 12:07:57
+ * @LastEditTime: 2020-12-31 13:46:30
  * @LastEditors: zfd
  * @Description: 施工报价
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue
@@ -179,20 +179,21 @@ export default {
       if (id) {
         let error = false
         if (notEmptyArray(this.uploadList)) {
-          this.uploadList.forEach(async(v, i) => {
-            const { file } = v
+          for (const idx in this.uploadList) {
+            const { file } = this.uploadList[idx]
             await File.uploadOffer(id, file)
               .catch(() => {
                 // 上传失败
                 error = true
               })
-            this.uploadList.splice(i, 1)
-          })
+          }
         }
-        if (error) {
-          this.$message.error('提交失败')
-        }
+        this.uploadList = []
         this.pageLoading = false
+        if (error) {
+          this.$message.error('材料上传失败')
+          return
+        }
         this.$router.push('/construction/list')
       } else {
         this.$message.error('提交失败')

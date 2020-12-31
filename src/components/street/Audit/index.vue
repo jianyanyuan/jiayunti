@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-16 16:35:29
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 10:43:00
+ * @LastEditTime: 2020-12-31 13:02:13
  * @Description:
 -->
 <template>
@@ -17,8 +17,8 @@
           <div class="enclosure-tips">
             审核意见表
           </div>
-          <div>将文件拖到此处，或点击添加</div>
-          <div>单个文件大小不超过20MB，可上传图片或PDF</div>
+          <div>将文件拖到此处，或点击添加。只允许上传单个文件。</div>
+          <div>文件大小不超过20MB，可上传图片或PDF</div>
         </el-upload>
       </el-form-item>
       <el-form-item label="审核结果:" prop="reviewResults">
@@ -102,9 +102,6 @@ export default {
         const formData = new FormData()
         formData.append('file', file.raw)
         this.attachment = {
-          uid: file.uid,
-          name: file.name,
-          url: URL.createObjectURL(file.raw),
           file: formData
         }
       } else {

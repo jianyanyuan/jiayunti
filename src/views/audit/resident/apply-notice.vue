@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 11:20:25
+ * @LastEditTime: 2020-12-31 13:27:40
  * @Description: 公示/公告上传
 -->
 <template>
@@ -75,7 +75,6 @@ export default {
       contentList: [], // 公示内容
       reportList: [], // 公示报告
       uploadList: [], // 上传用
-      deleteList: [], // 删除用
       dirName: ['notice-content', 'notice-report'],
       id: null, // 工程id
       status: null // 工程阶段标识位
@@ -93,38 +92,9 @@ export default {
     if (!isNaN(+id) && +status === 3) {
       this.id = id
       this.status = status
-      this.detailApply()
     }
   },
   methods: {
-    // 获取已上传的意见征询表
-    detailApply() {
-      this.pageLoading = true
-      this.contentList = []
-      this.reportList = []
-      this.uploadList = []
-      this.deleteList = []
-      this.dirName.forEach(async(v, i) => {
-        await File.get({ projectId: this.id, typeName: v })
-          .then(res => {
-            if (notEmptyArray(res.content)) {
-              const arr = i === 0 ? 'contentList' : 'reportList'
-              for (const i of res.content) {
-                this[arr].push({
-                  uid: i.id,
-                  name: i.filename,
-                  url: i.path
-                })
-              }
-            }
-          })
-          .catch(() => {
-            this.$message.error('信息获取失败')
-          })
-      })
-      this.pageLoading = false
-    },
-
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList, type) {
@@ -134,8 +104,7 @@ export default {
         formData.append('file', file.raw)
         const showFile = {
           uid: file.uid,
-          name: file.name,
-          url: URL.createObjectURL(file.raw)
+          name: file.name
         }
         const upload = {
           type,
@@ -156,87 +125,41 @@ export default {
       const arr = type === 0 ? 'contentList' : 'reportList'
       const cancelIdx = this[arr].findIndex(f => f.uid === file.uid)
       this[arr].splice(cancelIdx, 1)
-      if (file.url === undefined) {
-        // 未上传 --> 取消上传
-
-        const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
-        this.uploadList.splice(removeIdx, 1)
-      } else {
-        // 已上传的 --> 待删除
-        this.deleteList.push(
-          {
-            type,
-            projectId: this.id,
-            uid: file.uid
-          }
-        )
-      }
+      const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
+      this.uploadList.splice(removeIdx, 1)
     },
 
     // 保存修改
-    postFile() {
+    async postFile() {
       if (this.contentList.length === 0 || this.reportList.length === 0) {
         this.$message.error('请补全附件')
         return
       }
       this.pageLoading = true
-      const asyncList = []
       if (notEmptyArray(this.uploadList)) {
         let error = false
-        const uploadAsync = new Promise((resolove, reject) => {
-          this.uploadList.forEach(async(v, i) => {
-            const { type, file } = v
-            const arr = type === 0 ? 'contentList' : 'reportList'
-            const last = i === this.uploadList.length - 1
-            await File.upload(file, { typeName: this.dirName[type], projectId: this.id })
-              .catch(() => {
-                // 上传失败
-                const failIdx = this[arr].findIndex(f => f.uid === v.uid)
-                this[arr].splice(failIdx, 1)
-                error = true
-              })
-            if (last) {
-              error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
-            }
-            this.uploadList.splice(i, 1)
-          })
-        })
-        asyncList.push(uploadAsync)
-      }
-      if (notEmptyArray(this.deleteList)) {
-        let error = false
-        const deleteAsync = new Promise((resolove, reject) => {
-          this.deleteList.forEach(async(v, i) => {
-            const last = i === this.deleteList.length - 1
-            const arr = v.type === 0 ? 'contentList' : 'reportList'
-            await File.remove(v.uid)
-              // .then(() => {
-              //   const delIndx = this[arr].findIndex(f => f.uid === v.uid)
-              //   this[arr].splice(delIndx, 1)
-              // })
-              .catch(() => {
-                this[arr].push(v)
-                error = true
-              })
-            if (last) {
-              error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
-            }
-            this.deleteList.splice(i, 1)
-          })
-        })
-        asyncList.push(deleteAsync)
-      }
-      Promise.all(asyncList).then(async() => {
+        for (const idx in this.uploadList) {
+          const { type, file } = this.uploadList[idx]
+          const arr = type === 0 ? 'contentList' : 'reportList'
+          await File.upload(file, { typeName: this.dirName[type], projectId: this.id })
+            .catch(() => {
+              // 上传失败
+              const failIdx = this[arr].findIndex(f => f.uid === this.uploadList[idx].uid)
+              this[arr].splice(failIdx, 1)
+              error = true
+            })
+        }
+        this.uploadList = []
+        this.pageLoading = false
+        if (error) {
+          this.$message.error('部分文件保存失败')
+          return
+        }
         await advanceApi(this.id, 3).catch(() => {
           this.$message.error('流程错误')
         })
         this.$router.push('/resident/list')
-      }).catch(() => {
-        this.$message.error('保存失败')
-      })
-        .finally(() => {
-          this.pageLoading = false
-        })
+      }
     }
   },
   // 获得工程Id
