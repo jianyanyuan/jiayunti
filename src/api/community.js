@@ -2,29 +2,29 @@
  * @Author: zfd
  * @Date: 2020-12-14 10:11:19
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 10:29:28
- * @Description: 
+ * @LastEditTime: 2020-12-31 15:51:55
+ * @Description:
  */
 import request from '@/utils/request'
 
 // 查看审核历史记录
-const checkSingle = (projectId ) => {
+const checkSingle = (projectId) => {
   return request({
-    url:'/CommunityReview/' + projectId,
-    method: 'get',
+    url: '/CommunityReview/' + projectId,
+    method: 'get'
   })
 }
 
 // 查看最新的审核记录
-const checkLatest = (projectId ) => {
+const checkLatest = (projectId) => {
   return request({
-    url:'/CommunityReview/opinion/' + projectId,
-    method: 'get',
+    url: '/CommunityReview/opinion/' + projectId,
+    method: 'get'
   })
 }
 
 // 审核历史记录 / 报价历史记录
-const auditHistorylist = (params,data) => {
+const auditHistorylist = (params, data) => {
   return request({
     url: '/project/getHistoryAccording/history',
     method: 'post',
@@ -36,29 +36,29 @@ const auditHistorylist = (params,data) => {
 const listObjection = (applyId) => {
   return request({
     url: '/Objection/' + applyId,
-    method: 'get',
+    method: 'get'
   })
 }
 const modifyObjection = (objections) => {
   return request({
     url: '/Objection',
     method: 'put',
-    data:objections 
+    data: objections
   })
 }
 
-const addObjection = (projectId,data) => {
+const addObjection = (projectId, data) => {
   return request({
     url: '/Objection/' + projectId,
     method: 'post',
-    data 
+    data
   })
 }
 
 const removeObjection = (id) => {
   return request({
     url: '/Objection/' + id,
-    method: 'delete',
+    method: 'delete'
   })
 }
 export default {

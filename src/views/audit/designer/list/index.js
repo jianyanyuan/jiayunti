@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-10 11:06:02
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 13:39:50
+ * @LastEditTime: 2020-12-31 16:02:00
  * @Description:
  */
 import { mapState } from 'vuex'
@@ -145,6 +145,8 @@ export default {
             })
             .catch(() => (this.$message.error('流程错误')))
         }
+      } else {
+        this.$message.error('请上传施工图设计稿')
       }
     }
   }

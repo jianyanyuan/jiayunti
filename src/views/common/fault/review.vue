@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-11-02 14:20:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 11:28:56
+ * @LastEditTime: 2020-12-31 14:26:20
  * @Description:
 -->
 <!--
@@ -219,26 +219,6 @@ export default {
   background: #409eff;
   color: #fff;
 }
-.head {
-  height: 30px;
-}
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both;
-}
-
 .box-card {
   width: 100%;
   margin-bottom: 30px;

@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-28 13:42:09
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-30 17:23:45
+ * @LastEditTime: 2020-12-31 14:48:07
  * @Description: 设计单位介绍
 -->
 <template>
@@ -96,7 +96,7 @@ export default {
         initialFrameWidth: '100%',
         UEDITOR_HOME_URL: '/UEditor/',
         // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
-        serverUrl: 'http://192.168.0.191:8342/api/file/uploadImage',
+        serverUrl: 'http://192.168.9.31:8342/api/file/uploadImage',
         //
 
         // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况，如果需要特殊配置，参考下方的常见问题2

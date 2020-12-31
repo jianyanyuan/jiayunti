@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-31 14:23:15
+ * @LastEditTime: 2020-12-31 14:25:19
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -225,25 +225,6 @@ export default {
 .basic-container ::v-deep .el-card__header:nth-child(1) {
   background: #409eff;
   color: #fff;
-}
-.head {
-  height: 30px;
-}
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both;
 }
 
 .box-card {

@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-31 11:19:40
+ * @LastEditTime: 2020-12-31 16:00:42
  * @Description: card
  * @FilePath: \vue-admin-template\src\views\card\index.vue
 -->
@@ -64,11 +64,10 @@ export default {
       projectId: null,
       status: null,
       audit: {},
-      typeName: 'construction-review-form',
+      typeName: 'construction-design',
       pageLoading: false,
       fileList: [], // 展示用
-      uploadList: [], // 上传用
-      deleteList: [] // 删除用
+      uploadList: [] // 上传用
 
     }
   },
@@ -90,10 +89,11 @@ export default {
       this.pageLoading = true
       this.fileList = []
       this.uploadList = []
-      this.deleteList = []
       const auditAsync = new Promise((resolve, reject) => {
         Community.checkLatest(this.projectId).then(res => {
-          res.files = new Array({ uid: Date.now(), url: res.path })
+          if (res.path) {
+            res.files = new Array({ uid: Date.now(), url: res.path })
+          }
           this.audit = res
           resolve('ok')
         }).catch(() => {
@@ -128,16 +128,17 @@ export default {
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
       const valid = checkUpload(file.raw)
-      if (valid && file.url === undefined) {
+      if (valid) {
         const reader = new FileReader()
         reader.readAsDataURL(file.raw)
-        reader.onload((event) => {
+        reader.onload = (event) => {
           this.fileList.push({
             uid: file.uid,
             name: file.name,
-            url: event.target.result
+            url: event.target.result,
+            type: 'temp'
           })
-        })
+        }
         const formData = new FormData()
         formData.append('file', file.raw)
         this.uploadList.push({
@@ -153,78 +154,53 @@ export default {
     // 删除文件
     handleUploadRemove(file, fileList) {
       const cancelIdx = this.fileList.findIndex(f => f.uid === file.uid)
-      this.fileList.splice(cancelIdx, 1)
-      if (file.url === undefined) {
+      if (file.type === 'temp') {
         // 未上传 --> 取消上传
+        this.fileList.splice(cancelIdx, 1)
         const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
         this.uploadList.splice(removeIdx, 1)
       } else {
         // 已上传的 --> 待删除
-        this.deleteList.push(
-          {
-            projectId: this.projectId,
-            uid: file.uid,
-            name: file.name,
-            url: file.url
-          }
-        )
+        File.remove(file.uid)
+          .then(() => {
+            this.fileList.splice(cancelIdx, 1)
+          })
+          .catch(() => {
+            this.$message.error('删除失败')
+          })
       }
     },
     // 提交材料
-    postApply(typeName) {
+    async postApply(typeName) {
       this.pageLoading = true
-      let uploadAsync = new Promise(resolove => resolove('未修改'))
-      let deleteAsync = new Promise(resolove => resolove('未修改'))
       if (notEmptyArray(this.uploadList)) {
         let error = false
-        uploadAsync = new Promise((resolove, reject) => {
-          this.uploadList.forEach(async(v, i) => {
-            const { projectId, file } = v
-            const last = i === this.uploadList.length - 1
-            await File.upload(file, { projectId, typeName })
-              .catch(() => {
-                // 上传失败
-                const failIdx = this.fileList.findIndex(f => f.uid === v.uid)
-                this.fileList.splice(failIdx, 1)
-                error = true
-              })
-            if (last) {
-              error ? (reject('部分文件上传失败')) : (resolove('上传完成'))
-            }
-            this.uploadList.splice(i, 1)
-          })
-        })
-      }
-      if (notEmptyArray(this.deleteList)) {
-        let error = false
-        deleteAsync = new Promise((resolove, reject) => {
-          this.deleteList.forEach(async(v, i) => {
-            const last = i === this.deleteList.length - 1
-            await File.remove(v.uid)
-              // .then(() => {
-              //   const delIndx = this.fileList.findIndex(f => f.uid === v.uid)
-              //   this.fileList.splice(delIndx, 1)
-              // })
-              .catch(() => {
-                this.fileList.push(v)
-                error = true
-              })
-            if (last) {
-              error ? (reject('部分文件删除失败')) : (resolove('删除完成'))
-            }
-            this.deleteList.splice(i, 1)
-          })
-        })
-      }
-      Promise.all([uploadAsync, deleteAsync]).then(async() => {
+        for (const idx in this.uploadList) {
+          const { projectId, file } = this.uploadList[idx]
+          await File.upload(file, { projectId, typeName })
+            .catch(() => {
+              // 上传失败
+              const failIdx = this.fileList.findIndex(f => f.uid === this.uploadList[idx].uid)
+              this.fileList.splice(failIdx, 1)
+              error = true
+            })
+        }
+        this.uploadList = []
+        if (error) {
+          this.$message.error('部分文件保存失败')
+          this.pageLoading = false
+        } else {
+          await advanceApi(this.projectId, this.status)
+            .catch(() => (this.$message.error('流程错误')))
+          this.pageLoading = false
+          this.$router.push('/designer/list')
+        }
+      } else {
         await advanceApi(this.projectId, this.status)
           .catch(() => (this.$message.error('流程错误')))
         this.pageLoading = false
         this.$router.push('/designer/list')
-      }).catch(() => {
-        this.$message.error('保存失败')
-        this.pageLoading = false
-      })
+      }
     }
   },
   beforeRouteEnter(to, from, next) {
