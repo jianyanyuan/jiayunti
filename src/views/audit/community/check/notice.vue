@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 10:40:22
+ * @LastEditTime: 2021-01-04 09:24:30
  * @Description: 公示/公告审核
 -->
 <template>
@@ -44,7 +44,6 @@ export default {
       contentList: [], // 公示内容
       reportList: [], // 公示报告
       uploadList: [], // 上传用
-      deleteList: [], // 删除用
       dirName: ['notice-content', 'notice-report'],
       projectId: null, // 工程id
       status: null, // 工程阶段标识位
@@ -74,7 +73,6 @@ export default {
       this.contentList = []
       this.reportList = []
       this.uploadList = []
-      this.deleteList = []
       this.dirName.forEach(async(v, i) => {
         await File.get({ projectId: this.projectId, typeName: v })
           .then(res => {

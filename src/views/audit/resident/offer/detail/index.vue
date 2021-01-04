@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-14 10:12:06
- * @LastEditTime: 2020-12-31 11:32:23
+ * @LastEditTime: 2021-01-04 09:56:40
  * @LastEditors: zfd
  * @Description: 居民查看报价单详情
  * @FilePath: \jiayunti\src\components\street\Pipe\index.vue

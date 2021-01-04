@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-22 10:55:27
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 10:38:13
+ * @LastEditTime: 2021-01-04 11:18:19
  * @Description:
 -->
 <template>
@@ -18,13 +18,13 @@
               <el-button size="medium" @click="appendDevice">新增</el-button>
             </div>
             <el-tree ref="tree" style="min-height:500px" :data="data" :filter-node-method="filterNode" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]" :props="defaultProps" @check="filterApply">
-              <span slot-scope="{ node, dt }">
+              <span slot-scope="{ node,data }">
                 <span>{{ node.label }}</span>
                 <span class="custom-tree-node">
-                  <el-button v-if="dt.children" type="text" size="mini" @click.stop="() => appendDevice(dt)">
+                  <el-button v-if="data.children" type="text" size="mini" @click.stop="() => appendDevice(data)">
                     新增
                   </el-button>
-                  <el-popconfirm title="确认删除该设备吗？" @onConfirm="removeDevice(dt)">
+                  <el-popconfirm title="确认删除该设备吗？" @onConfirm="removeDevice(data)">
                     <el-button slot="reference" size="mini" type="text">删除</el-button>
                   </el-popconfirm>
 
@@ -234,7 +234,8 @@ export default {
     },
     goSearch() { },
     clearQuery() { },
-    removeDevice() { },
+    removeDevice(data) {
+    },
     appendDevice(data) {
       // console.log(data)
       // const newChild = { id: Date.now(), label: 'testtest', children: [] };
