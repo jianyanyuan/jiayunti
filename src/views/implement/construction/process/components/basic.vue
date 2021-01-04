@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 11:27:00
+ * @LastEditTime: 2021-01-04 08:12:53
  * @Description: 施工端资料查看
 -->
 <template>
@@ -100,6 +100,7 @@ export default {
       const detailAsync = new Promise((resolve, reject) => {
         File.get({ projectId: this.id, typeName: 'construction-design' })
           .then(res => {
+            this.files = []
             if (notEmptyArray(res.content)) {
               for (const i of res.content) {
                 this.files.push({

@@ -1,7 +1,7 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-11 19:55:23
- * @LastEditTime: 2020-12-31 10:34:00
+ * @LastEditTime: 2021-01-04 08:13:25
  * @Description: 居民异议反馈查看
  * @FilePath: \vue-admin-template\src\views\collapse\index.vue
 -->
@@ -108,6 +108,7 @@ export default {
         // 方案设计稿
         File.get({ projectId: this.projectId, typeName: 'designer-scheme' })
           .then(res => {
+            this.files = []
             if (notEmptyArray(res.content)) {
               for (const i of res.content) {
                 this.files.push({

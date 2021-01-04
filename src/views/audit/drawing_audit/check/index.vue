@@ -75,6 +75,7 @@ export default {
       const fileAsync = new Promise((resolve, reject) => {
         File.get({ projectId: this.projectId, typeName: 'construction-design' })
           .then(res => {
+            this.files = []
             if (notEmptyArray(res.content)) {
               for (const i of res.content) {
                 this.files.push({
