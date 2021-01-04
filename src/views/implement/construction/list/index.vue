@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-04 09:05:30
+ * @LastEditTime: 2020-12-16 17:13:34
  * @Description:图审列表
 -->
 
@@ -73,10 +73,9 @@
         <template slot-scope="{row}">
           <el-row type="flex" justify="space-around">
             <el-button v-if="row.status === 7" size="mini" type="warning" plain @click="$router.push({path:'/construction/process',query:{applyId:row.Id}})">报价</el-button>
-            <el-button v-if="row.status === 10" size="mini" type="success" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">开始施工</el-button>
 
             <el-button v-if="row.status === 11" size="mini" type="warning" plain @click="$router.push({path:'/construction/fault',query:{applyId:row.Id}})">违规查看</el-button>
-            <el-button v-if="row.status === 11" size="mini" type="warning" plain @click="$router.push({path:'/construction/fault',query:{applyId:row.Id}})">竣工验收</el-button>
+            <el-button v-if="row.status === 11" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button>
 
             <!-- <el-button v-if="row.status === 12" size="mini" type="warning" plain @click="$router.push({path:'/construction/complete',query:{applyId:row.Id}})">竣工验收</el-button> -->
 

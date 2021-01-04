@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-10 13:33:21
+ * @LastEditTime: 2020-12-10 14:04:17
  * @Description:设计列表
 -->
 
@@ -29,13 +29,13 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-table v-loading="listLoading" class="design-table" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'status', order: 'ascending'}" @row-dblclick="flowView">
+    <el-table v-loading="listLoading" @expand-change="handleExpand" class="design-table" :data="list" element-loading-text="Loading" fit highlight-current-row :default-sort="{prop: 'status', order: 'ascending'}" @row-dblclick="flowView">
       <el-table-column align="center" label="序号" min-width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column type="expand">
+      <el-table-column type="expand" >
         <template slot-scope="{ row }">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-form-item label="申请人">
@@ -223,11 +223,17 @@ export default {
   created() {
   },
   methods: {
+    handleExpand(row,expandedRows) {
+      console.log(row)
+      console.log(expandedRows)
+      expandedRows.length = 0
+      return false
+    },
     flowView() {
       this.flowVisible = true
     },
-    goSearch() {},
-    clearQuery() {},
+    goSearch() { },
+    clearQuery() { },
     handleSizeChange(val) {
       this.pagination.pageSize = val
     },
@@ -272,7 +278,7 @@ export default {
 }
 </script>
 <style scoped>
- .manage-query {
+.manage-query {
   height: 45px;
   padding: 5px 20px;
   background: #efefef;

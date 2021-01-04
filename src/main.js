@@ -1,7 +1,7 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-09 19:47:59
- * @LastEditTime: 2020-10-26 16:10:58
+ * @LastEditTime: 2021-01-04 14:15:13
  * @Description: main.js
  * @FilePath: \vue-admin-template\src\main.js
  */
@@ -23,6 +23,9 @@ import '@/permission' // permission control
 import * as filters from '@/filters' // global filters
 
 import UploadList from 'element-ui/packages/upload/src/upload-list'
+import echarts from 'echarts'
+import 'element-ui/lib/theme-chalk/display.css'
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -52,6 +55,7 @@ const isDebug_mode = process.env.NODE_ENV !== 'production'
 Vue.config.debug = isDebug_mode
 Vue.config.devtools = isDebug_mode
 Vue.config.productionTip = isDebug_mode
+Vue.prototype.$echarts = echarts
 new Vue({
   el: '#app',
   router,

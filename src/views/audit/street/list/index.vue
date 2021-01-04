@@ -2,7 +2,7 @@
  * @Author: 张飞达
  * @Date: 2020-10-12 09:38:42
  * @LastEditors: zfd
- * @LastEditTime: 2020-11-03 09:12:10
+ * @LastEditTime: 2020-12-18 08:23:33
  * @Description:街道审核列表
 -->
 
@@ -150,6 +150,26 @@ export default {
             phone: '15988800323'
           },
           status: 8 // 街道审核
+        },
+        {
+          code: 'xxx小区xxxx幢xxx单元',
+          designTime: '2020-10-14 10:56',
+          auditTime: '2020-10-14 10:56',
+          apply: {
+            name: '李先生',
+            address: '苏州高新区',
+            phone: '15988800323',
+            liftAddress: '小区1楼',
+            spec: '高端电梯',
+            time: '2020-10-14 08:00'
+          },
+          design: {
+            org: '建研院',
+            time: '2020-10-12 10:56',
+            address: '苏州高新区',
+            phone: '15988800323'
+          },
+          status: 11 // 街道审核
         }
         // {
         //   code: 'apply10140900',

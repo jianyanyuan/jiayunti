@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-10-30 13:57:49
+ * @LastEditTime: 2020-12-04 10:59:21
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -129,6 +129,8 @@ export default {
   },
   methods: {
     handleUploadRemove(file, fileList) {
+      console.log('Remove',file)
+      console.log('RemoveL',fileList)
     },
     detailImg(file) {
       this.detailImgUrl = file.url
@@ -144,6 +146,8 @@ export default {
     },
     // 上传文件发生改变时
     handleUploadChange(file, fileList, index) {
+      console.log('change',fileList)
+      console.log('change',file)
       if (fileList.length > 0) {
         this.model[index] = fileList.map(f => f.raw)
       }
