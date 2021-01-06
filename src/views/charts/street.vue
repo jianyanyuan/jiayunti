@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-23 09:32:49
  * @LastEditors: zfd
- * @LastEditTime: 2021-01-05 16:40:30
+ * @LastEditTime: 2021-01-06 10:48:56
  * @Description: 街道图表
 -->
 <template>
@@ -48,7 +48,14 @@
     </el-row>
     <el-card style="width:100%">
       <el-row slot="header" type="flex" justify="space-between" align="middle">
-        <span>新增申请</span>
+        <div class="tabs-nav-list">
+          <div :class="['tabs-tab',{'tabs-tab-active':btnFocusId === 0}]" @click="btnFocusId = 0">
+            新增申请
+          </div>
+          <div :class="['tabs-tab',{'tabs-tab-active':btnFocusId === 1}]" @click="btnFocusId = 1">
+            已加装数
+          </div>
+        </div>
         <span>
           <el-radio-group v-model="radio3" class="hidden-sm-and-down" size="small" style="margin-right:20px">
             <el-radio-button label="今日" />
@@ -69,19 +76,20 @@ export default {
   name: 'Home',
   data() {
     return {
-      radio3: '',
       value1: '',
       input3: '',
+      radio3: '',
       chartMap: null,
       chartLine: null,
-      mapData: require('@/assets/chart/gusuStreet.json')
+      mapData: require('@/assets/chart/gusuStreet.json'),
+      btnFocusId: 0
     }
   },
   created() {
+
   },
   mounted() {
     this.initChart()
-
     window.onresize = () => {
       this.resizeChart()
     }
@@ -121,7 +129,6 @@ export default {
           {
             name: '姑苏区已加装电梯',
             type: 'map',
-            roam: true,
             aspectScale: 0.8, // 长宽比
             map: 'gusu', // 自定义扩展图表类型
             label: {
@@ -154,6 +161,9 @@ export default {
             type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
           }
         },
+        legend: {
+          right: 80
+        },
         grid: {
           left: '3%',
           right: '4%',
@@ -176,10 +186,16 @@ export default {
         ],
         series: [
           {
-            name: '直接访问',
+            name: '柱状图',
             type: 'bar',
             barWidth: '60%',
             data: [10, 52, 200, 334, 390, 330, 220]
+          },
+          {
+            name: '折线图',
+            data: [10, 52, 200, 334, 390, 330, 220],
+            type: 'line',
+            color: 'red'
           }
         ]
       }
@@ -215,6 +231,9 @@ export default {
       } else {
         return '#F8FC11'
       }
+    },
+    switchFocus(e) {
+      console.log(this.$refs.btnGroup)
     }
   }
 }
@@ -277,6 +296,28 @@ export default {
     width: 20px;
     height: 20px;
     // background-color: red;
+  }
+  .tabs-nav-list {
+    position: relative;
+    display: flex;
+    transition: transform 0.3s;
+    .tabs-tab {
+      position: relative;
+      // display: inline-flex;
+      // align-items: center;
+      margin: 0 32px 0 0;
+      padding: 12px 0;
+      font-size: 14px;
+      background: 0 0;
+      border: 0;
+      outline: none;
+      cursor: pointer;
+    }
+    .tabs-tab-active {
+      color: #1890ff;
+      font-weight: 500;
+      border-bottom: 2px solid #1890ff;
+    }
   }
 }
 .chart-box {
