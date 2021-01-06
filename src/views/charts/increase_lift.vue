@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-23 09:32:49
  * @LastEditors: zfd
- * @LastEditTime: 2021-01-06 11:04:01
+ * @LastEditTime: 2021-01-06 16:20:46
  * @Description: 违规统计
 -->
 <template>
@@ -158,9 +158,28 @@ export default {
         grid: {
           left: '3%',
           right: '4%',
-          bottom: '3%',
+          bottom: '50',
           containLabel: true
         },
+        dataZoom: [{
+          show: true,
+          height: 30,
+          xAxisIndex: [0],
+          bottom: 10,
+          'start': 10,
+          'end': 80,
+          handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+          handleSize: '110%',
+          handleStyle: {
+            color: '#3398DB'
+          }
+        }, {
+          type: 'inside',
+          show: true,
+          height: 15,
+          start: 1,
+          end: 35
+        }],
         xAxis: [
           {
             type: 'category',
@@ -186,7 +205,7 @@ export default {
             name: '折线图',
             data: [10, 52, 200, 334, 390, 330, 220],
             type: 'line',
-            color: 'red'
+            color: '#FFA32E'
           }
         ]
       }
