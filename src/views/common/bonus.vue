@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 11:21:17
+ * @LastEditTime: 2021-01-14 15:28:46
  * @Description: 补贴派发
 -->
 <template>
@@ -30,7 +30,7 @@
     </el-card>
     <el-row type="flex" justify="center" align="middle" style="padding:18px 20px">
       <!-- <span>补贴派发</span> -->
-      <el-button v-if="!uploaded" type="success" style="float:right" @click="handlePost">提 交</el-button>
+      <el-button v-if="!isIns || !uploaded" type="success" style="float:right" @click="handlePost">提 交</el-button>
 
     </el-row>
 
