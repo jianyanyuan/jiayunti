@@ -13,6 +13,18 @@ export default {
     key() {
       return this.$route.path
     }
+  },
+  created() {
+    const addressAsync = this.$store.dispatch('common/getAddress')
+    const deviceAsync = this.$store.dispatch('common/getDevice')
+    const designAsync = this.$store.dispatch('common/getDesign')
+    const constructionAsync = this.$store.dispatch('common/getConstruction')
+    const supervisionAsync = this.$store.dispatch('common/getSupervision')
+
+    Promise.all([addressAsync, constructionAsync, deviceAsync, designAsync, supervisionAsync])
+      .catch(() => {
+        this.$message.error('信息获取失败')
+      })
   }
 }
 </script>
@@ -25,7 +37,7 @@ export default {
   position: relative;
   overflow: hidden;
 }
-.fixed-header+.app-main {
+.fixed-header + .app-main {
   padding-top: 50px;
 }
 </style>

@@ -8,7 +8,8 @@
 
 <template>
   <div class="app-container">
-    <el-button type="primary" size="medium" style="margin-bottom:20px" :loading="openLoading" @click="openAdd">新增申请</el-button>
+    <!-- 代理人不能新增申请 -->
+    <el-button v-if="!$store.getters.roles.includes('ROLE_TRUSTEE')" type="primary" size="medium" style="margin-bottom:20px" :loading="openLoading" @click="openAdd">新增申请</el-button>
 
     <el-card>
       <!-- @row-dblclick="flowView" -->
@@ -125,19 +126,45 @@
           <div> <input v-model="model.form.location[1]" type="text" name="building" autocomplete="off"> 幢</div>
           <div> <input v-model="model.form.location[2]" type="text" name="unit" autocomplete="off"> 单元</div>
         </el-form-item>
-        <el-form-item label="设计单位" prop="designId">
-          <el-select v-model="model.form.designId" filterable>
-            <el-option v-for="item in designOptions" :key="item.value" :value="item.value" :label="item.label" />
-          </el-select>
+        <!-- 申请方式 -->
+        <el-form-item label="申请方式" prop="applyMode">
+          <el-radio v-model="model.form.applyMode" label="self">自行申请</el-radio>
+          <el-radio v-model="model.form.applyMode" label="deglegate">委托受理人</el-radio>
         </el-form-item>
-        <el-form-item label="设备" prop="typeAndDevice">
-          <el-cascader v-model="model.form.typeAndDevice" :options="deviceOptions">
-            <template slot-scope="{ node, data }">
-              <span>{{ data.label }}</span>
-              <span v-if="node.isLeaf">kg</span>
-            </template>
-          </el-cascader>
-        </el-form-item>
+        <!-- 自行 -->
+        <template v-if="model.form.applyMode === 'self'">
+          <el-form-item label="设计单位" prop="designId">
+            <el-select v-model="model.form.designId" filterable>
+              <el-option v-for="item in designOptions" :key="item.value" :value="item.value" :label="item.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="设备" prop="typeAndDevice">
+            <el-cascader v-model="model.form.typeAndDevice" :options="deviceOptions">
+              <template slot-scope="{ node, data }">
+                <span>{{ data.label }}</span>
+                <span v-if="node.isLeaf">kg</span>
+              </template>
+            </el-cascader>
+          </el-form-item>
+          <el-form-item label="施工单位" prop="constructionId">
+            <el-select v-model="model.form.constructionId" filterable>
+              <el-option v-for="item in constructionOptions" :key="item.value" :value="item.value" :label="item.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="监理单位" prop="supervisionId">
+            <el-select v-model="model.form.supervisionId" filterable>
+              <el-option v-for="item in supervisionOptions" :key="item.value" :value="item.value" :label="item.label" />
+            </el-select>
+          </el-form-item>
+        </template>
+        <!-- 委托受理人 -->
+        <template v-else>
+          <el-form-item label="委托受理人" prop="trusteeId">
+            <el-select v-model="model.form.trusteeId" filterable>
+              <el-option v-for="item in trusteeOptions" :key="item.value" :value="item.value" :label="item.label" />
+            </el-select>
+          </el-form-item>
+        </template>
         <!-- 单元下业主 -->
         <el-form-item v-for="(room, index) in model.form.rooms" :key="room.key" :label="'房间编号' + (index+1)" :prop="'rooms.' + index + '.val'" :rules="{required: true, message: '房间编号不能为空', trigger: 'blur'}">
           <el-input v-model="room.val" auto-complete="off" placeholder="房间编号">
@@ -166,7 +193,6 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-
 .dialog-container {
   min-width: 700px;
 }

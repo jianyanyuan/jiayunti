@@ -7,6 +7,9 @@
  * @FilePath: \trip-enterprise\src\store\modules\common.js
  */
 import Common from '@/api/common'
+import Construction from '@/api/construction'
+import Supervision from '@/api/supervision'
+
 import { notEmptyArray } from '@/utils'
 const state = {
   isOrNo: [
@@ -159,6 +162,20 @@ const getters = {
       value: v.id,
       label: v.designname
     }
+  }),
+  // 监理单位列表
+  supervisionOptions: state => state.supervision?.map(v => {
+    return {
+      value: v.id,
+      label: v.supervisionName
+    }
+  }),
+  // 施工单位列表
+  constructionOptions: state => state.construction?.map(v => {
+      return {
+        value: v.id,
+        label: v.constructionName
+      }
   })
 }
 
@@ -171,6 +188,12 @@ const mutations = {
   },
   SET_DESIGN: (state, design) => {
     state.design = design
+  },
+  SET_CONSTRUCTION: (state, construction) => {
+    state.construction = construction
+  },
+  SET_SUPERVISION: (state, supervision) => {
+    state.supervision = supervision
   }
 }
 const actions = {
@@ -218,7 +241,39 @@ const actions = {
         reject(err)
       })
     })
-  }
+  },
+  // get construction
+  getConstruction({commit}) {
+    return new Promise( (resolve, reject) => {
+      Construction.list({ }, {}).then((res) => {
+        if(res.content) {
+          commit('SET_CONSTRUCTION', res.content)
+          resolve(res.content)
+        }else {
+          reject(res)
+        }
+      })
+      .catch(err => {
+        reject(err)
+      })
+    })
+  },
+  // get Supervision
+  getSupervision({commit}) {
+      return new Promise( (resolve, reject) => {
+        Supervision.list({ }, {}).then((res) => {
+          if(res.content) {
+            commit('SET_SUPERVISION', res.content)
+            resolve(res.content)
+          }else {
+            reject(res)
+          }
+        })
+        .catch(err => {
+          reject(err)
+        })
+      })
+    }
 
 }
 export default {

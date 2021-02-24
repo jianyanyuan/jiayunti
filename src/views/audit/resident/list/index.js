@@ -5,11 +5,15 @@ import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import { cancelApi, listApi, addApi } from '@/api/projects'
 const defaultForm = {
   applicantName: '',
+  applyMode:'self',
   location: [],
   phoneNumber: '',
   address: { county: [], community: [] }, //
-  designId: '',
-  typeAndDevice: [], // []
+  designId: null,
+  typeAndDevice: null, // []
+  constructionId:null,
+  supervisionId:null,
+  trusteeId:null,
   rooms: [{ key: 'defaultRoom', val: '' }]
 }
 
@@ -36,8 +40,6 @@ export default {
           address: [{ required: true, message: '请选择地址' }],
           phoneNumber: [{ required: true, validator: validatePhone, trigger: 'blur' }],
           location: [{ required: true, message: '请输入地址' }],
-          designId: [{ required: true, message: '请选择设计单位', trigger: 'blur' }],
-          typeAndDevice: [{ required: true, message: '请选择设备', trigger: 'blur' }]
         }
       },
       list: [],
@@ -57,7 +59,7 @@ export default {
   },
   computed: {
     ...mapState('common', ['applyStatus', 'applyTag', 'handleStatus', 'handleTag']),
-    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'designOptions'])
+    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'designOptions','supervisionOptions','constructionOptions'])
   },
   watch: {
   },
@@ -82,21 +84,13 @@ export default {
       this.model.form = deepClone(defaultForm)
       this.model.form.address = address // 修复el-cascader bug
       this.model.form.applicantName = this.$store.getters.username
-      const addressAsync = this.$store.dispatch('common/getAddress')
-      const deviceAsync = this.$store.dispatch('common/getDevice')
-      const designAsync = this.$store.dispatch('common/getDesign')
-
-      Promise.all([addressAsync, deviceAsync, designAsync]).then(() => {
-        this.model.form.address.county = this.$store.getters['address']?.slice(0, 2)
-        this.communityOptions = this.$store.getters['common/communityOptions'](this.model.form.address.county)
-
-        this.model.form.address.community = this.$store.getters['address']?.slice(2)
-        // this.model.form.address = this.$store.getters.addressPlain
-        this.model.form.phoneNumber = this.$store.getters['phone'] ?? ''
-        this.model.visible = true
-      }).catch(() => {
-        this.$message.error('信息获取失败')
-      }).finally(() => (this.openLoading = false))
+      this.model.form.address.county = this.$store.getters['address']?.slice(0, 2)
+      this.communityOptions = this.$store.getters['common/communityOptions'](this.model.form.address.county)
+      this.model.form.applyMode = 'self'
+      this.model.form.address.community = this.$store.getters['address']?.slice(2)
+      this.model.form.phoneNumber = this.$store.getters['phone'] ?? ''
+      this.model.visible = true
+      this.openLoading = false
     },
     // 撤销申请
     cancelApply(row) {
@@ -117,12 +111,25 @@ export default {
           } else {
             this.$message.error('请填写加装电梯地址')
             return
-          }
+          }   
           if (notEmptyArray(rooms)) {
             this.model.form.rooms = Array.from(new Set(rooms.map(v => v.val.replace(/[<>&"']/gi, ' ').trim()))) // 过滤 + 去重
           } else {
             this.$message.error('请填写单位下业主房间编号')
             return
+          }
+          if(this.model.form.applyMode === 'self') {
+            const {designId,typeAndDevice, constructionId, supervisionId} = this.model.form
+            if(designId === null || typeAndDevice === null || constructionId === null || supervisionId === null ) {
+              this.$message.error('请选择单位与设备')
+              return
+            }   
+          }else {
+            const {trusteeId} = this.model.form
+            if(trusteeId === null) {
+              this.$message.error('请选择委托代理人')
+              return
+            }
           }
           this.model.form.address = address.community.concat(address.county)
           this.formLoading = true
