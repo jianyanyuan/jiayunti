@@ -59,10 +59,14 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       User.login({ username: username.trim(), password: password }).then(res => {
-        const token = `${res.tokenType} ${res.accessToken}`
-        commit('SET_TOKEN', token)
-        setToken(token)
-        resolve('登录成功')
+        if (res.code === '500') {
+          reject('用户名密码错误')
+        } else {
+          const token = `${res.tokenType} ${res.accessToken}`
+          commit('SET_TOKEN', token)
+          setToken(token)
+          resolve('登录成功')
+        }
       }).catch(() => {
         reject('登录失败')
       })
@@ -73,8 +77,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       User.regist(data).then(res => {
         resolve('注册成功')
-      }).catch(() => {
-        reject('注册失败')
+      }).catch((err) => {
+        reject(err.response.data.message || '注册失败')
       })
     })
   },
@@ -85,6 +89,16 @@ const actions = {
         resolve('密码修改成功')
       }).catch(() => {
         reject('密码修改失败')
+      })
+    })
+  },
+  // 修改密码
+  modifyPwd(context, data) {
+    return new Promise((resolve, reject) => {
+      User.modifyPwd(data).then(res => {
+        res.code === 400 ? reject('原密码错误') : resolve('密码修改成功')
+      }).catch(() => {
+        reject('原密码错误')
       })
     })
   },

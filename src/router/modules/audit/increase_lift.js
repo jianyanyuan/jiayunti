@@ -71,6 +71,26 @@ const inlRouter = {
         title: '补贴派发',
         roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
       }
+    },
+    {
+      path: 'audited-list',
+      component: () => import('@/views/common/audited/list.vue'),
+      name: 'InsAuditedList',
+      meta: {
+        title: '已审核列表',
+        icon: 'list',
+        roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
+      }
+    },
+    {
+      path: 'audited-detail',
+      component: () => import('@/views/common/audited/detail.vue'),
+      name: 'InsAuditedDetail',
+      hidden: true,
+      meta: {
+        title: '审核详情',
+        roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
+      }
     }
 
   ]

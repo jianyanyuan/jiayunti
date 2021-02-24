@@ -71,8 +71,9 @@ export default {
             this.$router.addRoutes(accessRoutes)
             this.$router.push({ path: '/' })
             this.loading = false
-          }).catch(async() => {
+          }).catch(async(err) => {
             await this.$store.dispatch('user/resetToken')
+            this.$message.error(err)
             this.loading = false
           })
         } else {

@@ -50,22 +50,16 @@
           </td>
         </tr>
         <tr>
-          <td rowspan="2">项目（元）</td>
-          <td>人工费</td>
-          <td colspan="2">
-            <el-input-number v-model="construction.artificialCost" :precision="2" :step="0.1" placeholder="请输入人工费" controls-position="right" />
+          <td>项目报价（元）</td>
+
+          <td colspan="3">
+            <el-input-number v-model="construction.cost" :precision="2" :step="0.1" placeholder="请输入项目报价" controls-position="right" />
           </td>
         </tr>
-        <tr>
-          <td>材料费</td>
-          <td colspan="2">
-            <el-input-number v-model="construction.materialCost" :precision="2" :step="0.1" placeholder="请输入材料费" controls-position="right" />
-          </td>
-        </tr>
+
         <tr>
           <td>材料</td>
           <td colspan="3" style="padding-top:20px">
-
             <el-upload action="#" :on-remove="handleUploadRemove" :on-change="handleUploadChange" :auto-upload="false">
               <el-button size="small" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">单个文件大小不超过20M</div>
@@ -111,9 +105,8 @@ export default {
         phoneNumber: '',
         contact: '',
         offerTime: '',
-        constructionPeriod: '',
-        materialCost: '',
-        artificialCost: ''
+        constructionPeriod: 0,
+        cost: 0
       },
       uploadList: [], // 上传用
       pageLoading: false,

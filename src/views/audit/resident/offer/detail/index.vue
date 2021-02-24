@@ -38,19 +38,10 @@
           <td>施工周期（天）</td>
           <td>{{ construction.constructionPeriod }}</td>
         </tr>
-        <tr>
-          <td rowspan="2">项目（元）</td>
-          <td>人工费</td>
-          <td colspan="2">
-            {{ construction.artificialCost }}
-          </td>
-        </tr>
-        <tr>
-          <td>材料费</td>
-          <td colspan="2">
-            {{ construction.materialCost }}
-          </td>
-        </tr>
+        <td>项目报价（元）</td>
+        <td colspan="3">
+          <el-input-number v-model="construction.cost" :precision="2" :step="0.1" placeholder="请输入项目报价" controls-position="right" />
+        </td>
         <tr>
           <td>材料</td>
           <td colspan="3" style="text-align:left">

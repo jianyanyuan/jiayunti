@@ -55,7 +55,7 @@ export default {
       pagination: {
         total: 0,
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 30
       },
       list: [],
       listLoading: false,

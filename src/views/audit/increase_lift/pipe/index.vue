@@ -43,7 +43,7 @@
     <el-card style="margin-bottom:30px">
       <div slot="header">
         <el-row type="flex" justify="space-between" align="middle">
-          <span>管道踏勘（须踏勘完全部项目）</span>
+          <span>管道踏勘</span>
           <!-- <el-button v-if="editable" type="primary" style="float:right" @click="editable = !editable">提 交</el-button> -->
           <el-button v-if="editable" type="primary" style="float:right" @click="handlePost">保 存</el-button>
           <el-button v-else type="primary" style="float:right" @click="editable = !editable">修 改</el-button>
@@ -57,9 +57,16 @@
               {{ scope.$index + 1 }}
             </template>
           </el-table-column>
+          <el-table-column label="操作" min-width="80" align="center">
+            <template slot-scope="{$index}">
+              <el-button v-if="$index === 0" type="plain" icon="el-icon-plus" @click="onItemClick($index)" />
+              <el-button v-else type="plain" icon="el-icon-minus" @click="onItemClick($index)" />
+            </template>
+          </el-table-column>
           <el-table-column label="项目" min-width="180" align="center">
             <template slot-scope="{row}">
-              {{ row.type }}
+              <el-input v-model="row.type" size="small" />
+
             </template>
           </el-table-column>
           <el-table-column label="单位" min-width="240" align="center">
@@ -69,7 +76,8 @@
           </el-table-column>
           <el-table-column label="是否完成" min-width="180" prop="whetherComplete" align="center">
             <template slot-scope="{row}">
-              <el-checkbox v-model="row.whetherComplete" @change="handleChange(row)">是</el-checkbox>
+              <!-- @change="handleChange(row)" -->
+              <el-checkbox v-model="row.whetherComplete">是</el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="时间" min-width="250" align="center">
@@ -141,8 +149,8 @@ export default {
       pageLoading: false,
       tableData: [],
       projectId: null,
-      status: null,
-      updateList: []
+      status: null
+      // updateList: []
     }
   },
   computed: {
@@ -188,15 +196,42 @@ export default {
         this.$message.error('信息获取失败')
       })
     },
-    handleChange(row) {
-      if (!this.updateList.includes(row)) {
-        // 引用传递
-        this.updateList.push(row)
+    // handleChange(row) {
+    //   if (!this.updateList.includes(row)) {
+    //     // 引用传递
+    //     this.updateList.push(row)
+    //   }
+    // },
+    async onItemClick(index) {
+      if (index !== 0) {
+        // 删除
+        if (this.tableData[index].id === undefined) {
+          this.tableData.splice(index, 1)
+          return
+        }
+        const response = await IncreaseLift.deletePipeItem(this.tableData[index].id)
+        if (response.success) {
+          this.tableData.splice(index, 1)
+        } else {
+          this.$message.error('删除失败')
+        }
+      } else {
+        this.tableData.push({ type: '', whetherComplete: false })
       }
     },
-    handlePost() {
+    async handlePost() {
       this.pageLoading = true
-      IncreaseLift.modifyPipe(this.updateList).then(async res => {
+      const addList = this.tableData.filter(v => v.id === undefined)
+      if (addList.length > 0) {
+        const addRes = await IncreaseLift.addPipeItems(this.projectId, addList)
+        if (!addRes.length) {
+          this.$message.error('保存失败')
+          this.detailApply()
+          this.editable = false
+          return
+        }
+      }
+      IncreaseLift.modifyPipe(this.tableData.filter(v => v.id !== undefined)).then(async res => {
         const next = this.isFinished()
         if (next) {
           await advanceApi(this.projectId, this.status)
@@ -215,6 +250,9 @@ export default {
     },
     isFinished() {
       for (let i = 0; i < this.tableData.length; i++) {
+        if (this.tableData[i].whetherComplete === false) {
+          return false
+        }
         const data = plainToClass(Pipe, this.tableData[i])
         const errors = validateSync(data)
         if (errors.length > 0) {
@@ -250,5 +288,4 @@ export default {
   background: #409eff;
   color: #fff;
 }
-
 </style>

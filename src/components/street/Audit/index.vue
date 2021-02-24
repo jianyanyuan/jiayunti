@@ -11,7 +11,7 @@
       <el-form-item label="审核意见:" prop="reviewOpinions">
         <el-input v-model="form.reviewOpinions" type="textarea" :rows="4" />
       </el-form-item>
-      <el-form-item label="审核表:">
+      <el-form-item label="审核意见表:">
         <el-upload action="#" class="form-card" :limit="1" :on-remove="handleUploadRemove" :on-change="handleUploadChange" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div class="enclosure-tips">

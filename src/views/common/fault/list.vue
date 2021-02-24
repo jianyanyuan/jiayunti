@@ -210,7 +210,7 @@ export default {
       pagination: {
         total: 20,
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 30
       },
       projectId: null,
       status: null

@@ -82,6 +82,26 @@ const designerRouter = {
         icon: 'eye',
         roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
       }
+    },
+    {
+      path: 'designed-list',
+      component: () => import('@/views/audit/designer/designed/list.vue'),
+      name: 'DesignedList',
+      meta: {
+        title: '已设计列表',
+        icon: 'list',
+        roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
+      }
+    },
+    {
+      path: 'designed-detail/:id',
+      component: () => import('@/views/audit/designer/designed/detail.vue'),
+      name: 'DesignedDetail',
+      hidden: true,
+      meta: {
+        title: '设计详情',
+        roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
+      }
     }
   ]
 }

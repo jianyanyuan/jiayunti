@@ -23,12 +23,32 @@
           <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
             <el-dropdown-item>Docs</el-dropdown-item>
           </a> -->
+
+          <el-dropdown-item @click.native="modifyVisible = true">
+            <span style="display:block;">修改密码</span>
+          </el-dropdown-item>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">登 出</span>
+            <span style="display:block;">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <el-dialog v-el-drag-dialog title="修改密码" class="card-dialog" center :visible.sync="modifyVisible" append-to-body :close-on-click-modal="false" width="500px" @close="resetFrom('form')">
+      <el-form ref="form" :model="form" :rules="rule" label-position="top">
+        <el-form-item prop="originalPwd" label="原密码">
+          <el-input v-model="form.originalPwd" type="password" placeholder="请输入原密码" />
+        </el-form-item>
+        <el-form-item prop="newPwd" label="新密码">
+          <el-input v-model="form.newPwd" type="password" placeholder="请输入6-17位密码" @blur="setRule" />
+        </el-form-item>
+        <el-form-item prop="confirmPwd" label="确认密码">
+          <el-input v-model="form.confirmPwd" type="password" placeholder="请再次输入密码" />
+        </el-form-item>
+        <el-form-item style="text-align:center;margin-top:40px">
+          <el-button type="primary" :loading="loading" size="medium" @click="postReset('form')">修 改</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -36,11 +56,28 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import { validatePassword, validateConfirmPassword } from '@/utils/element-validator'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger
+  },
+  data() {
+    return {
+      modifyVisible: false,
+      form: {
+        originalPwd: '',
+        newPwd: '',
+        confirmPwd: ''
+      },
+      rule: {
+        originalPwd: [{ required: true, trigger: 'blur', message: '请输入原密码' }],
+        confirmPwd: [{ required: true, trigger: 'blur', message: '两次密码不一致', validator: validateConfirmPassword }],
+        newPwd: [{ required: true, trigger: 'blur', message: '密码需为6-17位数字和英文符号组合', validator: validatePassword }]
+      },
+      loading: false
+    }
   },
   computed: {
     ...mapGetters([
@@ -58,12 +95,42 @@ export default {
       // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
 
       this.$router.push('/login')
+    },
+    resetFrom(formName) {
+      this.$refs[formName].clearValidate()
+    },
+    // 修改密码
+    postReset(formName) {
+      this.$refs[formName].validate((success, errors) => {
+        if (success) {
+          this.loading = true
+          this.$store.dispatch('user/modifyPwd', this.form).then((res) => {
+            this.$message.success(res)
+            setTimeout(() => {
+              this.loading = false
+              this.$message.warning('请重新登录')
+              this.logout()
+            }, 1000)
+          }).catch(err => {
+            this.$message.error(err)
+            this.loading = false
+          })
+        } else {
+          this.$message.error(Object.values(errors)[0][0].message)
+        }
+      })
+    },
+    setRule() {
+      this.rule.confirmPwd[0].pwd = this.form.newPwd
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss" >
+.card-dialog ::v-deep .el-dialog--center .el-dialog__body{
+      padding-bottom: 10px;
+    }
 .navbar {
   height: 50px;
   overflow: hidden;
@@ -139,5 +206,10 @@ export default {
       }
     }
   }
+  .card-dialog{
+    box-shadow: 0 12px 0 #000;
+
+  }
+
 }
 </style>

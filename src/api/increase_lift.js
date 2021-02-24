@@ -8,23 +8,38 @@
 import request from '@/utils/request'
 
 // 管道踏勘
-const listPipe = (projectId ) => {
+const listPipe = (projectId) => {
   return request({
-    url:`/pipelineexploration/${projectId}/All`,
-    method: 'get',
+    url: `/pipelineexploration/${projectId}/All`,
+    method: 'get'
   })
 }
-
-const modifyPipe = (newPipelineExploration ) => {
+// 删除单个踏勘项目
+const deletePipeItem = (pipeItemId) => {
+  return request({
+    url: `/pipelineexploration/${pipeItemId}`,
+    method: 'delete'
+  })
+}
+// 修改单个踏勘项目
+const modifyPipe = (newPipelineExploration) => {
   return request({
     url: '/pipelineexploration/update',
     method: 'put',
-    data:newPipelineExploration  
+    data: newPipelineExploration
   })
 }
-
-
+// 新增踏勘项目
+const addPipeItems = (projectId, pipeItems) => {
+  return request({
+    url: '/pipelineexploration/add/' + projectId,
+    method: 'post',
+    data: pipeItems
+  })
+}
 export default {
   listPipe,
-  modifyPipe
+  modifyPipe,
+  deletePipeItem,
+  addPipeItems
 }

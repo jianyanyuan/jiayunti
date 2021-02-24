@@ -41,10 +41,19 @@ const getUserInfo = () => {
     method: 'get'
   })
 }
-
+// 找回密码
 const findPwd = (data) => {
   return request({
     url: '/auth/retrievePassword',
+    method: 'post',
+    data
+  })
+}
+
+// 修改密码
+const modifyPwd = (data) => {
+  return request({
+    url: '/auth/resetPwd',
     method: 'post',
     data
   })
@@ -61,5 +70,6 @@ export default {
   regist,
   getCode,
   getUserInfo,
-  findPwd
+  findPwd,
+  modifyPwd
 }

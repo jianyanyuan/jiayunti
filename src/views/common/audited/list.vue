@@ -51,7 +51,7 @@ import Community from '@/api/community'
 import { notEmptyArray } from '@/utils'
 import FilterList from '@/components/Filter'
 export default {
-  name: 'CommunityAudited',
+  name: 'AuditedList',
   components: {
     FilterList
   },
@@ -60,7 +60,7 @@ export default {
       pagination: {
         total: 0,
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 30
       },
       query: {
         code: '',

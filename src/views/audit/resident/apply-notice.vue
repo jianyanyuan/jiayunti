@@ -22,7 +22,7 @@
       </el-card>
       <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
-          <span>公示公告</span>
+          <span>公示报告</span>
         </div>
         <upload-list :files="reportList" list-type="picture-card" :disabled="true" />
 
@@ -47,7 +47,7 @@
       </el-card>
       <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
-          <span>公示公告</span>
+          <span>公示报告</span>
         </div>
         <el-upload action="#" :file-list="reportList" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,1)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,1)}" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->

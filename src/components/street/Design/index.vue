@@ -45,7 +45,6 @@
 import File from '@/api/file'
 import { notEmptyArray } from '@/utils'
 import { getDesignerApi } from '@/api/projects'
-import Design from '@/api/designer'
 export default {
   name: 'AuditDesign',
   props: {
@@ -72,18 +71,6 @@ export default {
   methods: {
     detailApply() {
       this.pageLoading = true
-      const infoAsync = new Promise((resolve, reject) => {
-        Design.getInfo(this.id).then(res => {
-          if (res) {
-            this.design = res
-            resolve('ok')
-          }
-          reject('设计单位信息获取失败')
-        })
-          .catch(() => {
-            reject('设计单位信息获取失败')
-          })
-      })
       const designerAsync = new Promise((resolve, reject) => {
         getDesignerApi(this.id)
           .then(res => {
@@ -130,7 +117,7 @@ export default {
             reject('施工图调取失败')
           })
       })
-      Promise.all([designerAsync, schemaAsync, constructionAsync, infoAsync])
+      Promise.all([designerAsync, schemaAsync, constructionAsync])
         .then(() => (this.pageLoading = false))
         .catch(() => {
           this.pageLoading = false

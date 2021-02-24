@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-09 08:27:43
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 11:26:50
+ * @LastEditTime: 2020-12-29 16:02:09
  * @Description: 已审核列表
 -->
 
@@ -10,7 +10,7 @@
   <div class="app-container">
     <FilterList @listFn="listApplies" />
     <el-card>
-      <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row @row-dblclick="showOffer">
+      <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row @row-dblclick="showAudit">
         <el-table-column align="center" label="序号" width="50">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
@@ -32,7 +32,7 @@
         </el-table-column>
         <!-- <el-table-column label="状态" align="center" prop="whetherThrough" sortable>
           <template slot-scope="scope">
-            <el-tag :type="scope.row.whetherThrough | keyToVal(auditOptions)">{{ scope.row.whetherThrough | keyToVal(auditOptions) }}</el-tag>
+            <el-tag :type="scope.row.whetherThrough === 0 ? 'success':'danger'">{{ scope.row.whetherThrough === 0 ? '通过':'未通过' }}</el-tag>
           </template>
         </el-table-column> -->
         <!-- <el-table-column align="center" label="操作">
@@ -51,7 +51,7 @@ import Community from '@/api/community'
 import { notEmptyArray } from '@/utils'
 import FilterList from '@/components/Filter'
 export default {
-  name: 'CommunityAudited',
+  name: 'DesignedList',
   components: {
     FilterList
   },
@@ -61,6 +61,11 @@ export default {
         total: 0,
         pageIndex: 1,
         pageSize: 30
+      },
+      query: {
+        code: '',
+        applyName: '',
+        audit: ''
       },
       list: [],
       listLoading: false
@@ -75,11 +80,12 @@ export default {
     async listApplies(query = {}) {
       this.listLoading = true
       await Community.auditHistorylist({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }, query).then(res => {
-        this.list = []
-        this.pagination.total = 0
         if (notEmptyArray(res.content)) {
           this.list = res.content
           this.pagination.total = res.totalElements
+        } else {
+          this.list = []
+          this.pagination.total = 0
         }
       }).catch(() => {
         this.$message.error('数据获取失败')
@@ -94,11 +100,13 @@ export default {
       this.pagination.pageIndex = val
       this.listApplies()
     },
-    showOffer(row) {
-      this.$router.push({ name: 'ConstructionOfferDetail', params: { id: row.id, status: row.statusId }})
-    },
-    goSearch() { },
-    clearQuery() { }
+    showAudit(row) {
+      // audited-detail
+      // const reg = /\/(.*)\//
+      // const prefix = this.$route.fullPath.match(reg)[1]
+      // const path = `/${prefix}/audited-detail`
+      this.$router.push({ name: 'DesignedDetail', params: { id: row.id, status: row.statusId }})
+    }
   }
 }
 

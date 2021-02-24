@@ -34,11 +34,7 @@ export class Construction {
   @Min(1, { message: '最短施工周期为一天' })
   constructionPeriod
 
-  @IsNumber({}, { message: '请输入合法的材料费' })
-  @Min(1, { message: '材料费最低为1元' })
-  materialCost
-
-  @IsNumber({}, { message: '请输入合法的人工费' })
+  @IsNumber({}, { message: '请输入合法的报价' })
   @Min(1, { message: '人工费最低为1元' })
-  artificialCost
+  cost
 }

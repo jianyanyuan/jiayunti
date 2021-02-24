@@ -21,7 +21,7 @@ export default {
       pagination: {
         total: 0,
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 30
       },
       communityStatus: [
         { key: 1, val: '材料审核' },

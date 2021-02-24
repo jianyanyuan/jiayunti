@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="regist-head">
-      重置密码
+      重置密码（仅限居民）
     </div>
     <el-card class="regist-main">
       <el-row type="flex" class="row-bg">
@@ -18,10 +18,10 @@
               </div>
             </el-form-item>
             <el-form-item prop="password" label="新密码">
-              <el-input v-model="form.password" type="password"  placeholder="请输入6-12位密码" @blur="setRule" />
+              <el-input v-model="form.password" type="password" placeholder="请输入6-12位密码" @blur="setRule" />
             </el-form-item>
             <el-form-item prop="conPwd" label="确认密码">
-              <el-input v-model="form.conPwd" type="password"  placeholder="请再次输入密码" />
+              <el-input v-model="form.conPwd" type="password" placeholder="请再次输入密码" />
             </el-form-item>
             <el-form-item style="text-align:center;margin-top:40px">
               <el-button type="success" :loading="loading" class="regist-submit" @click="postReset('form')">重 置</el-button>

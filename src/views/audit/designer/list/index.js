@@ -30,7 +30,7 @@ export default {
       pagination: {
         total: 0,
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 30
       },
       uploadVisible: false,
       uploadId: null, // 待施工图设计的工程id
