@@ -156,6 +156,14 @@
               <el-option v-for="item in supervisionOptions" :key="item.value" :value="item.value" :label="item.label" />
             </el-select>
           </el-form-item>
+          <!-- 单元下业主 -->
+          <el-form-item v-for="(room, index) in model.form.rooms" :key="room.key" :label="'房间编号' + (index+1)" :prop="'rooms.' + index + '.val'" :rules="{required: true, message: '房间编号不能为空', trigger: 'blur'}">
+            <el-input v-model="room.val" auto-complete="off" placeholder="房间编号">
+              <template slot="append">
+                <el-button :icon="index == 0 ? 'el-icon-plus' : 'el-icon-minus'" @click="handleRoom(index)" />
+              </template>
+            </el-input>
+          </el-form-item>
         </template>
         <!-- 委托受理人 -->
         <template v-else>
@@ -165,14 +173,7 @@
             </el-select>
           </el-form-item>
         </template>
-        <!-- 单元下业主 -->
-        <el-form-item v-for="(room, index) in model.form.rooms" :key="room.key" :label="'房间编号' + (index+1)" :prop="'rooms.' + index + '.val'" :rules="{required: true, message: '房间编号不能为空', trigger: 'blur'}">
-          <el-input v-model="room.val" auto-complete="off" placeholder="房间编号">
-            <template slot="append">
-              <el-button :icon="index == 0 ? 'el-icon-plus' : 'el-icon-minus'" @click="handleRoom(index)" />
-            </template>
-          </el-input>
-        </el-form-item>
+
       </el-form>
       <div style="text-align:center">
         <el-button @click="model.visible = false">取 消</el-button>

@@ -5,15 +5,15 @@ import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import { cancelApi, listApi, addApi } from '@/api/projects'
 const defaultForm = {
   applicantName: '',
-  applyMode:'self',
+  applyMode: 'self',
   location: [],
   phoneNumber: '',
   address: { county: [], community: [] }, //
   designId: null,
   typeAndDevice: null, // []
-  constructionId:null,
-  supervisionId:null,
-  trusteeId:null,
+  constructionId: null,
+  supervisionId: null,
+  trusteeId: null,
   rooms: [{ key: 'defaultRoom', val: '' }]
 }
 
@@ -39,7 +39,7 @@ export default {
           applicantName: [{ required: true, validator: validateTrueName, trigger: 'blur' }],
           address: [{ required: true, message: '请选择地址' }],
           phoneNumber: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-          location: [{ required: true, message: '请输入地址' }],
+          location: [{ required: true, message: '请输入地址' }]
         }
       },
       list: [],
@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     ...mapState('common', ['applyStatus', 'applyTag', 'handleStatus', 'handleTag']),
-    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'designOptions','supervisionOptions','constructionOptions'])
+    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'designOptions', 'supervisionOptions', 'constructionOptions'])
   },
   watch: {
   },
@@ -111,22 +111,23 @@ export default {
           } else {
             this.$message.error('请填写加装电梯地址')
             return
-          }   
-          if (notEmptyArray(rooms)) {
-            this.model.form.rooms = Array.from(new Set(rooms.map(v => v.val.replace(/[<>&"']/gi, ' ').trim()))) // 过滤 + 去重
-          } else {
-            this.$message.error('请填写单位下业主房间编号')
-            return
           }
-          if(this.model.form.applyMode === 'self') {
-            const {designId,typeAndDevice, constructionId, supervisionId} = this.model.form
-            if(designId === null || typeAndDevice === null || constructionId === null || supervisionId === null ) {
+
+          if (this.model.form.applyMode === 'self') {
+            const { designId, typeAndDevice, constructionId, supervisionId } = this.model.form
+            if (designId === null || typeAndDevice === null || constructionId === null || supervisionId === null) {
               this.$message.error('请选择单位与设备')
               return
-            }   
-          }else {
-            const {trusteeId} = this.model.form
-            if(trusteeId === null) {
+            }
+            if (notEmptyArray(rooms)) {
+              this.model.form.rooms = Array.from(new Set(rooms.map(v => v.val.replace(/[<>&"']/gi, ' ').trim()))) // 过滤 + 去重
+            } else {
+              this.$message.error('请填写单位下业主房间编号')
+              return
+            }
+          } else {
+            const { trusteeId } = this.model.form
+            if (trusteeId === null) {
               this.$message.error('请选择委托代理人')
               return
             }

@@ -98,7 +98,9 @@ const state = {
   // community: 街道--社区
   address: null,
   device: null,
-  design: null
+  design: null,
+  supervision: null,
+  construction: null
 }
 const getters = {
   // 城市--区县
@@ -172,10 +174,10 @@ const getters = {
   }),
   // 施工单位列表
   constructionOptions: state => state.construction?.map(v => {
-      return {
-        value: v.id,
-        label: v.constructionName
-      }
+    return {
+      value: v.id,
+      label: v.constructionName
+    }
   })
 }
 
@@ -243,37 +245,37 @@ const actions = {
     })
   },
   // get construction
-  getConstruction({commit}) {
-    return new Promise( (resolve, reject) => {
+  getConstruction({ commit }) {
+    return new Promise((resolve, reject) => {
       Construction.list({ }, {}).then((res) => {
-        if(res.content) {
+        if (res.content) {
           commit('SET_CONSTRUCTION', res.content)
           resolve(res.content)
-        }else {
+        } else {
           reject(res)
         }
       })
-      .catch(err => {
-        reject(err)
-      })
-    })
-  },
-  // get Supervision
-  getSupervision({commit}) {
-      return new Promise( (resolve, reject) => {
-        Supervision.list({ }, {}).then((res) => {
-          if(res.content) {
-            commit('SET_SUPERVISION', res.content)
-            resolve(res.content)
-          }else {
-            reject(res)
-          }
-        })
         .catch(err => {
           reject(err)
         })
+    })
+  },
+  // get Supervision
+  getSupervision({ commit }) {
+    return new Promise((resolve, reject) => {
+      Supervision.list({ }, {}).then((res) => {
+        if (res.content) {
+          commit('SET_SUPERVISION', res.content)
+          resolve(res.content)
+        } else {
+          reject(res)
+        }
       })
-    }
+        .catch(err => {
+          reject(err)
+        })
+    })
+  }
 
 }
 export default {
