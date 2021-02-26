@@ -17,6 +17,7 @@ const drawingAuditRouter = {
   name: 'DrawingAudit',
   meta: {
     title: '图审',
+    mean: 'user',
     icon: 'institution',
     roles: ['ROLE_ADMIN', 'ROLE_DRAWING_AUDIT']
   },

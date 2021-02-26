@@ -17,8 +17,9 @@ const residentRouter = {
   name: 'Resident',
   meta: {
     title: '居民',
+    mean: 'user',
     icon: 'people',
-    roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+    roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
   },
   children: [
     {
@@ -28,7 +29,7 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '申请',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -38,7 +39,7 @@ const residentRouter = {
       meta: {
         title: '我的申请',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -48,7 +49,7 @@ const residentRouter = {
       meta: {
         title: '设备列表',
         icon: 'device',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -58,7 +59,7 @@ const residentRouter = {
       meta: {
         title: '设计单位',
         icon: 'design',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -68,7 +69,7 @@ const residentRouter = {
       meta: {
         title: '施工单位',
         icon: 'construction',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -78,7 +79,7 @@ const residentRouter = {
       meta: {
         title: '监理单位',
         icon: 'supervisor',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -88,7 +89,7 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '单位介绍',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -98,7 +99,7 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '审核意见',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -108,7 +109,7 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '设计图',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -118,31 +119,31 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '异议反馈',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
-    {
-      path: 'offer/:id/:status',
-      component: () => import('@/views/audit/resident/offer/index.vue'),
-      name: 'ResidentOffer',
-      hidden: true,
-      meta: {
-        title: '报价列表',
-            roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+    // {
+    //   path: 'offer/:id/:status',
+    //   component: () => import('@/views/audit/resident/offer/index.vue'),
+    //   name: 'ResidentOffer',
+    //   hidden: true,
+    //   meta: {
+    //     title: '报价列表',
+    //     roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
 
-      }
-    },
-    {
-      path: 'offer-detail/:id/:offerId/:status',
-      component: () => import('@/views/audit/resident/offer/detail/index.vue'),
-      name: 'ResidentOfferDetail',
-      hidden: true,
-      meta: {
-        title: '报价单',
-            roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+    //   }
+    // },
+    // {
+    //   path: 'offer-detail/:id/:offerId/:status',
+    //   component: () => import('@/views/audit/resident/offer/detail/index.vue'),
+    //   name: 'ResidentOfferDetail',
+    //   hidden: true,
+    //   meta: {
+    //     title: '报价单',
+    //     roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
 
-      }
-    },
+    //   }
+    // },
     {
       path: 'fault-detail',
       component: () => import('@/views/common/fault/detail.vue'),
@@ -151,7 +152,7 @@ const residentRouter = {
       meta: {
         title: '违规查看',
         icon: 'list',
-            roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
 
       }
     },
@@ -162,7 +163,18 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '提交材料',
-            roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+
+      }
+    },
+    {
+      path: 'apply-notice-read/:id/:status',
+      component: () => import('@/views/audit/resident/apply-notice-read.vue'),
+      name: 'ResidentNoticeRead',
+      hidden: true,
+      meta: {
+        title: '公示材料',
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT']
 
       }
     },
@@ -173,7 +185,7 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '补贴查看',
-            roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_TRUSTEE']
+        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
 
       }
     }

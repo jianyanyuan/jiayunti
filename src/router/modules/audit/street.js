@@ -17,6 +17,7 @@ const streetRouter = {
   name: 'Street',
   meta: {
     title: '街道',
+    mean: 'user',
     icon: 'street',
     roles: ['ROLE_ADMIN', 'ROLE_STREET']
   },

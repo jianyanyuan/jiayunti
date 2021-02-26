@@ -27,10 +27,10 @@ export default {
       if (arrow < 0) {
         this.$emit('nextProcess', arrow)
       } else {
-        if (this.fileList.length > 0) {
+        if (this.hasChanged && this.fileList.length > 0) {
           this.$emit('nextProcess', arrow)
         } else {
-          this.$message.error('请补全材料')
+          this.$message.warning('请先上传材料')
         }
       }
     },

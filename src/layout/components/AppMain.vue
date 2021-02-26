@@ -20,8 +20,8 @@ export default {
     const designAsync = this.$store.dispatch('common/getDesign')
     const constructionAsync = this.$store.dispatch('common/getConstruction')
     const supervisionAsync = this.$store.dispatch('common/getSupervision')
-
-    Promise.all([addressAsync, constructionAsync, deviceAsync, designAsync, supervisionAsync])
+    const trusteeAsync = this.$store.dispatch('common/getTrustee')
+    Promise.all([trusteeAsync, addressAsync, constructionAsync, deviceAsync, designAsync, supervisionAsync])
       .catch(() => {
         this.$message.error('信息获取失败')
       })

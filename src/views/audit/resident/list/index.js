@@ -1,6 +1,7 @@
 import { mapState, mapGetters } from 'vuex'
 import { deepClone, notEmptyArray } from '@/utils'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
+import { createButtons } from '@/mixin/common'
 // import Flow from '@/components/street/Flow'
 import { cancelApi, listApi, addApi } from '@/api/projects'
 const defaultForm = {
@@ -13,7 +14,7 @@ const defaultForm = {
   typeAndDevice: null, // []
   constructionId: null,
   supervisionId: null,
-  trusteeId: null,
+  principalId: null,
   rooms: [{ key: 'defaultRoom', val: '' }]
 }
 
@@ -53,13 +54,15 @@ export default {
         label: 'name',
         children: 'communities'
       },
-      expandLoading: false,
+      // expandLoading: false,
       communityOptions: []
     }
   },
   computed: {
-    ...mapState('common', ['applyStatus', 'applyTag', 'handleStatus', 'handleTag']),
-    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'designOptions', 'supervisionOptions', 'constructionOptions'])
+    ...mapState('common', ['handleStatus', 'handleTag']),
+    ...mapState('project', ['applyStatus', 'applyTag']),
+
+    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'designOptions', 'supervisionOptions', 'constructionOptions', 'trusteeOptions'])
   },
   watch: {
   },
@@ -67,13 +70,26 @@ export default {
     this.listApplies()
   },
   methods: {
+    getButtons(row) {
+      const { id, statusId, isEntrust, whetherThrough } = row
+      const userInfo = {
+        roles: this.$store.getters.roles
+      }
+      const projectInfo = {
+        id,
+        status: statusId,
+        isDelegated: isEntrust === 0, // 0委托
+        isPass: whetherThrough === 0 ? undefined : whetherThrough
+      }
+      return createButtons(this.$store.state.project.operations, userInfo, projectInfo) || []
+    },
     async handleExpand(row, expandedRows) {
       if (Object.keys(row.apply).length === 0) {
-        this.expandLoading = true
+        // this.expandLoading = true
         const apply = await this.$store.dispatch('getProjectBasic', row.id)
         const idx = this.list.findIndex(v => v.id === row.id)
         this.$set(this.list[idx], 'apply', apply)
-        this.expandLoading = false
+        // this.expandLoading = false
       }
     },
     // 打开申请Modal
@@ -126,8 +142,9 @@ export default {
               return
             }
           } else {
-            const { trusteeId } = this.model.form
-            if (trusteeId === null) {
+            const { principalId } = this.model.form
+            this.model.form.rooms = null
+            if (principalId === null) {
               this.$message.error('请选择委托代理人')
               return
             }
@@ -142,6 +159,7 @@ export default {
           })
             .finally(() => {
               this.formLoading = false
+              this.model.form.rooms = [{ key: 'defaultRoom', val: '' }]
             })
         } else {
           this.$message.error(Object.values(errors)[0][0].message)
@@ -158,6 +176,10 @@ export default {
           if (notEmptyArray(res.content)) {
             res.content.forEach(v => {
               v.apply = {}
+              v.isDelegated = false
+              if (this.$store.getters.roles[0] === 'ROLE_RESIDENT' && v.isEntrust === 0) {
+                v.isDelegated = true
+              }
               this.list.push(v)
             })
           }

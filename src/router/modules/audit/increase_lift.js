@@ -17,6 +17,7 @@ const inlRouter = {
   name: 'IncreaseLift',
   meta: {
     title: '增梯办',
+    mean: 'user',
     icon: 'institution',
     roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
   },

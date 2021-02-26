@@ -43,6 +43,16 @@ const getArticle = () => {
   })
 }
 
+// 委托人列表
+const getTrustee = (params, data) => {
+  return request({
+    url: '/principal/getAll',
+    method: 'post',
+    params,
+    data
+  })
+}
+
 const modifyArticle = (newCompany) => {
   return request({
     url: '/Company',
@@ -71,5 +81,6 @@ export default {
   getArticle,
   modifyArticle,
   addArticle,
-  getArticleById
+  getArticleById,
+  getTrustee
 }

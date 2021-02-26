@@ -11,8 +11,8 @@
       <div slot="header">
         <el-row type="flex" justify="space-between" align="middle">
           <span>基本资料</span>
-          <el-button v-if="!hasChanged" type="primary" style="float:right" @click="hasChanged = true">修改</el-button>
-          <el-button v-else type="primary" style="float:right" @click="updateApply">保存</el-button>
+          <el-button v-if="!hasChanged && !form.isDelegated" type="primary" style="float:right" @click="hasChanged = true">修改</el-button>
+          <el-button v-if="hasChanged && !form.isDelegated" type="primary" style="float:right" @click="updateApply">保存</el-button>
         </el-row>
       </div>
       <el-form ref="form" v-loading="formLoading" class="basic-form" :model="form" :rules="rules" label-width="120px" :disabled="!hasChanged">
@@ -20,7 +20,8 @@
           <el-input v-model="form.applicantName" />
         </el-form-item>
         <el-form-item label="地址" prop="address">
-          <el-row>
+          {{ form.address }}
+          <!-- <el-row>
             <el-col :span="12">
               <el-cascader v-model="form.address.county" :options="countyOptions" :props="countyProps" style="display:block" disabled />
             </el-col>
@@ -29,10 +30,16 @@
             <el-col :span="10">
               <el-cascader v-model="form.address.community" :options="communityOptions" :props="communityProps" style="display:block" disabled />
             </el-col>
-          </el-row>
+          </el-row> -->
         </el-form-item>
         <el-form-item label="电话" prop="phoneNumber">
           <el-input v-model="form.phoneNumber" />
+        </el-form-item>
+        <el-form-item v-if="form.principalName" label="代理人">
+          {{ form.principalName }}
+        </el-form-item>
+        <el-form-item v-if="form.principalPhone" label="代理人电话">
+          {{ form.principalPhone }}
         </el-form-item>
         <el-form-item label="加装电梯地址" prop="location">
           <div> <input v-model="form.location[0]" class="basic-address-input" type="text" name="cell" autocomplete="off" :disabled="!hasChanged">小区</div>
@@ -53,6 +60,16 @@
             </template>
           </el-cascader>
         </el-form-item>
+        <el-form-item label="施工单位" prop="constructionId">
+          <el-select v-model="form.constructionId" filterable>
+            <el-option v-for="item in constructionOptions" :key="item.value" :value="item.value" :label="item.label" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="监理单位" prop="supervisionId">
+          <el-select v-model="form.supervisionId" filterable>
+            <el-option v-for="item in supervisionOptions" :key="item.value" :value="item.value" :label="item.label" />
+          </el-select>
+        </el-form-item>
         <el-form-item v-for="(room, index) in form.rooms" :key="room.key" :label="`房间编号${(index+1)}`" :prop="'rooms.' + index + '.val'" :rules="{required: true, message: '房间编号不能为空', trigger: 'blur'}">
           <el-input v-model="room.val" placeholder="房间编号">
             <template slot="append">
@@ -62,7 +79,7 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <div v-if="!hasChanged" style="text-align:center">
+    <div style="text-align:center">
       <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
     </div>
   </div>
@@ -72,16 +89,18 @@
 import { mapGetters } from 'vuex'
 import { deepClone, notEmptyArray } from '@/utils'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
-import { detailApi, updateApi } from '@/api/projects'
+import { updateApi } from '@/api/projects'
 
 const defaultForm = {
   applicantName: '',
   location: [],
-  address: { county: [], community: [] }, //
+  address: '', // { county: [], community: [] }
   phoneNumber: '',
   rooms: [{ key: Date.now(), val: '' }],
   designId: '',
-  typeAndDevice: [] // []
+  constructionId: '',
+  supervisionId: '',
+  typeAndDevice: null // []
 }
 export default {
   name: 'ApplyBasic',
@@ -99,9 +118,13 @@ export default {
       form: deepClone(defaultForm),
       rules: {
         applicantName: [{ required: true, validator: validateTrueName, trigger: 'blur' }],
-        address: [{ required: true, message: '请选择地址' }],
+        address: [{ required: true, message: '请选择地址', trigger: 'blur' }],
         phoneNumber: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-        location: [{ required: true, message: '请输入地址' }]
+        location: [{ required: true, message: '请输入地址', trigger: 'blur' }],
+        designId: [{ required: true, message: '请选择设计单位', trigger: 'blur' }],
+        typeAndDevice: [{ required: true, message: '请选择设备' }],
+        constructionId: [{ required: true, message: '请选择施工单位', trigger: 'blur' }],
+        supervisionId: [{ required: true, message: '请选择监管单位', trigger: 'blur' }]
       },
       communityOptions: [],
       countyProps: {
@@ -117,24 +140,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('common', ['countyOptions', 'deviceOptions', 'designOptions'])
+    ...mapGetters('common', ['deviceOptions', 'designOptions', 'supervisionOptions', 'constructionOptions'])
   },
   watch: {
 
   },
   created() {
-    const addressAsync = this.$store.dispatch('common/getAddress')
-    const deviceAsync = this.$store.dispatch('common/getDevice')
-    const designAsync = this.$store.dispatch('common/getDesign')
-
-    Promise.all([addressAsync, deviceAsync, designAsync]).then(() => {
-      this.form.address.county = this.$store.getters['address']?.slice(0, 2)
-      this.communityOptions = this.$store.getters['common/communityOptions'](this.form.address.county)
-      this.form.address.community = this.$store.getters['address'].slice(2)
-      // this.form.phoneNumber = this.$store.getters['phone'] ?? ''
-    }).catch(() => {
-      this.$message.error('信息获取失败')
-    })
+    // this.form.address.county = this.$store.getters['address']?.slice(0, 2)
+    // this.communityOptions = this.$store.getters['common/communityOptions'](this.form.address.county)
+    // this.form.address.community = this.$store.getters['address'].slice(2)
   },
   activated() {
     // 组件激活
@@ -149,8 +163,21 @@ export default {
       }
     },
     nextProcess(arrow) {
+      if (this.hasChanged) {
+        this.$message.warning('请先保存')
+        return
+      }
       this.$refs.form.validate((valid, errors) => {
         if (valid) {
+          const { location, rooms } = this.form
+          if (!notEmptyArray(location) || location.length !== 3) {
+            this.$message.error('请填写加装电梯地址')
+            return
+          }
+          if (!notEmptyArray(rooms)) {
+            this.$message.error('请填写单位下业主房间编号')
+            return
+          }
           this.$emit('nextProcess', arrow)
         } else {
           this.$message.error(Object.values(errors)[0][0].message)
@@ -196,25 +223,33 @@ export default {
     // 获取申请基本资料
     detailApply() {
       this.formLoading = true
-      detailApi(this.id).then(res => {
-        // Object.assign(this.form, res)
-        const { applicantName, phoneNumber, designId, deviceId, deviceTypeId, rooms, residentialQuarters, building, unit } = res
-        this.form.applicantName = applicantName
-        this.form.designId = designId
-        this.form.phoneNumber = phoneNumber
-        this.form.typeAndDevice = [deviceId, deviceTypeId]
-        this.form.location = [residentialQuarters, building, unit]
-        if (notEmptyArray(rooms)) {
-          this.form.rooms = rooms.map(v => ({ key: v, val: v }))
-        } else {
-          this.form.rooms = [{ key: Date.now(), val: '' }]
-        }
-        this.hasChanged = false
-        this.formLoading = false
-      }).catch(() => {
-        this.formLoading = false
-        this.$message.error('信息获取失败')
-      })
+      this.$store.dispatch('getProjectBasic', this.id)
+        .then(res => {
+          const { applicantName, phoneNumber, address, principalName, principalPhone, designId, deviceId, deviceTypeId, constructionId, supervisionId, rooms, residentialQuarters, building, unit, isDelegated } = res
+          this.form.applicantName = applicantName
+          this.form.designId = designId
+          this.form.principalName = principalName
+          this.form.principalPhone = principalPhone
+          this.form.address = address
+          this.form.constructionId = constructionId
+          this.form.supervisionId = supervisionId
+
+          this.form.phoneNumber = phoneNumber
+          this.form.typeAndDevice = [deviceId, deviceTypeId]
+          this.form.location = [residentialQuarters, building, unit]
+          this.form.isDelegated = isDelegated
+          if (notEmptyArray(rooms)) {
+            this.form.rooms = rooms.map(v => ({ key: v, val: v }))
+          } else {
+            this.form.rooms = [{ key: Date.now(), val: '' }]
+          }
+          this.hasChanged = false
+          this.formLoading = false
+        })
+        .catch(() => {
+          this.formLoading = false
+          this.$message.error('信息获取失败')
+        })
     }
   }
 

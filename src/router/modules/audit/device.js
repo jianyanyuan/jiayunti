@@ -17,6 +17,7 @@ const deviceRouter = {
   name: 'Device',
   meta: {
     title: '设备',
+    mean: 'user',
     icon: 'device',
     roles: ['ROLE_ADMIN', 'ROLE_DEVICE']
   },

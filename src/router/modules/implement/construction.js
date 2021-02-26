@@ -16,6 +16,7 @@ const constructionRouter = {
   meta: {
     title: '施工单位',
     icon: 'construction',
+    mean: 'user',
     roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
   },
   children: [
@@ -29,36 +30,36 @@ const constructionRouter = {
         roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
       }
     },
-    {
-      path: 'process/:id/:status',
-      component: () => import('@/views/implement/construction/process/index.vue'),
-      name: 'ConstructionProcess',
-      hidden: true,
-      meta: {
-        title: '报价',
-        roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
-      }
-    },
-    {
-      path: 'offer-list',
-      component: () => import('@/views/implement/construction/offer-list/list.vue'),
-      name: 'ConstructionOfferList',
-      meta: {
-        title: '已报价列表',
-        icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
-      }
-    },
-    {
-      path: 'offer-detail/:id/:status',
-      component: () => import('@/views/implement/construction/offer-list/detail.vue'),
-      name: 'ConstructionOfferDetail',
-      hidden: true,
-      meta: {
-        title: '报价详情',
-        roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
-      }
-    },
+    // {
+    //   path: 'process/:id/:status',
+    //   component: () => import('@/views/implement/construction/process/index.vue'),
+    //   name: 'ConstructionProcess',
+    //   hidden: true,
+    //   meta: {
+    //     title: '报价',
+    //     roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
+    //   }
+    // },
+    // {
+    //   path: 'offer-list',
+    //   component: () => import('@/views/implement/construction/offer-list/list.vue'),
+    //   name: 'ConstructionOfferList',
+    //   meta: {
+    //     title: '已报价列表',
+    //     icon: 'list',
+    //     roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
+    //   }
+    // },
+    // {
+    //   path: 'offer-detail/:id/:status',
+    //   component: () => import('@/views/implement/construction/offer-list/detail.vue'),
+    //   name: 'ConstructionOfferDetail',
+    //   hidden: true,
+    //   meta: {
+    //     title: '报价详情',
+    //     roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
+    //   }
+    // },
     {
       path: 'fault/:id/:status',
       name: 'ConstructionFault',

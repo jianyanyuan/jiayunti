@@ -56,51 +56,15 @@ const state = {
     { key: 0, val: '通过' },
     { key: 1, val: '不通过' }
   ],
-  applyStatus: [
-    { key: 0, val: '申请中' },
-    { key: 1, val: '社区受理' },
-    { key: 2, val: '方案设计' },
-    { key: 3, val: '公示阶段' }, // 社区异议记录 居民异议查看  居民提交材料
-    { key: 4, val: '公示审核' },
-    { key: 5, val: '管道踏勘' },
-    { key: 6, val: '施工图设计' },
-    { key: 7, val: '施工图审核' },
-    { key: 8, val: '施工报价' },
-    { key: 9, val: '街道审核' },
-    { key: 10, val: '联合审查' },
-    // { key: 11, val: '审核通过' },
-    { key: 11, val: '施工中' },
-    { key: 12, val: '竣工验收' },
-    { key: 13, val: '驳回' },
-    { key: 14, val: '已撤销' }
-  ],
-  applyTag: [
-    { key: 0, val: 'warning' },
-    { key: 1, val: 'warning' },
-    { key: 2, val: 'primary' },
-    { key: 3, val: 'primary' },
-    { key: 4, val: 'primary' },
-    { key: 4, val: 'warning' },
-    { key: 5, val: 'primary' },
-    { key: 6, val: 'warning' },
-    { key: 7, val: 'warning' },
-    { key: 8, val: 'warning' },
-    { key: 9, val: 'warning' },
-    { key: 10, val: 'warning' },
-    { key: 11, val: 'info' },
-    { key: 12, val: 'success' },
-    { key: 13, val: 'warning' },
-    { key: 14, val: 'info' }
-
-  ],
 
   // county: 城市--区县
   // community: 街道--社区
-  address: null,
-  device: null,
-  design: null,
-  supervision: null,
-  construction: null
+  address: [],
+  device: [],
+  design: [],
+  supervision: [],
+  construction: [],
+  trustees: []
 }
 const getters = {
   // 城市--区县
@@ -178,6 +142,13 @@ const getters = {
       value: v.id,
       label: v.constructionName
     }
+  }),
+  // 委托人列表
+  trusteeOptions: state => state.trustees?.map(v => {
+    return {
+      value: v.id,
+      label: v.name
+    }
   })
 }
 
@@ -196,6 +167,9 @@ const mutations = {
   },
   SET_SUPERVISION: (state, supervision) => {
     state.supervision = supervision
+  },
+  SET_TRUESTEES: (state, trustees) => {
+    state.trustees = trustees
   }
 }
 const actions = {
@@ -266,6 +240,21 @@ const actions = {
       Supervision.list({ }, {}).then((res) => {
         if (res.content) {
           commit('SET_SUPERVISION', res.content)
+          resolve(res.content)
+        } else {
+          reject(res)
+        }
+      })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  },
+  getTrustee({ commit }) {
+    return new Promise((resolve, reject) => {
+      Common.getTrustee({}, {}).then((res) => {
+        if (res.content) {
+          commit('SET_TRUESTEES', res.content)
           resolve(res.content)
         } else {
           reject(res)

@@ -16,6 +16,7 @@ const communityRouter = {
   meta: {
     title: '社区',
     icon: 'community',
+    mean: 'user',
     roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
   },
   children: [

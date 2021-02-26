@@ -10,10 +10,10 @@
     <el-page-header content="设计稿" style="margin-bottom:30px" @back="$router.go(-1)" />
     <el-card style="margin-bottom:30px">
       <div slot="header">
-        <span>居民信息</span>
+        <span>基本信息</span>
       </div>
       <el-form label-width="120px" class="show-form">
-        <el-form-item label="姓名">
+        <el-form-item label="申请人">
           {{ basic.applicantName }}
         </el-form-item>
         <el-form-item label="申请时间">
@@ -28,11 +28,23 @@
         <el-form-item label="加装电梯地址">
           {{ basic.location }}
         </el-form-item>
+        <el-form-item v-if="basic.principalName" label="代理人">
+          {{ basic.principalName }}
+        </el-form-item>
+        <el-form-item v-if="basic.principalName" label="代理人电话">
+          {{ basic.principalPhone }}
+        </el-form-item>
         <el-form-item label="设计单位">
           {{ basic.designName }}
         </el-form-item>
         <el-form-item label="设备">
           {{ basic.device }}
+        </el-form-item>
+        <el-form-item label="施工单位">
+          {{ basic.constructionName }}
+        </el-form-item>
+        <el-form-item label="监理单位">
+          {{ basic.supervisionName }}
         </el-form-item>
       </el-form>
     </el-card>

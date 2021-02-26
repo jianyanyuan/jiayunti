@@ -31,12 +31,11 @@ export default {
       list: [],
       listLoading: false,
       isFinished: false,
-      flowVisible: false,
-      expandLoading: false
+      flowVisible: false
     }
   },
   computed: {
-    ...mapState('common', ['applyStatus', 'applyTag'])
+    ...mapState('project', ['applyStatus', 'applyTag'])
   },
   created() {
     this.listApplies()
@@ -62,11 +61,9 @@ export default {
     },
     async handleExpand(row, expandedRows) {
       if (Object.keys(row.apply).length === 0) {
-        this.expandLoading = true
         const apply = await this.$store.dispatch('getProjectBasic', row.id)
         const idx = this.list.findIndex(v => v.id === row.id)
         this.$set(this.list[idx], 'apply', apply)
-        this.expandLoading = false
       }
     },
     // flowView() {

@@ -9,7 +9,7 @@
 <template>
   <div class="app-container">
     <!-- 代理人不能新增申请 -->
-    <el-button v-if="!$store.getters.roles.includes('ROLE_TRUSTEE')" type="primary" size="medium" style="margin-bottom:20px" :loading="openLoading" @click="openAdd">新增申请</el-button>
+    <el-button v-if="!$store.getters.roles.includes('ROLE_PRINCIPAL')" type="primary" size="medium" style="margin-bottom:20px" :loading="openLoading" @click="openAdd">新增申请</el-button>
 
     <el-card>
       <!-- @row-dblclick="flowView" -->
@@ -21,7 +21,7 @@
         </el-table-column>
         <el-table-column type="expand">
           <template slot-scope="{ row }">
-            <el-form v-loading="expandLoading" label-position="left" inline class="expand-form-p">
+            <el-form label-position="left" inline class="expand-form-p">
               <el-form-item label="申请人">
                 {{ row.apply.applicantName }}
               </el-form-item>
@@ -37,11 +37,23 @@
               <el-form-item label="加装电梯地址">
                 {{ row.apply.location }}
               </el-form-item>
+              <el-form-item v-if="row.apply.principalName" label="代理人">
+                {{ row.apply.principalName }}
+              </el-form-item>
+              <el-form-item v-if="row.apply.principalName" label="代理人电话">
+                {{ row.apply.principalPhone }}
+              </el-form-item>
               <el-form-item label="设计单位">
-                {{ row.apply.designName }}
+                {{ row.apply.designName || '' }}
               </el-form-item>
               <el-form-item label="设备">
-                {{ row.apply.device }}
+                {{ row.apply.device || '' }}
+              </el-form-item>
+              <el-form-item label="施工单位">
+                {{ row.apply.constructionName || '' }}
+              </el-form-item>
+              <el-form-item label="监理单位">
+                {{ row.apply.supervisionName || '' }}
               </el-form-item>
             </el-form>
           </template>
@@ -67,30 +79,27 @@
         <el-table-column align="center" label="操作" width="200px">
           <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="scope.row.statusId === 0" size="mini" type="warning" plain @click="$router.push({name:'ResidentApply',params:{id:scope.row.id,status:scope.row.statusId}})">提交材料</el-button>
-              <!-- <el-tag v-if="scope.row.statusId === 1 && !scope.row.auditTime" size="medium" type="warning" effect="light">社区受理中</el-tag> -->
+              <el-button v-for="(btn,index) in getButtons(scope.row)" :key="index" :size="btn.s" :type="btn.t" plain @click="$router.push(btn.url)">{{ btn.o }}</el-button>
+              <!-- <el-button v-if="scope.row.statusId === 0" size="mini" type="warning" plain @click="$router.push({name:'ResidentApply',params:{id:scope.row.id,status:scope.row.statusId}})">提交材料</el-button>
+              <el-button v-if="scope.row.statusId ===0 && scope.row.whetherThrough===1" size="mini" plain type="danger" @click="$router.push({name:'ResidentAuditDetail',params:{id:scope.row.id,status:scope.row.statusId}})">审核意见</el-button>
 
               <el-button v-if="scope.row.statusId === 3" size="mini" type="primary" plain @click="$router.push({name:'ResidentApplyNotice',params:{id:scope.row.id,status:scope.row.statusId}})">提交材料</el-button>
 
               <el-button v-if="scope.row.statusId === 3" size="mini" type="warning" plain @click="$router.push({name:'ResidentAssentsDetail',params:{id:scope.row.id,status:scope.row.statusId}})">异议反馈</el-button>
 
-              <!-- <el-tag v-if="scope.row.statusId === 4" size="medium" type="warning" effect="light">管道踏勘中</el-tag> -->
-
               <el-button v-if="scope.row.statusId === 7" size="mini" type="success" plain @click="$router.push({name:'ResidentDesignDetail',params:{id:scope.row.id,status:scope.row.statusId}})">查看设计</el-button>
               <el-button v-if="scope.row.statusId === 8" size="mini" type="warning" plain @click="$router.push({name:'ResidentOffer',params:{id:scope.row.id,status:scope.row.statusId}})">选择报价</el-button>
-              <!-- <el-tag v-if="scope.row.statusId === 10" size="medium" type="success" effect="light">申请已通过</el-tag> -->
               <el-tag v-if="scope.row.statusId === 13" size="medium" type="danger" effect="light">已驳回</el-tag>
-              <el-button v-if="scope.row.statusId ===0 && scope.row.whetherThrough===1" size="mini" plain type="danger" @click="$router.push({name:'ResidentAuditDetail',params:{id:scope.row.id,status:scope.row.statusId}})">审核意见</el-button>
               <el-button v-if="scope.row.statusId === 13" size="mini" plain type="danger" @click="$router.push({name:'ResidentAuditDetail',params:{id:scope.row.id,status:scope.row.statusId}})">驳回原因</el-button>
 
               <el-tag v-if="scope.row.statusId === 14" size="medium" type="info" effect="light">已撤销</el-tag>
               <el-button v-if="scope.row.statusId === 11" size="mini" type="warning" plain @click="$router.push({path:'/resident/fault-detail',query:{id:scope.row.id,status:scope.row.statusId}})">违规查看</el-button>
-              <el-button v-if="scope.row.statusId === 12" size="mini" plain type="warning" @click="$router.push({path:'/resident/bonus',query:{id:scope.row.id,status:scope.row.statusId}})">补贴查看</el-button>
+              <el-button v-if="scope.row.statusId === 12" size="mini" plain type="warning" @click="$router.push({path:'/resident/bonus',query:{id:scope.row.id,status:scope.row.statusId}})">补贴查看</el-button> -->
             </el-row>
           </template>
         </el-table-column>
         <el-table-column label="撤销申请" align="center">
-          <template slot-scope="scope">
+          <template v-if="!scope.row.isDelegated" slot-scope="scope">
             <el-popconfirm v-if="scope.row.statusId !== 13 && scope.row.statusId !== 14 && scope.row.statusId !== 12" title="确认撤销申请吗？" @onConfirm="cancelApply(scope.row)">
               <el-button slot="reference" size="mini" type="text">撤 销</el-button>
             </el-popconfirm>
@@ -168,7 +177,7 @@
         <!-- 委托受理人 -->
         <template v-else>
           <el-form-item label="委托受理人" prop="trusteeId">
-            <el-select v-model="model.form.trusteeId" filterable>
+            <el-select v-model="model.form.principalId" filterable>
               <el-option v-for="item in trusteeOptions" :key="item.value" :value="item.value" :label="item.label" />
             </el-select>
           </el-form-item>

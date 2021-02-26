@@ -63,6 +63,8 @@ export default {
             // repair the problem of '/' not found, must place 404 at the end
             // ROLE_STREET ---> string
             let roleHome = roles[0].split('_').slice(1).join('-').toLocaleLowerCase()
+            // 居民和受理委托人共用一个路由表
+            roleHome = roleHome === 'principal' ? 'resident' : roleHome
             const unions = ['capital-rule', 'house-construction', 'urban-management', 'market-supervisor']
             if (unions.includes(roleHome)) {
               roleHome = 'union'

@@ -15,6 +15,7 @@ const supervisorRouter = {
   meta: {
     title: '监理单位',
     icon: 'supervisor',
+    mean: 'user',
     roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
   },
 

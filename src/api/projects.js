@@ -10,7 +10,7 @@ import request from '@/utils/request'
 const api_prefix_dev = '/project'
 
 // 根据token获取工程列表
-export const listApi = (params,data) => {
+export const listApi = (params, data) => {
   return request({
     url: api_prefix_dev + '/getroleproject',
     method: 'post',
@@ -39,25 +39,25 @@ export const cancelApi = (id) => {
 // 获取单个
 export const detailApi = id => {
   return request({
-    url:api_prefix_dev + '/' + id,
+    url: api_prefix_dev + '/' + id,
     method: 'get'
   })
 }
 
 // 修改申请基本资料
-export const updateApi = (id,newprojectRequest) => {
+export const updateApi = (id, newprojectRequest) => {
   return request({
-    url:api_prefix_dev + '/' + id,
+    url: api_prefix_dev + '/' + id,
     // headers: { 'Content-Type': 'application/json' } ,
     method: 'put',
-    data:newprojectRequest
+    data: newprojectRequest
   })
 }
 
 // 流程步骤更新
-export const advanceApi = (projectId,status,constructionId,supervisionId) => {
+export const advanceApi = (projectId, status, constructionId, supervisionId) => {
   return request({
-    url:'/flowchartlogic',
+    url: '/flowchartlogic',
     // headers: { 'Content-Type': 'application/json' } ,
     method: 'post',
     data: {
@@ -70,43 +70,43 @@ export const advanceApi = (projectId,status,constructionId,supervisionId) => {
 }
 
 // 审核
-export const checkApi = (communityReviewRequest ) => {
+export const checkApi = (communityReviewRequest) => {
   return request({
-    url:'/CommunityReview',
+    url: '/CommunityReview',
     method: 'post',
-    data:communityReviewRequest
+    data: communityReviewRequest
   })
 }
 
 // 查看工程选择的设计院信息
-export const getDesignerApi = (projectId ) => {
+export const getDesignerApi = (projectId) => {
   return request({
-    url:`/design/${projectId}`,
+    url: `/design/${projectId}`,
     method: 'get'
   })
 }
 
 // 新增补贴
-export const addBonusApi = (projectId,data ) => {
+export const addBonusApi = (projectId, data) => {
   return request({
-    url:`/Bonus/${projectId}`,
+    url: `/Bonus/${projectId}`,
     method: 'post',
     data
   })
 }
 
 // 补贴查看
-export const getBonusApi = (projectId ) => {
+export const getBonusApi = (projectId) => {
   return request({
-    url:`/Bonus/${projectId}`,
+    url: `/Bonus/${projectId}`,
     method: 'get'
   })
 }
 
 // 获取增梯办信息
-export const getInsInfoApi = (projectId ) => {
+export const getInsInfoApi = (projectId) => {
   return request({
-    url:`/users/${projectId}`,
+    url: `/users/${projectId}`,
     method: 'get'
   })
 }

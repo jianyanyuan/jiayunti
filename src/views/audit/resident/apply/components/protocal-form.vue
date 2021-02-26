@@ -9,8 +9,8 @@
   <div v-loading="pageLoading">
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
       <span>项目协议书</span>
-      <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
-      <el-button v-else type="primary" style="float:right" @click="postApply(typeName)">保存</el-button>
+      <el-button v-if="hasChanged && !$store.state.project.isDelegated" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
+      <el-button v-if="!hasChanged && !$store.state.project.isDelegated" type="primary" style="float:right" @click="postApply(typeName)">保存</el-button>
     </el-row>
     <template v-if="hasChanged">
       <el-card class="upload-card" style="margin-bottom:30px">
@@ -36,7 +36,7 @@
     </template>
     <div style="text-align:center">
       <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
-      <el-button v-if="hasChanged" type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
+      <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
     </div>
   </div>
 </template>

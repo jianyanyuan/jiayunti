@@ -29,14 +29,25 @@
           <el-form-item label="加装电梯地址">
             {{ basic.location }}
           </el-form-item>
+          <el-form-item v-if="basic.principalName" label="代理人">
+            {{ basic.principalName }}
+          </el-form-item>
+          <el-form-item v-if="basic.principalName" label="代理人电话">
+            {{ basic.principalPhone }}
+          </el-form-item>
           <el-form-item label="设计单位">
             {{ basic.designName }}
           </el-form-item>
           <el-form-item label="设备">
             {{ basic.device }}
           </el-form-item>
+          <el-form-item label="施工单位">
+            {{ basic.constructionName }}
+          </el-form-item>
+          <el-form-item label="监理单位">
+            {{ basic.supervisionName }}
+          </el-form-item>
         </el-form>
-
       </el-card>
     </div>
 
@@ -147,7 +158,7 @@ export default {
       editable: false,
       basic: {},
       pageLoading: false,
-      tableData: [],
+      tableData: [{}],
       projectId: null,
       status: null
       // updateList: []
@@ -220,6 +231,10 @@ export default {
       }
     },
     async handlePost() {
+      if (this.tableData.length === 1 && this.tableData[0].type === undefined) {
+        this.$message.warning('请先添加踏勘项目')
+        return
+      }
       this.pageLoading = true
       const addList = this.tableData.filter(v => v.id === undefined)
       if (addList.length > 0) {

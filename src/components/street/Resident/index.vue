@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-tabs tab-position="left" v-loading="tabLoading">
+    <el-tabs v-loading="tabLoading" tab-position="left">
       <el-tab-pane label="基本资料">
         <el-card class="table-expand-public">
           <el-form label-position="left" inline class="expand-form-p">
@@ -16,6 +16,12 @@
             <el-form-item label="电话">
               {{ basic.phoneNumber }}
             </el-form-item>
+            <el-form-item v-if="basic.principalName" label="代理人">
+              {{ basic.principalName }}
+            </el-form-item>
+            <el-form-item v-if="basic.principalPhone" label="代理人电话">
+              {{ basic.principalPhone }}
+            </el-form-item>
             <el-form-item label="加装电梯地址">
               {{ basic.location }}
             </el-form-item>
@@ -24,6 +30,12 @@
             </el-form-item>
             <el-form-item label="设备">
               {{ basic.device }}
+            </el-form-item>
+            <el-form-item label="施工单位">
+              {{ basic.constructionName }}
+            </el-form-item>
+            <el-form-item label="监理单位">
+              {{ basic.supervisionName }}
             </el-form-item>
           </el-form>
         </el-card>
@@ -63,8 +75,8 @@ export default {
   data() {
     return {
       tabLoading: false,
-      basic: {},// 基础信息
-      rooms: [],// 意见征询表
+      basic: {}, // 基础信息
+      rooms: [], // 意见征询表
       fileList: {}, // 意见征询表
       pageContent: [
         {
@@ -128,10 +140,10 @@ export default {
           label: '公示内容',
           fileList: []
         },
-          {
-            label: '公示报告',
-            fileList: []
-          })
+        {
+          label: '公示报告',
+          fileList: []
+        })
       }
 
       for (let idx = 0; idx < typeMap.length; idx++) {
@@ -149,8 +161,7 @@ export default {
           })
         asyncReq.push(fileAsync)
       }
-      Promise.all(asyncReq).then(() => (this.tabLoading = false)).catch(err => {
-        
+      Promise.all(asyncReq).then(() => (this.tabLoading = false)).catch(() => {
         this.tabLoading = false
         this.$message.error('信息获取失败')
       })

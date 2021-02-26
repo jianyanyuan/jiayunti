@@ -40,7 +40,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('common', ['applyStatus', 'applyTag'])
+    ...mapState('project', ['applyStatus', 'applyTag'])
 
   },
   created() {

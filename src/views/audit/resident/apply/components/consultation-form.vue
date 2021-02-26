@@ -9,8 +9,8 @@
   <div v-loading="pageLoading">
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
       <span>意见征询表</span>
-      <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
-      <el-button v-else type="primary" style="float:right" @click="postFile">保存</el-button>
+      <el-button v-if="hasChanged && !$store.state.project.isDelegated" type="primary" style="float:right" @click="hasChanged = false">修改</el-button>
+      <el-button v-if="!hasChanged && !$store.state.project.isDelegated" type="primary" style="float:right" @click="postFile">保存</el-button>
     </el-row>
     <template v-if="hasChanged">
       <el-card v-for="(room) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
@@ -51,7 +51,7 @@
     <div style="text-align:center">
       <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
 
-      <el-button v-if="hasChanged" type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
+      <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
     </div>
   </div>
 </template>
@@ -124,11 +124,15 @@ export default {
 
     nextProcess(arrow) {
       if (arrow > 0) {
+        if (!this.hasChanged) {
+          this.$message.warning('请先保存')
+          return
+        }
         const count = this.rooms.reduce((c, v) => (this.fileList[v].length + c), 0)
         if (count >= this.rooms.length * 3) {
           this.$emit('nextProcess', arrow)
         } else {
-          this.$message.error('请补全附件，附件分开上传')
+          this.$message.error('附件未提交完成')
         }
       } else {
         this.$emit('nextProcess', arrow)

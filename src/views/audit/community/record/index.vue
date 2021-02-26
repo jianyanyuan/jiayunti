@@ -13,7 +13,7 @@
           <span>基本信息</span>
         </div>
         <el-form label-width="120px" class="show-form">
-          <el-form-item label="姓名">
+          <el-form-item label="申请人">
             {{ basic.applicantName }}
           </el-form-item>
           <el-form-item label="申请时间">
@@ -28,11 +28,23 @@
           <el-form-item label="加装电梯地址">
             {{ basic.location }}
           </el-form-item>
+          <el-form-item v-if="basic.principalName" label="代理人">
+            {{ basic.principalName }}
+          </el-form-item>
+          <el-form-item v-if="basic.principalName" label="代理人电话">
+            {{ basic.principalPhone }}
+          </el-form-item>
           <el-form-item label="设计单位">
             {{ basic.designName }}
           </el-form-item>
           <el-form-item label="设备">
             {{ basic.device }}
+          </el-form-item>
+          <el-form-item label="施工单位">
+            {{ basic.constructionName }}
+          </el-form-item>
+          <el-form-item label="监理单位">
+            {{ basic.supervisionName }}
           </el-form-item>
         </el-form>
       </el-card>
@@ -98,7 +110,6 @@ export default {
       },
       objection: [],
       updateList: [],
-      deleteList: [],
       postList: [],
       rules: {
         adviceName: [{ required: true, message: '请输入姓名', validator: validateTrueName, trigger: 'blur' }],
@@ -133,7 +144,7 @@ export default {
             resolve('获取成功')
           })
           .catch(() => {
-            reject('基础信息获取失败')
+            reject('信息获取失败')
           })
       })
       const detailAsync = new Promise((resolve, reject) => {
@@ -161,7 +172,11 @@ export default {
       }
       if (item.id !== undefined) {
         // 已上传
-        this.deleteList.push(item.id)
+        Community.removeObjection(item.id)
+          .then(() => {
+            this.detailApply()
+          })
+          .catch(() => { this.$message.error('删除失败') })
       }
       if (item.timeStamp) {
         // 未上传
@@ -208,12 +223,7 @@ export default {
           const updateAsync = Community.modifyObjection(this.updateList)
           asyncList.push(updateAsync)
         }
-        if (notEmptyArray(this.deleteList)) {
-          this.deleteList.forEach(v => {
-            const deleteAsync = Community.removeObjection(v)
-            asyncList.push(deleteAsync)
-          })
-        }
+
         Promise.all(asyncList).then(() => {
           this.pageLoading = false
           this.$router.push('/community/list')

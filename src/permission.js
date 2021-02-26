@@ -26,7 +26,6 @@ router.beforeEach(async(to, from, next) => {
   document.title = getPageTitle(to.meta.title)
   // determine whether the user has logged in
   const hasToken = getToken()
-
   if (hasToken) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
@@ -49,6 +48,8 @@ router.beforeEach(async(to, from, next) => {
           }
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
           let roleHome = roles[0].split('_').slice(1).join('-').toLocaleLowerCase()
+          // 居民和受理委托人共用一个路由表
+          roleHome = roleHome === 'principal' ? 'resident' : roleHome
           const unions = ['capital-rule', 'house-construction', 'urban-management', 'market-supervisor']
           if (unions.includes(roleHome)) {
             roleHome = 'union'

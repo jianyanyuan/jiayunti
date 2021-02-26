@@ -17,6 +17,7 @@ const designerRouter = {
   name: 'Designer',
   meta: {
     title: '设计',
+    mean: 'user',
     icon: 'design',
     roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
   },

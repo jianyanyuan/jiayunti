@@ -70,7 +70,7 @@
 
           <template slot-scope="{row}">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="row.statusId === 8" size="mini" type="warning" plain @click="willOffer(row)">报价</el-button>
+              <el-button v-if="row.statusId === 8" size="mini" type="warning" plain @click="willOffer(row)">现场照片</el-button>
               <!-- <el-button v-if="row.statusId === 11" size="mini" type="success" plain >开始施工</el-button> -->
 
               <el-button v-if="row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'ConstructionFault',params:{id:row.id,status:row.statusId}})">违规查看</el-button>
