@@ -18,7 +18,7 @@
         </el-table-column>
         <el-table-column type="expand">
           <template slot-scope="{ row }">
-            <el-form v-loading="expandLoading" label-position="left" inline class="expand-form-p">
+            <el-form label-position="left" inline class="expand-form-p">
               <el-form-item label="申请人">
                 {{ row.apply.applicantName }}
               </el-form-item>
@@ -34,11 +34,23 @@
               <el-form-item label="加装电梯地址">
                 {{ row.apply.location }}
               </el-form-item>
+              <el-form-item v-if="row.apply.principalName" label="代理人">
+                {{ row.apply.principalName }}
+              </el-form-item>
+              <el-form-item v-if="row.apply.principalName" label="代理人电话">
+                {{ row.apply.principalPhone }}
+              </el-form-item>
               <el-form-item label="设计单位">
-                {{ row.apply.designName }}
+                {{ row.apply.designName || '' }}
               </el-form-item>
               <el-form-item label="设备">
-                {{ row.apply.device }}
+                {{ row.apply.device || '' }}
+              </el-form-item>
+              <el-form-item label="施工单位">
+                {{ row.apply.constructionName || '' }}
+              </el-form-item>
+              <el-form-item label="监理单位">
+                {{ row.apply.supervisionName || '' }}
               </el-form-item>
             </el-form>
           </template>
@@ -97,5 +109,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
 </style>

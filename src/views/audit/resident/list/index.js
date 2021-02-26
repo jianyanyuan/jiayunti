@@ -1,5 +1,7 @@
 import { mapState, mapGetters } from 'vuex'
-import { deepClone, notEmptyArray } from '@/utils'
+import File from '@/api/file'
+import { deepClone, notEmptyArray, checkUpload } from '@/utils'
+
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import { createButtons } from '@/mixin/common'
 // import Flow from '@/components/street/Flow'
@@ -25,14 +27,13 @@ export default {
   // },
   data() {
     return {
-
+      uploadVisible: false,
+      uploadId: null,
       formLoading: false,
       listLoading: false,
       openLoading: false,
       flowVisible: false,
-      audit: {
-
-      },
+      audit: {},
       model: {
         visible: false,
         form: deepClone(defaultForm),
@@ -55,7 +56,10 @@ export default {
         children: 'communities'
       },
       // expandLoading: false,
-      communityOptions: []
+      communityOptions: [],
+      contractList: [],
+      contractUpload: true,
+      uploadLoading: false
     }
   },
   computed: {
@@ -204,6 +208,102 @@ export default {
     },
     resetFrom(formName) {
       this.$refs[formName].clearValidate()
+    },
+    // 上传合同
+    openUpload(row) {
+      const { isEntrust, id } = row
+      this.contractList = []
+      this.contractUpload = true
+
+      if (this.$store.getters.roles[0] === 'ROLE_RESIDENT' && isEntrust === 0) {
+        this.contractUpload = false
+      }
+      File.get({ projectId: id, typeName: 'apply-contract' })
+        .then(res => {
+          if (notEmptyArray(res.content)) {
+            for (const i of res.content) {
+              this.contractList.push({
+                uid: i.id,
+                name: i.filename,
+                url: i.path
+              })
+            }
+          }
+        })
+        .finally(() => {
+          this.uploadId = id
+          this.uploadVisible = true
+        })
+    },
+    // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
+    // 限制了添加文件的逻辑，不支持多个文件选择
+    handleUploadChange(file, fileList) {
+      const valid = checkUpload(file.raw)
+      if (valid && file.url === undefined) {
+        const formData = new FormData()
+        formData.append('file', file.raw)
+        this.contractList.push({
+          projectId: this.uploadId,
+          uid: file.uid,
+          name: file.name,
+          file: formData
+        })
+      } else {
+        fileList.pop()
+      }
+    },
+    // 删除文件
+    handleUploadRemove(file, fileList) {
+      // 未上传 --> 取消上传
+      const removeIdx = this.contractList.findIndex(f => f.uid === file.uid)
+      if (file.url) {
+        // 已上传
+        File.remove(file.uid)
+          .then(() => {
+            this.contractList.splice(removeIdx, 1)
+          })
+          .catch(() => {
+            this.$message.error('删除失败')
+          })
+      } else {
+        this.contractList.splice(removeIdx, 1)
+      }
+    },
+    // 上传合同
+    async handleUpload() {
+      this.uploadLoading = true
+      this.contractList = this.contractList.filter(v => v.file)
+
+      if (notEmptyArray(this.contractList)) {
+        let error = false
+        // let last = true
+        for (const idx in this.contractList) {
+          const { projectId, file } = this.contractList[idx]
+          await File.upload(file, { projectId, typeName: 'apply-contract' })
+            .catch(() => {
+              // 上传失败
+              const failIdx = this.$refs.contractUpload.uploadFiles.findIndex(f => f.uid === this.contractList[idx].uid)
+              this.$refs.contractUpload.uploadFiles.splice(failIdx, 1)
+              error = true
+            })
+        }
+        this.contractList = []
+        if (error) {
+          this.$message.error('文件上传失败')
+          this.uploadLoading = false
+        } else {
+          this.$message.success('上传完成')
+          this.uploadVisible = false
+          this.uploadId = null
+          this.$refs.contractUpload.uploadFiles = []
+          this.uploadLoading = false
+        }
+      } else {
+        this.uploadVisible = false
+        this.uploadId = null
+        this.$refs.contractUpload.uploadFiles = []
+        this.uploadLoading = false
+      }
     }
   }
 }

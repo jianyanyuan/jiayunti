@@ -101,14 +101,6 @@ export default {
       const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
       this.uploadList.splice(removeIdx, 1)
     },
-    handleSizeChange(val) {
-      this.pagination.pageSize = val
-      this.listApplies()
-    },
-    handleCurrentPageChange(val) {
-      this.pagination.pageIndex = val
-      this.listApplies()
-    },
     // 上传施工图设计稿
     async designUpload() {
       this.uploadLoading = true
@@ -145,6 +137,15 @@ export default {
       } else {
         this.$message.error('请上传施工图设计稿')
       }
+    },
+    handleSizeChange(val) {
+      this.pagination.pageSize = val
+      this.listApplies()
+    },
+    handleCurrentPageChange(val) {
+      this.pagination.pageIndex = val
+      this.listApplies()
     }
+
   }
 }

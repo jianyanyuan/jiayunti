@@ -134,16 +134,22 @@ export default {
 
       const typeMap = ['consultation-summary', 'delegate-form', 'protocal-form', 'special-form']
       // 9街道审核
-      if (this.status == 9) {
-        typeMap.push('notice-content', 'notice-report')
-        this.pageContent.push({
-          label: '公示内容',
-          fileList: []
-        },
-        {
-          label: '公示报告',
-          fileList: []
-        })
+      if (this.status >= 9) {
+        typeMap.push('notice-content', 'notice-report', 'apply-contract')
+        this.pageContent.push(
+          {
+            label: '公示内容',
+            fileList: []
+          },
+          {
+            label: '公示报告',
+            fileList: []
+          },
+          {
+            label: '申请合同',
+            fileList: []
+          }
+        )
       }
 
       for (let idx = 0; idx < typeMap.length; idx++) {

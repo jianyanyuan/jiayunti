@@ -9,7 +9,7 @@
 <template>
   <div class="app-container">
     <!-- 代理人不能新增申请 -->
-    <el-button v-if="!$store.getters.roles.includes('ROLE_PRINCIPAL')" type="primary" size="medium" style="margin-bottom:20px" :loading="openLoading" @click="openAdd">新增申请</el-button>
+    <el-button v-if="$store.getters.roles && !$store.getters.roles.includes('ROLE_PRINCIPAL')" type="primary" size="medium" style="margin-bottom:20px" :loading="openLoading" @click="openAdd">新增申请</el-button>
 
     <el-card>
       <!-- @row-dblclick="flowView" -->
@@ -76,10 +76,11 @@
             <el-tag :type="scope.row.statusId | keyToVal(applyTag)">{{ scope.row.statusId | keyToVal(applyStatus) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" width="200px">
+        <el-table-column align="center" label="操作" width="300px">
           <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
               <el-button v-for="(btn,index) in getButtons(scope.row)" :key="index" :size="btn.s" :type="btn.t" plain @click="$router.push(btn.url)">{{ btn.o }}</el-button>
+              <el-button v-if="+scope.row.statusId < 11" size="mini" type="info" plain @click="openUpload(scope.row)">申请合同</el-button>
               <!-- <el-button v-if="scope.row.statusId === 0" size="mini" type="warning" plain @click="$router.push({name:'ResidentApply',params:{id:scope.row.id,status:scope.row.statusId}})">提交材料</el-button>
               <el-button v-if="scope.row.statusId ===0 && scope.row.whetherThrough===1" size="mini" plain type="danger" @click="$router.push({name:'ResidentAuditDetail',params:{id:scope.row.id,status:scope.row.statusId}})">审核意见</el-button>
 
@@ -189,6 +190,22 @@
         <el-button type="primary" @click="postApply">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog center title="申请合同" :visible.sync="uploadVisible" :close-on-click-modal="false" class="uploadModal">
+      <template v-if="contractUpload">
+        <el-upload ref="contractUpload" :file-list="contractList" action="#" :on-remove="contractUpload && handleUploadRemove" :on-change="handleUploadChange" drag :auto-upload="false">
+          <div>将文件拖到此处，或点击添加</div>
+          <div>单个文件大小不超过20MB，可上传图片或PDF</div>
+        </el-upload>
+        <span slot="footer">
+          <el-button size="small" type="primary" @click="handleUpload">上传合同</el-button>
+        </span>
+      </template>
+      <template v-else>
+        <upload-list :files="contractList" list-type="picture-card" :disabled="true" />
+
+      </template>
+
+    </el-dialog>
     <!-- 查看流程 -->
     <!-- <el-dialog v-el-drag-dialog title="申请流程" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
       <flow />
@@ -224,5 +241,18 @@ input {
 .file-display:hover {
   color: #409eff;
   background-color: #ebebeb;
+}
+.uploadModal ::v-deep .el-upload-dragger {
+  padding: 40px 5px;
+  border: 2px solid #e5e5e5;
+  color: #777;
+  -webkit-transition: background-color 0.2s linear;
+  transition: background-color 0.2s linear;
+}
+.uploadModal ::v-deep .el-upload-dragger:hover {
+  background: #f6f6f6;
+}
+.uploadModal ::v-deep .el-dialog__body {
+  text-align: center;
 }
 </style>

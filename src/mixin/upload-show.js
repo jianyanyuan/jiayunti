@@ -13,7 +13,7 @@ export default {
   data() {
     return {
       // 修改后重新保存
-      hasChanged: false,
+      hasChanged: true,
       pageLoading: false,
       fileList: [], // 展示用
       uploadList: [] // 上传用

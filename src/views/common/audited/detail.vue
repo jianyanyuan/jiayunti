@@ -13,7 +13,9 @@
       <el-timeline-item v-for="(item, index) in list" :key="index" :timestamp="new Date(item.auditTime) | parseTime('{y}-{m}-{d} {h}:{i}')" placement="top">
         <el-card>
           <p>
-            <span class="audit-tip">审核意见：</span>
+            <span class="audit-tip">审核内容：</span>
+            {{ item.typename }}
+            <span class="audit-tip-r">审核意见：</span>
             {{ item.reviewOpinion }}
             <span class="audit-tip audit-tip-r">审核结果：</span>
             <el-tag :type="item.reviewResult | keyToVal(handleTag)">{{ item.reviewResult | keyToVal(auditOptions) }}</el-tag>

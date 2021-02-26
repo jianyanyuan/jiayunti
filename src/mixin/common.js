@@ -11,6 +11,9 @@
 *  - isPass
 */
 export const createButtons = (operations, userInfo, projectInfo) => {
+  if (!operations || !userInfo.roles || !projectInfo) {
+    return null
+  }
   let { roles } = userInfo
   const { id, status, isDelegated, isPass } = projectInfo
   if (roles[0] === 'ROLE_RESIDENT' && !isDelegated) {

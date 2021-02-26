@@ -8,9 +8,11 @@
 import { mapState } from 'vuex'
 // import Flow from '@/components/street/Flow'
 import { listApi } from '@/api/projects'
-import { notEmptyArray } from '@/utils'
+import { notEmptyArray, checkUpload } from '@/utils'
 import Construction from '@/api/construction'
 import FilterList from '@/components/Filter'
+import File from '@/api/file'
+
 export default {
   name: 'DesignerList',
   components: {
@@ -30,7 +32,9 @@ export default {
         pageIndex: 1,
         pageSize: 30
       },
-      expandLoading: false
+      uploadVisible: false,
+      uploadId: null,
+      uploadList: []
     }
   },
   computed: {
@@ -58,22 +62,22 @@ export default {
       })
       this.listLoading = false
     },
-    async willOffer(row) {
-      let valid = true
-      await Construction.getProOffer(row.id).then((res) => {
-        if (Object.keys(res).length !== 0) {
-          valid = false
-        }
-      })
-        .catch(() => {
-          valid = false
-        })
-      if (valid) {
-        this.$router.push({ name: 'ConstructionProcess', params: { id: row.id, status: row.statusId }})
-      } else {
-        this.$message.error('请勿重复报价')
-      }
-    },
+    // async willOffer(row) {
+    //   let valid = true
+    //   await Construction.getProOffer(row.id).then((res) => {
+    //     if (Object.keys(res).length !== 0) {
+    //       valid = false
+    //     }
+    //   })
+    //     .catch(() => {
+    //       valid = false
+    //     })
+    //   if (valid) {
+    //     this.$router.push({ name: 'ConstructionProcess', params: { id: row.id, status: row.statusId }})
+    //   } else {
+    //     this.$message.error('请勿重复报价')
+    //   }
+    // },
     async willComplete(row) {
       let valid = true
       await Construction.isResolved(row.id).then((res) => {
@@ -92,11 +96,9 @@ export default {
     },
     async handleExpand(row, expandedRows) {
       if (Object.keys(row.apply).length === 0) {
-        this.expandLoading = true
         const apply = await this.$store.dispatch('getProjectBasic', row.id)
         const idx = this.list.findIndex(v => v.id === row.id)
         this.$set(this.list[idx], 'apply', apply)
-        this.expandLoading = false
       }
     },
     // flowView() {
@@ -109,6 +111,102 @@ export default {
     handleCurrentPageChange(val) {
       this.pagination.pageIndex = val
       this.listApplies()
+    },
+    // 上传现场照片
+    openUpload(id) {
+      this.uploadList = []
+
+      File.get({ projectId: id, typeName: 'locale-form' })
+        .then(res => {
+          if (notEmptyArray(res.content)) {
+            for (const i of res.content) {
+              this.uploadList.push({
+                uid: i.id,
+                name: i.filename,
+                url: i.path
+              })
+            }
+          }
+        })
+        .finally(() => {
+          this.uploadId = id
+          this.uploadVisible = true
+        })
+    },
+    // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
+    // 限制了添加文件的逻辑，不支持多个文件选择
+    handleUploadChange(file, fileList) {
+      const isImage = /\bimage/i.test(file.raw.type)
+      if (!isImage) {
+        this.$message.warning('只能上传图片')
+        return
+      }
+
+      const valid = checkUpload(file.raw)
+      if (valid && file.url === undefined) {
+        const formData = new FormData()
+        formData.append('file', file.raw)
+        this.uploadList.push({
+          projectId: this.uploadId,
+          uid: file.uid,
+          name: file.name,
+          file: formData
+        })
+      } else {
+        fileList.pop()
+      }
+    },
+    // 删除文件
+    handleUploadRemove(file, fileList) {
+      // 未上传 --> 取消上传
+      const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
+      if (file.url) {
+        // 已上传
+        File.remove(file.uid)
+          .then(() => {
+            this.uploadList.splice(removeIdx, 1)
+          })
+          .catch(() => {
+            this.$message.error('删除失败')
+          })
+      } else {
+        this.uploadList.splice(removeIdx, 1)
+      }
+    },
+    // 上传合同
+    async handleUpload() {
+      this.uploadList = this.uploadList.filter(v => v.file)
+      this.uploadLoading = true
+      if (notEmptyArray(this.uploadList)) {
+        let error = false
+        // let last = true
+        for (const idx in this.uploadList) {
+          const { projectId, file } = this.uploadList[idx]
+          await File.upload(file, { projectId, typeName: 'locale-form' })
+            .catch(() => {
+              // 上传失败
+              const failIdx = this.$refs.upload.uploadFiles.findIndex(f => f.uid === this.uploadList[idx].uid)
+              this.$refs.upload.uploadFiles.splice(failIdx, 1)
+              error = true
+            })
+        }
+        this.uploadList = []
+        if (error) {
+          this.$message.error('文件上传失败')
+          this.uploadLoading = false
+        } else {
+          this.$message.success('上传完成')
+          this.uploadVisible = false
+          this.uploadId = null
+          this.$refs.upload.uploadFiles = []
+          this.uploadLoading = false
+        }
+      } else {
+        this.uploadVisible = false
+        this.uploadId = null
+        this.$refs.upload.uploadFiles = []
+        this.uploadLoading = false
+      }
     }
 
   }
