@@ -7,6 +7,8 @@
 -->
 <template>
   <div v-loading="pageLoading" class="app-container">
+    <el-page-header style="margin-bottom:30px" content="违规查看" @back="$router.go(-1)" />
+
     <div class="basic-container">
       <el-card style="margin-bottom:30px">
         <div slot="header">

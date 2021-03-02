@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="regist-head">居民注册</div>
+    <div class="regist-head">用户注册</div>
     <el-card class="regist-main">
       <el-row type="flex" class="row-bg">
         <el-col :span="18">

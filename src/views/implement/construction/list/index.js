@@ -34,7 +34,9 @@ export default {
       },
       uploadVisible: false,
       uploadId: null,
-      uploadList: []
+      uploadList: [],
+      dialogImageUrl: '',
+      dialogImageVisible: false
     }
   },
   computed: {
@@ -135,79 +137,98 @@ export default {
     },
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
-    handleUploadChange(file, fileList) {
+    async handleUploadChange(file, fileList) {
       const isImage = /\bimage/i.test(file.raw.type)
       if (!isImage) {
         this.$message.warning('只能上传图片')
+        fileList.pop()
         return
       }
 
       const valid = checkUpload(file.raw)
-      if (valid && file.url === undefined) {
+      if (valid) {
         const formData = new FormData()
         formData.append('file', file.raw)
-        this.uploadList.push({
-          projectId: this.uploadId,
-          uid: file.uid,
-          name: file.name,
-          file: formData
-        })
+        await File.upload(formData, { projectId: this.uploadId, typeName: 'locale-form' })
+          .then(res => {
+            file.uid = res.fileTypeId
+            file.url = res.fileAddress
+            file.status = 'success'
+          })
+          .catch(() => {
+            // 上传失败
+            this.$message.error('上传失败')
+            // const failIdx = this.$refs.contractUpload.uploadFiles.findIndex(f => f.uid === this.contractList[idx].uid)
+            // this.$refs.contractUpload.uploadFiles.splice(failIdx, 1)
+            // error = true
+          })
       } else {
         fileList.pop()
       }
     },
     // 删除文件
     handleUploadRemove(file, fileList) {
-      // 未上传 --> 取消上传
-      const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
-      if (file.url) {
-        // 已上传
-        File.remove(file.uid)
-          .then(() => {
-            this.uploadList.splice(removeIdx, 1)
-          })
-          .catch(() => {
-            this.$message.error('删除失败')
-          })
-      } else {
-        this.uploadList.splice(removeIdx, 1)
-      }
+      File.remove(file.uid)
+        .then(() => {
+          // this.contractList.splice(removeIdx, 1)
+        })
+        .catch(() => {
+          this.$message.error('删除失败')
+        })
+      // const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
+      // if (file.url) {
+      //   // 已上传
+      //   File.remove(file.uid)
+      //     .then(() => {
+      //       this.uploadList.splice(removeIdx, 1)
+      //     })
+      //     .catch(() => {
+      //       this.$message.error('删除失败')
+      //     })
+      // } else {
+      //   this.uploadList.splice(removeIdx, 1)
+      // }
     },
-    // 上传合同
-    async handleUpload() {
-      this.uploadList = this.uploadList.filter(v => v.file)
-      this.uploadLoading = true
-      if (notEmptyArray(this.uploadList)) {
-        let error = false
-        // let last = true
-        for (const idx in this.uploadList) {
-          const { projectId, file } = this.uploadList[idx]
-          await File.upload(file, { projectId, typeName: 'locale-form' })
-            .catch(() => {
-              // 上传失败
-              const failIdx = this.$refs.upload.uploadFiles.findIndex(f => f.uid === this.uploadList[idx].uid)
-              this.$refs.upload.uploadFiles.splice(failIdx, 1)
-              error = true
-            })
-        }
-        this.uploadList = []
-        if (error) {
-          this.$message.error('文件上传失败')
-          this.uploadLoading = false
-        } else {
-          this.$message.success('上传完成')
-          this.uploadVisible = false
-          this.uploadId = null
-          this.$refs.upload.uploadFiles = []
-          this.uploadLoading = false
-        }
-      } else {
-        this.uploadVisible = false
-        this.uploadId = null
-        this.$refs.upload.uploadFiles = []
-        this.uploadLoading = false
-      }
+    // 现场照片预览
+    handleLocalePreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogImageVisible = true
     }
+    // 上传合同
+    // async handleUpload() {
+    //   this.uploadList = this.uploadList.filter(v => v.file)
+    //   this.uploadLoading = true
+    //   if (notEmptyArray(this.uploadList)) {
+    //     let error = false
+    //     // let last = true
+    //     for (const idx in this.uploadList) {
+    //       const { projectId, file } = this.uploadList[idx]
+    //       await File.upload(file, { projectId, typeName: 'locale-form' })
+    //         .catch(() => {
+    //           // 上传失败
+    //           const failIdx = this.$refs.upload.uploadFiles.findIndex(f => f.uid === this.uploadList[idx].uid)
+    //           this.$refs.upload.uploadFiles.splice(failIdx, 1)
+    //           error = true
+    //         })
+    //     }
+    //     this.uploadList = []
+    //     if (error) {
+    //       this.$message.error('文件上传失败')
+    //       this.uploadLoading = false
+    //     } else {
+    //       this.$message.success('上传完成')
+    //       this.uploadVisible = false
+    //       this.uploadId = null
+    //       this.$refs.upload.uploadFiles = []
+    //       this.uploadLoading = false
+    //     }
+    //   } else {
+    //     this.uploadVisible = false
+    //     this.uploadId = null
+    //     this.$refs.upload.uploadFiles = []
+    //     this.uploadLoading = false
+    //   }
+    // }
 
   }
 }

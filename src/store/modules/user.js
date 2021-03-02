@@ -106,6 +106,7 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       User.getUserInfo().then(res => {
+        // 返回的address是字符串数组
         const { id, username, address, roles, phonenumber } = res
         // roles must be a non-empty array
         if (notEmptyArray(roles)) {

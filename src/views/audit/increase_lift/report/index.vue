@@ -104,7 +104,7 @@ export default {
     },
     handlePost() {
       if (this.form.attachment === null) {
-        this.$message.error('请上传报告')
+        this.$message.warning('请上传报告')
         return
       }
       this.$refs.form.validate(async(valid, errors) => {

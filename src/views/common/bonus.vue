@@ -112,12 +112,18 @@ export default {
     },
     // 保存修改
     async handlePost() {
-      this.pageLoading = true
       let error = false
       if (this.uploadList.length === 0) {
-        this.$message.error('请上传附件')
+        this.$message.warning('请上传附件')
+
         return
       }
+      if (!this.model.money) {
+        this.$message.warning('请填写金额')
+        return
+      }
+      this.pageLoading = true
+
       for (const idx in this.uploadList) {
         const { file } = this.uploadList[idx]
         await File.upload(file, { typeName: this.typeName, projectId: this.projectId })

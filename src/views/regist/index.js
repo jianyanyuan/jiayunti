@@ -38,7 +38,7 @@ export default {
       address: { county: [], community: [] },
       rule: {
         username: [{ required: true, trigger: 'blur', message: '用户名非数字开头，2-30位中英文和数字组合', validator: Validator.validateUsername }],
-        password: [{ required: true, trigger: 'blur', message: '密码需为6-17位数字和英文符号组合', validator: Validator.validatePassword }],
+        password: [{ required: true, trigger: 'blur', message: '密码需为6-17位数字、字母和英文符号组合', validator: Validator.validatePassword }],
         conPwd: [{ required: true, trigger: 'blur', message: '两次密码不一致', validator: Validator.validateConfirmPassword }],
         idcard: [{ required: true, trigger: 'blur', message: '请输入身份证号', validator: Validator.validateIdCard }],
         phonenumber: [{ required: true, trigger: 'blur', message: '请输入手机号', validator: Validator.validatePhone }],
@@ -91,9 +91,10 @@ export default {
             this.$message.error(err)
             this.loading = false
           })
-        } else {
-          this.$message.error(Object.values(errors)[0][0].message)
         }
+        // else {
+        //   this.$message.error(Object.values(errors)[0][0].message)
+        // }
       })
     },
     // 验证码focus事件

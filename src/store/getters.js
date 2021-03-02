@@ -23,9 +23,9 @@ const getters = {
     try {
       if (notEmptyArray(state.user.address)) {
         const result = state.user.address.reduce((init, value, index) => {
-          const target = source.find(v => v.id === value)
+          const target = source.find(v => v.id === +value)
           if (!target) {
-            throw new Error('数据异常')
+            throw new Error('地址解析异常')
           }
           source = target[idxMap.get(index)]
           return init.concat(target.name)
@@ -33,6 +33,7 @@ const getters = {
         return result.join('/')
       }
     } catch (err) {
+      console.log(err)
       // )
       // console.log('地址')
       return ''

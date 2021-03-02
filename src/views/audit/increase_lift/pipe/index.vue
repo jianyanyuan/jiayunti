@@ -247,35 +247,46 @@ export default {
         }
       }
       IncreaseLift.modifyPipe(this.tableData.filter(v => v.id !== undefined)).then(async res => {
-        const next = this.isFinished()
-        if (next) {
-          await advanceApi(this.projectId, this.status)
-            .then(() => (this.$router.push('/increase-lift/list')))
-            .catch(() => (this.$message.error('流程错误')))
-          this.pageLoading = false
-        } else {
-          this.pageLoading = false
-          this.detailApply()
-        }
+        // const next = this.isFinished()
+        this.$confirm('踏勘是否全部完成？')
+          .then(_ => {
+            advanceApi(this.projectId, this.status)
+              .then(() => (this.$router.push('/increase-lift/list')))
+              .catch(() => (this.$message.error('流程错误')))
+              .finally(() => { this.pageLoading = false })
+          })
+          .catch(_ => {
+            this.pageLoading = false
+            this.detailApply()
+          })
+        // if (next) {
+        //   await advanceApi(this.projectId, this.status)
+        //     .then(() => (this.$router.push('/increase-lift/list')))
+        //     .catch(() => (this.$message.error('流程错误')))
+        //   this.pageLoading = false
+        // } else {
+        //   this.pageLoading = false
+        //   this.detailApply()
+        // }
       }).catch(res => {
         this.pageLoading = false
         this.$message.error('保存失败')
       })
       this.editable = false
-    },
-    isFinished() {
-      for (let i = 0; i < this.tableData.length; i++) {
-        if (this.tableData[i].whetherComplete === false) {
-          return false
-        }
-        const data = plainToClass(Pipe, this.tableData[i])
-        const errors = validateSync(data)
-        if (errors.length > 0) {
-          return false
-        }
-      }
-      return true // 全部完成
     }
+    // isFinished() {
+    //   for (let i = 0; i < this.tableData.length; i++) {
+    //     if (this.tableData[i].whetherComplete === false) {
+    //       return false
+    //     }
+    //     const data = plainToClass(Pipe, this.tableData[i])
+    //     const errors = validateSync(data)
+    //     if (errors.length > 0) {
+    //       return false
+    //     }
+    //   }
+    //   return true // 全部完成
+    // }
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {

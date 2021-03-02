@@ -1,7 +1,9 @@
 import { mapState, mapGetters } from 'vuex'
 import File from '@/api/file'
 import { deepClone, notEmptyArray, checkUpload } from '@/utils'
-
+import Pdf from 'vue-pdf'
+import html2canvas from 'html2canvas'
+import printJS from 'print-js'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import { createButtons } from '@/mixin/common'
 // import Flow from '@/components/street/Flow'
@@ -25,8 +27,16 @@ export default {
   // components: {
   //   Flow
   // },
+  components: {
+    Pdf
+  },
   data() {
     return {
+      dialogImageVisible: false,
+      dialogImageUrl: '',
+      pdfURL: '',
+      pdfVisible: false,
+      pdfPages: undefined, // pdf内容
       uploadVisible: false,
       uploadId: null,
       formLoading: false,
@@ -100,14 +110,15 @@ export default {
     openAdd() {
       // 重置表格
       this.openLoading = true
-      const { address } = this.model.form
+      // const { address } = this.model.form
       this.model.form = deepClone(defaultForm)
-      this.model.form.address = address // 修复el-cascader bug
+      this.model.form.address = this.$store.getters['addressPlain']
+      // this.model.form.address = address // 修复el-cascader bug
       this.model.form.applicantName = this.$store.getters.username
-      this.model.form.address.county = this.$store.getters['address']?.slice(0, 2)
-      this.communityOptions = this.$store.getters['common/communityOptions'](this.model.form.address.county)
+      // this.model.form.address.county = this.$store.getters['address']?.slice(0, 2)
+      // this.communityOptions = this.$store.getters['common/communityOptions'](this.model.form.address.county)
       this.model.form.applyMode = 'self'
-      this.model.form.address.community = this.$store.getters['address']?.slice(2)
+      // this.model.form.address.community = this.$store.getters['address']?.slice(2)
       this.model.form.phoneNumber = this.$store.getters['phone'] ?? ''
       this.model.visible = true
       this.openLoading = false
@@ -125,7 +136,7 @@ export default {
     postApply() {
       this.$refs.form.validate((valid, errors) => {
         if (valid) {
-          const { location, rooms, address } = this.model.form
+          const { location, rooms } = this.model.form
           if (notEmptyArray(location) && location.length === 3) {
             this.model.form.location = location.map(v => v.replace(/[<>&"']/gi, ' ').trim()) // 防止xss攻击
           } else {
@@ -153,7 +164,7 @@ export default {
               return
             }
           }
-          this.model.form.address = address.community.concat(address.county)
+          // this.model.form.address = address.community.concat(address.county)
           this.formLoading = true
           addApi(this.model.form).then(res => {
             this.model.visible = false
@@ -222,11 +233,16 @@ export default {
         .then(res => {
           if (notEmptyArray(res.content)) {
             for (const i of res.content) {
-              this.contractList.push({
+              const file = {
                 uid: i.id,
                 name: i.filename,
                 url: i.path
-              })
+              }
+              if (/\bpdf/i.test(i.filename)) {
+                file.url = require('@/assets/images/pdf.jpg')
+                file.path = i.path
+              }
+              this.contractList.push(file)
             }
           }
         })
@@ -237,73 +253,134 @@ export default {
     },
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
-    handleUploadChange(file, fileList) {
+    async handleUploadChange(file, fileList) {
       const valid = checkUpload(file.raw)
-      if (valid && file.url === undefined) {
+      if (valid) {
         const formData = new FormData()
         formData.append('file', file.raw)
-        this.contractList.push({
-          projectId: this.uploadId,
-          uid: file.uid,
-          name: file.name,
-          file: formData
-        })
+        const isPdf = /\bpdf/i.test(file.raw.type)
+        if (isPdf) file.url = require('@/assets/images/pdf.jpg')
+        await File.upload(formData, { projectId: this.uploadId, typeName: 'apply-contract' })
+          .then(res => {
+            if (isPdf) {
+              file.path = res.fileAddress
+            } else {
+              file.url = res.fileAddress
+            }
+            file.status = 'success'
+
+            file.uid = res.fileTypeId
+          })
+          .catch(() => {
+            // 上传失败
+            this.$message.error('上传失败')
+            // const failIdx = this.$refs.contractUpload.uploadFiles.findIndex(f => f.uid === this.contractList[idx].uid)
+            // this.$refs.contractUpload.uploadFiles.splice(failIdx, 1)
+            // error = true
+          })
       } else {
         fileList.pop()
       }
+      // if (valid && file.url === undefined) {
+      //   const formData = new FormData()
+      //   formData.append('file', file.raw)
+      //   this.contractList.push({
+      //     projectId: this.uploadId,
+      //     uid: file.uid,
+      //     name: file.name,
+      //     file: formData
+      //   })
+      // } else {
+      //   fileList.pop()
+      // }
     },
     // 删除文件
     handleUploadRemove(file, fileList) {
+      File.remove(file.uid)
+        .then(() => {
+          // this.contractList.splice(removeIdx, 1)
+        })
+        .catch(() => {
+          this.$message.error('删除失败')
+        })
       // 未上传 --> 取消上传
-      const removeIdx = this.contractList.findIndex(f => f.uid === file.uid)
-      if (file.url) {
-        // 已上传
-        File.remove(file.uid)
-          .then(() => {
-            this.contractList.splice(removeIdx, 1)
-          })
-          .catch(() => {
-            this.$message.error('删除失败')
-          })
-      } else {
-        this.contractList.splice(removeIdx, 1)
-      }
+      // const removeIdx = this.contractList.findIndex(f => f.uid === file.uid)
+      // if (file.url) {
+      //   // 已上传
+
+      // } else {
+      //   this.contractList.splice(removeIdx, 1)
+      // }
     },
     // 上传合同
-    async handleUpload() {
-      this.uploadLoading = true
-      this.contractList = this.contractList.filter(v => v.file)
+    // async handleUpload() {
+    //   this.uploadLoading = true
+    //   this.contractList = this.contractList.filter(v => v.file)
 
-      if (notEmptyArray(this.contractList)) {
-        let error = false
-        // let last = true
-        for (const idx in this.contractList) {
-          const { projectId, file } = this.contractList[idx]
-          await File.upload(file, { projectId, typeName: 'apply-contract' })
-            .catch(() => {
-              // 上传失败
-              const failIdx = this.$refs.contractUpload.uploadFiles.findIndex(f => f.uid === this.contractList[idx].uid)
-              this.$refs.contractUpload.uploadFiles.splice(failIdx, 1)
-              error = true
-            })
-        }
-        this.contractList = []
-        if (error) {
-          this.$message.error('文件上传失败')
-          this.uploadLoading = false
-        } else {
-          this.$message.success('上传完成')
-          this.uploadVisible = false
-          this.uploadId = null
-          this.$refs.contractUpload.uploadFiles = []
-          this.uploadLoading = false
-        }
+    //   if (notEmptyArray(this.contractList)) {
+    //     let error = false
+    //     // let last = true
+    //     for (const idx in this.contractList) {
+    //       const { projectId, file } = this.contractList[idx]
+    //       await File.upload(file, { projectId, typeName: 'apply-contract' })
+    //         .catch(() => {
+    //           // 上传失败
+    //           const failIdx = this.$refs.contractUpload.uploadFiles.findIndex(f => f.uid === this.contractList[idx].uid)
+    //           this.$refs.contractUpload.uploadFiles.splice(failIdx, 1)
+    //           error = true
+    //         })
+    //     }
+    //     this.contractList = []
+    //     if (error) {
+    //       this.$message.error('文件上传失败')
+    //       this.uploadLoading = false
+    //     } else {
+    //       this.$message.success('上传完成')
+    //       this.uploadVisible = false
+    //       this.uploadId = null
+    //       this.$refs.contractUpload.uploadFiles = []
+    //       this.uploadLoading = false
+    //     }
+    //   } else {
+    //     this.uploadVisible = false
+    //     this.uploadId = null
+    //     this.$refs.contractUpload.uploadFiles = []
+    //     this.uploadLoading = false
+    //   }
+    // },
+    // 合同预览
+    handleContractPreview(file) {
+      const url = file.path || file.url
+      const isPdf = /\bpdf/i.test(file.name) || /\bpdf$/i.test(url)
+      if (isPdf) {
+        // 展示pdf
+        this.pdfURL = Pdf.createLoadingTask(url)
+        this.pdfURL.promise.then(pdf => {
+          this.pdfPages = pdf.numPages
+          this.pdfVisible = true
+        }).catch(() => {
+          this.$message.error('pdf预览失败')
+        })
       } else {
-        this.uploadVisible = false
-        this.uploadId = null
-        this.$refs.contractUpload.uploadFiles = []
-        this.uploadLoading = false
+        this.dialogImageUrl = file.url
+        this.dialogImageVisible = true
       }
+    },
+    // 打印pdf
+    printPDF(refName) {
+      html2canvas(this.$refs[refName], {
+        backgroundColor: null,
+        useCORS: true,
+        windowHeight: 0
+      }).then((canvas) => {
+        const url = canvas.toDataURL()
+        printJS({
+          printable: url,
+          type: 'image',
+          documentTitle: this.printName
+        })
+        // console.log(url)
+      })
     }
   }
 }

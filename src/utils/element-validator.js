@@ -42,7 +42,7 @@ export function validatePassword(rule, value, callback) {
   } else {
     const reg = /^[a-zA-z0-9_.@~!?]{6,17}$/
     if (!reg.test(value)) {
-      callback(new Error('密码需为6-17位数字和英文符号组合'))
+      callback(new Error('密码需为6-17位数字、字母和英文符号组合'))
     } else {
       callback()
     }

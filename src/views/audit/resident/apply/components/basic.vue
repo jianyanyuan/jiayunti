@@ -180,7 +180,8 @@ export default {
           }
           this.$emit('nextProcess', arrow)
         } else {
-          this.$message.error(Object.values(errors)[0][0].message)
+          this.$message.warning('信息未补全')
+          // this.$message.error(Object.values(errors)[0][0].message)
         }
       })
     },

@@ -56,7 +56,7 @@ li {
   text-align: center;
 }
 .dialog-center-public img {
-  width: 100%;
+  // width: 100%;
   // object-fit: scale-down;
 }
 // 空内容

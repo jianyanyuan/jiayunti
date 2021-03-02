@@ -117,8 +117,8 @@
           <el-input v-model="model.form.applicantName" auto-complete="off" />
         </el-form-item>
         <el-form-item label="地址" prop="address">
-          <!-- {{model.form.address}} -->
-          <el-row>
+          {{ model.form.address }}
+          <!-- <el-row>
             <el-col :span="12">
               <el-cascader v-model="model.form.address.county" :options="countyOptions" :props="countyProps" style="display:block" disabled />
             </el-col>
@@ -126,7 +126,7 @@
             <el-col :span="10">
               <el-cascader v-model="model.form.address.community" :options="communityOptions" :props="communityProps" style="display:block" disabled />
             </el-col>
-          </el-row>
+          </el-row> -->
         </el-form-item>
         <el-form-item label="电话" prop="phoneNumber">
           <el-input v-model="model.form.phoneNumber" auto-complete="off" />
@@ -192,19 +192,35 @@
     </el-dialog>
     <el-dialog center title="申请合同" :visible.sync="uploadVisible" :close-on-click-modal="false" class="uploadModal">
       <template v-if="contractUpload">
-        <el-upload ref="contractUpload" :file-list="contractList" action="#" :on-remove="contractUpload && handleUploadRemove" :on-change="handleUploadChange" drag :auto-upload="false">
-          <div>将文件拖到此处，或点击添加</div>
-          <div>单个文件大小不超过20MB，可上传图片或PDF</div>
+        <el-upload ref="contractUpload" :file-list="contractList" action="#" :on-preview="handleContractPreview" :on-remove="contractUpload && handleUploadRemove" :on-change="handleUploadChange" list-type="picture-card" :auto-upload="false">
+          <!-- <div>将文件拖到此处，或点击添加</div>
+          <div>单个文件大小不超过20MB，可上传图片或PDF</div> -->
+          <i class="el-icon-plus" />
+
         </el-upload>
-        <span slot="footer">
+        <!-- <span slot="footer">
           <el-button size="small" type="primary" @click="handleUpload">上传合同</el-button>
-        </span>
+        </span> -->
       </template>
       <template v-else>
-        <upload-list :files="contractList" list-type="picture-card" :disabled="true" />
-
+        <upload-list v-if="contractList.length > 0" :files="contractList" list-type="picture-card" :disabled="true" />
+        <p v-else style="text-align:center"> 合同暂未上传</p>
       </template>
 
+    </el-dialog>
+    <el-dialog center title="申请合同" :visible.sync="dialogImageVisible" class="dialog-center-public">
+      <img :src="dialogImageUrl " alt="申请合同">
+    </el-dialog>
+
+    <el-dialog center :visible.sync="pdfVisible" class="dialog-center-public">
+      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
+      <div ref="printContent">
+        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
+      </div>
+      <span slot="title">
+        <el-button type="success" size="small" style="float:left" @click="printPDF('printContent')">打印</el-button>
+        <span class="pdf-title">申请合同</span>
+      </span>
     </el-dialog>
     <!-- 查看流程 -->
     <!-- <el-dialog v-el-drag-dialog title="申请流程" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
@@ -215,6 +231,7 @@
 
 <script>
 import index from './index'
+
 export default {
   ...index
 }
@@ -252,7 +269,7 @@ input {
 .uploadModal ::v-deep .el-upload-dragger:hover {
   background: #f6f6f6;
 }
-.uploadModal ::v-deep .el-dialog__body {
-  text-align: center;
-}
+// .uploadModal ::v-deep .el-dialog__body {
+//   text-align: center;
+// }
 </style>

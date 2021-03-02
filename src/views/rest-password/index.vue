@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="regist-head">
-      重置密码（仅限居民）
+      重置密码
     </div>
     <el-card class="regist-main">
       <el-row type="flex" class="row-bg">

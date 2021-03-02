@@ -71,7 +71,7 @@ service.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           Message({
-            message: '登录失败,请重新登录',
+            message: '用户名密码错误',
             type: 'error',
             duration: 3 * 1000
           })
