@@ -36,7 +36,7 @@
     </template>
     <div style="text-align:center">
       <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
-      <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="submitApply">提交申请</el-button>
+      <el-button type="success" icon="el-icon-upload2" @click.native.prevent="submitApply">提交申请</el-button>
     </div>
   </div>
 </template>
