@@ -176,10 +176,11 @@ export default {
               this.formLoading = false
               this.model.form.rooms = [{ key: 'defaultRoom', val: '' }]
             })
-        } else {
-          this.$message.error(Object.values(errors)[0][0].message)
         }
       })
+      //  else {
+      //   this.$message.error(Object.values(errors)[0][0].message)
+      // }
     },
     // 获取申请列表
     async listApplies() {
