@@ -9,6 +9,7 @@ import { mapState } from 'vuex'
 import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 import FilterList from '@/components/Filter'
+import CreateButtons from '@/mixin/createButtons'
 
 // import Flow from '@/components/street/Flow'
 const defaultQuery = {
@@ -20,6 +21,8 @@ export default {
   components: {
     FilterList
   },
+  mixins: [CreateButtons],
+
   data() {
     return {
       flowVisible: false,

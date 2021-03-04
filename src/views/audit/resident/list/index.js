@@ -5,7 +5,7 @@ import Pdf from 'vue-pdf'
 import html2canvas from 'html2canvas'
 import printJS from 'print-js'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
-import { createButtons } from '@/mixin/common'
+import CreateButtons from '@/mixin/createButtons'
 // import Flow from '@/components/street/Flow'
 import { cancelApi, listApi, addApi } from '@/api/projects'
 const defaultForm = {
@@ -30,6 +30,7 @@ export default {
   components: {
     Pdf
   },
+  mixins: [CreateButtons],
   data() {
     return {
       dialogImageVisible: false,
@@ -84,19 +85,19 @@ export default {
     this.listApplies()
   },
   methods: {
-    getButtons(row) {
-      const { id, statusId, isEntrust, whetherThrough } = row
-      const userInfo = {
-        roles: this.$store.getters.roles
-      }
-      const projectInfo = {
-        id,
-        status: statusId,
-        isDelegated: isEntrust === 0, // 0委托
-        isPass: whetherThrough === 0 ? undefined : whetherThrough
-      }
-      return createButtons(this.$store.state.project.operations, userInfo, projectInfo) || []
-    },
+    // getButtons(row) {
+    //   const { id, statusId, isEntrust, whetherThrough } = row
+    //   const userInfo = {
+    //     roles: this.$store.getters.roles
+    //   }
+    //   const projectInfo = {
+    //     id,
+    //     status: statusId,
+    //     isDelegated: isEntrust === 0, // 0委托
+    //     isPass: whetherThrough === 0 ? undefined : whetherThrough
+    //   }
+    //   return createButtons(this.$store.state.project.operations, userInfo, projectInfo) || []
+    // },
     async handleExpand(row, expandedRows) {
       if (Object.keys(row.apply).length === 0) {
         // this.expandLoading = true

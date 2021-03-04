@@ -19,7 +19,7 @@ const designerRouter = {
     title: '设计',
     mean: 'user',
     icon: 'design',
-    roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
+    roles: ['ROLE_DESIGNER']
   },
   children: [
     {
@@ -29,7 +29,7 @@ const designerRouter = {
       meta: {
         title: '申请列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
+        roles: ['ROLE_DESIGNER']
       }
     },
     {
@@ -39,7 +39,7 @@ const designerRouter = {
       hidden: true,
       meta: {
         title: '编辑',
-        roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
+        roles: ['ROLE_DESIGNER']
       }
     },
     {
@@ -49,7 +49,7 @@ const designerRouter = {
       hidden: true,
       meta: {
         title: '上传',
-        roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
+        roles: ['ROLE_DESIGNER']
       }
     },
     // {
@@ -59,7 +59,7 @@ const designerRouter = {
     //   hidden: true,
     //   meta: {
     //     title: '查看',
-    //     roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
+    //     roles: [ 'ROLE_DESIGNER']
     //   }
     // },
     {
@@ -70,7 +70,7 @@ const designerRouter = {
       meta: {
         title: '编辑',
         icon: 'edit',
-        roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
+        roles: ['ROLE_DESIGNER']
       }
     },
     {
@@ -81,7 +81,7 @@ const designerRouter = {
       meta: {
         title: '公司介绍',
         icon: 'eye',
-        roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
+        roles: ['ROLE_DESIGNER']
       }
     },
     {
@@ -91,7 +91,7 @@ const designerRouter = {
       meta: {
         title: '已设计列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
+        roles: ['ROLE_DESIGNER']
       }
     },
     {
@@ -101,7 +101,7 @@ const designerRouter = {
       hidden: true,
       meta: {
         title: '设计详情',
-        roles: ['ROLE_ADMIN', 'ROLE_DESIGNER']
+        roles: ['ROLE_DESIGNER']
       }
     }
   ]

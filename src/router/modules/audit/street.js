@@ -19,7 +19,7 @@ const streetRouter = {
     title: '街道',
     mean: 'user',
     icon: 'street',
-    roles: ['ROLE_ADMIN', 'ROLE_STREET']
+    roles: ['ROLE_STREET']
   },
   children: [
     {
@@ -29,7 +29,7 @@ const streetRouter = {
       meta: {
         title: '申请列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_STREET']
+        roles: ['ROLE_STREET']
       }
     },
     {
@@ -40,7 +40,7 @@ const streetRouter = {
       meta: {
         title: '审核',
         icon: 'check',
-        roles: ['ROLE_ADMIN', 'ROLE_STREET']
+        roles: ['ROLE_STREET']
       }
     },
     {
@@ -51,7 +51,7 @@ const streetRouter = {
       meta: {
         title: '违规列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_STREET']
+        roles: ['ROLE_STREET']
       }
     },
     {
@@ -61,7 +61,7 @@ const streetRouter = {
       hidden: true,
       meta: {
         title: '违规回复',
-        roles: ['ROLE_ADMIN', 'ROLE_STREET']
+        roles: ['ROLE_STREET']
       }
     },
     {
@@ -71,7 +71,7 @@ const streetRouter = {
       hidden: true,
       meta: {
         title: '违规记录',
-        roles: ['ROLE_ADMIN', 'ROLE_STREET']
+        roles: ['ROLE_STREET']
       }
     },
     {
@@ -81,7 +81,7 @@ const streetRouter = {
       meta: {
         title: '已审核列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_STREET']
+        roles: ['ROLE_STREET']
       }
     },
     {
@@ -92,7 +92,7 @@ const streetRouter = {
       meta: {
         title: '审核详情',
         icon: 'community',
-        roles: ['ROLE_ADMIN', 'ROLE_STREET']
+        roles: ['ROLE_STREET']
       }
     }
   ]

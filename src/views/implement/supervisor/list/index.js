@@ -10,11 +10,15 @@ import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 // import Flow from '@/components/street/Flow'
 import FilterList from '@/components/Filter'
+import CreateButtons from '@/mixin/createButtons'
+
 export default {
   name: 'SupList',
   components: {
     FilterList
   },
+  mixins: [CreateButtons],
+
   data() {
     return {
       flowVisible: false,

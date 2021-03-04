@@ -19,7 +19,7 @@ const drawingAuditRouter = {
     title: '图审',
     mean: 'user',
     icon: 'institution',
-    roles: ['ROLE_ADMIN', 'ROLE_DRAWING_AUDIT']
+    roles: ['ROLE_DRAWING_AUDIT']
   },
   children: [
     {
@@ -29,7 +29,7 @@ const drawingAuditRouter = {
       meta: {
         title: '申请列表',
         icon: 'institution',
-        roles: ['ROLE_ADMIN', 'ROLE_DRAWING_AUDIT']
+        roles: ['ROLE_DRAWING_AUDIT']
       }
     },
     {
@@ -39,7 +39,7 @@ const drawingAuditRouter = {
       hidden: true,
       meta: {
         title: '审核',
-        roles: ['ROLE_ADMIN', 'ROLE_DRAWING_AUDIT']
+        roles: ['ROLE_DRAWING_AUDIT']
       }
     },
     {
@@ -49,7 +49,7 @@ const drawingAuditRouter = {
       meta: {
         title: '已审核列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_DRAWING_AUDIT']
+        roles: ['ROLE_DRAWING_AUDIT']
       }
     },
     {
@@ -60,7 +60,7 @@ const drawingAuditRouter = {
       meta: {
         title: '审核详情',
         icon: 'community',
-        roles: ['ROLE_ADMIN', 'ROLE_DRAWING_AUDIT']
+        roles: ['ROLE_DRAWING_AUDIT']
       }
     }
   ]

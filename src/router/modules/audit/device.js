@@ -19,7 +19,7 @@ const deviceRouter = {
     title: '设备',
     mean: 'user',
     icon: 'device',
-    roles: ['ROLE_ADMIN', 'ROLE_DEVICE']
+    roles: ['ROLE_DEVICE']
   },
   children: [
     {
@@ -29,7 +29,7 @@ const deviceRouter = {
       meta: {
         title: '设备列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_DEVICE']
+        roles: ['ROLE_DEVICE']
       }
     },
     {
@@ -40,7 +40,7 @@ const deviceRouter = {
       meta: {
         title: '编辑',
         icon: 'edit',
-        roles: ['ROLE_ADMIN', 'ROLE_DEVICE']
+        roles: ['ROLE_DEVICE']
       }
     },
     {
@@ -51,7 +51,7 @@ const deviceRouter = {
       meta: {
         title: '公司介绍',
         icon: 'eye',
-        roles: ['ROLE_ADMIN', 'ROLE_DEVICE']
+        roles: ['ROLE_DEVICE']
       }
     }
   ]

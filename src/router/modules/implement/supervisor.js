@@ -16,7 +16,7 @@ const supervisorRouter = {
     title: '监理单位',
     icon: 'supervisor',
     mean: 'user',
-    roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
+    roles: ['ROLE_SUPERVISION']
   },
 
   children: [
@@ -27,7 +27,7 @@ const supervisorRouter = {
       meta: {
         title: '申请列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
+        roles: ['ROLE_SUPERVISION']
       }
     },
     {
@@ -38,7 +38,7 @@ const supervisorRouter = {
       meta: {
         title: '违规列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
+        roles: ['ROLE_SUPERVISION']
       }
     },
     {
@@ -48,7 +48,7 @@ const supervisorRouter = {
       hidden: true,
       meta: {
         title: '违规回复',
-        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
+        roles: ['ROLE_SUPERVISION']
       }
     },
     {
@@ -58,7 +58,7 @@ const supervisorRouter = {
       hidden: true,
       meta: {
         title: '违规记录',
-        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
+        roles: ['ROLE_SUPERVISION']
       }
     },
     {
@@ -69,7 +69,7 @@ const supervisorRouter = {
       meta: {
         title: '编辑',
         icon: 'edit',
-        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
+        roles: ['ROLE_SUPERVISION']
       }
     },
     {
@@ -80,7 +80,7 @@ const supervisorRouter = {
       meta: {
         title: '公司介绍',
         icon: 'eye',
-        roles: ['ROLE_ADMIN', 'ROLE_SUPERVISION']
+        roles: ['ROLE_SUPERVISION']
       }
     }
   ]

@@ -61,49 +61,65 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    return response.data
+    const result = response.data
+    if (result.code === '200') {
+      return Promise.resolve(result.data)
+    }
+    // token过期
+    if (result.code === '401') {
+      removeToken()
+      router.push('/login')
+      return Promise.reject('登录过期')
+    }
+    if (result.code === '403') {
+      removeToken()
+      router.push('/login')
+      return Promise.reject('权限不足')
+    }
+    return Promise.reject(result.message)
   },
   error => {
     console.log(error)
-
+    removeToken()
+    router.push('/login')
+    return Promise.reject('服务器错误')
     // 对响应错误做点什么
-    if (error.response?.status) {
-      switch (error.response.status) {
-        case 401:
-          Message({
-            message: '用户名密码错误',
-            type: 'error',
-            duration: 3 * 1000
-          })
-          removeToken()
-          router.push('/login')
-          break
-        case 403:
-          Message({
-            message: '操作无权限',
-            type: 'error',
-            duration: 3 * 1000
-          })
-          break
-        // case 500:
-        //   Message({
-        //     message: '服务器错误',
-        //     type: 'error',
-        //     duration: 3 * 1000
-        //   })
-        //   break
-        default:
-          if (error.message.includes('timeout')) { // 判断请求异常信息中是否含有超时timeout字符串
-            Message({
-              message: '请求超时',
-              type: 'error',
-              duration: 5 * 1000
-            })
-          }
-          break
-      }
-    }
-    return Promise.reject(error)
+    // if (error.response?.status) {
+    //   switch (error.response.status) {
+    //     case 401:
+    //       Message({
+    //         message: '用户名密码错误',
+    //         type: 'error',
+    //         duration: 3 * 1000
+    //       })
+    //       removeToken()
+    //       router.push('/login')
+    //       break
+    //     case 403:
+    //       Message({
+    //         message: '操作无权限',
+    //         type: 'error',
+    //         duration: 3 * 1000
+    //       })
+    //       break
+    //     // case 500:
+    //     //   Message({
+    //     //     message: '服务器错误',
+    //     //     type: 'error',
+    //     //     duration: 3 * 1000
+    //     //   })
+    //     //   break
+    //     default:
+    //       if (error.message.includes('timeout')) { // 判断请求异常信息中是否含有超时timeout字符串
+    //         Message({
+    //           message: '请求超时',
+    //           type: 'error',
+    //           duration: 5 * 1000
+    //         })
+    //       }
+    //       break
+    //   }
+    // }
     // 超时处理
     // #region
     // var config = error.config

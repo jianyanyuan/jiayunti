@@ -17,7 +17,7 @@ const constructionRouter = {
     title: '施工单位',
     icon: 'construction',
     mean: 'user',
-    roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
+    roles: ['ROLE_CONSTRUCTION']
   },
   children: [
     {
@@ -27,7 +27,7 @@ const constructionRouter = {
       meta: {
         title: '申请列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
+        roles: ['ROLE_CONSTRUCTION']
       }
     },
     // {
@@ -37,7 +37,7 @@ const constructionRouter = {
     //   hidden: true,
     //   meta: {
     //     title: '报价',
-    //     roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
+    //     roles: [ 'ROLE_CONSTRUCTION']
     //   }
     // },
     // {
@@ -47,7 +47,7 @@ const constructionRouter = {
     //   meta: {
     //     title: '已报价列表',
     //     icon: 'list',
-    //     roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
+    //     roles: [ 'ROLE_CONSTRUCTION']
     //   }
     // },
     // {
@@ -57,7 +57,7 @@ const constructionRouter = {
     //   hidden: true,
     //   meta: {
     //     title: '报价详情',
-    //     roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
+    //     roles: [ 'ROLE_CONSTRUCTION']
     //   }
     // },
     {
@@ -67,7 +67,7 @@ const constructionRouter = {
       hidden: true,
       meta: {
         title: '违规',
-        roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
+        roles: ['ROLE_CONSTRUCTION']
       }
     },
     {
@@ -77,7 +77,7 @@ const constructionRouter = {
       hidden: true,
       meta: {
         title: '竣工验收',
-        roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
+        roles: ['ROLE_CONSTRUCTION']
       }
     },
     {
@@ -88,7 +88,7 @@ const constructionRouter = {
       meta: {
         title: '编辑',
         icon: 'edit',
-        roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
+        roles: ['ROLE_CONSTRUCTION']
       }
     },
     {
@@ -99,7 +99,7 @@ const constructionRouter = {
       meta: {
         title: '公司介绍',
         icon: 'eye',
-        roles: ['ROLE_ADMIN', 'ROLE_CONSTRUCTION']
+        roles: ['ROLE_CONSTRUCTION']
       }
     }
   ]

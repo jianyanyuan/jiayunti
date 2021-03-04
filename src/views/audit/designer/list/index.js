@@ -11,12 +11,15 @@ import File from '@/api/file'
 import { listApi, advanceApi } from '@/api/projects'
 import { notEmptyArray, checkUpload } from '@/utils'
 import FilterList from '@/components/Filter'
+import CreateButtons from '@/mixin/createButtons'
+
 export default {
   name: 'DesignerList',
   components: {
     // Flow
     FilterList
   },
+  mixins: [CreateButtons],
   data() {
     return {
       flowVisible: false,

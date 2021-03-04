@@ -2,13 +2,13 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 08:53:51
- * @Description: 居民申请专用账户授权委托书
+ * @LastEditTime: 2020-12-24 08:54:12
+ * @Description: 其他材料
 -->
 <template>
   <div v-loading="pageLoading">
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
-      <span>专用账户授权委托书</span>
+      <span>其他材料</span>
       <template v-if="!$store.state.project.isDelegated">
         <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = false">修改</el-button>
         <el-button v-else type="success" style="float:right" @click="handlePreview">预览</el-button>
@@ -38,16 +38,16 @@
 
     <div style="text-align:center">
       <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
-      <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>
+      <el-button v-if="!$store.state.project.isDelegated" type="success" icon="el-icon-upload2" @click.native.prevent="submitApply">提交申请</el-button>
     </div>
   </div>
 </template>
 
 <script>
+import { advanceApi } from '@/api/projects'
 import mixin from '@/mixin/upload-show'
-
 export default {
-  name: 'ApplySpecial',
+  name: 'ApplyOthers',
   mixins: [mixin],
   props: {
     id: {
@@ -57,7 +57,19 @@ export default {
   },
   data() {
     return {
-      typeName: 'special-form'
+      typeName: 'others-form'
+    }
+  },
+  methods: {
+    submitApply() {
+      advanceApi(this.id, 0)
+        .then(() => {
+          // 回到我的申请
+          this.$router.push('/resident/list')
+        })
+        .catch(() => {
+          this.$message.error('申请提交失败')
+        })
     }
   }
 }

@@ -10,11 +10,14 @@ import { mapState } from 'vuex'
 import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 import FilterList from '@/components/Filter'
+import CreateButtons from '@/mixin/createButtons'
+
 export default {
   name: 'DrawingList',
   components: {
     FilterList
   },
+  mixins: [CreateButtons],
   data() {
     return {
       flowVisible: false,

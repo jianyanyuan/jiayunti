@@ -9,20 +9,12 @@
   <div v-loading="pageLoading">
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
       <span>意见征询汇总表</span>
-      <el-button v-if="hasChanged && !$store.state.project.isDelegated" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
-      <el-button v-if="!hasChanged && !$store.state.project.isDelegated" type="primary" style="float:right" @click="postApply(typeName)">保存</el-button>
+      <template v-if="!$store.state.project.isDelegated">
+        <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = false">修改</el-button>
+        <el-button v-else type="success" style="float:right" @click="handlePreview">预览</el-button>
+      </template>
     </el-row>
-    <template v-if="hasChanged">
-      <el-card class="upload-card" style="margin-bottom:30px">
-        <div slot="header">
-          <span>查看</span>
-        </div>
-        <upload-list :files="fileList" list-type="picture-card" :disabled="true" />
-
-      </el-card>
-    </template>
-
-    <template v-else>
+    <template v-if="!$store.state.project.isDelegated && !hasChanged">
       <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
           <span>上传</span>
@@ -34,6 +26,16 @@
         </el-upload>
       </el-card>
     </template>
+    <template v-else>
+      <el-card class="upload-card" style="margin-bottom:30px">
+        <div slot="header">
+          <span>查看</span>
+        </div>
+        <upload-list :files="fileList" list-type="picture-card" :disabled="true" />
+
+      </el-card>
+    </template>
+
     <div style="text-align:center">
       <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
       <el-button type="success" icon="el-icon-arrow-right" @click.native.prevent="nextProcess(1)">下一步</el-button>

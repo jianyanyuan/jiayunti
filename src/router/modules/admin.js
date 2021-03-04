@@ -13,11 +13,23 @@ import Layout from '@/layout'
 const adminRouter = {
   path: '/admin',
   component: Layout,
-  redirect: '/resident/list',
-  hidden: true,
+  redirect: '/admin/setting',
   meta: {
     roles: ['ROLE_ADMIN']
-  }
+  },
+  children: [
+    {
+      path: '/admin/setting',
+      component: () => import('@/views/admin/setting.vue'), // Parent router-view
+      name: 'AdminSetting',
+      meta: {
+        title: '网站管理员',
+        mean: 'user',
+        icon: 'people',
+        roles: ['ROLE_ADMIN']
+      }
+    }
+  ]
 }
 
 export default adminRouter

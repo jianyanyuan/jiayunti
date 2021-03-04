@@ -58,17 +58,12 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      User.login({ username: username.trim(), password: password }).then(res => {
-        if (res.code === '500') {
-          reject('用户名密码错误')
-        } else {
-          const token = `${res.tokenType} ${res.accessToken}`
-          commit('SET_TOKEN', token)
-          setToken(token)
-          resolve('登录成功')
-        }
-      }).catch(() => {
-        reject('登录失败')
+      User.login({ username: username.trim(), password: password }).then(token => {
+        commit('SET_TOKEN', token)
+        setToken(token)
+        resolve('登录成功')
+      }).catch((errorMsg) => {
+        reject(errorMsg)
       })
     })
   },
@@ -105,9 +100,9 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      User.getUserInfo().then(res => {
+      User.getUserInfo().then(userInfo => {
         // 返回的address是字符串数组
-        const { id, username, address, roles, phonenumber } = res
+        const { id, username, address, roles, phonenumber } = userInfo
         // roles must be a non-empty array
         if (notEmptyArray(roles)) {
           commit('SET_Id', id)
@@ -115,12 +110,16 @@ const actions = {
           commit('SET_ADDRESS', address)
           commit('SET_ROLES', roles)
           commit('SET_PHONE', phonenumber)
-          resolve(res)
+          resolve(userInfo)
         } else {
+          removeToken() // must remove  token  first
+          // removeRoleToken()
+          commit('RESET_STATE')
+          resetRouter()
           reject('用户无权限')
         }
-      }).catch(() => {
-        reject('用户信息获取失败')
+      }).catch((errMsg) => {
+        reject(errMsg)
       })
     })
   },

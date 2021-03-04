@@ -46,6 +46,20 @@ const state = {
     { key: 13, val: 'warning' },
     { key: 14, val: 'info' }
   ],
+  roles: [
+    { key: 0, val: 'ROLE_COMMUNITY' },
+    { key: 1, val: 'ROLE_DESIGNER' },
+    { key: 2, val: 'ROLE_DEVICE' },
+    { key: 3, val: 'ROLE_DRAWING_AUDIT' },
+    { key: 4, val: 'ROLE_INCREASE_LIFT' },
+    { key: 4, val: 'ROLE_RESIDENT' },
+    { key: 5, val: 'ROLE_PRINCIPAL' },
+    { key: 6, val: 'ROLE_STREET' },
+    { key: 7, val: 'ROLE_UNION' },
+    { key: 8, val: 'ROLE_CONSTRUCTION' },
+    { key: 9, val: 'ROLE_SUPERVISION' },
+    { key: 10, val: 'ROLE_ADMIN' }
+  ],
   // 项目操作
   operations: {
     // 申请中
@@ -61,6 +75,30 @@ const state = {
         uN: 'ResidentApply',
         // 角色
         r: ['ROLE_PRINCIPAL'] // 委托代理人
+      },
+      {
+        // 按钮名
+        o: '现场照片',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_CONSTRUCTION']
+      },
+      {
+        // 按钮名
+        o: '申请合同',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT']
       },
       {
         o: '查看材料',
@@ -82,12 +120,36 @@ const state = {
     // 社区受理
     1: [
       {
-        o: '审核',
+        // 按钮名
+        o: '现场照片',
+        // 按钮大小
         s: 'mini',
+        // 按钮类型
         t: 'warning',
-        uN: 'CommunityCheck',
-        r: ['ROLE_COMMUNITY']
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_CONSTRUCTION']
       },
+      {
+        // 按钮名
+        o: '申请合同',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT']
+      }
+      // {
+      //   o: '审核',
+      //   s: 'mini',
+      //   t: 'warning',
+      //   uN: 'CommunityCheck',
+      //   r: ['ROLE_COMMUNITY']
+      // },
       // {
       //   o: '查看材料',
       //   s: 'mini',
@@ -95,18 +157,42 @@ const state = {
       //   uN: 'ResidentApplyRead',
       //   r: ['ROLE_RESIDENT'] // 自行
       // },
-      {
-        o: '审核意见',
-        s: 'mini',
-        t: 'danger',
-        uN: 'ResidentAuditDetail',
-        r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT'],
-        // 项目状态
-        status: 1
-      }
+      // {
+      //   o: '审核意见',
+      //   s: 'mini',
+      //   t: 'danger',
+      //   uN: 'ResidentAuditDetail',
+      //   r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT'],
+      //   // 项目状态
+      //   status: 1
+      // }
     ],
     // 方案设计
     2: [
+      {
+        // 按钮名
+        o: '现场照片',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_CONSTRUCTION']
+      },
+      {
+        // 按钮名
+        o: '申请合同',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT']
+      },
       {
         o: '上传',
         s: 'mini',
@@ -117,6 +203,30 @@ const state = {
     ],
     // 公示阶段
     3: [
+      {
+        // 按钮名
+        o: '现场照片',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_CONSTRUCTION']
+      },
+      {
+        // 按钮名
+        o: '申请合同',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT']
+      },
       {
         o: '提交材料',
         s: 'mini',
@@ -149,6 +259,30 @@ const state = {
     // 公示审核
     4: [
       {
+        // 按钮名
+        o: '现场照片',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_CONSTRUCTION']
+      },
+      {
+        // 按钮名
+        o: '申请合同',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT']
+      },
+      {
         o: '审核',
         s: 'mini',
         t: 'warning',
@@ -158,6 +292,30 @@ const state = {
     ],
     // 管道踏勘
     5: [
+      {
+        // 按钮名
+        o: '现场照片',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_CONSTRUCTION']
+      },
+      {
+        // 按钮名
+        o: '申请合同',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT']
+      },
       {
         o: '管道踏勘',
         s: 'mini',
@@ -169,16 +327,72 @@ const state = {
     // 施工图设计
     6: [
       {
+        // 按钮名
+        o: '现场照片',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_CONSTRUCTION']
+      },
+      {
+        // 按钮名
+        o: '申请合同',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT']
+      },
+      {
         o: '修改',
         s: 'mini',
         t: 'primary',
         uN: 'DesignerEdit',
         r: ['ROLE_DESIGNER'],
         status: 7
+      },
+      {
+        o: '上传',
+        s: 'mini',
+        t: 'primary',
+        uN: 'DesignerConstruction',
+        r: ['ROLE_DESIGNER'],
+        status: 7
       }
     ],
     // 施工图审核
     7: [
+      {
+        // 按钮名
+        o: '现场照片',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_CONSTRUCTION']
+      },
+      {
+        // 按钮名
+        o: '申请合同',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT']
+      },
       {
         o: '查看设计',
         s: 'mini',
@@ -197,6 +411,30 @@ const state = {
     // 街道审核
     9: [
       {
+        // 按钮名
+        o: '现场照片',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_CONSTRUCTION']
+      },
+      {
+        // 按钮名
+        o: '申请合同',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT']
+      },
+      {
         o: '审核',
         s: 'mini',
         t: 'warning',
@@ -206,6 +444,30 @@ const state = {
     ],
     // 联合审查
     10: [
+      {
+        // 按钮名
+        o: '现场照片',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_CONSTRUCTION']
+      },
+      {
+        // 按钮名
+        o: '申请合同',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT']
+      },
       {
         o: '上传报告',
         s: 'mini',
@@ -224,17 +486,29 @@ const state = {
     // 施工中
     11: [
       {
+        // 按钮名
+        o: '现场照片',
+        // 按钮大小
+        s: 'mini',
+        // 按钮类型
+        t: 'warning',
+        // 页面名
+        uN: 'ResidentApply',
+        // 角色
+        r: ['ROLE_CONSTRUCTION']
+      },
+      {
         o: '违规查看',
         s: 'mini',
         t: 'warning',
-        uP: '/resident/fault-detail',
+        uN: '/resident/fault-detail',
         r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT']
       },
       {
         o: '违规查看',
         s: 'mini',
         t: 'warning',
-        uP: '/increase-lift/fault-detail',
+        uN: '/increase-lift/fault-detail',
         r: ['ROLE_INCREASE_LIFT']
       },
       {
@@ -248,28 +522,28 @@ const state = {
         o: '违规记录',
         s: 'mini',
         t: 'info',
-        uP: '/street/fault-record',
+        uN: '/street/fault-record',
         r: ['ROLE_STREET']
       },
       {
         o: '违规处理',
         s: 'mini',
         t: 'warning',
-        uP: '/street/fault-review',
+        uN: '/street/fault-review',
         r: ['ROLE_STREET']
       },
       {
         o: '违规记录',
         s: 'mini',
         t: 'info',
-        uP: '/supervision/fault-record',
+        uN: '/supervision/fault-record',
         r: ['ROLE_SUPERVISION']
       },
       {
         o: '违规处理',
         s: 'mini',
         t: 'warning',
-        uP: '/supervision/fault-review',
+        uN: '/supervision/fault-review',
         r: ['ROLE_SUPERVISION']
       }
     ],
@@ -279,15 +553,29 @@ const state = {
         o: '补贴查看',
         s: 'mini',
         t: 'success',
-        uP: '/resident/bonus',
+        uN: '/resident/bonus',
         r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT']
       },
       {
         o: '补贴派发',
         s: 'mini',
         t: 'warning',
-        uP: '/increase-lift/bonus',
+        uN: '/increase-lift/bonus',
         r: ['ROLE_INCREASE_LIFT']
+      },
+      {
+        o: '竣工验收',
+        s: 'mini',
+        t: 'warning',
+        uN: '/increase-lift/bonus',
+        r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT']
+      },
+      {
+        o: '竣工查看',
+        s: 'mini',
+        t: 'warning',
+        uN: '/increase-lift/bonus',
+        r: ['ROLE_PRINCIPAL', 'ROLE_RESIDENT']
       }
     ],
     // 驳回

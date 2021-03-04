@@ -80,7 +80,7 @@
           <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
               <el-button v-for="(btn,index) in getButtons(scope.row)" :key="index" :size="btn.s" :type="btn.t" plain @click="$router.push(btn.url)">{{ btn.o }}</el-button>
-              <el-button v-if="+scope.row.statusId < 11" size="mini" type="info" plain @click="openUpload(scope.row)">申请合同</el-button>
+              <!-- <el-button v-if="+scope.row.statusId < 11" size="mini" type="info" plain @click="openUpload(scope.row)">申请合同</el-button> -->
               <!-- <el-button v-if="scope.row.statusId === 0" size="mini" type="warning" plain @click="$router.push({name:'ResidentApply',params:{id:scope.row.id,status:scope.row.statusId}})">提交材料</el-button>
               <el-button v-if="scope.row.statusId ===0 && scope.row.whetherThrough===1" size="mini" plain type="danger" @click="$router.push({name:'ResidentAuditDetail',params:{id:scope.row.id,status:scope.row.statusId}})">审核意见</el-button>
 

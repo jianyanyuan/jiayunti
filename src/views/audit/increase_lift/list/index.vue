@@ -80,12 +80,9 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
 
-          <template slot-scope="{row}">
+          <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="row.statusId=== 10" size="mini" plain type="warning" @click="$router.push({name:'IncreaseLiftReport',params:{id:row.id,status:row.statusId}})">上传报告</el-button>
-              <el-button v-if="row.statusId=== 5" size="mini" plain type="warning" @click="$router.push({name:'IncreaseLiftPipe',params:{id:row.id,status:row.statusId}})">管道踏勘</el-button>
-              <el-button v-if="row.statusId === 11" size="mini" plain type="warning" @click="$router.push({path:'/increase-lift/fault-detail',query:{id:row.id,status:row.statusId}})">违规查看</el-button>
-              <el-button v-if="row.statusId === 12" size="mini" plain type="warning" @click="$router.push({path:'/increase-lift/bonus',query:{id:row.id,status:row.statusId}})">补贴派发</el-button>
+              <el-button v-for="(btn,index) in getButtons(scope.row)" :key="index" :size="btn.s" :type="btn.t" plain @click="$router.push(btn.url)">{{ btn.o }}</el-button>
 
             </el-row>
           </template>

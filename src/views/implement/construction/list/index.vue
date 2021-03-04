@@ -80,13 +80,10 @@
         </el-table-column>
         <el-table-column align="center" label="操作" min-width="200px">
 
-          <template slot-scope="{row}">
+          <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="+row.statusId < 12" size="mini" type="warning" plain @click="openUpload(row.id)">现场照片</el-button>
-              <!-- <el-button v-if="row.statusId === 11" size="mini" type="success" plain >开始施工</el-button> -->
 
-              <el-button v-if="row.statusId === 11" size="mini" type="warning" plain @click="$router.push({name:'ConstructionFault',params:{id:row.id,status:row.statusId}})">违规查看</el-button>
-              <el-button v-if="row.statusId === 11" size="mini" type="warning" plain @click="willComplete(row)">竣工验收</el-button>
+              <el-button v-for="(btn,index) in getButtons(scope.row)" :key="index" :size="btn.s" :type="btn.t" plain @click="$router.push(btn.url)">{{ btn.o }}</el-button>
 
             </el-row>
           </template>

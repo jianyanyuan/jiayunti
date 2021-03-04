@@ -12,12 +12,15 @@ import { notEmptyArray, checkUpload } from '@/utils'
 import Construction from '@/api/construction'
 import FilterList from '@/components/Filter'
 import File from '@/api/file'
+import CreateButtons from '@/mixin/createButtons'
 
 export default {
   name: 'DesignerList',
   components: {
     FilterList
   },
+  mixins: [CreateButtons],
+
   data() {
     return {
       flowVisible: false,

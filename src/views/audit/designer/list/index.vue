@@ -80,12 +80,9 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
 
-          <template slot-scope="{row}">
+          <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="row.statusId === 2" type="warning" plain size="mini" @click="$router.push({name:'DesignerUpload',params:{id:row.id,status:row.statusId}})">上 传</el-button>
-
-              <el-button v-if="row.statusId === 6 && row.whetherThrough !== 7" type="warning" plain size="mini" @click="openUpload(row.id)">上 传</el-button>
-              <el-button v-if="row.statusId === 6 && row.whetherThrough === 7" size="mini" plain type="primary" @click="$router.push({name:'DesignerEdit',params:{id:row.id,status:row.statusId}})">修 改</el-button>
+              <el-button v-for="(btn,index) in getButtons(scope.row)" :key="index" :size="btn.s" :type="btn.t" plain @click="$router.push(btn.url)">{{ btn.o }}</el-button>
 
             </el-row>
           </template>

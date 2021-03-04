@@ -81,9 +81,8 @@
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="scope.row.statusId === 1" size="mini" type="warning" plain @click="$router.push({name:'CommunityCheck',params:{id: scope.row.id, status: scope.row.statusId}})">审核</el-button>
-              <el-button v-if="scope.row.statusId === 4" size="mini" type="warning" plain @click="$router.push({name:'CommunityCheckNotice',params:{id: scope.row.id, status: scope.row.statusId}})">审核</el-button>
-              <el-button v-if="scope.row.statusId === 3" size="mini" type="warning" plain @click="$router.push({name:'CommunityRecord',params:{id:scope.row.id, status: scope.row.statusId}})">异议记录</el-button>
+              <el-button v-for="(btn,index) in getButtons(scope.row)" :key="index" :size="btn.s" :type="btn.t" plain @click="$router.push(btn.url)">{{ btn.o }}</el-button>
+
             </el-row>
           </template>
         </el-table-column>

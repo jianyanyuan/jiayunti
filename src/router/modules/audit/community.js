@@ -17,7 +17,7 @@ const communityRouter = {
     title: '社区',
     icon: 'community',
     mean: 'user',
-    roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
+    roles: ['ROLE_COMMUNITY']
   },
   children: [
     {
@@ -27,7 +27,7 @@ const communityRouter = {
       meta: {
         title: '申请列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
+        roles: ['ROLE_COMMUNITY']
       }
     },
     {
@@ -37,7 +37,7 @@ const communityRouter = {
       meta: {
         title: '已审核列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
+        roles: ['ROLE_COMMUNITY']
       }
     },
     {
@@ -47,7 +47,7 @@ const communityRouter = {
       hidden: true,
       meta: {
         title: '审核详情',
-        roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
+        roles: ['ROLE_COMMUNITY']
       }
     },
     {
@@ -57,7 +57,7 @@ const communityRouter = {
       hidden: true,
       meta: {
         title: '异议记录',
-        roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
+        roles: ['ROLE_COMMUNITY']
       }
     },
     {
@@ -67,7 +67,7 @@ const communityRouter = {
       hidden: true,
       meta: {
         title: '审核',
-        roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
+        roles: ['ROLE_COMMUNITY']
       }
     },
     {
@@ -77,7 +77,7 @@ const communityRouter = {
       hidden: true,
       meta: {
         title: '公示审核',
-        roles: ['ROLE_ADMIN', 'ROLE_COMMUNITY']
+        roles: ['ROLE_COMMUNITY']
       }
     }
   ]

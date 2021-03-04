@@ -81,7 +81,7 @@
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="scope.row.statusId === 10" size="mini" plain type="warning" @click="$router.push({name:'UnionCheck',params:{id:scope.row.id,status:scope.row.statusId}})">审 核</el-button>
+              <el-button v-for="(btn,index) in getButtons(scope.row)" :key="index" :size="btn.s" :type="btn.t" plain @click="$router.push(btn.url)">{{ btn.o }}</el-button>
             </el-row>
           </template>
         </el-table-column>

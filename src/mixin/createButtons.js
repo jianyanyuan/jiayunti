@@ -1,3 +1,11 @@
+/*
+ * @Author: zfd
+ * @Date: 2020-12-04 10:50:09
+ * @LastEditors: zfd
+ * @LastEditTime: 2020-12-31 13:09:35
+ * @Description: 动态渲染业务流程
+ */
+
 /**
 * 根据用户信息，工程信息生成按钮操作
 * operations
@@ -33,4 +41,24 @@ export const createButtons = (operations, userInfo, projectInfo) => {
     }
   }
   return buttons
+}
+export default {
+  data() {
+    return {}
+  },
+  methods: {
+    getButtons(row) {
+      const { id, statusId, isEntrust, whetherThrough } = row
+      const userInfo = {
+        roles: this.$store.getters.roles
+      }
+      const projectInfo = {
+        id,
+        status: statusId,
+        isDelegated: isEntrust === 0, // 0委托
+        isPass: whetherThrough === 0 ? undefined : whetherThrough
+      }
+      return createButtons(this.$store.state.project.operations, userInfo, projectInfo) || []
+    }
+  }
 }

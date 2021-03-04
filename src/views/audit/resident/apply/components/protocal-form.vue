@@ -9,20 +9,13 @@
   <div v-loading="pageLoading">
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
       <span>项目协议书</span>
-      <el-button v-if="hasChanged && !$store.state.project.isDelegated" type="primary" style="float:right" @click="hasChanged = !hasChanged">修改</el-button>
-      <el-button v-if="!hasChanged && !$store.state.project.isDelegated" type="primary" style="float:right" @click="postApply(typeName)">保存</el-button>
+      <template v-if="!$store.state.project.isDelegated">
+        <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = false">修改</el-button>
+        <el-button v-else type="success" style="float:right" @click="handlePreview">预览</el-button>
+      </template>
     </el-row>
-    <template v-if="hasChanged">
-      <el-card class="upload-card" style="margin-bottom:30px">
-        <div slot="header">
-          <span>查看</span>
-        </div>
-        <upload-list :files="fileList" list-type="picture-card" :disabled="true" />
 
-      </el-card>
-    </template>
-
-    <template v-else>
+    <template v-if="!$store.state.project.isDelegated && !hasChanged">
       <el-card class="upload-card" style="margin-bottom:30px">
         <div slot="header">
           <span>上传</span>
@@ -32,6 +25,15 @@
           <div>将文件拖到此处，或点击添加</div>
           <p>单个文件大小不超过20MB，可上传图片或PDF</p>
         </el-upload>
+      </el-card>
+    </template>
+    <template v-else>
+      <el-card class="upload-card" style="margin-bottom:30px">
+        <div slot="header">
+          <span>查看</span>
+        </div>
+        <upload-list :files="fileList" list-type="picture-card" :disabled="true" />
+
       </el-card>
     </template>
     <div style="text-align:center">

@@ -19,7 +19,7 @@ const residentRouter = {
     title: '居民',
     mean: 'user',
     icon: 'people',
-    roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+    roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
   },
   children: [
     {
@@ -29,7 +29,7 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '申请',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+        roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -39,7 +39,7 @@ const residentRouter = {
       meta: {
         title: '我的申请',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+        roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -49,7 +49,7 @@ const residentRouter = {
       meta: {
         title: '设备列表',
         icon: 'device',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+        roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -59,7 +59,7 @@ const residentRouter = {
       meta: {
         title: '设计单位',
         icon: 'design',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+        roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -69,7 +69,7 @@ const residentRouter = {
       meta: {
         title: '施工单位',
         icon: 'construction',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+        roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -79,7 +79,7 @@ const residentRouter = {
       meta: {
         title: '监理单位',
         icon: 'supervisor',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+        roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -89,7 +89,7 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '单位介绍',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+        roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -99,7 +99,7 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '审核意见',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+        roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -109,7 +109,7 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '设计图',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+        roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     {
@@ -119,7 +119,7 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '异议反馈',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+        roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
     // {
@@ -129,7 +129,7 @@ const residentRouter = {
     //   hidden: true,
     //   meta: {
     //     title: '报价列表',
-    //     roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+    //     roles: [ 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
 
     //   }
     // },
@@ -140,7 +140,7 @@ const residentRouter = {
     //   hidden: true,
     //   meta: {
     //     title: '报价单',
-    //     roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+    //     roles: [ 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
 
     //   }
     // },
@@ -152,7 +152,7 @@ const residentRouter = {
       meta: {
         title: '违规查看',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+        roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
 
       }
     },
@@ -163,7 +163,7 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '提交材料',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+        roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
 
       }
     },
@@ -174,7 +174,7 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '公示材料',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT']
+        roles: ['ROLE_RESIDENT']
 
       }
     },
@@ -185,7 +185,7 @@ const residentRouter = {
       hidden: true,
       meta: {
         title: '补贴查看',
-        roles: ['ROLE_ADMIN', 'ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+        roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
 
       }
     }

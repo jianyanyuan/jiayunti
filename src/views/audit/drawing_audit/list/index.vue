@@ -80,9 +80,9 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
 
-          <template slot-scope="{row}">
+          <template slot-scope="scope">
             <el-row type="flex" justify="space-around">
-              <el-button v-if="row.statusId === 7" size="mini" plain type="primary" @click="$router.push({name:'DrawingAuditCheck',params:{id:row.id,status:row.statusId}})">审 核</el-button>
+              <el-button v-for="(btn,index) in getButtons(scope.row)" :key="index" :size="btn.s" :type="btn.t" plain @click="$router.push(btn.url)">{{ btn.o }}</el-button>
 
             </el-row>
           </template>

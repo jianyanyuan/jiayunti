@@ -19,7 +19,7 @@ const inlRouter = {
     title: '增梯办',
     mean: 'user',
     icon: 'institution',
-    roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
+    roles: ['ROLE_INCREASE_LIFT']
   },
   children: [
     {
@@ -29,7 +29,7 @@ const inlRouter = {
       meta: {
         title: '申请列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
+        roles: ['ROLE_INCREASE_LIFT']
       }
     },
     {
@@ -39,7 +39,7 @@ const inlRouter = {
       hidden: true,
       meta: {
         title: '上传报告',
-        roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
+        roles: ['ROLE_INCREASE_LIFT']
       }
     },
     {
@@ -49,7 +49,7 @@ const inlRouter = {
       hidden: true,
       meta: {
         title: '管道踏勘',
-        roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
+        roles: ['ROLE_INCREASE_LIFT']
       }
 
     },
@@ -60,7 +60,7 @@ const inlRouter = {
       hidden: true,
       meta: {
         title: '违规查看',
-        roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
+        roles: ['ROLE_INCREASE_LIFT']
       }
     },
     {
@@ -70,7 +70,7 @@ const inlRouter = {
       hidden: true,
       meta: {
         title: '补贴派发',
-        roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
+        roles: ['ROLE_INCREASE_LIFT']
       }
     },
     {
@@ -80,7 +80,7 @@ const inlRouter = {
       meta: {
         title: '已审核列表',
         icon: 'list',
-        roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
+        roles: ['ROLE_INCREASE_LIFT']
       }
     },
     {
@@ -90,7 +90,7 @@ const inlRouter = {
       hidden: true,
       meta: {
         title: '审核详情',
-        roles: ['ROLE_ADMIN', 'ROLE_INCREASE_LIFT']
+        roles: ['ROLE_INCREASE_LIFT']
       }
     }
 

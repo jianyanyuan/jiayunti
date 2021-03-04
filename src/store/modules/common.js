@@ -36,6 +36,11 @@ const state = {
     { key: -1, val: 'danger' },
     { key: 3, val: 'info' }
   ],
+  buttonSize: [
+    { key: 0, val: 'mini' },
+    { key: 1, val: 'small' },
+    { key: 2, val: 'medium' }
+  ],
   handleStatus: [
     { key: 0, val: '未处理' },
     { key: 1, val: '已解决' }

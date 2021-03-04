@@ -9,20 +9,13 @@
   <div v-loading="pageLoading">
     <el-row type="flex" justify="space-between" align="middle" style="padding:18px 20px">
       <span>意见征询表</span>
-      <el-button v-if="hasChanged && !$store.state.project.isDelegated" type="primary" style="float:right" @click="hasChanged = false">修改</el-button>
-      <el-button v-if="!hasChanged && !$store.state.project.isDelegated" type="primary" style="float:right" @click="postFile">保存</el-button>
+      <!-- <el-button v-if="hasChanged && !$store.state.project.isDelegated" type="success" style="float:right" @click="handlePreview">预览</el-button> -->
+      <template v-if="!$store.state.project.isDelegated">
+        <el-button v-if="hasChanged" type="primary" style="float:right" @click="hasChanged = false">修改</el-button>
+        <el-button v-else type="success" style="float:right" @click="handlePreview">预览</el-button>
+      </template>
     </el-row>
-    <template v-if="hasChanged">
-      <el-card v-for="(room) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
-        <div slot="header">
-          <span>{{ room }}</span>
-        </div>
-        <upload-list :files="fileList[room]" list-type="picture-card" :disabled="true" />
-      </el-card>
-
-    </template>
-
-    <template v-else>
+    <template v-if="!$store.state.project.isDelegated && !hasChanged">
       <el-card v-for="(room) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
         <div slot="header">
           <span>{{ room }}</span>
@@ -48,6 +41,16 @@
         </el-upload>
       </el-card>
     </template>
+    <template v-else>
+      <el-card v-for="(room) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
+        <div slot="header">
+          <span>{{ room }}</span>
+        </div>
+        <upload-list :files="fileList[room]" list-type="picture-card" :disabled="true" />
+      </el-card>
+
+    </template>
+
     <div style="text-align:center">
       <el-button type="primary" icon="el-icon-arrow-left" @click.native.prevent="nextProcess(-1)">上一步</el-button>
 
@@ -70,11 +73,10 @@ export default {
   data() {
     return {
       // 修改后重新保存
-      hasChanged: true,
+      hasChanged: false,
       pageLoading: false,
       rooms: [],
-      fileList: {}, // 展示用
-      uploadList: [] // 上传用
+      fileList: {} // 展示用
     }
   },
 
@@ -90,15 +92,16 @@ export default {
     this.detailApply()
   },
   methods: {
-
+    handlePreview() {
+      this.hasChanged = true
+      this.detailApply()
+    },
     // 获取已上传的意见征询表
-    detailApply() {
+    async detailApply() {
       this.pageLoading = true
       this.rooms = []
       this.fileList = {}
-      this.uploadList = []
-      this.deleteList = []
-      File.getConsultation({ projectId: this.id }).then(res => {
+      await File.getConsultation({ projectId: this.id }).then(res => {
         if (notEmptyArray(res.content)) {
           for (const i of res.content) {
             const { room, opinionFileList } = i
@@ -122,12 +125,9 @@ export default {
       })
     },
 
-    nextProcess(arrow) {
+    async nextProcess(arrow) {
       if (arrow > 0) {
-        if (!this.hasChanged) {
-          this.$message.warning('请先保存')
-          return
-        }
+        await this.detailApply()
         const count = this.rooms.reduce((c, v) => (this.fileList[v].length + c), 0)
         if (count >= this.rooms.length * 3) {
           this.$emit('nextProcess', arrow)
@@ -144,75 +144,33 @@ export default {
     handleUploadChange(file, fileList, room) {
       const valid = checkUpload(file.raw)
       if (valid && file.url === undefined) {
-        const reader = new FileReader()
-        reader.readAsDataURL(file.raw)
-        reader.onload = (event) => {
-          this.fileList[room].push({
-            uid: file.uid,
-            name: file.name,
-            url: event.target.result,
-            type: 'temp' // 临时保存base64结果
-          })
-        }
+        // const reader = new FileReader()
+        // reader.readAsDataURL(file.raw)
+        // reader.onload = (event) => {
+        //   this.fileList[room].push({
+        //     uid: file.uid,
+        //     name: file.name,
+        //     url: event.target.result,
+        //     type: 'temp' // 临时保存base64结果
+        //   })
+        // }
         const formData = new FormData()
         formData.append('file', file.raw)
-        this.uploadList.push({
-          room,
-          projectId: this.id,
-          uid: file.uid,
-          name: file.name,
-          file: formData
-        })
+        File.uploadOpinion(formData, { room, projectId: this.id })
+          .catch(() => {
+            // 上传失败
+            this.$message.error('上传失败')
+          })
       } else {
         fileList.pop()
       }
     },
     // 删除文件
     handleUploadRemove(file, fileList, room) {
-      const cancelIdx = this.fileList[room].findIndex(f => f.uid === file.uid)
-      if (file.url === undefined) {
-        // 未上传 --> 取消上传
-        this.fileList[room].splice(cancelIdx, 1)
-        const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
-        this.uploadList.splice(removeIdx, 1)
-      } else {
-        File.removeOpinion(file.uid)
-          .then(() => {
-            this.fileList[room].splice(cancelIdx, 1)
-          })
-          .catch(() => {
-            this.$message.error('删除失败')
-          })
-      }
-    },
-
-    // 保存修改
-    async postFile() {
-      this.pageLoading = true
-      if (notEmptyArray(this.uploadList)) {
-        let err = false
-        for (const idx in this.uploadList) {
-          const { room, projectId, file } = this.uploadList[idx]
-          await File.uploadOpinion(file, { room, projectId })
-            .catch(() => {
-              // 上传失败
-              err = true
-              const failIdx = this.fileList[room].findIndex(f => f.uid === this.uploadList[idx].uid)
-              this.fileList[room].splice(failIdx, 1)
-            })
-        }
-        this.uploadList = []
-        if (err) {
-          this.$message.error('保存失败')
-        }
-        this.hasChanged = true
-        this.pageLoading = false
-        this.detailApply()
-      } else {
-        this.hasChanged = true
-        this.pageLoading = false
-        this.detailApply()
-      }
+      File.removeOpinion(file.uid)
+        .catch(() => {
+          this.$message.error('删除失败')
+        })
     }
   }
 }
