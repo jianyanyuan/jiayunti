@@ -51,12 +51,18 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(async() => {
-            const { roles } = await this.$store.dispatch('user/getInfo').catch(err => {
-              this.$message.error(err)
-            })
+            const userInfo = await this.$store.dispatch('user/getInfo')
+              .catch(err => {
+                this.$message.error(err)
+              })
+            const roles = userInfo.roles
             if (!roles) {
               this.$router.push('/login') // 无权限返回登录界面
             }
+            await this.$store.dispatch('project/getApplyStatus')
+
+            await this.$store.dispatch('user/getOperation', { district: userInfo.address[1], role: roles[0], setState: true })
+
             resetRouter() // 重置下路由，避免重复路由
             const accessRoutes = await this.$store.dispatch('permission/generateRoutes', roles)
             // dynamically add accessible routes

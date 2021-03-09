@@ -23,7 +23,7 @@ export const createButtons = (operations, userInfo, projectInfo) => {
     return null
   }
   let { roles } = userInfo
-  const { id, status, isDelegated, isPass } = projectInfo
+  const { id, status, isDelegated, isPass, nextStatus, lastStatus } = projectInfo
   if (roles[0] === 'ROLE_RESIDENT' && !isDelegated) {
     roles = ['ROLE_PRINCIPAL'] // 自行提交
   }
@@ -34,10 +34,10 @@ export const createButtons = (operations, userInfo, projectInfo) => {
   }
 
   for (const operation of (operations[status] || [])) {
-    if (operation.r.includes(roles[0]) && operation.status === isPass) {
-      const { uN, o, s, t } = operation
-      const url = { name: uN, params: { id, status }}
-      buttons.push({ o, s, t, url })
+    if (operation.role === roles[0] && operation.status === status) {
+      const { un, name, s, t } = operation
+      const url = { name: un, params: { id, status, nextStatus, lastStatus }}
+      buttons.push({ o: name, s, t, url })
     }
   }
   return buttons
@@ -58,7 +58,7 @@ export default {
         isDelegated: isEntrust === 0, // 0委托
         isPass: whetherThrough === 0 ? undefined : whetherThrough
       }
-      return createButtons(this.$store.state.project.operations, userInfo, projectInfo) || []
+      return createButtons(this.$store.state.user.operations, userInfo, projectInfo) || []
     }
   }
 }

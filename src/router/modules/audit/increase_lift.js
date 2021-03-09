@@ -92,6 +92,35 @@ const inlRouter = {
         title: '审核详情',
         roles: ['ROLE_INCREASE_LIFT']
       }
+    },
+    {
+      path: 'district-chart',
+      component: () => import('@/views/audit/increase_lift/chart/overview.vue'),
+      name: 'DistrictChart',
+      meta: {
+        title: '区级总览',
+        roles: ['ROLE_INCREASE_LIFT']
+      }
+    },
+    {
+      path: 'chart-project-detail',
+      component: () => import('@/views/audit/increase_lift/chart/project_detail.vue'),
+      name: 'ChartProjectDetail',
+      hidden: true,
+      meta: {
+        title: '工程详情',
+        roles: ['ROLE_INCREASE_LIFT']
+      }
+    },
+    {
+      path: 'chart-bonus-detail',
+      component: () => import('@/views/audit/increase_lift/chart/bonus_detail.vue'),
+      name: 'ChartBonusDetail',
+      hidden: true,
+      meta: {
+        title: '补贴详情',
+        roles: ['ROLE_INCREASE_LIFT']
+      }
     }
 
   ]

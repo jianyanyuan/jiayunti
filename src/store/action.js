@@ -15,6 +15,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       context.dispatch('common/getAddress').then(() => {
         detailApi(projectId).then(res => {
+          console.log(context)
+          debugger
           context.state.project.isDelegated = false
           const basic = Object.assign({}, res)
           const { deviceName, deviceType, residentialQuarters, building, unit, address, createTime, isEntrust } = res

@@ -1,5 +1,7 @@
-const a = {
-  0: 1,
-  2: 2
-}
-console.log(Object.keys(a))
+let a = NaN
+
+console.log(isFinite(a))
+a = 0
+console.log(isFinite(a))
+a = Infinity
+console.log(isFinite(a))

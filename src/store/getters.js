@@ -16,7 +16,7 @@ const getters = {
   address: state => state.user.address?.map(v => +v),
   addressPlain: state => {
     let source = state.common.address
-    if (!source) {
+    if (!notEmptyArray(source)) {
       return ''
     }
     const idxMap = new Map([[0, 'areas'], [1, 'streets'], [2, 'communities']])

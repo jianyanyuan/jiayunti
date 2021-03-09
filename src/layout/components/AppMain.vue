@@ -15,6 +15,7 @@ export default {
     }
   },
   created() {
+    // const nodeAsync = this.$store.dispatch('project/getApplyStatus')
     const addressAsync = this.$store.dispatch('common/getAddress')
     const deviceAsync = this.$store.dispatch('common/getDevice')
     const designAsync = this.$store.dispatch('common/getDesign')

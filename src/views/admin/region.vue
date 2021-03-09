@@ -8,7 +8,7 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <el-col :span="6">
+      <el-col :span="10">
         <div class="device-left">
           <el-input v-model="treeKey" placeholder="搜索设备">
             <el-button slot="append" icon="el-icon-search" @click="filterDevice" />
@@ -17,58 +17,23 @@
             <el-tree ref="tree" style="min-height:500px" :data="treeData" :filter-node-method="filterNode" node-key="id" :props="defaultProps" @check="filterApply" @node-click="handleQuery">
               <span slot-scope="{ node,data }">
                 <span>{{ node.label }}</span>
-                <!-- <span class="custom-tree-node">
+                <span class="custom-tree-node">
                   <el-button v-if="data.children" type="text" size="mini" @click.stop="() => appendDevice(data)">
                     新增
                   </el-button>
-                  <el-popconfirm title="确认删除该设备吗？" @onConfirm="removeDevice(data)">
-                    <el-button slot="reference" size="mini" type="text">删除</el-button>
-                  </el-popconfirm>
-                </span> -->
+                  <el-button type="text" size="mini">修改</el-button>
+
+                  <el-button type="text" size="mini">禁用</el-button>
+                  <!-- <el-button slot="reference" size="mini" type="text">禁用</el-button> -->
+
+                </span>
               </span>
             </el-tree>
           </div>
         </div>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="14">
         <el-button size="medium" style="margin-bottom:30px" @click="openAdd">新增</el-button>
-
-        <template v-for="(prop) in Object.keys(operationsData)">
-          <el-card class="upload-card" style="margin-bottom:30px">
-            <div slot="header">
-              <span>{{ +prop | keyToVal(applyStatus) }} {{ prop }}</span>
-            </div>
-            <el-collapse accordion>
-              <el-collapse-item v-for="(operation) in operationsData[prop]" :key="operation.id">
-                <template slot="title">
-                  {{ operation.name }}
-                  <el-button type="text" size="small" style="margin-left:30px" @click.stop="openModify(operation)">修改</el-button>
-                </template>
-                <el-form :inline="true" :model="operation">
-                  <el-form-item label="页面名">
-                    {{ operation.un }}
-                  </el-form-item>
-                  <el-form-item label="角色">
-                    {{ role }}
-                  </el-form-item>
-                  <el-form-item label="按钮大小">
-                    {{ operation.s }}
-                  </el-form-item>
-                  <el-form-item label="按钮类型">
-                    {{ operation.t }}
-                  </el-form-item>
-                  <el-form-item label="按钮状态">
-                    {{ operation.isValid ? '正常' : '禁用' }}
-                  </el-form-item>
-                  <el-form-item label="描述">
-                    {{ operation.description }}
-                  </el-form-item>
-                </el-form>
-              </el-collapse-item>
-            </el-collapse>
-
-          </el-card>
-        </template>
 
       </el-col>
     </el-row>
@@ -89,16 +54,6 @@
 
         <el-form-item label="流程节点" prop="status">
           <el-select v-model="model.form.status" filterable>
-            <el-option v-for="item in applyStatus" :key="item.val" :value="item.key" :label="item.val" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="上一节点" prop="lastStatus">
-          <el-select v-model="model.form.lastStatus" filterable>
-            <el-option v-for="item in applyStatus" :key="item.val" :value="item.key" :label="item.val" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="下一节点" prop="nextStatus">
-          <el-select v-model="model.form.nextStatus" filterable>
             <el-option v-for="item in applyStatus" :key="item.val" :value="item.key" :label="item.val" />
           </el-select>
         </el-form-item>
@@ -139,6 +94,24 @@
 import { mapState } from 'vuex'
 import { addApi, listApi, updateApi } from '@/api/operations'
 import { notEmptyArray } from '@/utils'
+// 不用递归，迭代性能更好
+// const idxMap = ['streets', 'communities']
+
+// function recursionAddress(parent, parentObj, i = 0) {
+
+//   for (const child of parent[idxMap[i]]) {
+//     const middleObj = { id: child.id, label: child.name, children: null }
+//     if (parentObj.children === null) {
+//       parentObj.children = [middleObj]
+//     } else {
+//       parentObj.children.push(middleObj)
+//     }
+//     if (i < idxMap.length - 1 && parent.streets !== undefined) {
+//       recursionAddress(child, middleObj, ++i)
+//     }
+//     i = 0
+//   }
+// }
 export default {
   name: 'AdminSetting',
   data() {
@@ -178,49 +151,45 @@ export default {
     }
   },
   computed: {
-    ...mapState('project', ['applyStatus', 'roles']),
-    ...mapState('common', ['isOrNo', 'buttonSize', 'statusType']),
     treeData() {
-      const address = this.$store.state.common.address
-      const data = []
-      const children = [
-        { id: 'resident', label: '居民', val: 'ROLE_RESIDENT' },
-        { id: 'trustee', label: '委托人', val: 'ROLE_PRINCIPAL' },
-        { id: 'designer', label: '设计院', val: 'ROLE_DESIGNER' },
-        { id: 'community', label: '社区', val: 'ROLE_COMMUNITY' },
-        { id: 'increaseLift', label: '增梯办', val: 'ROLE_INCREASE_LIFT' },
-        { id: 'drawingCheck', label: '图审', val: 'ROLE_DRAWING_AUDIT' },
-        { id: 'street', label: '街道', val: 'ROLE_STREET' },
-        { id: 'capitalRule', label: '资规局', val: 'ROLE_CAPITAL_RULE' },
-        { id: 'houseConstruction', label: '住建局', val: 'ROLE_HOUSE_CONSTRUCTION' },
-        { id: 'urbanManagement', label: '城管局', val: 'ROLE_URBAN_MANAGEMENT' },
-        { id: 'marketSupervision', label: '市场监督局', val: 'ROLE_MARKET_SUPERVISOR' },
-        { id: 'construction', label: '施工单位', val: 'ROLE_CONSTRUCTION' },
-        { id: 'supervision', label: '监管单位', val: 'ROLE_SUPERVISION' }
-      ]
-      if (Array.isArray(address[0]?.areas)) {
-        for (const district of address[0].areas) {
-          data.push({
-            id: district.id,
-            label: district.name,
-            children: children.map(v => ({ id: district.id + v.id, label: v.label, val: v.val }))
-          })
-        }
+      const cities = this.$store.state.common.address
+      if (!notEmptyArray(cities)) {
+        return ''
       }
-      return data
-    },
-    districtOptions() {
-      const address = this.$store.state.common.address
       const data = []
-      if (Array.isArray(address[0]?.areas)) {
-        for (const district of address[0].areas) {
-          data.push({
-            id: district.id,
-            label: district.name
-          })
+      // 区街道社区
+      try {
+        // 只做苏州一个市的
+        // 迭代性能更好
+        for (const area of cities[0].areas) {
+          const areaObj = { id: area.id, label: area.name, children: [] }
+          for (const street of area.streets) {
+            const streetObj = { id: street.id, label: street.name, children: [] }
+            areaObj.children.push(streetObj)
+            // if (areaObj.children === null) {
+            //   areaObj.children = [streetObj]
+            // } else {
+            //   areaObj.children.push(streetObj)
+            // }
+            for (const community of street.communities) {
+              const communityObj = { id: community.id, label: community.name, children: null }
+              streetObj.children.push(communityObj)
+              // if (streetObj.children === null) {
+              //   streetObj.children = [communityObj]
+              // } else {
+              //   streetObj.children.push(communityObj)
+              // }
+            }
+          }
+          data.push(areaObj)
         }
+        return data
+      } catch (err) {
+        console.log(err)
+        // )
+        // console.log('地址')
+        return []
       }
-      return data
     }
   },
   created() {

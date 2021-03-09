@@ -111,3 +111,9 @@ export const getInsInfoApi = (projectId) => {
   })
 }
 
+export const getApplyStatusApi = () => {
+  return request({
+    url: `/Flow`,
+    method: 'get'
+  })
+}

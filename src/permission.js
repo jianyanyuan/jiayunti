@@ -41,11 +41,15 @@ router.beforeEach(async(to, from, next) => {
           resetRouter()
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          const { roles } = await store.dispatch('user/getInfo')
+          const userInfo = await store.dispatch('user/getInfo')
           // generate accessible routes map based on roles
+          const roles = userInfo.roles
           if (!roles) {
             throw new Error('用户无权限')
           }
+          // 获取流程节点、用户操作
+          await store.dispatch('project/getApplyStatus')
+          await store.dispatch('user/getOperation', { district: userInfo.address[1], role: roles[0], setState: true })
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
           let roleHome = roles[0].split('_').slice(1).join('-').toLocaleLowerCase()
           // 居民和受理委托人共用一个路由表

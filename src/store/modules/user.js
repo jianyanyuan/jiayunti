@@ -9,6 +9,8 @@ import User from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 import { notEmptyArray } from '@/utils'
+import { listApi } from '@/api/operations'
+
 const getDefaultState = () => {
   return {
     token: getToken(),
@@ -16,7 +18,9 @@ const getDefaultState = () => {
     username: null,
     address: null,
     phone: null,
-    roles: null
+    roles: null,
+    operations: {}
+
   }
 }
 
@@ -26,7 +30,8 @@ const state = {
   username: null,
   address: null,
   phone: null,
-  roles: null
+  roles: null,
+  operations: {}
 }
 
 const mutations = {
@@ -50,6 +55,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_OPERATIONS: (state, operations) => {
+    state.operations = operations
   }
 }
 
@@ -124,6 +132,38 @@ const actions = {
     })
   },
 
+  // 获取用户操作
+  getOperation({ commit }, { district, role, setState = false }) {
+    return new Promise((resolve, reject) => {
+      if (role && district) {
+        listApi({ district, role })
+          .then(operations => {
+            const result = {}
+            if (notEmptyArray(operations)) {
+              for (const o of operations) {
+                // 用户需过滤掉禁用的操作
+                if (setState && !o.isValid) continue
+                if (Array.isArray(result[o.status])) {
+                  result[o.status].push(o)
+                } else {
+                  result[o.status] = [o]
+                }
+              }
+            }
+            setState && commit('SET_OPERATIONS', result)
+
+            resolve(result)
+          })
+          .catch(errMsg => {
+            reject(errMsg)
+          })
+      } else {
+        setState && commit('SET_OPERATIONS', {})
+
+        resolve({})
+      }
+    })
+  },
   // get verificationCode
   getCode(context, params) {
     return new Promise((resolve, reject) => {

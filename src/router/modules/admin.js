@@ -14,7 +14,10 @@ const adminRouter = {
   path: '/admin',
   component: Layout,
   redirect: '/admin/setting',
+  name: 'Admin',
   meta: {
+    title: '网站管理员',
+    mean: 'user',
     roles: ['ROLE_ADMIN']
   },
   children: [
@@ -23,8 +26,27 @@ const adminRouter = {
       component: () => import('@/views/admin/setting.vue'), // Parent router-view
       name: 'AdminSetting',
       meta: {
-        title: '网站管理员',
-        mean: 'user',
+        title: '节点设置',
+        icon: 'people',
+        roles: ['ROLE_ADMIN']
+      }
+    },
+    {
+      path: '/admin/region',
+      component: () => import('@/views/admin/region.vue'), // Parent router-view
+      name: 'AdminRegion',
+      meta: {
+        title: '行政区域变更',
+        icon: 'people',
+        roles: ['ROLE_ADMIN']
+      }
+    },
+    {
+      path: '/admin/audit',
+      component: () => import('@/views/admin/audit.vue'), // Parent router-view
+      name: 'AdminAudit',
+      meta: {
+        title: '企业初审',
         icon: 'people',
         roles: ['ROLE_ADMIN']
       }
