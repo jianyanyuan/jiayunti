@@ -44,9 +44,10 @@ export default {
   },
   methods: {
     // 获取申请列表
-    async listApplies(query = {}) {
+    async listApplies(pagination = {}, query = {}) {
+      const { pageIndex = this.pagination.pageIndex - 1, size = this.pagination.pageSize } = pagination
       this.listLoading = true
-      await listApi({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }, query).then(res => {
+      await listApi({ page: pageIndex, size: size }, query).then(res => {
         this.list = []
         this.pagination.total = 0
         if (notEmptyArray(res.content)) {

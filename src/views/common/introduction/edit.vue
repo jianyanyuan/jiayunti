@@ -8,6 +8,23 @@
 <template>
   <div v-loading="pageLoading" class="app-container">
     <!-- <div class="preview" v-html="msg" /> -->
+    <el-card v-if="showAudit" style="margin:30px 0">
+      <div slot="header">
+        <span style="margin-right:20px">审核信息</span>
+        <el-tag :type="org.communityReview.reviewResults | keyToVal(handleTag)">{{ org.communityReview.reviewResults | keyToVal(auditOptions) }}</el-tag>
+      </div>
+      <el-form label-position="left" class="expand-form-p">
+        <el-form-item label="审核时间：">
+          <span>{{ new Date(org.communityReview.createdAt) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        </el-form-item>
+        <el-form-item label="审核意见：">
+          <span>{{ org.communityReview.reviewOpinions }}</span>
+        </el-form-item>
+        <el-form-item label="审核结果：">
+          <el-tag :type="org.communityReview.reviewResults | keyToVal(handleTag)">{{ org.communityReview.reviewResults | keyToVal(auditOptions) }}</el-tag>
+        </el-form-item>
+      </el-form>
+    </el-card>
     <el-form ref="form" :model="org" :rules="rule" label-width="120px" label-position="top" class="handle-form">
       <el-form-item label="单位名称:" prop="companyName">
         <el-input v-model="org.companyName" />
@@ -61,6 +78,8 @@
 import VueUeditorWrap from '@/components/VueUeditor'
 import { validatePhone } from '@/utils/element-validator'
 import Common from '@/api/common'
+import { notEmptyArray } from '@/utils'
+import { mapState } from 'vuex'
 export default {
   name: 'IntroEdit',
   components: {
@@ -77,6 +96,7 @@ export default {
         address: '',
         phone: ''
       },
+      showAudit: false,
       modalVisible: false,
       pageLoading: false,
       type: 0,
@@ -109,19 +129,34 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState('common', ['handleTag', 'auditOptions'])
+
+  },
   created() {
     const { type } = this.$route.query
     this.type = type
     if (type === 0) {
       // 修改
-      this.getDetail()
+      this.getorg()
     }
   },
   methods: {
-    getDetail() {
+    getorg() {
       this.pageLoading = true
       Common.getArticle()
         .then(res => {
+          if (notEmptyArray(res.communityReview)) {
+            res.communityReview = res.communityReview.pop()
+            if (res.communityReview.reviewResults === 1 && res.checked !== 0) {
+              this.showAudit = true
+            } else {
+              this.showAudit = false
+            }
+          } else {
+            res.communityReview = null
+            this.showAudit = false
+          }
           if (res) {
             this.org = res
           }
@@ -145,6 +180,7 @@ export default {
     handlePost() {
       this.$refs.form.validate(async(success, errors) => {
         if (success) {
+          this.org.communityReview = null
           this.pageLoading = true
           if (this.type === 0) {
             // 修改
@@ -161,7 +197,7 @@ export default {
           this.goView()
           this.pageLoading = false
         } else {
-          this.$message.error(Object.values(errors)[0][0].message)
+          this.$message.warning('请补全信息')
         }
       })
     }

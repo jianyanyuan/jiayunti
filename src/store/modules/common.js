@@ -57,9 +57,15 @@ const state = {
     { key: 0, val: '通过' },
     { key: 1, val: '不通过' } // 1社区不通过
   ],
-  checkOptions: [
-    { key: 0, val: '通过' },
-    { key: 1, val: '不通过' }
+  checkType: [
+    { key: 0, val: 'warning' },
+    { key: 1, val: 'success' },
+    { key: 2, val: 'danger' }
+  ],
+  checkStatus: [
+    { key: 0, val: '未审核' },
+    { key: 1, val: '审核通过' },
+    { key: 2, val: '审核未通过' }
   ],
 
   // county: 城市--区县

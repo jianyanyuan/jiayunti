@@ -76,7 +76,7 @@
         </el-form-item>
         <el-form-item label="处理结果" prop="result">
           <el-select v-model="item.result">
-            <el-option v-for="res in checkOptions" :key="res.val" :value="res.key" :label="res.val" />
+            <el-option v-for="res in auditOptions" :key="res.val" :value="res.key" :label="res.val" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -123,7 +123,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('common', ['checkOptions'])
+    ...mapState('common', ['auditOptions'])
   },
   created() {
     const { id, status } = this.$route.params

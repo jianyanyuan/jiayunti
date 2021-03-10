@@ -111,6 +111,7 @@ export const getInsInfoApi = (projectId) => {
   })
 }
 
+// 获取工程状态节点
 export const getApplyStatusApi = () => {
   return request({
     url: `/Flow`,

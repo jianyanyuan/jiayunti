@@ -28,3 +28,20 @@ export const listApi = (params) => {
     params
   })
 }
+
+// 管理员审核列表
+export const companyAduitApi = (params, data) => {
+  return request({
+    url: '/Company/admin',
+    method: 'post',
+    params,
+    data
+  })
+}
+// 管理员审核详情
+export const companyDetailApi = (userId) => {
+  return request({
+    url: '/Company/admin/' + userId,
+    method: 'get'
+  })
+}

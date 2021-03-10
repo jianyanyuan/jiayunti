@@ -3,7 +3,7 @@
  * @Date: 2020-12-29 13:53:41
  * @LastEditors: zfd
  * @LastEditTime: 2020-12-30 09:44:53
- * @Description: 
+ * @Description:
 -->
 <template>
   <div class="list-query-public">
@@ -14,7 +14,7 @@
       <el-form-item label="申请人" prop="applicantName " style="margin-right: 30px">
         <el-input v-model="query.applicantName" />
       </el-form-item>
-      <el-form-item label="操作" prop="status " style="margin-right: 30px" v-if="status">
+      <el-form-item v-if="status" label="操作" prop="status " style="margin-right: 30px">
         <el-select v-model="query.status">
           <el-option v-for="item in status" :key="item.val" :label="item.val" :value="item.key" />
         </el-select>
@@ -36,11 +36,11 @@ const defaultQuery = {
 }
 export default {
   name: 'FilterList',
-  props:{
-    status:{
-      type:Array,
-      defualt:[]
-    },
+  props: {
+    status: {
+      type: Array,
+      defualt: []
+    }
   },
   data() {
     return {
@@ -53,7 +53,7 @@ export default {
       this.listApplies()
     },
     listApplies() {
-      this.$emit('listFn',this.query)
+      this.$emit('listFn', { pageIndex: 0, size: this.pagination.pageSize }, this.query)
     }
   }
 }

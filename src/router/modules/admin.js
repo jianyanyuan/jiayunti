@@ -48,6 +48,17 @@ const adminRouter = {
       meta: {
         title: '企业初审',
         icon: 'people',
+
+        roles: ['ROLE_ADMIN']
+      }
+    },
+    {
+      path: '/admin/audit-detail/:type/:id',
+      component: () => import('@/views/admin/audit-detail.vue'), // Parent router-view
+      name: 'AdminAuditDetail',
+      hidden: true,
+      meta: {
+        title: '企业简介',
         roles: ['ROLE_ADMIN']
       }
     }

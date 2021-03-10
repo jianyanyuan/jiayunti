@@ -8,7 +8,7 @@
 
 <template>
   <div class="app-container">
-    <el-input placeholder="单位名称" class="filter__input" />
+    <el-input v-model="query.name" placeholder="单位名称" class="filter__input" @input="handleInput" />
     <el-card>
       <el-table v-loading="listLoading" row-key="$index" style="width:100%" :data="list" :default-sort="{prop: 'addTime', order: 'descending'}" fit highlight-current-row @row-dblclick="showAudit">
         <el-table-column align="center" label="序号" width="50">
@@ -16,35 +16,35 @@
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column label="单位" prop="projectName" />
+        <el-table-column label="单位" prop="companyName" />
         <el-table-column label="提交时间" align="center" prop="addTime" sortable min-width="145px">
           <template slot-scope="{row}">
             <i class="el-icon-time" />
             <span>{{ new Date(row.addTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="审核时间" align="center" prop="updateTime" sortable min-width="145px">
-          <template v-if="scope.row.updateTime" slot-scope="scope">
+        <el-table-column label="审核时间" align="center" prop="auditTime" sortable min-width="145px">
+          <template v-if="scope.row.auditTime" slot-scope="scope">
             <i class="el-icon-time" />
-            <span>{{ new Date(scope.row.updateTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+            <span>{{ new Date(scope.row.auditTime) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
         <el-table-column
           label="状态"
           align="center"
-          prop="whetherThrough"
-          sortable
-          :filters="[{ text: '待审核', value: '正在申请中' }, { text: '审核未通过', value: '正在施工中' },{ text: '审核通过', value: '已安装' }]"
-          :filter-method="filterStatus"
+          prop="checked"
+          :filters="[{ text: '待审核', value: 0 }, { text: '审核未通过', value: 2 },{ text: '审核通过', value: 1 }]"
+          :filter-method="handleFilter"
         >
           <template slot-scope="scope">
-            <el-tag :type="scope.row.whetherThrough === 0 ? 'success':'danger'">{{ scope.row.whetherThrough === 0 ? '通过':'未通过' }}</el-tag>
+            <el-tag :type="scope.row.checked | keyToVal(checkType)">{{ scope.row.checked | keyToVal(checkStatus) }}</el-tag>
+
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="warning" @click="handleAudit(scope.row.id)">审核</el-button>
-            <el-button size="mini" type="warning" @click="handleRead(scope.row.id)">查看</el-button>
+            <el-button v-if="scope.row.checked === 0" size="mini" type="info" plain @click="handleOperation(scope.row.userId, 'audit')">审核</el-button>
+            <el-button size="mini" type="warning" plain @click="handleOperation(scope.row.userId, 'read')">查看</el-button>
 
           </template>
         </el-table-column>
@@ -55,8 +55,8 @@
 </template>
 
 <script>
-import Community from '@/api/community'
-import { notEmptyArray } from '@/utils'
+import { mapState } from 'vuex'
+import { companyAduitApi } from '@/api/operations'
 export default {
   name: 'AuditedList',
   data() {
@@ -67,39 +67,46 @@ export default {
         pageSize: 30
       },
       query: {
-        code: '',
-        applyName: '',
-        audit: ''
+        name: '',
+        checked: null
       },
       list: [],
-      listLoading: false
+      listLoading: false,
+      lastTick: null
     }
   },
   computed: {
+    ...mapState('common', ['checkType', 'checkStatus'])
 
   },
   created() {
-    // this.listApplies()
+    this.listApplies()
   },
   methods: {
     // 获取已审核列表
-    async listApplies(query = {}) {
+    async listApplies(pagination = {}, query = {}) {
+      const { pageIndex = this.pagination.pageIndex - 1, size = this.pagination.pageSize } = pagination
+
       this.listLoading = true
-      await Community.auditHistorylist({ page: this.pagination.pageIndex - 1, size: this.pagination.pageSize }, query).then(res => {
-        if (notEmptyArray(res.content)) {
-          this.list = res.content
-          this.pagination.total = res.totalElements
-        } else {
-          this.list = []
-          this.pagination.total = 0
-        }
-      }).catch(() => {
-        this.$message.error('数据获取失败')
-      })
+      await companyAduitApi({ page: pageIndex, size }, query)
+        .then(data => {
+          const { content, totalElements } = data
+          this.list = content
+          this.pagination.total = totalElements
+        }).catch(() => {
+          this.$message.error('数据获取失败')
+        })
       this.listLoading = false
     },
-    handleAudit() {},
-    handleRead() {},
+    handleInput(val) {
+      if (this.lastTick === null || +new Date() - this.lastTick > 500 || val.length === 0) {
+        this.listApplies({ pageIndex: 0, size: this.pagination.pageSize }, this.query)
+        this.lastTick = +new Date()
+      }
+    },
+    handleOperation(id, type) {
+      this.$router.push({ name: 'AdminAuditDetail', params: { id, type }})
+    },
     handleSizeChange(val) {
       this.pagination.pageSize = val
       this.listApplies()
@@ -115,7 +122,10 @@ export default {
       const path = `/${prefix}/audited-detail`
       this.$router.push({ path, query: { id: row.id, status: row.statusId }})
     },
-    filterStatus() {}
+    handleFilter(value, row, column) {
+      const property = column['property']
+      return row[property] === value
+    }
   }
 }
 

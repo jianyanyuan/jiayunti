@@ -41,7 +41,7 @@
       <el-collapse-item v-for="(item, index) in objection" :key="index">
         <template slot="title">
           建议人：{{ item.adviceName }}
-          <el-tag :type="item.result | keyToVal(handleTag)" style="margin-left:20px">{{ item.result | keyToVal(checkOptions) }}</el-tag>
+          <el-tag :type="item.result | keyToVal(handleTag)" style="margin-left:20px">{{ item.result | keyToVal(auditOptions) }}</el-tag>
         </template>
         <el-form label-width="120px" class="center-form">
           <el-form-item label="时间：">
@@ -60,7 +60,7 @@
             {{ item.toObjection }}
           </el-form-item>
           <el-form-item label="处理结果：">
-            {{ item.result | keyToVal(checkOptions) }}
+            {{ item.result | keyToVal(auditOptions) }}
           </el-form-item>
         </el-form>
 
@@ -90,7 +90,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('common', ['checkOptions', 'handleTag'])
+    ...mapState('common', ['auditOptions', 'handleTag'])
   },
   created() {
     const { id, status } = this.$route.params

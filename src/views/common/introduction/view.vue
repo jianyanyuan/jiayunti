@@ -8,11 +8,30 @@
 <template>
   <div class="app-container">
     <el-button v-if="id===null" type="warning" @click="clickEdit">修改</el-button>
+    <el-card v-if="showAudit" style="margin:30px 0">
+      <div slot="header">
+        <span style="margin-right:20px">审核信息</span>
+        <el-tag :type="detail.communityReview.reviewResults | keyToVal(handleTag)">{{ detail.communityReview.reviewResults | keyToVal(auditOptions) }}</el-tag>
+      </div>
+      <el-form label-position="left" class="expand-form-p">
+        <el-form-item label="审核时间：">
+          <span>{{ new Date(detail.communityReview.createdAt) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        </el-form-item>
+        <el-form-item label="审核意见：">
+          <span>{{ detail.communityReview.reviewOpinions }}</span>
+        </el-form-item>
+        <el-form-item label="审核结果：">
+          <el-tag :type="detail.communityReview.reviewResults | keyToVal(handleTag)">{{ detail.communityReview.reviewResults | keyToVal(auditOptions) }}</el-tag>
+        </el-form-item>
+      </el-form>
+    </el-card>
     <div v-loading="pageLoading" class="intro-container">
       <template v-if="detail">
         <header>
           <h1>
             {{ detail.companyName }}
+            <el-tag v-if="detail.communityReview && detail.checked !== 0" :type="detail.communityReview.reviewResults | keyToVal(handleTag)">{{ detail.communityReview.reviewResults | keyToVal(auditOptions) }}</el-tag>
+            <el-tag v-else type="warning">未审核</el-tag>
           </h1>
           <p v-if="detail.articleSource || detail.author">
             <span v-if="detail.articleSource">来源：{{ detail.articleSource }}</span>
@@ -30,18 +49,22 @@
         <div class="empty-content-public">暂无介绍</div>
       </template>
     </div>
+
   </div>
 
 </template>
 <script>
 import Common from '@/api/common'
+import { notEmptyArray } from '@/utils'
+import { mapState } from 'vuex'
 export default {
   name: 'IntroView',
   data() {
     return {
       pageLoading: false,
       detail: null,
-      id: null
+      id: null,
+      showAudit: false
     }
   },
   created() {
@@ -53,12 +76,28 @@ export default {
       this.getDetail()
     }
   },
+  computed: {
+    ...mapState('common', ['handleTag', 'auditOptions'])
+
+  },
   methods: {
+    // 单位用户自己查看
     getDetail() {
       this.pageLoading = true
       Common.getArticle()
         .then(res => {
           if (res) {
+            if (notEmptyArray(res.communityReview)) {
+              res.communityReview = res.communityReview.pop()
+              if (res.communityReview.reviewResults === 1 && res.checked !== 0) {
+                this.showAudit = true
+              } else {
+                this.showAudit = false
+              }
+            } else {
+              res.communityReview = null
+              this.showAudit = false
+            }
             this.detail = res
           }
         })
@@ -69,12 +108,16 @@ export default {
           this.pageLoading = false
         })
     },
+    // 居民根据id查看
     getDetailById() {
       this.pageLoading = true
       Common.getArticleById()
         .then(res => {
-          if (res) {
+          // 最新审核过 且审核通过
+          if (res.checked !== 0 && notEmptyArray(res.communityReview) && res.communityReview.pop().reviewResults === 0) {
             this.detail = res
+          } else {
+            this.detail = null
           }
         })
         .catch(() => {
