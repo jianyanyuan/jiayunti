@@ -54,7 +54,7 @@
 
         <el-form-item label="流程节点" prop="status">
           <el-select v-model="model.form.status" filterable>
-            <el-option v-for="item in applyStatus" :key="item.val" :value="item.key" :label="item.val" />
+            <el-option v-for="item in validApplyStatus" :key="item.val" :value="item.key" :label="item.val" />
           </el-select>
         </el-form-item>
         <el-form-item label="是否有效" prop="isValid">
@@ -91,7 +91,7 @@
 
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import { addApi, listApi, updateApi } from '@/api/operations'
 import { notEmptyArray } from '@/utils'
 // 不用递归，迭代性能更好
@@ -190,6 +190,22 @@ export default {
         // console.log('地址')
         return []
       }
+    },
+    ...mapState('project', ['roles']),
+    ...mapGetters('project', ['validApplyStatus']),
+    ...mapState('common', ['buttonSize', 'statusType']),
+    districtOptions() {
+      const address = this.$store.state.common.address
+      const data = []
+      if (Array.isArray(address[0]?.areas)) {
+        for (const district of address[0].areas) {
+          data.push({
+            id: district.id,
+            label: district.name
+          })
+        }
+      }
+      return data
     }
   },
   created() {

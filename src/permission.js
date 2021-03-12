@@ -48,8 +48,11 @@ router.beforeEach(async(to, from, next) => {
             throw new Error('用户无权限')
           }
           // 获取流程节点、用户操作
-          await store.dispatch('project/getApplyStatus')
-          await store.dispatch('user/getOperation', { district: userInfo.address[1], role: roles[0], setState: true })
+          const freeRoles = ['ROLE_ADMIN', 'ROLE_DESIGNER', 'ROLE_PRINCIPAL', 'ROLE_CONSTRUCTION', 'ROLE_DEVICE', 'ROLE_SUPERVISION']
+          const district = freeRoles.includes(roles[0]) ? '' : userInfo.address[1]
+          await store.dispatch('project/getApplyStatus', district)
+
+          await store.dispatch('user/getOperation', { district, role: roles[0], setState: true })
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
           let roleHome = roles[0].split('_').slice(1).join('-').toLocaleLowerCase()
           // 居民和受理委托人共用一个路由表

@@ -75,7 +75,8 @@ export default {
   },
   computed: {
     ...mapState('common', ['handleStatus', 'handleTag']),
-    ...mapState('project', ['applyStatus', 'applyTag']),
+    ...mapState('project', ['applyTag']),
+    ...mapGetters('project', ['validApplyStatus']),
 
     ...mapGetters('common', ['countyOptions', 'deviceOptions', 'designOptions', 'supervisionOptions', 'constructionOptions', 'trusteeOptions'])
   },

@@ -23,7 +23,7 @@ export const createButtons = (operations, userInfo, projectInfo) => {
     return null
   }
   let { roles } = userInfo
-  const { id, status, isDelegated, isPass, nextStatus, lastStatus } = projectInfo
+  const { id, status, isDelegated, isPass, nextStatus, lastStatus, district } = projectInfo
   if (roles[0] === 'ROLE_RESIDENT' && !isDelegated) {
     roles = ['ROLE_PRINCIPAL'] // 自行提交
   }
@@ -34,7 +34,7 @@ export const createButtons = (operations, userInfo, projectInfo) => {
   }
 
   for (const operation of (operations[status] || [])) {
-    if (operation.role === roles[0] && operation.status === status) {
+    if (operation.role === roles[0] && operation.status === status && operation.district === district) {
       const { un, name, s, t } = operation
       const url = { name: un, params: { id, status, nextStatus, lastStatus }}
       buttons.push({ o: name, s, t, url })

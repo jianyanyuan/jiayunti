@@ -50,11 +50,7 @@ export default {
       timer: null,
       loading: false,
       communityShow: false,
-      countyProps: {
-        value: 'id',
-        label: 'name',
-        children: 'areas'
-      },
+
       communityProps: {
         value: 'id',
         label: 'name',

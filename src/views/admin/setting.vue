@@ -9,15 +9,13 @@
   <div class="app-container">
     <el-row :gutter="20">
       <el-col :span="6">
-        <div class="device-left">
-          <el-input v-model="treeKey" placeholder="搜索设备">
-            <el-button slot="append" icon="el-icon-search" @click="filterDevice" />
-          </el-input>
-          <div class="device-tree">
-            <el-tree ref="tree" style="min-height:500px" :data="treeData" :filter-node-method="filterNode" node-key="id" :props="defaultProps" @check="filterApply" @node-click="handleQuery">
-              <span slot-scope="{ node,data }">
-                <span>{{ node.label }}</span>
-                <!-- <span class="custom-tree-node">
+        <el-button size="medium" @click="openAdd">新增</el-button>
+
+        <div class="device-tree">
+          <el-tree ref="tree" style="min-height:500px" :data="treeData" node-key="id" @check="filterApply" @node-click="handleQuery">
+            <span slot-scope="{ node,data }">
+              <span>{{ node.label }}</span>
+              <!-- <span class="custom-tree-node">
                   <el-button v-if="data.children" type="text" size="mini" @click.stop="() => appendDevice(data)">
                     新增
                   </el-button>
@@ -25,18 +23,16 @@
                     <el-button slot="reference" size="mini" type="text">删除</el-button>
                   </el-popconfirm>
                 </span> -->
-              </span>
-            </el-tree>
-          </div>
+            </span>
+          </el-tree>
         </div>
       </el-col>
       <el-col :span="18">
-        <el-button size="medium" style="margin-bottom:30px" @click="openAdd">新增</el-button>
 
         <template v-for="(prop) in Object.keys(operationsData)">
-          <el-card class="upload-card" style="margin-bottom:30px">
+          <el-card class="upload-card gap-bottom-public">
             <div slot="header">
-              <span>{{ +prop | keyToVal(applyStatus) }} {{ prop }}</span>
+              <span>{{ +prop | keyToVal(validApplyStatus) }} {{ prop }}</span>
             </div>
             <el-collapse accordion>
               <el-collapse-item v-for="(operation) in operationsData[prop]" :key="operation.id">
@@ -89,17 +85,17 @@
 
         <el-form-item label="流程节点" prop="status">
           <el-select v-model="model.form.status" filterable>
-            <el-option v-for="item in applyStatus" :key="item.val" :value="item.key" :label="item.val" />
+            <el-option v-for="item in validApplyStatus" :key="item.val" :value="item.key" :label="item.val" />
           </el-select>
         </el-form-item>
         <el-form-item label="上一节点" prop="lastStatus">
           <el-select v-model="model.form.lastStatus" filterable>
-            <el-option v-for="item in applyStatus" :key="item.val" :value="item.key" :label="item.val" />
+            <el-option v-for="item in validApplyStatus" :key="item.val" :value="item.key" :label="item.val" />
           </el-select>
         </el-form-item>
         <el-form-item label="下一节点" prop="nextStatus">
           <el-select v-model="model.form.nextStatus" filterable>
-            <el-option v-for="item in applyStatus" :key="item.val" :value="item.key" :label="item.val" />
+            <el-option v-for="item in validApplyStatus" :key="item.val" :value="item.key" :label="item.val" />
           </el-select>
         </el-form-item>
         <el-form-item label="是否有效" prop="isValid">
@@ -136,7 +132,7 @@
 
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import { addApi, listApi, updateApi } from '@/api/operations'
 import { notEmptyArray } from '@/utils'
 export default {
@@ -178,7 +174,9 @@ export default {
     }
   },
   computed: {
-    ...mapState('project', ['applyStatus', 'roles']),
+    ...mapState('project', ['roles']),
+    ...mapGetters('project', ['validApplyStatus']),
+    ...mapGetters('common', ['districtOptions']),
     ...mapState('common', ['isOrNo', 'buttonSize', 'statusType']),
     treeData() {
       const address = this.$store.state.common.address
@@ -204,19 +202,6 @@ export default {
             id: district.id,
             label: district.name,
             children: children.map(v => ({ id: district.id + v.id, label: v.label, val: v.val }))
-          })
-        }
-      }
-      return data
-    },
-    districtOptions() {
-      const address = this.$store.state.common.address
-      const data = []
-      if (Array.isArray(address[0]?.areas)) {
-        for (const district of address[0].areas) {
-          data.push({
-            id: district.id,
-            label: district.name
           })
         }
       }

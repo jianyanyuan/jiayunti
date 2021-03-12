@@ -5,7 +5,7 @@
  * @LastEditTime: 2020-12-31 11:30:00
  * @Description:
  */
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 import FilterList from '@/components/Filter'
@@ -42,7 +42,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('project', ['applyStatus', 'applyTag'])
+    ...mapState('project', ['applyTag']),
+    ...mapGetters('project', ['validApplyStatus'])
 
   },
   created() {

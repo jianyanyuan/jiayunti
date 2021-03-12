@@ -78,16 +78,31 @@ const state = {
   trustees: []
 }
 const getters = {
+  // 区的选项
+  districtOptions: state => {
+    const address = state.address
+    const data = []
+    if (Array.isArray(address[0]?.areas)) {
+      for (const district of address[0].areas) {
+        data.push({
+          id: district.id,
+          label: district.name
+        })
+      }
+    }
+    return data
+  },
+
   // 城市--区县
   // id,name,areas
   countyOptions: state => state.address?.map(v => {
     return {
-      id: v.id,
-      name: v.name,
-      areas: v.areas?.map(v => {
+      value: v.id,
+      label: v.name,
+      children: v.areas?.map(v => {
         return {
-          id: v.id,
-          name: v.name
+          value: v.id,
+          label: v.name
         }
       })
     }

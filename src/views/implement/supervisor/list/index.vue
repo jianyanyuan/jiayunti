@@ -35,7 +35,7 @@
         </el-table-column>
         <el-table-column label="状态" align="center" prop="statusId" sortable>
           <template slot-scope="scope">
-            <el-tag :type="scope.row.statusId | keyToVal(applyTag)">{{ scope.row.statusId | keyToVal(applyStatus) }}</el-tag>
+            <el-tag :type="scope.row.statusId | keyToVal(applyTag)">{{ scope.row.statusId | keyToVal(validApplyStatus) }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" min-width="145px">

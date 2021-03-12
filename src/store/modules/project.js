@@ -5,8 +5,8 @@
  * @LastEditTime: 2020-12-31 12:00:02
  * @Description: 申请项目仓库
  */
-import { listApi, getApplyStatusApi } from '@/api/projects'
-
+import { listApi } from '@/api/projects'
+import { getApplyStatusApi } from '@/api/operations'
 const state = {
   // 当前申请是否为委托
   isDelegated: false,
@@ -51,6 +51,11 @@ const state = {
   operations: {}
 }
 
+const getters = {
+  validApplyStatus: (state) => {
+    return state.applyStatus.filter(v => v.isValid)
+  }
+}
 const mutations = {
   SET_APPLY_STATUS: (state, applyStatus) => {
     state.applyStatus = applyStatus
@@ -64,13 +69,14 @@ const actions = {
       listApi().then(res => resolve(res)).catch(err => reject(err))
     })
   },
-  getApplyStatus({ commit }) {
+  getApplyStatus({ commit }, district) {
     return new Promise((resolve, reject) => {
-      getApplyStatusApi()
-        .then(status => {
-          status.unshift({ status: null, name: '空' })
-          commit('SET_APPLY_STATUS', status.map(v => ({ key: v.status, val: v.name })))
-          resolve(status)
+      getApplyStatusApi(district)
+        .then(applyStatus => {
+          applyStatus = applyStatus.map(v => ({ key: v.status, val: v.name, isValid: v.isValid, district: v.district, isStart: v.isStart, id: v.id }))
+          applyStatus.unshift({ key: null, val: '空', isValid: true })
+          commit('SET_APPLY_STATUS', applyStatus)
+          resolve(applyStatus)
         })
         .catch(errMsg => reject(errMsg))
     })
@@ -81,6 +87,7 @@ export default {
   namespaced: true,
   state,
   mutations,
-  actions
+  actions,
+  getters
 }
 

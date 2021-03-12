@@ -6,7 +6,7 @@
  * @Description: 增梯办列表
  */
 // import Flow from '@/components/street/Flow'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
 import FilterList from '@/components/Filter'
@@ -39,7 +39,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('project', ['applyStatus', 'applyTag'])
+    ...mapState('project', ['applyTag']),
+    ...mapGetters('project', ['validApplyStatus'])
   },
   created() {
     this.listApplies()

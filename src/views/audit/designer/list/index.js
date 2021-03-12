@@ -5,7 +5,7 @@
  * @LastEditTime: 2020-12-31 16:02:00
  * @Description:
  */
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 // import Flow from '@/components/street/Flow'
 import File from '@/api/file'
 import { listApi, advanceApi } from '@/api/projects'
@@ -42,7 +42,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('project', ['applyStatus', 'applyTag'])
+    ...mapState('project', ['applyTag']),
+    ...mapGetters('project', ['validApplyStatus'])
   },
   created() {
     this.listApplies()

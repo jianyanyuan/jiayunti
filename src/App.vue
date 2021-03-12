@@ -51,6 +51,37 @@ li {
     margin-bottom: 0;
   }
 }
+.gap-top-public{
+  margin-top:30px;
+}
+.gap-bottom-public{
+  margin-bottom:30px;
+}
+.gap-both-public{
+  margin:30px 0;
+}
+.upload-card-public  {
+   .el-card__body{
+      margin-bottom: 30px;
+  text-align: center;
+   }
+   .el-upload-dragger{
+     width: 400px;
+  padding: 10px 5px;
+  border: 2px solid #e5e5e5;
+  color: #777;
+  -webkit-transition: background-color 0.2s linear;
+  transition: background-color 0.2s linear;
+   }
+
+}
+ .upload-tips-public {
+  color: #14274e;
+  text-align: left;
+  li {
+    list-style: decimal;
+  }
+}
 // 展示居中
 .dialog-center-public .el-dialog__body {
   text-align: center;

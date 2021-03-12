@@ -21,7 +21,7 @@
               <el-input v-model="form.idcard" placeholder="请输入身份证" />
             </el-form-item>
             <el-form-item prop="address" label="地址">
-              <el-cascader v-model="address.county" :options="countyOptions" :props="countyProps" @change="changeAddress" @focus="focusAddress" />
+              <el-cascader v-model="address.county" :options="countyOptions" @change="changeAddress" @focus="focusAddress" />
               <label v-if="communityShow" for="address-detail" class="regist-address-d"> — </label>
               <el-cascader v-if="communityShow" v-model="address.community" :options="communityOptions" :props="communityProps" />
               <!-- <el-input v-model="form.address" placeholder="请选择地址"  /> -->

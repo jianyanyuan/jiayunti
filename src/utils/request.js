@@ -76,6 +76,7 @@ service.interceptors.response.use(
       router.push('/login')
       return Promise.reject('权限不足')
     }
+
     return Promise.reject(result.message)
   },
   error => {

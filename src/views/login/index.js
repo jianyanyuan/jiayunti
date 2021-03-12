@@ -59,9 +59,12 @@ export default {
             if (!roles) {
               this.$router.push('/login') // 无权限返回登录界面
             }
-            await this.$store.dispatch('project/getApplyStatus')
+            // 自由角色获取所有区的节点，区角色的有效节点
+            const freeRoles = ['ROLE_ADMIN', 'ROLE_DESIGNER', 'ROLE_PRINCIPAL', 'ROLE_CONSTRUCTION', 'ROLE_DEVICE', 'ROLE_SUPERVISION']
+            const district = freeRoles.includes(roles[0]) ? '' : userInfo.address[1]
+            await this.$store.dispatch('project/getApplyStatus', district)
 
-            await this.$store.dispatch('user/getOperation', { district: userInfo.address[1], role: roles[0], setState: true })
+            await this.$store.dispatch('user/getOperation', { district, role: roles[0], setState: true })
 
             resetRouter() // 重置下路由，避免重复路由
             const accessRoutes = await this.$store.dispatch('permission/generateRoutes', roles)
@@ -79,9 +82,9 @@ export default {
             this.$router.addRoutes(accessRoutes)
             this.$router.push({ path: '/' })
             this.loading = false
-          }).catch(async() => {
+          }).catch(async(errMsg) => {
             await this.$store.dispatch('user/resetToken')
-            // this.$message.error(err)
+            this.$message.error(errMsg)
             this.loading = false
           })
         } else {

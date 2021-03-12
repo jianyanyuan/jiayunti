@@ -16,13 +16,13 @@
       </template>
     </el-row>
     <template v-if="!$store.state.project.isDelegated && !hasChanged">
-      <el-card v-for="(room) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
+      <el-card v-for="(room) in rooms" :key="room" class="upload-card-public" style="margin-bottom:30px">
         <div slot="header">
           <span>{{ room }}</span>
         </div>
         <el-upload action="#" :file-list="fileList[room]" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,room)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,room)}" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
-          <div class="enclosure-tips">
+          <div class="upload-tips-public">
             所需附件：
             <ul>
               <li>
@@ -42,7 +42,7 @@
       </el-card>
     </template>
     <template v-else>
-      <el-card v-for="(room) in rooms" :key="room" class="upload-card" style="margin-bottom:30px">
+      <el-card v-for="(room) in rooms" :key="room" class="upload-card-public" style="margin-bottom:30px">
         <div slot="header">
           <span>{{ room }}</span>
         </div>
@@ -177,25 +177,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.upload-card ::v-deep .el-card__body {
-  margin-bottom: 30px;
-  text-align: center;
-}
-.enclosure-tips {
-  color: #14274e;
-  text-align: left;
-  li {
-    list-style: decimal;
-  }
-}
-.upload-card ::v-deep .el-upload-dragger {
-  width: 400px;
-  padding: 10px 5px;
-  border: 2px solid #e5e5e5;
-  color: #777;
-  -webkit-transition: background-color 0.2s linear;
-  transition: background-color 0.2s linear;
-}
+
 .image-container {
   height: 200px;
   margin-bottom: 20px;

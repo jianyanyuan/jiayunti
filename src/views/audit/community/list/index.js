@@ -5,7 +5,7 @@
  * @LastEditTime: 2020-12-31 11:35:37
  * @Description: 社区端列表
  */
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 // import Flow from '@/components/street/Flow'
 import { listApi } from '@/api/projects'
 import { notEmptyArray } from '@/utils'
@@ -37,7 +37,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('project', ['applyStatus', 'applyTag'])
+    ...mapState('project', ['applyTag']),
+    ...mapGetters('project', ['validApplyStatus'])
   },
   created() {
     this.listApplies()
