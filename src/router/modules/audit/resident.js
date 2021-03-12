@@ -23,8 +23,8 @@ const residentRouter = {
   },
   children: [
     {
-      path: 'apply/:id/:status',
-      component: () => import('@/views/audit/resident/apply/index.vue'), // Parent router-view
+      path: 'apply/:id',
+      component: () => import('@/views/audit/resident/apply/index.vue'),
       name: 'ResidentApply',
       hidden: true,
       meta: {

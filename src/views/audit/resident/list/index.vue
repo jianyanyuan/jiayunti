@@ -9,7 +9,7 @@
 <template>
   <div class="app-container">
     <!-- 代理人不能新增申请 -->
-    <el-button v-if="$store.getters.roles && !$store.getters.roles.includes('ROLE_PRINCIPAL')" type="primary" size="medium" style="margin-bottom:20px" :loading="openLoading" @click="openAdd">新增申请</el-button>
+    <el-button v-if="$store.getters.roles && !$store.getters.roles.includes('ROLE_PRINCIPAL')" type="primary" size="medium" class="gap-bottom-public" :loading="openLoading" @click="openAdd">新增申请</el-button>
 
     <el-card>
       <!-- @row-dblclick="flowView" -->

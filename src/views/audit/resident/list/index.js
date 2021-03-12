@@ -6,7 +6,6 @@ import html2canvas from 'html2canvas'
 import printJS from 'print-js'
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import CreateButtons from '@/mixin/createButtons'
-// import Flow from '@/components/street/Flow'
 import { cancelApi, listApi, addApi } from '@/api/projects'
 const defaultForm = {
   applicantName: '',
@@ -24,9 +23,6 @@ const defaultForm = {
 
 export default {
   name: 'ResidentList',
-  // components: {
-  //   Flow
-  // },
   components: {
     Pdf
   },
@@ -74,32 +70,15 @@ export default {
     }
   },
   computed: {
-    ...mapState('common', ['handleStatus', 'handleTag']),
     ...mapState('project', ['applyTag']),
     ...mapGetters('project', ['validApplyStatus']),
-
     ...mapGetters('common', ['countyOptions', 'deviceOptions', 'designOptions', 'supervisionOptions', 'constructionOptions', 'trusteeOptions'])
-  },
-  watch: {
   },
   created() {
     this.listApplies()
   },
   methods: {
-    // getButtons(row) {
-    //   const { id, statusId, isEntrust, whetherThrough } = row
-    //   const userInfo = {
-    //     roles: this.$store.getters.roles
-    //   }
-    //   const projectInfo = {
-    //     id,
-    //     status: statusId,
-    //     isDelegated: isEntrust === 0, // 0委托
-    //     isPass: whetherThrough === 0 ? undefined : whetherThrough
-    //   }
-    //   return createButtons(this.$store.state.project.operations, userInfo, projectInfo) || []
-    // },
-    async handleExpand(row, expandedRows) {
+    async handleExpand(row) {
       if (Object.keys(row.apply).length === 0) {
         // this.expandLoading = true
         const apply = await this.$store.dispatch('getProjectBasic', row.id)
@@ -136,33 +115,33 @@ export default {
     },
     // 提交申请
     postApply() {
-      this.$refs.form.validate((valid, errors) => {
+      this.$refs.form.validate((valid) => {
         if (valid) {
           const { location, rooms } = this.model.form
           if (notEmptyArray(location) && location.length === 3) {
-            this.model.form.location = location.map(v => v.replace(/[<>&"']/gi, ' ').trim()) // 防止xss攻击
+            this.model.form.location = location.map(v => v.trim()) // 防止xss攻击
           } else {
-            this.$message.error('请填写加装电梯地址')
+            this.$message.warning('请填写加装电梯地址')
             return
           }
 
           if (this.model.form.applyMode === 'self') {
             const { designId, typeAndDevice, constructionId, supervisionId } = this.model.form
             if (designId === null || typeAndDevice === null || constructionId === null || supervisionId === null) {
-              this.$message.error('请选择单位与设备')
+              this.$message.warning('请选择单位与设备')
               return
             }
             if (notEmptyArray(rooms)) {
-              this.model.form.rooms = Array.from(new Set(rooms.map(v => v.val.replace(/[<>&"']/gi, ' ').trim()))) // 过滤 + 去重
+              this.model.form.rooms = Array.from(new Set(rooms.map(v => v.val.trim()))) // 过滤 + 去重
             } else {
-              this.$message.error('请填写单位下业主房间编号')
+              this.$message.warning('请填写单位下业主房间编号')
               return
             }
           } else {
             const { principalId } = this.model.form
             this.model.form.rooms = null
             if (principalId === null) {
-              this.$message.error('请选择委托代理人')
+              this.$message.warning('请选择委托代理人')
               return
             }
           }
@@ -191,16 +170,14 @@ export default {
         this.list = []
         if (notEmptyArray(res.content)) {
           // this.list = res.content
-          if (notEmptyArray(res.content)) {
-            res.content.forEach(v => {
-              v.apply = {}
-              v.isDelegated = false
-              if (this.$store.getters.roles[0] === 'ROLE_RESIDENT' && v.isEntrust === 0) {
-                v.isDelegated = true
-              }
-              this.list.push(v)
-            })
-          }
+          res.content.forEach(v => {
+            v.apply = {}
+            v.isDelegated = false
+            if (this.$store.getters.roles[0] === 'ROLE_RESIDENT' && v.isEntrust === 0) {
+              v.isDelegated = true
+            }
+            this.list.push(v)
+          })
         }
       }).catch(() => {
         this.$message.error('数据获取失败')
@@ -306,51 +283,8 @@ export default {
         .catch(() => {
           this.$message.error('删除失败')
         })
-      // 未上传 --> 取消上传
-      // const removeIdx = this.contractList.findIndex(f => f.uid === file.uid)
-      // if (file.url) {
-      //   // 已上传
-
-      // } else {
-      //   this.contractList.splice(removeIdx, 1)
-      // }
     },
-    // 上传合同
-    // async handleUpload() {
-    //   this.uploadLoading = true
-    //   this.contractList = this.contractList.filter(v => v.file)
 
-    //   if (notEmptyArray(this.contractList)) {
-    //     let error = false
-    //     // let last = true
-    //     for (const idx in this.contractList) {
-    //       const { projectId, file } = this.contractList[idx]
-    //       await File.upload(file, { projectId, typeName: 'apply-contract' })
-    //         .catch(() => {
-    //           // 上传失败
-    //           const failIdx = this.$refs.contractUpload.uploadFiles.findIndex(f => f.uid === this.contractList[idx].uid)
-    //           this.$refs.contractUpload.uploadFiles.splice(failIdx, 1)
-    //           error = true
-    //         })
-    //     }
-    //     this.contractList = []
-    //     if (error) {
-    //       this.$message.error('文件上传失败')
-    //       this.uploadLoading = false
-    //     } else {
-    //       this.$message.success('上传完成')
-    //       this.uploadVisible = false
-    //       this.uploadId = null
-    //       this.$refs.contractUpload.uploadFiles = []
-    //       this.uploadLoading = false
-    //     }
-    //   } else {
-    //     this.uploadVisible = false
-    //     this.uploadId = null
-    //     this.$refs.contractUpload.uploadFiles = []
-    //     this.uploadLoading = false
-    //   }
-    // },
     // 合同预览
     handleContractPreview(file) {
       const url = file.path || file.url

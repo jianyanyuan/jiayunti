@@ -16,11 +16,12 @@
       </template>
     </el-row>
     <template v-if="!$store.state.project.isDelegated && !hasChanged">
-      <el-card v-for="(room) in rooms" :key="room" class="upload-card-public" style="margin-bottom:30px">
+      <el-card v-for="(room) in rooms" :key="room" class="upload-card-public gap-bottom-public">
         <div slot="header">
           <span>{{ room }}</span>
         </div>
-        <el-upload action="#" :file-list="fileList[room]" :on-remove="function(file,fileList){return handleUploadRemove(file,fileList,room)}" :on-change="function(file,fileList){return handleUploadChange(file,fileList,room)}" drag :auto-upload="false">
+        <!-- function(file,fileList){return handleUploadChange(file,fileList,room)} -->
+        <el-upload action="#" :file-list="fileList[room]" :on-remove="handleUploadRemove(file) " :on-change="handleUploadChange(file,fileList,room)" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div class="upload-tips-public">
             所需附件：
@@ -142,27 +143,19 @@ export default {
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList, room) {
-      const valid = checkUpload(file.raw)
-      if (valid && file.url === undefined) {
-        // const reader = new FileReader()
-        // reader.readAsDataURL(file.raw)
-        // reader.onload = (event) => {
-        //   this.fileList[room].push({
-        //     uid: file.uid,
-        //     name: file.name,
-        //     url: event.target.result,
-        //     type: 'temp' // 临时保存base64结果
-        //   })
-        // }
-        const formData = new FormData()
-        formData.append('file', file.raw)
-        File.uploadOpinion(formData, { room, projectId: this.id })
-          .catch(() => {
+      return function() {
+        const valid = checkUpload(file.raw)
+        if (valid && file.url === undefined) {
+          const formData = new FormData()
+          formData.append('file', file.raw)
+          File.uploadOpinion(formData, { room, projectId: this.id })
+            .catch(() => {
             // 上传失败
-            this.$message.error('上传失败')
-          })
-      } else {
-        fileList.pop()
+              this.$message.error('上传失败')
+            })
+        } else {
+          fileList.pop()
+        }
       }
     },
     // 删除文件

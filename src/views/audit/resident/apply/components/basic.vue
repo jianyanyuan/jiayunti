@@ -146,9 +146,7 @@ export default {
 
   },
   created() {
-    // this.form.address.county = this.$store.getters['address']?.slice(0, 2)
-    // this.communityOptions = this.$store.getters['common/communityOptions'](this.form.address.county)
-    // this.form.address.community = this.$store.getters['address'].slice(2)
+
   },
   activated() {
     // 组件激活
@@ -217,7 +215,7 @@ export default {
             this.$message.error('修改失败')
           })
         } else {
-          this.$message.error(Object.values(errors)[0][0].message)
+          this.$message.warning('请补全信息')
         }
       })
     },
@@ -226,6 +224,7 @@ export default {
       this.formLoading = true
       this.$store.dispatch('getProjectBasic', this.id)
         .then(res => {
+          debugger
           const { applicantName, phoneNumber, address, principalName, principalPhone, designId, deviceId, deviceTypeId, constructionId, supervisionId, rooms, residentialQuarters, building, unit, isDelegated } = res
           this.form.applicantName = applicantName
           this.form.designId = designId
@@ -258,13 +257,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-// el-input__icon el-icon-arrow-down
-// .show-form ::v-deep .el-cascader,
-// .show-form ::v-deep .el-input__suffix-inner{
-//      pointer-events: none;
-//     cursor: default;
-//     opacity: 0.8;
-// }
+
 .basic-form {
   width: 600px;
 }
@@ -274,12 +267,5 @@ export default {
   height: 25px;
   padding: 0 15px;
 }
-// .show-form ::v-deep {
-//   .el-cascader,
-//   .el-input__suffix-inner {
-//     pointer-events: none;
-//     cursor: default;
-//     opacity: 0.8;
-//   }
-// }
+
 </style>

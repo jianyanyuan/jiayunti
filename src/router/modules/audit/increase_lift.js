@@ -23,6 +23,16 @@ const inlRouter = {
   },
   children: [
     {
+      path: 'district-chart',
+      component: () => import('@/views/audit/increase_lift/chart/overview.vue'),
+      name: 'DistrictChart',
+      meta: {
+        title: '区级总览',
+        icon: 'chart',
+        roles: ['ROLE_INCREASE_LIFT']
+      }
+    },
+    {
       path: 'list',
       component: () => import('@/views/audit/increase_lift/list/index.vue'), // Parent router-view
       name: 'IncreaseLiftList',
@@ -93,15 +103,7 @@ const inlRouter = {
         roles: ['ROLE_INCREASE_LIFT']
       }
     },
-    {
-      path: 'district-chart',
-      component: () => import('@/views/audit/increase_lift/chart/overview.vue'),
-      name: 'DistrictChart',
-      meta: {
-        title: '区级总览',
-        roles: ['ROLE_INCREASE_LIFT']
-      }
-    },
+
     {
       path: 'chart-project-detail',
       component: () => import('@/views/audit/increase_lift/chart/project_detail.vue'),
