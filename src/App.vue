@@ -118,4 +118,28 @@ li {
     }
   }
 }
+
+.line-divider-public {
+  height: 20px;
+  background: #14274e;
+}
+.step-btn-group-public {
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 60px;
+  .stepBtn {
+  width: 125px;
+  height: 40px;
+  background: #aab4be;
+  color: #fff;
+  text-align: center;
+  line-height: 40px;
+  /* cursor: pointer; */
+}
+.step-actived {
+  background: #82a7cb;
+}
+}
 </style>

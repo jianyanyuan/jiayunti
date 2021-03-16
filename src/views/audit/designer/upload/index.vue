@@ -1,28 +1,37 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-31 11:34:43
- * @LastEditors: zfd
+ * @LastEditTime: 2021-03-16 17:18:04
+ * @LastEditors: Please set LastEditors
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
 -->
 <template>
   <div class="app-container">
-    <div class="line-divider" />
+    <div class="line-divider-public" />
     <!-- @click="change($event)" -->
-    <div class="step-btn-group">
-      <div v-for="(item,index) in stepBtnGroup" :key="item" class="stepBtn" :step-index="index" :class="{'step-actived': curStep === index}">
+    <div class="step-btn-group-public">
+      <div
+        v-for="(item, index) in stepBtnGroup"
+        :key="item"
+        class="stepBtn"
+        :step-index="index"
+        :class="{ 'step-actived': curStep === index }"
+      >
         {{ item }}
       </div>
     </div>
-    <div class="line-divider" />
+    <div class="line-divider-public" />
 
-    <div v-if="projectId && status" class="dynamic-component-container">
+    <div v-if="projectId" class="gap-top-public">
       <keep-alive>
-        <component :is="curComponent" :id="projectId" :status="status" @nextProcess="handleProcess" />
+        <component
+          :is="curComponent"
+          :id="projectId"
+          @nextProcess="handleProcess"
+        />
       </keep-alive>
     </div>
-
   </div>
 </template>
 
@@ -41,8 +50,7 @@ export default {
       stepBtnGroup: ['档案调取', '上传设计'],
       componentGroup: ['Archive', 'Upload'],
       curStep: 0,
-      projectId: null,
-      status: null
+      projectId: null
     }
   },
   computed: {
@@ -51,70 +59,36 @@ export default {
     }
   },
   created() {
-    const { id, status } = this.$route.params
-    // 2方案设计
-    if (!isNaN(+id) && +status === 2) {
+    const { id, oid } = this.$route.params
+    if (isFinite(+id)) {
       this.projectId = id
-      this.status = status
+      if (!window.sessionStorage.getItem('projectId')) {
+        window.sessionStorage.setItem('projectId', id)
+        window.sessionStorage.setItem('oid', oid)
+      }
     }
   },
+  beforeDestroy() {
+    window.sessionStorage.removeItem('projectId')
+    window.sessionStorage.removeItem('oid')
+  },
   methods: {
-    // change(event) {
-    //   if (event.target.className === 'stepBtn') {
-    //     this.curStep = +event.target.attributes['step-index'].value
-    //   }
-    // },
     handleProcess(length) {
       this.curStep += length
-    },
-    submitApplay() {
-
     }
   },
   // 获得工程Id
   beforeRouteEnter(to, from, next) {
-    const { id, status } = to.params
-    // 2方案设计
-    if (isNaN(+id) || +status !== 2) {
-      next('/redirect' + from.fullPath)
-    } else {
+    const { id } = to.params
+    if (isFinite(+id)) {
       next()
+    } else {
+      next('/redirect' + from.fullPath)
     }
   }
-
 }
 </script>
 
 <style scoped>
-.line-divider {
-  height: 20px;
-  /* background: #646464; */
-  background: #14274e;
-}
-.step-btn-group {
-  padding: 0 20px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  height: 60px;
-}
-.step-btn-group .stepBtn {
-  width: 125px;
-  height: 40px;
-  background: #aab4be;
-  color: #fff;
-  text-align: center;
-  line-height: 40px;
-  /* cursor: pointer; */
-}
-.step-btn-group .step-actived {
-  background: #82a7cb;
-}
-.dynamic-component-container {
-  margin-top: 30px;
-}
-.step-container {
-  margin-top: 30px;
-  text-align: center;
-}
+
 </style>

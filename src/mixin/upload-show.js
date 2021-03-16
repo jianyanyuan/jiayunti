@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-12-04 10:50:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-16 16:47:40
+ * @LastEditTime: 2021-03-16 17:11:28
  * @Description: 附件上传 + 预览通用模块
  */
 import File from '@/api/file'
@@ -14,7 +14,8 @@ export default {
       // 修改后重新保存
       hasChanged: false,
       pageLoading: false,
-      fileList: [] // 展示用
+      fileList: [], // 展示用
+      uploadedCount: 0 // 记录用
     }
   },
   activated() {
@@ -25,8 +26,8 @@ export default {
       if (arrow < 0) {
         this.$emit('nextProcess', arrow)
       } else {
-        await this.detailApply()
-        if (this.fileList.length > 0) {
+        // await this.detailApply()
+        if (this.uploadedCount > 0) {
           this.$emit('nextProcess', arrow)
         } else {
           this.$message.warning('请先上传材料')
@@ -37,6 +38,7 @@ export default {
     async detailApply() {
       this.pageLoading = true
       this.fileList = []
+      this.uploadedCount = 0
       if (this.typeName === 'locale-form') {
         await File.getLocalFile(this.id).then(res => {
           if (notEmptyArray(res.content)) {
@@ -47,6 +49,7 @@ export default {
                 url: i.path
               })
             }
+            this.uploadedCount = res.content.length
           }
           this.pageLoading = false
         }).catch((errMsg) => {
@@ -63,6 +66,7 @@ export default {
                 url: i.path
               })
             }
+            this.uploadedCount = res.content.length
           }
           this.pageLoading = false
         }).catch((errMsg) => {
@@ -85,6 +89,7 @@ export default {
             file.url = res.fileAddress
             file.status = 'success'
             file.uid = res.fileTypeId
+            this.uploadedCount++
           })
           .catch((errMsg) => {
           // 上传失败

@@ -1,27 +1,27 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2021-03-16 15:51:04
+ * @LastEditTime: 2021-03-16 17:23:37
  * @LastEditors: Please set LastEditors
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
 -->
 <template>
   <div class="app-container">
-    <div class="line-divider" />
+    <div class="line-divider-public" />
     <!-- @click="change($event)" -->
-    <div class="step-btn-group">
+    <div class="step-btn-group-public">
       <div v-if="audit" class="audit-btn" @click="dialogVisible = true">审核意见</div>
 
       <div v-for="(item,index) in stepBtnGroup" :key="item" class="step-btn" :step-index="index" :class="{'step-actived': curStep === index}">
         {{ item }}
       </div>
     </div>
-    <div class="line-divider" />
+    <div class="line-divider-public" />
 
-    <div class="dynamic-component-container">
+    <div class="gap-top-public">
       <keep-alive>
-        <component :is="curComponent" v-if="projectId" :id="projectId" :status="status" @nextProcess="handleProcess" />
+        <component :is="curComponent" v-if="projectId" :id="projectId" @nextProcess="handleProcess" />
       </keep-alive>
     </div>
     <el-dialog v-el-drag-dialog title="审核意见" center :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" top="10vh">
@@ -94,18 +94,17 @@ export default {
   created() {
     // 项目id,项目节点,操作前进，操作后退，操作id
     const { id, status, nextStatus, lastStatus, oid } = this.$route.params
-    if (!window.sessionStorage.getItem('projectId')) {
-      window.sessionStorage.setItem('projectId', id)
-      window.sessionStorage.setItem('oid', oid)
-      // window.sessionStorage.setItem('status', status)
-      // window.sessionStorage.setItem('nextStats', nextStatus)
-      // window.sessionStorage.setItem('lastStatus', lastStatus)
-    }
 
     // 0第一次提交材料
     if (isFinite(+id)) {
       this.projectId = id
-      this.status = status
+      if (!window.sessionStorage.getItem('projectId')) {
+        window.sessionStorage.setItem('projectId', id)
+        window.sessionStorage.setItem('oid', oid)
+      // window.sessionStorage.setItem('status', status)
+      // window.sessionStorage.setItem('nextStats', nextStatus)
+      // window.sessionStorage.setItem('lastStatus', lastStatus)
+      }
       this.getAudit()
     }
   },
@@ -158,27 +157,7 @@ export default {
   margin-bottom: 0;
   width: 100%;
 }
-.line-divider {
-  height: 20px;
-  /* background: #646464; */
-  background: #14274e;
-}
-.step-btn-group {
-  padding: 0 20px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  height: 60px;
-}
-.step-btn-group .step-btn {
-  width: 125px;
-  height: 40px;
-  background: #aab4be;
-  color: #fff;
-  text-align: center;
-  line-height: 40px;
-  /* cursor: pointer; */
-}
+
 .step-btn-group .audit-btn {
   width: 125px;
   height: 40px;
@@ -188,14 +167,5 @@ export default {
   line-height: 40px;
   cursor: pointer;
 }
-.step-btn-group .step-actived {
-  background: #82a7cb;
-}
-.dynamic-component-container {
-  margin-top: 30px;
-}
-.step-container {
-  margin-top: 30px;
-  text-align: center;
-}
+
 </style>

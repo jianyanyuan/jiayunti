@@ -1,8 +1,8 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-15 16:32:36
- * @LastEditTime: 2020-12-25 10:29:53
- * @LastEditors: zfd
+ * @LastEditTime: 2021-03-16 17:30:03
+ * @LastEditors: Please set LastEditors
  * @Description: 审批端设计路由表
  * @FilePath: \jiayunti\src\router\modules\audit\resident.js
  */
@@ -33,7 +33,7 @@ const designerRouter = {
       }
     },
     {
-      path: 'edit/:id/:status',
+      path: 'edit/:id',
       component: () => import('@/views/audit/designer/edit/index.vue'),
       name: 'DesignerEdit',
       hidden: true,
@@ -43,7 +43,7 @@ const designerRouter = {
       }
     },
     {
-      path: 'upload/:id/:status',
+      path: 'upload/:id',
       component: () => import('@/views/audit/designer/upload/index.vue'),
       name: 'DesignerUpload',
       hidden: true,

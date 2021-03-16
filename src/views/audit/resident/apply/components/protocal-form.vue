@@ -28,7 +28,7 @@
       </el-card>
     </template>
     <template v-else>
-      <el-card class="upload-card-public">
+      <el-card class="upload-card-public gap-bottom-public">
         <div slot="header">
           <span>查看</span>
         </div>

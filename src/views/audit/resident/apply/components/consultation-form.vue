@@ -2,7 +2,7 @@
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-16 16:46:47
+ * @LastEditTime: 2021-03-16 17:12:36
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -76,6 +76,7 @@ export default {
       // 修改后重新保存
       hasChanged: false,
       pageLoading: false,
+      uploadedCount: 0, // 记录已有文件数量
       rooms: [],
       fileList: {} // 展示用
     }
@@ -93,12 +94,14 @@ export default {
       this.pageLoading = true
       this.rooms = []
       this.fileList = {}
+      this.uploadedCount = 0
       await File.getConsultation({ projectId: this.id }).then(res => {
         if (notEmptyArray(res.content)) {
           for (const i of res.content) {
             const { room, opinionFileList } = i
             this.rooms.push(room)
             if (Array.isArray(opinionFileList)) {
+              this.uploadedCount++
               this.fileList[room] = []
               opinionFileList.forEach(v => {
                 this.fileList[room].push({
@@ -119,12 +122,10 @@ export default {
 
     async nextProcess(arrow) {
       if (arrow > 0) {
-        await this.detailApply()
-        const count = this.rooms.reduce((c, v) => (this.fileList[v].length + c), 0)
-        if (count >= this.rooms.length * 3) {
+        if (this.uploadedCount >= this.rooms.length * 3) {
           this.$emit('nextProcess', arrow)
         } else {
-          this.$message.error('附件未提交完成')
+          this.$message.warning('附件未提交完成')
         }
       } else {
         this.$emit('nextProcess', arrow)
@@ -137,6 +138,7 @@ export default {
         formData.append('file', file.raw)
         File.uploadOpinion(formData, { room, projectId: this.id })
           .then(res => {
+            this.uploadedCount++
             file.url = res.fileAddress
             file.status = 'success'
             file.uid = res.opinionFileId
