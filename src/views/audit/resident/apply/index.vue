@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 16:22:14
- * @LastEditTime: 2020-12-31 11:30:55
- * @LastEditors: zfd
+ * @LastEditTime: 2021-03-16 15:51:04
+ * @LastEditors: Please set LastEditors
  * @Description: resident apply
  * @FilePath: \jiayunti\src\views\street\audit\index.vue
 -->
@@ -10,9 +10,10 @@
   <div class="app-container">
     <div class="line-divider" />
     <!-- @click="change($event)" -->
-    <el-button v-if="audit" @click="dialogVisible = true">审核意见</el-button>
     <div class="step-btn-group">
-      <div v-for="(item,index) in stepBtnGroup" :key="item" class="stepBtn" :step-index="index" :class="{'step-actived': curStep === index}">
+      <div v-if="audit" class="audit-btn" @click="dialogVisible = true">审核意见</div>
+
+      <div v-for="(item,index) in stepBtnGroup" :key="item" class="step-btn" :step-index="index" :class="{'step-actived': curStep === index}">
         {{ item }}
       </div>
     </div>
@@ -23,7 +24,7 @@
         <component :is="curComponent" v-if="projectId" :id="projectId" :status="status" @nextProcess="handleProcess" />
       </keep-alive>
     </div>
-    <el-dialog v-el-drag-dialog title="审核意见" :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" top="10vh">
+    <el-dialog v-el-drag-dialog title="审核意见" center :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" top="10vh">
       <el-form v-if="audit" label-position="left" class="expand-form-p">
         <el-form-item label="审核机构">
           <span>{{ audit.reviewOrganization }}</span>
@@ -54,7 +55,7 @@
 <script>
 import Community from '@/api/community'
 import { mapState } from 'vuex'
-
+import { isEmptyObj } from '@/utils'
 import Basic from './components/basic.vue'
 import ConsultationForm from './components/consultation-form.vue'
 import SummaryForm from './components/summary-form.vue'
@@ -92,12 +93,13 @@ export default {
   },
   created() {
     // 项目id,项目节点,操作前进，操作后退，操作id
-    const { id, status, nextStats, lastStatus, oid } = this.$route.params
-    if (!window.sessionStorage.getItem('oid')) {
+    const { id, status, nextStatus, lastStatus, oid } = this.$route.params
+    if (!window.sessionStorage.getItem('projectId')) {
+      window.sessionStorage.setItem('projectId', id)
       window.sessionStorage.setItem('oid', oid)
-      window.sessionStorage.setItem('status', status)
-      window.sessionStorage.setItem('nextStats', nextStats)
-      window.sessionStorage.setItem('lastStatus', lastStatus)
+      // window.sessionStorage.setItem('status', status)
+      // window.sessionStorage.setItem('nextStats', nextStatus)
+      // window.sessionStorage.setItem('lastStatus', lastStatus)
     }
 
     // 0第一次提交材料
@@ -107,15 +109,24 @@ export default {
       this.getAudit()
     }
   },
+  beforeDestroy() {
+    window.sessionStorage.removeItem('projectId')
+    window.sessionStorage.removeItem('oid')
+    // window.sessionStorage.removeItem('status')
+    // window.sessionStorage.removeItem('nextStats')
+    // window.sessionStorage.removeItem('lastStatus')
+  },
   methods: {
 
     // 获取审核意见
     async getAudit() {
       await Community.checkLatest(this.projectId).then(res => {
-        if (res.path) {
-          res.files = new Array({ uid: Date.now(), url: res.path })
+        if (isEmptyObj(res)) {
+          if (res.path) {
+            res.files = new Array({ uid: Date.now(), url: res.path })
+          }
+          this.audit = res
         }
-        this.audit = res
       }).catch(() => {
         this.$message.error('数据获取失败')
       })
@@ -159,7 +170,7 @@ export default {
   align-items: center;
   height: 60px;
 }
-.step-btn-group .stepBtn {
+.step-btn-group .step-btn {
   width: 125px;
   height: 40px;
   background: #aab4be;
@@ -167,6 +178,15 @@ export default {
   text-align: center;
   line-height: 40px;
   /* cursor: pointer; */
+}
+.step-btn-group .audit-btn {
+  width: 125px;
+  height: 40px;
+  background: #ee154c;
+  color: #fff;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
 }
 .step-btn-group .step-actived {
   background: #82a7cb;

@@ -177,3 +177,14 @@ export function decodeUtf8(bytes) {
   }
   return decodeURIComponent(encoded)
 }
+
+/**
+ * 检测空对象
+ * @param {*} text
+ */
+export function isEmptyObj(obj) {
+  const isObj = checkType(obj) === 'Object'
+  if (isObj) {
+    return Object.keys(obj).length > 0
+  }
+}

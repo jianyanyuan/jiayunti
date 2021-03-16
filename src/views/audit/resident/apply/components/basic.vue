@@ -1,8 +1,8 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
- * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 11:30:20
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-16 15:24:46
  * @Description: 居民申请基本资料
 -->
 <template>
@@ -202,18 +202,14 @@ export default {
           }
           // this.form.address = address.community.concat(address.county)
           this.formLoading = true
-          updateApi(this.id, this.form).then(res => {
-            if (res.id === this.id) {
+          updateApi(this.id, this.form)
+            .catch((errMsg) => {
+              this.$message.error(errMsg)
+            })
+            .finally(() => {
               this.detailApply()
-              // this.$message.success('修改成功')
-            } else {
-              this.$message.error('修改失败')
               this.formLoading = false
-            }
-          }).catch(() => {
-            this.formLoading = false
-            this.$message.error('修改失败')
-          })
+            })
         } else {
           this.$message.warning('请补全信息')
         }
@@ -224,7 +220,6 @@ export default {
       this.formLoading = true
       this.$store.dispatch('getProjectBasic', this.id)
         .then(res => {
-          debugger
           const { applicantName, phoneNumber, address, principalName, principalPhone, designId, deviceId, deviceTypeId, constructionId, supervisionId, rooms, residentialQuarters, building, unit, isDelegated } = res
           this.form.applicantName = applicantName
           this.form.designId = designId
@@ -246,9 +241,9 @@ export default {
           this.hasChanged = false
           this.formLoading = false
         })
-        .catch(() => {
+        .catch((errMsg) => {
           this.formLoading = false
-          this.$message.error('信息获取失败')
+          this.$message.error(errMsg)
         })
     }
   }

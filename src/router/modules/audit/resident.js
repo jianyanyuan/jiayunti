@@ -122,6 +122,16 @@ const residentRouter = {
         roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
       }
     },
+    {
+      path: 'contract/:id',
+      component: () => import('@/views/audit/resident/apply-contract.vue'),
+      name: 'ResidentContract',
+      hidden: true,
+      meta: {
+        title: '申请合同',
+        roles: ['ROLE_RESIDENT', 'ROLE_PRINCIPAL']
+      }
+    },
     // {
     //   path: 'offer/:id/:status',
     //   component: () => import('@/views/audit/resident/offer/index.vue'),

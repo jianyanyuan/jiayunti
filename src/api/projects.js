@@ -54,17 +54,15 @@ export const updateApi = (id, newprojectRequest) => {
   })
 }
 
-// 流程步骤更新
-export const advanceApi = (projectId, status, constructionId, supervisionId) => {
+// 流程步骤更新 projectId operationOd
+export const advanceApi = (projectId, operationOd) => {
   return request({
     url: '/flowchartlogic',
     // headers: { 'Content-Type': 'application/json' } ,
-    method: 'post',
-    data: {
+    method: 'get',
+    params: {
       projectId,
-      status,
-      constructionId,
-      supervisionId
+      operationOd
     }
   })
 }

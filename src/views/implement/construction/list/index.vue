@@ -96,21 +96,7 @@
     <!-- <el-dialog v-el-drag-dialog title="流程图" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
       <flow />
     </el-dialog> -->
-    <el-dialog center title="现场照片" :visible.sync="uploadVisible" :close-on-click-modal="false" class="uploadModal">
-      <el-upload ref="upload" :file-list="uploadList" action="#" :on-remove="handleUploadRemove" :on-change="handleUploadChange" :on-preview="handleLocalePreview" :auto-upload="false" list-type="picture-card">
-        <!-- <div>将文件拖到此处，或点击添加</div>
-        <div>单个文件大小不超过20MB，可上传图片或PDF</div> -->
-        <i class="el-icon-plus" />
 
-      </el-upload>
-      <!-- <span slot="footer">
-        <el-button size="small" type="primary" @click="handleUpload">上 传</el-button>
-      </span> -->
-
-    </el-dialog>
-    <el-dialog center title="现场照片" :visible.sync="dialogImageVisible" class="dialog-center-public">
-      <img :src="dialogImageUrl " alt="现场照片">
-    </el-dialog>
   </div>
 </template>
 
@@ -122,17 +108,4 @@ export default {
 </script>
 <style scoped lang="scss">
 
-.uploadModal ::v-deep .el-upload-dragger {
-  padding: 40px 5px;
-  border: 2px solid #e5e5e5;
-  color: #777;
-  -webkit-transition: background-color 0.2s linear;
-  transition: background-color 0.2s linear;
-}
-.uploadModal ::v-deep .el-upload-dragger:hover {
-  background: #f6f6f6;
-}
-// .uploadModal ::v-deep .el-dialog__body {
-//   text-align: center;
-// }
 </style>

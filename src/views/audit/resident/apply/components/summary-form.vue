@@ -1,8 +1,8 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
- * @LastEditors: zfd
- * @LastEditTime: 2020-12-24 08:53:51
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-16 15:21:59
  * @Description: 居民申请意见汇总表
 -->
 <template>
@@ -15,7 +15,7 @@
       </template>
     </el-row>
     <template v-if="!$store.state.project.isDelegated && !hasChanged">
-      <el-card class="upload-card" style="margin-bottom:30px">
+      <el-card class="upload-card-public gap-bottom-public">
         <div slot="header">
           <span>上传</span>
         </div>
@@ -27,7 +27,7 @@
       </el-card>
     </template>
     <template v-else>
-      <el-card class="upload-card" style="margin-bottom:30px">
+      <el-card class="upload-card-public">
         <div slot="header">
           <span>查看</span>
         </div>
@@ -64,34 +64,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.upload-card ::v-deep .el-card__body {
-  text-align: center;
-  margin-bottom: 30px;
-}
-.enclosure-tips {
-  color: #14274e;
-  text-align: left;
-  li {
-    list-style: decimal;
-  }
-}
-.upload-card ::v-deep .el-upload-dragger {
-  width: 400px;
-  padding: 40px 5px;
-  border: 2px solid #e5e5e5;
-  color: #777;
-  -webkit-transition: background-color 0.2s linear;
-  transition: background-color 0.2s linear;
-}
-.image-container {
-  height: 200px;
-  margin-bottom: 20px;
-  img {
-    width: auto;
-    height: auto;
 
-    max-width: 100%;
-    max-height: 100%;
-  }
-}
 </style>

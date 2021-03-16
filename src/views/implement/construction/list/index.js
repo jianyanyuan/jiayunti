@@ -68,22 +68,7 @@ export default {
       })
       this.listLoading = false
     },
-    // async willOffer(row) {
-    //   let valid = true
-    //   await Construction.getProOffer(row.id).then((res) => {
-    //     if (Object.keys(res).length !== 0) {
-    //       valid = false
-    //     }
-    //   })
-    //     .catch(() => {
-    //       valid = false
-    //     })
-    //   if (valid) {
-    //     this.$router.push({ name: 'ConstructionProcess', params: { id: row.id, status: row.statusId }})
-    //   } else {
-    //     this.$message.error('请勿重复报价')
-    //   }
-    // },
+
     async willComplete(row) {
       let valid = true
       await Construction.isResolved(row.id).then((res) => {
@@ -117,122 +102,7 @@ export default {
     handleCurrentPageChange(val) {
       this.pagination.pageIndex = val
       this.listApplies()
-    },
-    // 上传现场照片
-    openUpload(id) {
-      this.uploadList = []
-
-      File.get({ projectId: id, typeName: 'locale-form' })
-        .then(res => {
-          if (notEmptyArray(res.content)) {
-            for (const i of res.content) {
-              this.uploadList.push({
-                uid: i.id,
-                name: i.filename,
-                url: i.path
-              })
-            }
-          }
-        })
-        .finally(() => {
-          this.uploadId = id
-          this.uploadVisible = true
-        })
-    },
-    // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
-    // 限制了添加文件的逻辑，不支持多个文件选择
-    async handleUploadChange(file, fileList) {
-      const isImage = /\bimage/i.test(file.raw.type)
-      if (!isImage) {
-        this.$message.warning('只能上传图片')
-        fileList.pop()
-        return
-      }
-
-      const valid = checkUpload(file.raw)
-      if (valid) {
-        const formData = new FormData()
-        formData.append('file', file.raw)
-        await File.upload(formData, { projectId: this.uploadId, typeName: 'locale-form' })
-          .then(res => {
-            file.uid = res.fileTypeId
-            file.url = res.fileAddress
-            file.status = 'success'
-          })
-          .catch(() => {
-            // 上传失败
-            this.$message.error('上传失败')
-            // const failIdx = this.$refs.contractUpload.uploadFiles.findIndex(f => f.uid === this.contractList[idx].uid)
-            // this.$refs.contractUpload.uploadFiles.splice(failIdx, 1)
-            // error = true
-          })
-      } else {
-        fileList.pop()
-      }
-    },
-    // 删除文件
-    handleUploadRemove(file, fileList) {
-      File.remove(file.uid)
-        .then(() => {
-          // this.contractList.splice(removeIdx, 1)
-        })
-        .catch(() => {
-          this.$message.error('删除失败')
-        })
-      // const removeIdx = this.uploadList.findIndex(f => f.uid === file.uid)
-      // if (file.url) {
-      //   // 已上传
-      //   File.remove(file.uid)
-      //     .then(() => {
-      //       this.uploadList.splice(removeIdx, 1)
-      //     })
-      //     .catch(() => {
-      //       this.$message.error('删除失败')
-      //     })
-      // } else {
-      //   this.uploadList.splice(removeIdx, 1)
-      // }
-    },
-    // 现场照片预览
-    handleLocalePreview(file) {
-      this.dialogImageUrl = file.url
-      this.dialogImageVisible = true
     }
-    // 上传合同
-    // async handleUpload() {
-    //   this.uploadList = this.uploadList.filter(v => v.file)
-    //   this.uploadLoading = true
-    //   if (notEmptyArray(this.uploadList)) {
-    //     let error = false
-    //     // let last = true
-    //     for (const idx in this.uploadList) {
-    //       const { projectId, file } = this.uploadList[idx]
-    //       await File.upload(file, { projectId, typeName: 'locale-form' })
-    //         .catch(() => {
-    //           // 上传失败
-    //           const failIdx = this.$refs.upload.uploadFiles.findIndex(f => f.uid === this.uploadList[idx].uid)
-    //           this.$refs.upload.uploadFiles.splice(failIdx, 1)
-    //           error = true
-    //         })
-    //     }
-    //     this.uploadList = []
-    //     if (error) {
-    //       this.$message.error('文件上传失败')
-    //       this.uploadLoading = false
-    //     } else {
-    //       this.$message.success('上传完成')
-    //       this.uploadVisible = false
-    //       this.uploadId = null
-    //       this.$refs.upload.uploadFiles = []
-    //       this.uploadLoading = false
-    //     }
-    //   } else {
-    //     this.uploadVisible = false
-    //     this.uploadId = null
-    //     this.$refs.upload.uploadFiles = []
-    //     this.uploadLoading = false
-    //   }
-    // }
 
   }
 }

@@ -1,9 +1,6 @@
 import { mapState, mapGetters } from 'vuex'
-import File from '@/api/file'
-import { deepClone, notEmptyArray, checkUpload } from '@/utils'
-import Pdf from 'vue-pdf'
-import html2canvas from 'html2canvas'
-import printJS from 'print-js'
+import { deepClone, notEmptyArray } from '@/utils'
+
 import { validatePhone, validateTrueName } from '@/utils/element-validator'
 import CreateButtons from '@/mixin/createButtons'
 import { cancelApi, listApi, addApi } from '@/api/projects'
@@ -23,19 +20,11 @@ const defaultForm = {
 
 export default {
   name: 'ResidentList',
-  components: {
-    Pdf
-  },
+
   mixins: [CreateButtons],
   data() {
     return {
-      dialogImageVisible: false,
-      dialogImageUrl: '',
-      pdfURL: '',
-      pdfVisible: false,
-      pdfPages: undefined, // pdf内容
-      uploadVisible: false,
-      uploadId: null,
+
       formLoading: false,
       listLoading: false,
       openLoading: false,
@@ -52,21 +41,10 @@ export default {
         }
       },
       list: [],
-      countyProps: {
-        value: 'id',
-        label: 'name',
-        children: 'areas'
-      },
-      communityProps: {
-        value: 'id',
-        label: 'name',
-        children: 'communities'
-      },
+
       // expandLoading: false,
-      communityOptions: [],
-      contractList: [],
-      contractUpload: true,
-      uploadLoading: false
+      communityOptions: []
+
     }
   },
   computed: {
@@ -199,125 +177,7 @@ export default {
     },
     resetFrom(formName) {
       this.$refs[formName].clearValidate()
-    },
-    // 上传合同
-    openUpload(row) {
-      const { isEntrust, id } = row
-      this.contractList = []
-      this.contractUpload = true
-
-      if (this.$store.getters.roles[0] === 'ROLE_RESIDENT' && isEntrust === 0) {
-        this.contractUpload = false
-      }
-      File.get({ projectId: id, typeName: 'apply-contract' })
-        .then(res => {
-          if (notEmptyArray(res.content)) {
-            for (const i of res.content) {
-              const file = {
-                uid: i.id,
-                name: i.filename,
-                url: i.path
-              }
-              if (/\bpdf/i.test(i.filename)) {
-                file.url = require('@/assets/images/pdf.jpg')
-                file.path = i.path
-              }
-              this.contractList.push(file)
-            }
-          }
-        })
-        .finally(() => {
-          this.uploadId = id
-          this.uploadVisible = true
-        })
-    },
-    // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
-    // 限制了添加文件的逻辑，不支持多个文件选择
-    async handleUploadChange(file, fileList) {
-      const valid = checkUpload(file.raw)
-      if (valid) {
-        const formData = new FormData()
-        formData.append('file', file.raw)
-        const isPdf = /\bpdf/i.test(file.raw.type)
-        if (isPdf) file.url = require('@/assets/images/pdf.jpg')
-        await File.upload(formData, { projectId: this.uploadId, typeName: 'apply-contract' })
-          .then(res => {
-            if (isPdf) {
-              file.path = res.fileAddress
-            } else {
-              file.url = res.fileAddress
-            }
-            file.status = 'success'
-
-            file.uid = res.fileTypeId
-          })
-          .catch(() => {
-            // 上传失败
-            this.$message.error('上传失败')
-            // const failIdx = this.$refs.contractUpload.uploadFiles.findIndex(f => f.uid === this.contractList[idx].uid)
-            // this.$refs.contractUpload.uploadFiles.splice(failIdx, 1)
-            // error = true
-          })
-      } else {
-        fileList.pop()
-      }
-      // if (valid && file.url === undefined) {
-      //   const formData = new FormData()
-      //   formData.append('file', file.raw)
-      //   this.contractList.push({
-      //     projectId: this.uploadId,
-      //     uid: file.uid,
-      //     name: file.name,
-      //     file: formData
-      //   })
-      // } else {
-      //   fileList.pop()
-      // }
-    },
-    // 删除文件
-    handleUploadRemove(file, fileList) {
-      File.remove(file.uid)
-        .then(() => {
-          // this.contractList.splice(removeIdx, 1)
-        })
-        .catch(() => {
-          this.$message.error('删除失败')
-        })
-    },
-
-    // 合同预览
-    handleContractPreview(file) {
-      const url = file.path || file.url
-      const isPdf = /\bpdf/i.test(file.name) || /\bpdf$/i.test(url)
-      if (isPdf) {
-        // 展示pdf
-        this.pdfURL = Pdf.createLoadingTask(url)
-        this.pdfURL.promise.then(pdf => {
-          this.pdfPages = pdf.numPages
-          this.pdfVisible = true
-        }).catch(() => {
-          this.$message.error('pdf预览失败')
-        })
-      } else {
-        this.dialogImageUrl = file.url
-        this.dialogImageVisible = true
-      }
-    },
-    // 打印pdf
-    printPDF(refName) {
-      html2canvas(this.$refs[refName], {
-        backgroundColor: null,
-        useCORS: true,
-        windowHeight: 0
-      }).then((canvas) => {
-        const url = canvas.toDataURL()
-        printJS({
-          printable: url,
-          type: 'image',
-          documentTitle: this.printName
-        })
-        // console.log(url)
-      })
     }
+
   }
 }

@@ -190,38 +190,6 @@
         <el-button type="primary" @click="postApply">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog center title="申请合同" :visible.sync="uploadVisible" :close-on-click-modal="false" class="uploadModal">
-      <template v-if="contractUpload">
-        <el-upload ref="contractUpload" :file-list="contractList" action="#" :on-preview="handleContractPreview" :on-remove="contractUpload && handleUploadRemove" :on-change="handleUploadChange" list-type="picture-card" :auto-upload="false">
-          <!-- <div>将文件拖到此处，或点击添加</div>
-          <div>单个文件大小不超过20MB，可上传图片或PDF</div> -->
-          <i class="el-icon-plus" />
-
-        </el-upload>
-        <!-- <span slot="footer">
-          <el-button size="small" type="primary" @click="handleUpload">上传合同</el-button>
-        </span> -->
-      </template>
-      <template v-else>
-        <upload-list v-if="contractList.length > 0" :files="contractList" list-type="picture-card" :disabled="true" />
-        <p v-else style="text-align:center"> 合同暂未上传</p>
-      </template>
-
-    </el-dialog>
-    <el-dialog center title="申请合同" :visible.sync="dialogImageVisible" class="dialog-center-public">
-      <img :src="dialogImageUrl " alt="申请合同">
-    </el-dialog>
-
-    <el-dialog center :visible.sync="pdfVisible" class="dialog-center-public">
-      <!-- 加载全部页面的PDF是一个for循环,不能指定用来打印的ref -->
-      <div ref="printContent">
-        <Pdf v-for="i in pdfPages" :key="i" :src="pdfURL" :page="i" />
-      </div>
-      <span slot="title">
-        <el-button type="success" size="small" style="float:left" @click="printPDF('printContent')">打印</el-button>
-        <span class="pdf-title">申请合同</span>
-      </span>
-    </el-dialog>
     <!-- 查看流程 -->
     <!-- <el-dialog v-el-drag-dialog title="申请流程" center :visible.sync="flowVisible" :close-on-click-modal="false" min-width="1000px">
       <flow />

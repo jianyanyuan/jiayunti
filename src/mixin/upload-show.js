@@ -1,12 +1,11 @@
 /*
  * @Author: zfd
  * @Date: 2020-12-04 10:50:09
- * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 13:09:35
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-16 16:47:40
  * @Description: 附件上传 + 预览通用模块
  */
 import File from '@/api/file'
-// import { deepClone } from '@/utils'
 import { notEmptyArray, checkUpload } from '@/utils'
 
 export default {
@@ -50,8 +49,8 @@ export default {
             }
           }
           this.pageLoading = false
-        }).catch(() => {
-          this.$message.error('信息获取失败')
+        }).catch((errMsg) => {
+          this.$message.error(errMsg)
           this.pageLoading = false
         })
       } else {
@@ -66,8 +65,8 @@ export default {
             }
           }
           this.pageLoading = false
-        }).catch(() => {
-          this.$message.error('信息获取失败')
+        }).catch((errMsg) => {
+          this.$message.error(errMsg)
           this.pageLoading = false
         })
       }
@@ -76,34 +75,21 @@ export default {
       this.hasChanged = true
       this.detailApply()
     },
-    // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
-    // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList) {
       const valid = checkUpload(file.raw)
       if (valid && file.url === undefined) {
-        // const reader = new FileReader()
-        // reader.readAsDataURL(file.raw)
-        // reader.onload = (event) => {
-        //   this.fileList.push({
-        //     uid: file.uid,
-        //     name: file.name,
-        //     url: event.target.result,
-        //     type: 'temp' // 临时保存base64结果
-        //   })
-        // }
         const formData = new FormData()
         formData.append('file', file.raw)
         File.upload(formData, { projectId: this.id, typeName: this.typeName })
-          .catch(() => {
-          // 上传失败
-            this.$message.error('上传失败')
+          .then(res => {
+            file.url = res.fileAddress
+            file.status = 'success'
+            file.uid = res.fileTypeId
           })
-        // this.uploadList.push({
-        //   projectId: this.id,
-        //   uid: file.uid,
-        //   name: file.name,
-        //   file: formData
-        // })
+          .catch((errMsg) => {
+          // 上传失败
+            this.$message.error(errMsg)
+          })
       } else {
         fileList.pop()
       }
@@ -111,39 +97,9 @@ export default {
     // 删除文件
     handleUploadRemove(file, fileList) {
       File.remove(file.uid)
-        .catch(() => {
-          this.$message.error('删除失败')
+        .catch((errMsg) => {
+          this.$message.error(errMsg)
         })
-    },
-
-    // 保存修改
-    async postApply(typeName) {
-      // this.pageLoading = true
-
-      // if (notEmptyArray(this.uploadList)) {
-      //   let err = false
-      //   for (const idx in this.uploadList) {
-      //     const { projectId, file } = this.uploadList[idx]
-      //     await File.upload(file, { projectId, typeName })
-      //       .catch(() => {
-      //         // 上传失败
-      //         const failIdx = this.fileList.findIndex(f => f.uid === this.uploadList[idx].uid)
-      //         this.fileList.splice(failIdx, 1)
-      //         err = true
-      //       })
-      //   }
-      //   this.uploadList = []
-      //   if (err) {
-      //     this.$message.error('保存失败')
-      //   }
-      //   this.hasChanged = true
-      //   this.pageLoading = false
-      //   this.detailApply()
-      // } else {
-      //   this.hasChanged = true
-      //   this.pageLoading = false
-      //   this.detailApply()
-      // }
     }
   }
 }

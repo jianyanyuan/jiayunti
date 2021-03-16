@@ -1,8 +1,8 @@
 <!--
  * @Author: zfd
  * @Date: 2020-10-19 14:51:05
- * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 12:57:05
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-16 16:46:47
  * @Description: 居民申请意见征询表
 -->
 <template>
@@ -21,7 +21,7 @@
           <span>{{ room }}</span>
         </div>
         <!-- function(file,fileList){return handleUploadChange(file,fileList,room)} -->
-        <el-upload action="#" :file-list="fileList[room]" :on-remove="handleUploadRemove(file) " :on-change="handleUploadChange(file,fileList,room)" drag :auto-upload="false">
+        <el-upload action="#" :file-list="fileList[room]" :on-remove="handleUploadRemove " :on-change="function(file,fileList){return handleUploadChange(file,fileList,room)}" drag :auto-upload="false">
           <!-- <i class="el-icon-upload" /> -->
           <div class="upload-tips-public">
             所需附件：
@@ -43,7 +43,7 @@
       </el-card>
     </template>
     <template v-else>
-      <el-card v-for="(room) in rooms" :key="room" class="upload-card-public" style="margin-bottom:30px">
+      <el-card v-for="(room) in rooms" :key="room" class="upload-card-public gap-bottom-public">
         <div slot="header">
           <span>{{ room }}</span>
         </div>
@@ -80,15 +80,6 @@ export default {
       fileList: {} // 展示用
     }
   },
-
-  computed: {
-  },
-  watch: {
-
-  },
-  created() {
-    // this.detailApply()
-  },
   activated() {
     this.detailApply()
   },
@@ -120,8 +111,8 @@ export default {
           }
         }
         this.pageLoading = false
-      }).catch(() => {
-        this.$message.error('信息获取失败')
+      }).catch((errMsg) => {
+        this.$message.error(errMsg)
         this.pageLoading = false
       })
     },
@@ -139,30 +130,30 @@ export default {
         this.$emit('nextProcess', arrow)
       }
     },
-
-    // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
-    // 限制了添加文件的逻辑，不支持多个文件选择
     handleUploadChange(file, fileList, room) {
-      return function() {
-        const valid = checkUpload(file.raw)
-        if (valid && file.url === undefined) {
-          const formData = new FormData()
-          formData.append('file', file.raw)
-          File.uploadOpinion(formData, { room, projectId: this.id })
-            .catch(() => {
+      const valid = checkUpload(file.raw)
+      if (valid && file.url === undefined) {
+        const formData = new FormData()
+        formData.append('file', file.raw)
+        File.uploadOpinion(formData, { room, projectId: this.id })
+          .then(res => {
+            file.url = res.fileAddress
+            file.status = 'success'
+            file.uid = res.opinionFileId
+          })
+          .catch((errMsg) => {
             // 上传失败
-              this.$message.error('上传失败')
-            })
-        } else {
-          fileList.pop()
-        }
+            this.$message.error(errMsg)
+          })
+      } else {
+        fileList.pop()
       }
     },
     // 删除文件
     handleUploadRemove(file, fileList, room) {
       File.removeOpinion(file.uid)
-        .catch(() => {
-          this.$message.error('删除失败')
+        .catch((errMsg) => {
+          this.$message.error(errMsg)
         })
     }
   }
@@ -170,16 +161,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-.image-container {
-  height: 200px;
-  margin-bottom: 20px;
-  img {
-    width: auto;
-    height: auto;
-
-    max-width: 100%;
-    max-height: 100%;
-  }
+.upload-card-public ::v-deep .el-upload-dragger{
+  padding: 10px 5px;
 }
 </style>

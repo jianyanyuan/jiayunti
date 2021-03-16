@@ -1,8 +1,8 @@
 /*
  * @Author: zfd
  * @Date: 2020-10-13 09:15:58
- * @LastEditors: zfd
- * @LastEditTime: 2020-12-31 12:00:25
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-16 11:13:13
  * @Description: 用户仓库
  */
 import User from '@/api/user'
@@ -135,7 +135,7 @@ const actions = {
   // 获取用户操作
   getOperation({ commit }, { district, role, setState = false }) {
     return new Promise((resolve, reject) => {
-      if (role && district) {
+      if (role) {
         listApi({ district, role })
           .then(operations => {
             const result = {}

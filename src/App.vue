@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-13 09:15:58
- * @LastEditTime: 2020-12-29 16:39:53
- * @LastEditors: zfd
+ * @LastEditTime: 2021-03-16 15:21:33
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \jiayunti\src\App.vue
 -->
@@ -67,7 +67,7 @@ li {
    }
    .el-upload-dragger{
      width: 400px;
-  padding: 10px 5px;
+  padding: 40px 5px;
   border: 2px solid #e5e5e5;
   color: #777;
   -webkit-transition: background-color 0.2s linear;
